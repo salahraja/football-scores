@@ -21,9 +21,9 @@ export default function Home() {
             <nav className="font-sans flex py-2 px-6 bg-zinc-100/30 rounded-md bg-opacity-40 dark:bg-zinc-800/30 backdrop-blur-sm shadow sm:items-baseline w-5/6">
               <div className="pt-10 -m-7 flex-row justify-center align-center grid grid-cols-2 font-semibold w-full text-center ">
                 {" "}
-                <Link href={"/standings"}>Table</Link>
+                <Link href={"/standings"}>League Table</Link>
                 {"  "}
-                <Link href={"/results"}>Projects</Link>{" "}
+                <Link href={"/results"}>Match Results</Link>{" "}
                 <div className="h-10 pt-3 ml-auto flex col-auto w-screen max-[640px]:w-2vw] whitespace-nowrap font-semibold">
                   <div className="flex justify-center w-[80.5vw] pl-[5vw]">
                     <div className="-m-[1vh] w-full text-center"></div>
@@ -67,7 +67,7 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
+          {/* <h2 className={`mb-3 text-2xl font-semibold`}>
             Results{" "}
             <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
               -&gt;
@@ -126,7 +126,7 @@ export default function Home() {
           </h2>
           <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
             lacus sed turpis tincidunt id aliquet risus{" "}
-          </p>
+          </p> */}
         </a>
       </div>
     </main>
