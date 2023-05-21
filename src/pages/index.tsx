@@ -34,7 +34,10 @@ export default function Home() {
           </div>
         </div>{" "}
         <div className="flex flex-row justify-center flex-grow align-center"></div>
-        <div className="text-black dark:text-white font-bold"> By{"  "}</div>
+        <div className="text-black dark:text-white font-bold pt-10 pl-10 -mr-5">
+          {" "}
+          By{"  "}
+        </div>
         <a
           className="pointer-events-none flexplace-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
           href="https://www.salahs.org/"
@@ -42,9 +45,10 @@ export default function Home() {
           rel="noopener noreferrer"
         >
           <Image
+            sizes="(max-width: 768px) 10vw, (max-width: 700px) 21vw, 13vw"
             src="/salahav.png"
             alt="Salah avatar image"
-            className=""
+            className="w-full relative pt-[80%]"
             width={182}
             height={194}
             priority
