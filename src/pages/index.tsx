@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
   return (
     <main
-      className={`flex min-h-screen flex-col items-center justify-between p-2 ${inter.className}`}
+      className={`flex min-h-screen w-[100%] flex-col items-center justify-between p-2 ${inter.className}`}
     >
       {" "}
       <div className="z-10 flex space-x-5 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex text-[#008fd7]">
@@ -16,9 +16,9 @@ export default function Home() {
           Under&nbsp;
           <code className="font-mono">construction.</code>
         </p>
-        <div className="bottom-0 left-0 flex fixed h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
+        <div className="bottom-0 right-5 flex fixed h-48 items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
           <div className="flex flex-row justify-center align-middle">
-            <nav className="font-sans flex py-2 px-6 bg-zinc-100/30 rounded-md bg-opacity-40 dark:bg-zinc-800/30 backdrop-blur-sm shadow sm:items-baseline w-5/6">
+            <nav className="font-sans flex py-2 px-6 bg-zinc-100/30 rounded-md bg-opacity-40 dark:bg-zinc-800/30 backdrop-blur-sm shadow sm:items-baseline w-full">
               <div className="pt-10 -m-7 flex-row justify-center align-center grid grid-cols-2 font-semibold w-full text-center ">
                 {" "}
                 <Link href={"/standings"}>League Table</Link>
@@ -33,8 +33,8 @@ export default function Home() {
             </nav>
           </div>
         </div>{" "}
-        <div className="flex flex-row justify-center flex-grow align-center"></div>
-        <div className="text-black dark:text-white font-bold pt-10 pl-10 -mr-5">
+        <div className="flex flex-row justify-items-end flex-grow align-right pt-5"></div>
+        <div className="text-black dark:text-white font-bold pt-5 mr-[50%]">
           {" "}
           By{"  "}
         </div>
@@ -48,7 +48,7 @@ export default function Home() {
             sizes="(max-width: 768px) 10vw, (max-width: 700px) 21vw, 13vw"
             src="/salahav.png"
             alt="Salah avatar image"
-            className="w-full relative pt-[80%]"
+            className="w-full relative pt-[80%] pb-5"
             width={182}
             height={194}
             priority
