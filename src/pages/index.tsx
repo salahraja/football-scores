@@ -48,7 +48,7 @@ export default function Home() {
           <Image
             sizes="(max-width: 768px) 10vw, (max-width: 700px) 21vw, 13vw"
             src="/salahav.png"
-            alt="Salah avatar image"
+            alt="Salah avatar image of me"
             className="w-full relative pt-[80%] pb-5"
             width={182}
             height={194}
