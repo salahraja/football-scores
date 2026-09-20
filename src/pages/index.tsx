@@ -2,13 +2,19 @@ import Image from "next/image";
 import { Inter } from "next/font/google";
 import NavBar from "../../components/navbar";
 import Link from "next/link";
+import Head from "next/head";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   return (
+    <>
+    <Head>
+      <title>Serie A scores and standings</title>
+      <meta name="description" content="Latest scores and table standings for Serie A." />
+    </Head>
     <main
-      className={`flex min-h-screen w-[100%] flex-col items-center justify-between p-2 ${inter.className}`}
+      className={`flex min-h-screen w-[100%] flex-col items-center justify-between overflow-x-clip p-2 ${inter.className}`}
     >
       {" "}
       <div className="z-10 flex space-x-5 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex text-[#008fd7]">
@@ -22,14 +28,9 @@ export default function Home() {
             <nav className="font-sans flex py-2 px-6 bg-zinc-100/30 rounded-md bg-opacity-40 dark:bg-zinc-800/30 backdrop-blur-sm shadow sm:items-baseline w-full">
               <div className="pt-10 -m-7 flex-row justify-center align-center grid grid-cols-2 font-semibold w-full text-center ">
                 {" "}
-                <Link href={"/standings"}>League Table</Link>
+                <Link href={"/standings"} className="py-2">League Table</Link>
                 {"  "}
-                <Link href={"/results"}>Match Results</Link>{" "}
-                <div className="h-10 pt-3 ml-auto flex col-auto w-screen max-[640px]:w-2vw] whitespace-nowrap font-semibold">
-                  <div className="flex justify-center w-[80.5vw] pl-[5vw]">
-                    <div className="-m-[1vh] w-full text-center"></div>
-                  </div>
-                </div>
+                <Link href={"/results"} className="py-2">Match Results</Link>{" "}
               </div>
             </nav>
           </div>
@@ -69,14 +70,7 @@ export default function Home() {
         height={437}
         priority
       />
-      <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="/results"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        ></a>
-      </div>
     </main>
+    </>
   );
 }
