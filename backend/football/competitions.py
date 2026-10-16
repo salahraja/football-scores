@@ -33,6 +33,18 @@ DEFAULT_CODE = "SA"
 TEAM_SEARCH_ORDER = ["SA", "PL", "PD", "BL1", "FL1", "CL"]
 
 
+# The `stage` values football-data.org v4 puts on matches, in the order a season plays them.
+# LEAGUE_STAGE is what the Champions League uses since 2024-25; the rest are the documented enum.
+STAGES = [
+    "PRELIMINARY_ROUND", "QUALIFICATION", "QUALIFICATION_ROUND_1", "QUALIFICATION_ROUND_2",
+    "QUALIFICATION_ROUND_3", "PLAYOFF_ROUND_1", "PLAYOFF_ROUND_2",
+    "REGULAR_SEASON", "GROUP_STAGE", "LEAGUE_STAGE", "ROUND_1", "ROUND_2", "ROUND_3", "ROUND_4",
+    "PLAYOFFS", "LAST_64", "LAST_32", "LAST_16", "QUARTER_FINALS", "SEMI_FINALS", "THIRD_PLACE", "FINAL",
+]
+# Competitions whose season has rounds beyond the numbered matchdays.
+STAGED = ["CL"]
+
+
 def _zone(label, first, last):
     return {"label": label, "from": first, "to": last}
 

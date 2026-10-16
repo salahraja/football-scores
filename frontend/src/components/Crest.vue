@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
+// A crest always sits beside the team's written name, so it is decoration: empty alt, hidden from screen readers.
 defineProps<{ src: string | null | undefined; name: string; size?: number }>();
 const broken = ref(false);
 </script>
@@ -10,7 +11,7 @@ const broken = ref(false);
     v-if="src && !broken"
     class="crest"
     :src="src"
-    :alt="`${name} crest`"
+    alt=""
     :width="size ?? 28"
     :height="size ?? 28"
     loading="lazy"
@@ -19,8 +20,7 @@ const broken = ref(false);
   <span
     v-else
     class="crest crest-fallback"
-    role="img"
-    :aria-label="`${name} crest`"
+    aria-hidden="true"
     :style="{ width: (size ?? 28) + 'px', height: (size ?? 28) + 'px' }"
     >{{ name.charAt(0) }}</span
   >

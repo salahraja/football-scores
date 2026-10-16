@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ageText, chipTitle, liveLabel, parseForm, phase, scoreNote, scoreText } from "../src/format";
+import { ageText, chipTitle, kickoffDay, kickoffTime, liveLabel, parseForm, phase, scoreNote, scoreText } from "../src/format";
 
 describe("score formatter", () => {
   it("shows a plain score and a dash when there is none", () => {
@@ -48,5 +48,22 @@ describe("age", () => {
   it("counts in minutes, at least one", () => {
     expect(ageText(20)).toBe("1 minute old");
     expect(ageText(12 * 60)).toBe("12 minutes old");
+  });
+});
+
+describe("kick-off times", () => {
+  const utc = "2026-10-16T11:45:00Z";
+  it("are 24-hour in the viewer's zone, whatever the locale", () => {
+    expect(kickoffTime(utc, "Europe/Rome", "en-US")).toBe("13:45");
+    expect(kickoffTime(utc, "Europe/Rome", "it-IT")).toBe("13:45");
+    expect(kickoffTime("2026-10-16T07:05:00Z", "Europe/Rome", "en-US")).toBe("09:05");
+    expect(kickoffTime(utc, "America/New_York", "en-US")).toBe("07:45");
+  });
+  it("put the day before the month", () => {
+    expect(kickoffDay(utc, "Europe/Rome", "en-US")).toBe("Fri 16 Oct");
+    expect(kickoffDay(utc, "Europe/Rome", "it-IT")).toBe("ven 16 ott");
+  });
+  it("use the viewer's day, not the UTC one", () => {
+    expect(kickoffDay("2026-10-16T23:30:00Z", "Europe/Rome", "en-US")).toBe("Sat 17 Oct");
   });
 });

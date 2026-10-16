@@ -98,8 +98,10 @@ describe("Fixtures", () => {
     const { calls } = mockFetch();
     const { wrapper } = await mountAt("/fixtures", FixturesView);
     expect(calls).toContain("/api/competitions/SA/matches");
-    expect(wrapper.find("select").element.value).toBe("8");
-    expect(wrapper.find('img[alt="Juventus FC crest"]').exists()).toBe(true);
+    expect(wrapper.find("select").element.value).toBe("md:8");
+    // The team name is written next to each crest, so the crest is decoration for screen readers.
+    expect(wrapper.find("img.crest").exists()).toBe(true);
+    expect(wrapper.findAll("img.crest").every((i) => i.attributes("alt") === "")).toBe(true);
     expect(wrapper.find('button[aria-pressed="true"]').text()).toBe("Serie A");
   });
 
@@ -124,6 +126,24 @@ describe("Fixtures", () => {
     expect(wrapper.text()).toContain("AET");
   });
 
+  it("lists Champions League rounds in plain words and asks for the one picked", async () => {
+    const { calls } = mockFetch();
+    const { wrapper } = await mountAt("/fixtures", FixturesView);
+    await wrapper.findAll("button.pill").find((b) => b.text() === "Champions League")!.trigger("click");
+    await flushPromises();
+    const labels = wrapper.findAll("select option").map((o) => o.text());
+    expect(labels).toContain("League phase, matchday 8 (current)");
+    expect(labels.slice(-4)).toEqual(["Knockout play-offs", "Round of 16", "Quarter-finals", "Final"]);
+    expect(labels.filter((l) => l.startsWith("League phase"))).toHaveLength(8);
+    await wrapper.find("select").setValue("stage:LAST_16");
+    await flushPromises();
+    expect(calls).toContain("/api/competitions/CL/matches?stage=LAST_16");
+    // Next steps on to the following round.
+    await wrapper.find('button[aria-label="Next matchday"]').trigger("click");
+    await flushPromises();
+    expect(calls).toContain("/api/competitions/CL/matches?stage=QUARTER_FINALS");
+  });
+
   it("shows partial and empty and error states", async () => {
     const { matchesSA } = await import("./fixtures");
     mockFetch(() => [200, { ...matchesSA, matches: [], partial: true }]);
@@ -143,7 +163,7 @@ describe("Table", () => {
     const heads = wrapper.findAll("th").map((h) => h.text());
     expect(heads).toEqual(["#", "Team", "P", "W", "D", "L", "GF", "GA", "GD", "Pts", "Form"]);
     const rows = wrapper.findAll("tbody tr");
-    expect(rows).toHaveLength(6);
+    expect(rows).toHaveLength(7);
     expect(rows[0].find("td.pos").classes()).toContain("zone-championsLeague");
     expect(rows[4].find("td.pos").classes()).toContain("zone-europaLeague");
     expect(rows[0].findAll(".chip")).toHaveLength(5);

@@ -43,14 +43,20 @@ const STATUS_TEXT: Record<string, string> = {
   SUSPENDED: "Suspended",
 };
 
-export function kickoffTime(utcDate: string, timeZone?: string): string {
-  return new Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit", timeZone }).format(new Date(utcDate));
-}
-
-export function kickoffDay(utcDate: string, timeZone?: string): string {
-  return new Intl.DateTimeFormat(undefined, { weekday: "short", day: "numeric", month: "short", timeZone }).format(
+/** 24-hour kick-off time in the viewer's zone ("13:45"), the same in every locale. */
+export function kickoffTime(utcDate: string, timeZone?: string, locale?: string): string {
+  return new Intl.DateTimeFormat(locale, { hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZone }).format(
     new Date(utcDate),
   );
+}
+
+/** Day first, in the viewer's zone ("Fri 16 Oct"). */
+export function kickoffDay(utcDate: string, timeZone?: string, locale?: string): string {
+  const parts = new Intl.DateTimeFormat(locale, { weekday: "short", day: "numeric", month: "short", timeZone }).formatToParts(
+    new Date(utcDate),
+  );
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "";
+  return `${get("weekday")} ${get("day")} ${get("month")}`;
 }
 
 /** The line that says where a match stands: minute, FT, kick-off time or why it is off. */

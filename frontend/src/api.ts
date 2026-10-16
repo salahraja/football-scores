@@ -39,8 +39,13 @@ async function getJson<T>(path: string): Promise<T> {
 export const api = {
   competitions: () => getJson<Competition[]>("/api/competitions"),
   today: () => getJson<TodayResponse>("/api/today"),
-  matches: (code: CompetitionCode, matchday?: number | null) =>
-    getJson<MatchesResponse>(`/api/competitions/${code}/matches${matchday ? `?matchday=${matchday}` : ""}`),
+  matches: (code: CompetitionCode, matchday?: number | null, stage?: string | null) => {
+    const query = new URLSearchParams();
+    if (stage) query.set("stage", stage);
+    if (matchday) query.set("matchday", String(matchday));
+    const qs = query.toString();
+    return getJson<MatchesResponse>(`/api/competitions/${code}/matches${qs ? `?${qs}` : ""}`);
+  },
   standings: (code: CompetitionCode) => getJson<StandingsResponse>(`/api/competitions/${code}/standings`),
   team: (id: number | string) => getJson<TeamResponse>(`/api/teams/${id}`),
 };

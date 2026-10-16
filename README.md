@@ -26,6 +26,10 @@ npm install
 npm run dev
 ```
 
+`GET /api/competitions/{code}/matches` takes `?matchday=` and, for knockout rounds, `?stage=` (a football-data.org
+stage such as `LAST_16`; anything else is a 422). For the Champions League the reply also lists `stages`, the rounds
+that have matches, which the Fixtures page uses for its round picker.
+
 Without `DATABASE_URL` the backend caches in memory; set it to a Postgres URL to share the cache across restarts.
 `API_URL` points the dev proxy at another backend.
 

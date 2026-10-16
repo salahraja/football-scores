@@ -52,6 +52,10 @@ export interface TodayResponse extends Meta {
 export interface MatchesResponse extends Meta {
   matchday: number | null;
   currentMatchday: number | null;
+  /** The round asked for with ?stage=, else null. */
+  stage: string | null;
+  /** Rounds of this competition that have matches (Champions League only), in season order. */
+  stages: string[];
   matches: Match[];
 }
 

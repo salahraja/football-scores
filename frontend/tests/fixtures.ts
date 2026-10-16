@@ -12,10 +12,12 @@ export const teams = {
   milan: { id: 98, name: "AC Milan", shortName: "Milan", crest: crest("M", "#a01010") },
   napoli: { id: 113, name: "SSC Napoli", shortName: "Napoli", crest: crest("N", "#1a6fb0") },
   roma: { id: 100, name: "AS Roma", shortName: "Roma", crest: crest("R", "#8a2a10") },
+  fiorentina: { id: 99, name: "ACF Fiorentina", shortName: "Fiorentina", crest: crest("F", "#5b2a86") },
+  // The one long-name case: a team with no crest and a name too wide for a phone card.
   longName: {
     id: 999,
-    name: "Associazione Calcio Fiorentina Società Sportiva Dilettantistica",
-    shortName: "Associazione Calcio Fiorentina",
+    name: "Wolverhampton Wanderers Football Club",
+    shortName: "Wolverhampton Wanderers",
     crest: null,
   },
 };
@@ -36,7 +38,15 @@ export const finished: Match = {
 };
 export const upcoming: Match = {
   id: 3, competition: SA, utcDate: "2026-10-16T18:45:00Z", status: "TIMED",
-  homeTeam: teams.roma, awayTeam: teams.longName, score: { home: null, away: null, ...reg },
+  homeTeam: teams.roma, awayTeam: teams.fiorentina, score: { home: null, away: null, ...reg },
+};
+export const longMatch: Match = {
+  id: 6, competition: SA, utcDate: "2026-10-16T16:30:00Z", status: "TIMED",
+  homeTeam: teams.longName, awayTeam: teams.inter, score: { home: null, away: null, ...reg },
+};
+export const juveNext: Match = {
+  id: 30, competition: SA, utcDate: "2026-10-18T18:45:00Z", status: "TIMED",
+  homeTeam: teams.juve, awayTeam: teams.fiorentina, score: { home: null, away: null, ...reg },
 };
 export const aet: Match = {
   id: 4, competition: CL, utcDate: "2026-10-16T07:00:00Z", status: "FINISHED",
@@ -48,10 +58,10 @@ export const pens: Match = {
   score: { home: 1, away: 1, duration: "PENALTY_SHOOTOUT", penalties: { home: 6, away: 5 } },
 };
 
-export const today: TodayResponse = { matches: [upcoming, finished, live, pens, aet], ...meta };
+export const today: TodayResponse = { matches: [upcoming, longMatch, finished, live, pens, aet], ...meta };
 
 export const matchesSA: MatchesResponse = {
-  matchday: 8, currentMatchday: 8, matches: [live, finished, upcoming], ...meta,
+  matchday: 8, currentMatchday: 8, stage: null, stages: [], matches: [live, finished, upcoming, longMatch], ...meta,
 };
 
 const row = (position: number, team: TeamRef,pts: number, form: string) => ({
@@ -66,7 +76,8 @@ export const standingsSA: StandingsResponse = {
     row(3, teams.napoli, 14, "D,W,W,W,D"),
     row(4, teams.milan, 13, "L,W,D,W,W"),
     row(5, teams.roma, 12, "W,L,L,D,W"),
-    row(6, teams.longName, 10, "L,L,D,W,L"),
+    row(6, teams.fiorentina, 10, "L,L,D,W,L"),
+    row(7, teams.longName, 9, "L,L,D,L,L"),
   ],
   zones: {
     championsLeague: { label: "Champions League", from: 1, to: 4 },
@@ -77,9 +88,15 @@ export const standingsSA: StandingsResponse = {
   ...meta,
 };
 
+export const matchesCL: MatchesResponse = {
+  matchday: 8, currentMatchday: 8, stage: null,
+  stages: ["LEAGUE_STAGE", "PLAYOFFS", "LAST_16", "QUARTER_FINALS", "FINAL"],
+  matches: [aet, pens], ...meta,
+};
+
 export const teamJuve: TeamResponse = {
   team: { ...teams.juve, venue: "Allianz Stadium", founded: 1897 },
-  nextMatch: upcoming,
+  nextMatch: juveNext,
   recentMatches: [
     { ...pens, homeTeam: teams.juve, awayTeam: teams.napoli, result: "D", shootout: "W" },
     { ...finished, homeTeam: teams.juve, result: "D" },
@@ -105,6 +122,10 @@ export function route(url: string): [number, unknown] {
   const path = url.split("?")[0];
   if (path === "/api/competitions") return [200, competitions];
   if (path === "/api/today") return [200, today];
+  if (path === "/api/competitions/CL/matches") {
+    const stage = new URLSearchParams(url.split("?")[1] || "").get("stage");
+    return [200, stage ? { ...matchesCL, stage, matchday: null } : matchesCL];
+  }
   if (/^\/api\/competitions\/[A-Z0-9]+\/matches$/.test(path)) return [200, matchesSA];
   if (/^\/api\/competitions\/[A-Z0-9]+\/standings$/.test(path)) return [200, standingsSA];
   if (/^\/api\/teams\/\d+$/.test(path)) return [200, teamJuve];

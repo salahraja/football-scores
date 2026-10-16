@@ -27,7 +27,7 @@ from .client import (
     UpstreamBusy,
     UpstreamError,
 )
-from .competitions import CODES, COMPETITIONS, TEAM_SEARCH_ORDER
+from .competitions import CODES, COMPETITIONS, STAGED, STAGES, TEAM_SEARCH_ORDER
 from .ratelimit import PerKeyLimiter
 
 log = logging.getLogger("football.app")
@@ -181,23 +181,48 @@ def create_app(client=None, dist=None):
         return min(every) if every else None
 
     @app.get("/api/competitions/{code}/matches")
-    def competition_matches(code: str, response: Response, matchday: int | None = Query(None, ge=1, le=60)):
+    def competition_matches(
+        code: str,
+        response: Response,
+        matchday: int | None = Query(None, ge=1, le=60),
+        stage: str | None = Query(None),
+    ):
         code = code_or_404(code)
+        if stage is not None and stage not in STAGES:
+            raise HTTPException(422, "Unknown stage. Use one of: " + ", ".join(STAGES))
         meta = Meta(client)
         comp = meta.add(client.get("/competitions/" + code, TTL_MATCHES, check=shape.ok_competition))
         current = (comp.get("currentSeason") or {}).get("currentMatchday")
-        wanted = matchday if matchday is not None else current
+        # A stage on its own means the whole round (knockout matches may have no matchday).
+        wanted = matchday if matchday is not None or stage is not None else current
         path = "/competitions/%s/matches" % code
-        if wanted is not None:
+        if stage is not None:
+            matches = meta.add(
+                client.get(path, TTL_MATCHES, {"stage": stage, "matchday": matchday}, check=shape.ok_matches)
+            )["matches"]
+        elif wanted is not None:
             matches = meta.add(client.get(path, TTL_MATCHES, {"matchday": wanted}, check=shape.ok_matches))["matches"]
         else:
             # No current matchday (between seasons, or a cup): one fetch of the season, pick from it.
             season = meta.add(client.get(path, TTL_MATCHES, check=shape.ok_matches))["matches"]
             wanted = latest_matchday(season)
             matches = [m for m in season if m.get("matchday") == wanted]
+        stages = []
+        if code in STAGED:
+            # Which rounds have matches: one cached read of the season, at low priority.
+            try:
+                season = meta.add(client.get(path, TTL_MATCHES, check=shape.ok_matches, low_priority=True))["matches"]
+                have = {m.get("stage") for m in season}
+                stages = [s for s in STAGES if s in have]
+            except NotFound:
+                pass  # no season to read: no stage list
+            except SOFT_FAILURES:
+                meta.partial = True
         return {
             "matchday": wanted,
             "currentMatchday": current,
+            "stage": stage,
+            "stages": stages,
             "matches": [shape.match(m) for m in matches],
             **meta.out(response),
         }
@@ -307,14 +332,20 @@ def create_app(client=None, dist=None):
     root = FsPath(dist or os.environ.get("FRONTEND_DIST") or DEFAULT_DIST).resolve()
     if (root / "index.html").is_file():
 
-        @app.get("/{path:path}", include_in_schema=False)
+        @app.api_route("/{path:path}", methods=["GET", "HEAD"], include_in_schema=False)
         def front_end(path: str):
             if path == "api" or path.startswith("api/"):
                 return error(404, "Not found")
-            target = (root / path).resolve()
-            if path and target.is_file() and root in target.parents:
+            try:
+                target = (root / path).resolve()
+                is_file = bool(path) and target.is_file() and root in target.parents
+            except (ValueError, OSError):  # NUL byte, name too long
+                return error(404, "Not found")
+            if is_file:
                 headers = {"Cache-Control": "public, max-age=31536000, immutable"} if path.startswith("assets/") else None
                 return FileResponse(target, headers=headers)
+            if path.startswith("assets/"):
+                return error(404, "Not found")  # a build file that is gone, not a page
             return FileResponse(root / "index.html", headers={"Cache-Control": "no-cache"})
 
     return app
