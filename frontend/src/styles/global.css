@@ -1,0 +1,545 @@
+/* Matchday look: pitch-dark greens, white type, one lime accent. */
+:root {
+  --bg: #07110c;
+  --surface: #0e1d15;
+  --surface-2: #153024;
+  --line: #2a4a38;
+  --text: #f4f7f5;
+  --muted: #a9bfb2;
+  --accent: #c8f169;
+  --on-accent: #07110c;
+  --bad: #ffb4bd;
+  --z-championsLeague: #4aa3ff;
+  --z-championsLeagueQualifying: #9ad0ff;
+  --z-europaLeague: #ff9f43;
+  --z-conferenceLeague: #3ddc97;
+  --z-relegation: #ff5c6c;
+  --z-relegationPlayoff: #ffb3ba;
+  --z-roundOf16: #4aa3ff;
+  --z-playoff: #ff9f43;
+  --z-eliminated: #ff5c6c;
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
+}
+
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  color: var(--accent);
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+h1 {
+  font-size: 1.6rem;
+  line-height: 1.2;
+  margin: 0 0 0.25rem;
+  letter-spacing: -0.01em;
+}
+
+h2 {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin: 0 0 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.lede {
+  color: var(--muted);
+  margin: 0 0 1rem;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.skip {
+  position: absolute;
+  left: 0.5rem;
+  top: -4rem;
+  background: var(--accent);
+  color: var(--on-accent);
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  z-index: 10;
+}
+.skip:focus {
+  top: 0.5rem;
+}
+
+/* layout */
+.top {
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+.top-inner {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 0 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 1rem;
+}
+.brand {
+  color: var(--text);
+  font-weight: 800;
+  text-decoration: none;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  letter-spacing: -0.02em;
+}
+.brand span {
+  color: var(--accent);
+  margin-left: 0.15rem;
+}
+nav {
+  display: flex;
+  flex-wrap: wrap;
+}
+nav a {
+  color: var(--text);
+  text-decoration: none;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  border-bottom: 3px solid transparent;
+}
+nav a.active {
+  border-bottom-color: var(--accent);
+  font-weight: 700;
+}
+nav a.pinned {
+  color: var(--accent);
+}
+
+main {
+  flex: 1;
+  width: 100%;
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 1rem 0.75rem 2rem;
+}
+main:focus {
+  outline: none;
+}
+
+.foot {
+  border-top: 1px solid var(--line);
+  padding: 1rem 0.75rem;
+  color: var(--muted);
+  text-align: center;
+  font-size: 0.875rem;
+}
+.foot p {
+  margin: 0;
+}
+
+/* states and notes */
+.state {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1rem;
+  background: var(--surface);
+  border: 1px dashed var(--line);
+  border-radius: 10px;
+  color: var(--muted);
+  margin: 0.75rem 0;
+}
+.state-error {
+  border: 1px solid var(--bad);
+  color: var(--bad);
+}
+.spinner {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid var(--line);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .spinner {
+    animation: spin 0.9s linear infinite;
+  }
+  .status-live::before {
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.note {
+  margin: 0.5rem 0;
+  padding: 0.6rem 0.85rem;
+  background: var(--surface-2);
+  border-left: 4px solid var(--accent);
+  border-radius: 6px;
+  color: var(--text);
+}
+.note-warn {
+  border-left-color: var(--z-europaLeague);
+}
+
+/* switcher and picker */
+.switcher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.75rem 0;
+}
+.pill,
+.btn,
+select {
+  min-height: 44px;
+  min-width: 44px;
+  font: inherit;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0 0.9rem;
+  cursor: pointer;
+}
+.pill[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: var(--accent);
+  font-weight: 700;
+}
+.btn {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+.btn:disabled,
+select:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+select {
+  border-radius: 8px;
+}
+.picker {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+.picker-label {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--muted);
+}
+.picker-label select {
+  flex: 1;
+  min-width: 0;
+}
+
+/* matches */
+.group {
+  margin: 1.25rem 0;
+}
+.match {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.25rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  margin-bottom: 0.5rem;
+  padding: 0 0.25rem;
+}
+.match-live {
+  border-color: var(--accent);
+}
+.side {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 56px;
+  min-width: 0;
+  padding: 0 0.5rem;
+  color: var(--text);
+  text-decoration: none;
+}
+.side-home {
+  justify-content: flex-end;
+  text-align: right;
+}
+.team-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+}
+.crest {
+  flex: none;
+  object-fit: contain;
+}
+.crest-fallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  font-weight: 700;
+}
+.middle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 4.5rem;
+  padding: 0.4rem 0;
+  text-align: center;
+}
+.score {
+  font-size: 1.35rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.score-time {
+  font-size: 1.1rem;
+}
+.score-note,
+.status {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.status-live {
+  color: var(--accent);
+  font-weight: 700;
+}
+.status-live::before {
+  content: "";
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-right: 0.3rem;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* table */
+.table-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  max-width: 100%;
+}
+.standings {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 640px;
+  font-variant-numeric: tabular-nums;
+}
+.standings th,
+.standings td {
+  padding: 0.25rem 0.5rem;
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--line);
+}
+.standings th {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: var(--surface);
+}
+.standings tbody tr:last-child td {
+  border-bottom: 0;
+}
+.standings .num {
+  text-align: right;
+}
+.standings .pts {
+  font-weight: 800;
+}
+.standings .pos {
+  border-left: 6px solid transparent;
+}
+.standings .team-col {
+  position: sticky;
+  left: 0;
+  background: var(--surface);
+}
+.team-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 600;
+}
+.table-scroll:focus-visible {
+  outline-offset: -3px;
+}
+
+/* zones: the bar on a table row and the swatch in the legend */
+.pos.zone-championsLeague { border-left-color: var(--z-championsLeague); }
+.pos.zone-championsLeagueQualifying { border-left-color: var(--z-championsLeagueQualifying); }
+.pos.zone-europaLeague { border-left-color: var(--z-europaLeague); }
+.pos.zone-conferenceLeague { border-left-color: var(--z-conferenceLeague); }
+.pos.zone-relegation { border-left-color: var(--z-relegation); }
+.pos.zone-relegationPlayoff { border-left-color: var(--z-relegationPlayoff); }
+.pos.zone-roundOf16 { border-left-color: var(--z-roundOf16); }
+.pos.zone-playoff { border-left-color: var(--z-playoff); }
+.pos.zone-eliminated { border-left-color: var(--z-eliminated); }
+.swatch { display: inline-block; width: 6px; height: 1.1rem; border-radius: 2px; vertical-align: middle; margin-right: 0.4rem; }
+.swatch.zone-championsLeague { background: var(--z-championsLeague); }
+.swatch.zone-championsLeagueQualifying { background: var(--z-championsLeagueQualifying); }
+.swatch.zone-europaLeague { background: var(--z-europaLeague); }
+.swatch.zone-conferenceLeague { background: var(--z-conferenceLeague); }
+.swatch.zone-relegation { background: var(--z-relegation); }
+.swatch.zone-relegationPlayoff { background: var(--z-relegationPlayoff); }
+.swatch.zone-roundOf16 { background: var(--z-roundOf16); }
+.swatch.zone-playoff { background: var(--z-playoff); }
+.swatch.zone-eliminated { background: var(--z-eliminated); }
+
+.legend {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.25rem;
+  padding: 0;
+  margin: 0.85rem 0;
+  font-size: 0.9rem;
+}
+
+/* form chips */
+.form {
+  display: inline-flex;
+  gap: 3px;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #fff;
+}
+.chip-W { background: #1f7a4a; }
+.chip-D { background: #55635b; }
+.chip-L { background: #b3263a; }
+
+/* club */
+.club-head {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+.recent,
+.positions {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.recent li,
+.positions li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 48px;
+  padding: 0.25rem 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  margin-bottom: 0.4rem;
+}
+.positions li {
+  justify-content: space-between;
+}
+.recent-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.recent-score {
+  text-align: right;
+  font-weight: 700;
+  display: flex;
+  flex-direction: column;
+  font-variant-numeric: tabular-nums;
+}
+.recent-score .muted {
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
+@media (min-width: 640px) {
+  main {
+    padding: 1.5rem 1rem 3rem;
+  }
+  h1 {
+    font-size: 2rem;
+  }
+  .score {
+    font-size: 1.6rem;
+  }
+}

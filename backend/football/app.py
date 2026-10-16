@@ -3,11 +3,12 @@ import logging
 import os
 from contextlib import asynccontextmanager
 from datetime import datetime, timedelta, timezone
+from pathlib import Path as FsPath
 
 from fastapi import FastAPI, HTTPException, Path, Query, Request, Response
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from . import shape
@@ -68,7 +69,10 @@ class Meta:
         }
 
 
-def create_app(client=None):
+DEFAULT_DIST = FsPath(__file__).resolve().parents[2] / "frontend" / "dist"
+
+
+def create_app(client=None, dist=None):
     @asynccontextmanager
     async def lifespan(app):
         yield
@@ -297,6 +301,21 @@ def create_app(client=None):
             "positions": positions,
             **meta.out(response),
         }
+
+    # The built front end, when there is one: real files as they are, any other page
+    # (a deep link like /club/109) gets index.html and the router takes over.
+    root = FsPath(dist or os.environ.get("FRONTEND_DIST") or DEFAULT_DIST).resolve()
+    if (root / "index.html").is_file():
+
+        @app.get("/{path:path}", include_in_schema=False)
+        def front_end(path: str):
+            if path == "api" or path.startswith("api/"):
+                return error(404, "Not found")
+            target = (root / path).resolve()
+            if path and target.is_file() and root in target.parents:
+                headers = {"Cache-Control": "public, max-age=31536000, immutable"} if path.startswith("assets/") else None
+                return FileResponse(target, headers=headers)
+            return FileResponse(root / "index.html", headers={"Cache-Control": "no-cache"})
 
     return app
 
