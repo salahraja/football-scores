@@ -54,6 +54,7 @@ function load() {
 const { data, error, loading } = useResource(load, { watch: [selectedCompetition, pickedKey] });
 
 const shownKey = computed(() => pickedKey.value ?? (data.value?.matchday ? `md:${data.value.matchday}` : ""));
+const unit = computed(() => (selectedCompetition.value === "CL" ? "round" : "matchday"));
 const at = computed(() => options.value.findIndex((o) => o.key === shownKey.value));
 
 function go(key: string) {
@@ -66,7 +67,8 @@ function step(by: number) {
 
 const days = computed(() => {
   const out: { day: string; matches: NonNullable<typeof data.value>["matches"] }[] = [];
-  for (const m of data.value?.matches ?? []) {
+  // By kick-off time, whatever order the API sent them in.
+  for (const m of [...(data.value?.matches ?? [])].sort((a, b) => a.utcDate.localeCompare(b.utcDate))) {
     const day = kickoffDay(m.utcDate);
     const last = out[out.length - 1];
     if (last && last.day === day) last.matches.push(m);
@@ -82,17 +84,17 @@ const days = computed(() => {
     <CompetitionSwitcher />
 
     <div class="picker">
-      <button type="button" class="btn" aria-label="Previous matchday" :disabled="at <= 0" @click="step(-1)">
+      <button type="button" class="btn" :aria-label="`Previous ${unit}`" :disabled="at <= 0" @click="step(-1)">
         &lsaquo;
       </button>
       <label class="picker-label">
-        <span>{{ selectedCompetition === "CL" ? "Round" : "Matchday" }}</span>
+        <span>{{ unit === "round" ? "Round" : "Matchday" }}</span>
         <select :value="shownKey" :disabled="at < 0" @change="go(($event.target as HTMLSelectElement).value)">
           <option v-if="at < 0" value="">-</option>
           <option v-for="o in options" :key="o.key" :value="o.key">{{ o.label }}</option>
         </select>
       </label>
-      <button type="button" class="btn" aria-label="Next matchday" :disabled="at < 0 || at >= options.length - 1" @click="step(1)">
+      <button type="button" class="btn" :aria-label="`Next ${unit}`" :disabled="at < 0 || at >= options.length - 1" @click="step(1)">
         &rsaquo;
       </button>
     </div>

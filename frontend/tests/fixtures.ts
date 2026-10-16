@@ -1,5 +1,5 @@
 // Contract-shaped sample data, used by the unit tests and by the fake API the browser tests run against.
-import type { Match, MatchesResponse, TeamRef, StandingsResponse, TeamResponse, TodayResponse } from "../src/types.ts";
+import type { Match, MatchesResponse, RecentMatch, TeamRef, StandingsResponse, TeamResponse, TodayResponse } from "../src/types.ts";
 
 function crest(letter: string, colour: string) {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle cx="20" cy="20" r="19" fill="${colour}"/><text x="20" y="26" font-size="18" text-anchor="middle" fill="#fff" font-family="sans-serif">${letter}</text></svg>`;
@@ -13,13 +13,13 @@ export const teams = {
   napoli: { id: 113, name: "SSC Napoli", shortName: "Napoli", crest: crest("N", "#1a6fb0") },
   roma: { id: 100, name: "AS Roma", shortName: "Roma", crest: crest("R", "#8a2a10") },
   fiorentina: { id: 99, name: "ACF Fiorentina", shortName: "Fiorentina", crest: crest("F", "#5b2a86") },
-  // The one long-name case: a team with no crest and a name too wide for a phone card.
-  longName: {
-    id: 999,
-    name: "Wolverhampton Wanderers Football Club",
-    shortName: "Wolverhampton Wanderers",
-    crest: null,
-  },
+  // The long-name case: the full club name, no crest (so the fallback letter shows), wide for a phone card.
+  longName: { id: 450, name: "Hellas Verona Football Club", shortName: "Hellas Verona", crest: null },
+  genoa: { id: 107, name: "Genoa CFC", shortName: "Genoa", crest: crest("G", "#9a1b2e") },
+  leverkusen: { id: 3, name: "Bayer 04 Leverkusen", shortName: "Leverkusen", crest: crest("L", "#c01010") },
+  atletico: { id: 78, name: "Club Atlético de Madrid", shortName: "Atleti", crest: crest("A", "#b02030") },
+  barca: { id: 81, name: "FC Barcelona", shortName: "Barça", crest: crest("B", "#1b3a8a") },
+  bayern: { id: 5, name: "FC Bayern München", shortName: "Bayern", crest: crest("B", "#c00020") },
 };
 
 const SA = { code: "SA" as const, name: "Serie A", emblem: "https://crests.football-data.org/SA.png" };
@@ -42,19 +42,19 @@ export const upcoming: Match = {
 };
 export const longMatch: Match = {
   id: 6, competition: SA, utcDate: "2026-10-16T16:30:00Z", status: "TIMED",
-  homeTeam: teams.longName, awayTeam: teams.inter, score: { home: null, away: null, ...reg },
+  homeTeam: teams.longName, awayTeam: teams.genoa, score: { home: null, away: null, ...reg },
 };
 export const juveNext: Match = {
-  id: 30, competition: SA, utcDate: "2026-10-18T18:45:00Z", status: "TIMED",
+  id: 30, competition: SA, utcDate: "2026-10-24T18:45:00Z", status: "TIMED",
   homeTeam: teams.juve, awayTeam: teams.fiorentina, score: { home: null, away: null, ...reg },
 };
 export const aet: Match = {
   id: 4, competition: CL, utcDate: "2026-10-16T07:00:00Z", status: "FINISHED",
-  homeTeam: teams.juve, awayTeam: teams.milan, score: { home: 2, away: 1, duration: "EXTRA_TIME" },
+  homeTeam: teams.leverkusen, awayTeam: teams.atletico, score: { home: 2, away: 1, duration: "EXTRA_TIME" },
 };
 export const pens: Match = {
   id: 5, competition: CL, utcDate: "2026-10-16T06:00:00Z", status: "FINISHED",
-  homeTeam: teams.inter, awayTeam: teams.napoli,
+  homeTeam: teams.barca, awayTeam: teams.bayern,
   score: { home: 1, away: 1, duration: "PENALTY_SHOOTOUT", penalties: { home: 6, away: 5 } },
 };
 
@@ -94,18 +94,42 @@ export const matchesCL: MatchesResponse = {
   matches: [aet, pens], ...meta,
 };
 
+const juveGame = (
+  id: number, comp: typeof SA | typeof CL, utcDate: string, home: TeamRef, away: TeamRef,
+  h: number, a: number, result: "W" | "D" | "L",
+): RecentMatch => ({
+  id, competition: comp, utcDate, status: "FINISHED", homeTeam: home, awayTeam: away,
+  score: { home: h, away: a, ...reg }, result,
+});
+
+// Newest first, five different dates about a week apart.
+const juveRecent: RecentMatch[] = [
+  juveGame(41, SA, "2026-10-04T18:45:00Z", teams.juve, teams.longName, 2, 0, "W"),
+  juveGame(42, CL, "2026-09-29T19:00:00Z", teams.leverkusen, teams.juve, 1, 1, "D"),
+  juveGame(43, SA, "2026-09-20T18:45:00Z", teams.juve, teams.roma, 3, 1, "W"),
+  juveGame(44, SA, "2026-09-13T16:00:00Z", teams.napoli, teams.juve, 2, 1, "L"),
+  juveGame(45, SA, "2026-09-06T18:45:00Z", teams.juve, teams.milan, 1, 0, "W"),
+];
+
 export const teamJuve: TeamResponse = {
   team: { ...teams.juve, venue: "Allianz Stadium", founded: 1897 },
   nextMatch: juveNext,
-  recentMatches: [
-    { ...pens, homeTeam: teams.juve, awayTeam: teams.napoli, result: "D", shootout: "W" },
-    { ...finished, homeTeam: teams.juve, result: "D" },
-    { ...aet, result: "W" },
-    { ...finished, id: 22, homeTeam: teams.roma, awayTeam: teams.juve, score: { home: 3, away: 0, ...reg }, result: "L" },
-    { ...finished, id: 23, homeTeam: teams.juve, awayTeam: teams.roma, score: { home: 1, away: 0, ...reg }, result: "W" },
-  ],
+  recentMatches: juveRecent,
   positions: [{ competition: "SA", position: 2, points: 15 }, { competition: "CL", position: 5, points: 9 }],
   ...meta,
+};
+
+/** The same club after a cup-style tie settled on penalties, for the "won on pens" cases. */
+export const teamJuveShootout: TeamResponse = {
+  ...teamJuve,
+  recentMatches: [
+    {
+      ...juveGame(46, CL, "2026-10-07T19:00:00Z", teams.juve, teams.bayern, 1, 1, "D"),
+      score: { home: 1, away: 1, duration: "PENALTY_SHOOTOUT", penalties: { home: 6, away: 5 } },
+      shootout: "W",
+    },
+    ...juveRecent.slice(1),
+  ],
 };
 
 export const competitions = [

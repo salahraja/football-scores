@@ -34,11 +34,14 @@ TEAM_SEARCH_ORDER = ["SA", "PL", "PD", "BL1", "FL1", "CL"]
 
 
 # The `stage` values football-data.org v4 puts on matches, in the order a season plays them.
-# LEAGUE_STAGE is what the Champions League uses since 2024-25; the rest are the documented enum.
+# All but LEAGUE_STAGE are the names in the v4 lookup table (written from memory of it, not
+# re-checked). LEAGUE_STAGE is the Champions League league phase since 2024-25 but is NOT in
+# that table: confirm it on the first live call to /competitions/CL/matches and drop or keep it.
 STAGES = [
     "PRELIMINARY_ROUND", "QUALIFICATION", "QUALIFICATION_ROUND_1", "QUALIFICATION_ROUND_2",
     "QUALIFICATION_ROUND_3", "PLAYOFF_ROUND_1", "PLAYOFF_ROUND_2",
-    "REGULAR_SEASON", "GROUP_STAGE", "LEAGUE_STAGE", "ROUND_1", "ROUND_2", "ROUND_3", "ROUND_4",
+    "REGULAR_SEASON", "GROUP_STAGE", "LEAGUE_STAGE", "APERTURA", "CLAUSURA", "CHAMPIONSHIP",
+    "RELEGATION", "RELEGATION_ROUND", "ROUND_1", "ROUND_2", "ROUND_3", "ROUND_4",
     "PLAYOFFS", "LAST_64", "LAST_32", "LAST_16", "QUARTER_FINALS", "SEMI_FINALS", "THIRD_PLACE", "FINAL",
 ]
 # Competitions whose season has rounds beyond the numbered matchdays.

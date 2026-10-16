@@ -69,6 +69,13 @@ def test_unknown_stage_is_a_422_and_makes_no_upstream_call(stage_api):
     assert up.calls == []
 
 
+@pytest.mark.parametrize("name", ["CLAUSURA", "APERTURA", "CHAMPIONSHIP", "RELEGATION", "RELEGATION_ROUND",
+                                  "THIRD_PLACE", "GROUP_STAGE", "REGULAR_SEASON", "LEAGUE_STAGE"])
+def test_every_documented_stage_name_is_accepted(stage_api, name):
+    api, _ = stage_api
+    assert api.get(CL, params={"stage": name}).status_code == 200
+
+
 def test_other_competitions_have_no_stage_list(api):
     body = api.get("/api/competitions/SA/matches").json()
     assert body["stages"] == []

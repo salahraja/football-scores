@@ -118,6 +118,16 @@ describe("Fixtures", () => {
     expect(calls).toContain("/api/competitions/PL/matches?matchday=7");
   });
 
+  it("lists a day's matches by kick-off time, whatever order the API sends them", async () => {
+    const { matchesSA } = await import("./fixtures");
+    mockFetch();
+    const { wrapper } = await mountAt("/fixtures", FixturesView);
+    const labels = wrapper.findAll("article").map((a) => a.attributes("aria-label"));
+    const times = [...matchesSA.matches].sort((a, b) => a.utcDate.localeCompare(b.utcDate));
+    expect(labels).toEqual(times.map((m) => expect.stringContaining(m.homeTeam.name)));
+    expect(matchesSA.matches.map((m) => m.utcDate)).not.toEqual(times.map((m) => m.utcDate)); // the API order was not sorted
+  });
+
   it("shows pens and AET on the cards", async () => {
     const { pens, matchesSA, aet } = await import("./fixtures");
     mockFetch(() => [200, { ...matchesSA, matches: [pens, aet] }]);
@@ -138,8 +148,10 @@ describe("Fixtures", () => {
     await wrapper.find("select").setValue("stage:LAST_16");
     await flushPromises();
     expect(calls).toContain("/api/competitions/CL/matches?stage=LAST_16");
-    // Next steps on to the following round.
-    await wrapper.find('button[aria-label="Next matchday"]').trigger("click");
+    // Next steps on to the following round, and says round, not matchday.
+    expect(wrapper.find('button[aria-label="Previous matchday"]').exists()).toBe(false);
+    expect(wrapper.find('button[aria-label="Previous round"]').exists()).toBe(true);
+    await wrapper.find('button[aria-label="Next round"]').trigger("click");
     await flushPromises();
     expect(calls).toContain("/api/competitions/CL/matches?stage=QUARTER_FINALS");
   });
@@ -224,13 +236,24 @@ describe("Club", () => {
     expect(wrapper.find('section[aria-label="Next match"] article').exists()).toBe(true);
     const recent = wrapper.findAll(".recent li");
     expect(recent).toHaveLength(5);
-    expect(recent[0].find(".chip").attributes("title")).toBe("Draw, won on pens");
-    expect(recent[0].text()).toContain("won on pens");
+    expect(recent.map((r) => r.find(".chip").text())).toEqual(["W", "D", "W", "L", "W"]);
+    // Five different dates, newest first, about a week apart.
+    const days = recent.map((r) => r.find(".muted").text().split(",")[0]);
+    expect(new Set(days).size).toBe(5);
     expect(wrapper.findAll(".positions li").map((l) => l.text())).toEqual([
       expect.stringContaining("Serie A"),
       expect.stringContaining("UEFA Champions League"),
     ]);
     expect(wrapper.find('[data-test="partial"]').exists()).toBe(false);
+  });
+
+  it("says won or lost on pens for a shootout in the last five", async () => {
+    const { teamJuveShootout } = await import("./fixtures");
+    mockFetch(() => [200, teamJuveShootout]);
+    const { wrapper } = await mountAt("/club/109", ClubView);
+    const first = wrapper.findAll(".recent li")[0];
+    expect(first.find(".chip").attributes("title")).toBe("Draw, won on pens");
+    expect(first.text()).toContain("won on pens");
   });
 
   it("notes when data was left out", async () => {
