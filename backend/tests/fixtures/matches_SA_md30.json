@@ -1,0 +1,101 @@
+{
+  "filters": {
+    "season": "2021",
+    "matchday": "30"
+  },
+  "resultSet": {
+    "count": 1
+  },
+  "competition": {
+    "id": 2019,
+    "name": "Serie A",
+    "code": "SA",
+    "type": "LEAGUE",
+    "emblem": "https://crests.football-data.org/SA.png"
+  },
+  "matches": [
+    {
+      "area": {
+        "id": 1,
+        "name": "x",
+        "code": "X",
+        "flag": null
+      },
+      "competition": {
+        "id": 2019,
+        "name": "Serie A",
+        "code": "SA",
+        "type": "LEAGUE",
+        "emblem": "https://crests.football-data.org/SA.png"
+      },
+      "season": {
+        "id": 742,
+        "startDate": "2021-08-13",
+        "endDate": "2022-05-14",
+        "currentMatchday": 34,
+        "winner": null
+      },
+      "id": 900,
+      "utcDate": "2022-04-10T18:45:00Z",
+      "status": "FINISHED",
+      "venue": "Stadium",
+      "matchday": 30,
+      "stage": "REGULAR_SEASON",
+      "group": null,
+      "lastUpdated": "2022-04-10T18:45:00Z",
+      "homeTeam": {
+        "id": 100,
+        "name": "AS Roma",
+        "shortName": "Roma",
+        "tla": "ROM",
+        "crest": "https://crests.football-data.org/100.png",
+        "coach": {
+          "id": 1,
+          "name": "Some Coach",
+          "nationality": "Italy"
+        },
+        "leagueRank": 3,
+        "formation": "4-2-3-1",
+        "lineup": [],
+        "bench": []
+      },
+      "awayTeam": {
+        "id": 108,
+        "name": "FC Internazionale Milano",
+        "shortName": "Inter",
+        "tla": "INT",
+        "crest": "https://crests.football-data.org/108.png",
+        "coach": {
+          "id": 1,
+          "name": "Some Coach",
+          "nationality": "Italy"
+        },
+        "leagueRank": 3,
+        "formation": "4-2-3-1",
+        "lineup": [],
+        "bench": []
+      },
+      "score": {
+        "winner": null,
+        "duration": "REGULAR",
+        "fullTime": {
+          "home": 0,
+          "away": 0
+        },
+        "halfTime": {
+          "home": 0,
+          "away": 1
+        }
+      },
+      "goals": [],
+      "referees": [
+        {
+          "id": 9,
+          "name": "Ref"
+        }
+      ],
+      "minute": "90",
+      "injuryTime": null
+    }
+  ]
+}

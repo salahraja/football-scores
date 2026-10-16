@@ -1,0 +1,24 @@
+[project]
+name = "football-scores-backend"
+version = "0.1.0"
+description = "API for the football scores app: a cached, rate-limited proxy for football-data.org v4"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn>=0.30",
+    "httpx>=0.27",
+    "psycopg[binary]>=3.2",
+]
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["football"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

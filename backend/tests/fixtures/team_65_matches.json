@@ -1,0 +1,591 @@
+{
+  "filters": {
+    "limit": 100
+  },
+  "resultSet": {
+    "count": 9
+  },
+  "matches": [
+    {
+      "area": {
+        "id": 1,
+        "name": "x",
+        "code": "X",
+        "flag": null
+      },
+      "competition": {
+        "id": 2021,
+        "name": "Premier League",
+        "code": "PL",
+        "type": "LEAGUE",
+        "emblem": "https://crests.football-data.org/PL.png"
+      },
+      "season": {
+        "id": 742,
+        "startDate": "2021-08-13",
+        "endDate": "2022-05-14",
+        "currentMatchday": 34,
+        "winner": null
+      },
+      "id": 2001,
+      "utcDate": "2022-01-11T15:00:00Z",
+      "status": "FINISHED",
+      "venue": "Stadium",
+      "matchday": 1,
+      "stage": "REGULAR_SEASON",
+      "group": null,
+      "lastUpdated": "2022-01-11T15:00:00Z",
+      "homeTeam": {
+        "id": 65,
+        "name": "Manchester City FC",
+        "shortName": "Man City",
+        "tla": "MCI",
+        "crest": "https://crests.football-data.org/65.png"
+      },
+      "awayTeam": {
+        "id": 1,
+        "name": "Club 1",
+        "shortName": "C1",
+        "tla": "C1",
+        "crest": "https://crests.football-data.org/1.png"
+      },
+      "score": {
+        "winner": null,
+        "duration": "REGULAR",
+        "fullTime": {
+          "home": 3,
+          "away": 0
+        },
+        "halfTime": {
+          "home": 0,
+          "away": 1
+        }
+      },
+      "goals": [],
+      "referees": [
+        {
+          "id": 9,
+          "name": "Ref"
+        }
+      ],
+      "minute": "90",
+      "injuryTime": null
+    },
+    {
+      "area": {
+        "id": 1,
+        "name": "x",
+        "code": "X",
+        "flag": null
+      },
+      "competition": {
+        "id": 2021,
+        "name": "Premier League",
+        "code": "PL",
+        "type": "LEAGUE",
+        "emblem": "https://crests.football-data.org/PL.png"
+      },
+      "season": {
+        "id": 742,
+        "startDate": "2021-08-13",
+        "endDate": "2022-05-14",
+        "currentMatchday": 34,
+        "winner": null
+      },
+      "id": 2002,
+      "utcDate": "2022-02-12T15:00:00Z",
+      "status": "FINISHED",
+      "venue": "Stadium",
+      "matchday": 2,
+      "stage": "REGULAR_SEASON",
+      "group": null,
+      "lastUpdated": "2022-02-12T15:00:00Z",
+      "homeTeam": {
+        "id": 2,
+        "name": "Club 2",
+        "shortName": "C2",
+        "tla": "C2",
+        "crest": "https://crests.football-data.org/2.png"
+      },
+      "awayTeam": {
+        "id": 65,
+        "name": "Manchester City FC",
+        "shortName": "Man City",
+        "tla": "MCI",
+        "crest": "https://crests.football-data.org/65.png"
+      },
+      "score": {
+        "winner": null,
+        "duration": "REGULAR",
+        "fullTime": {
+          "home": 1,
+          "away": 1
+        },
+        "halfTime": {
+          "home": 0,
+          "away": 1
+        }
+      },
+      "goals": [],
+      "referees": [
+        {
+          "id": 9,
+          "name": "Ref"
+        }
+      ],
+      "minute": "90",
+      "injuryTime": null
+    },
+    {
+      "area": {
+        "id": 1,
+        "name": "x",
+        "code": "X",
+        "flag": null
+      },
+      "competition": {
+        "id": 2021,
+        "name": "Premier League",
+        "code": "PL",
+        "type": "LEAGUE",
+        "emblem": "https://crests.football-data.org/PL.png"
+      },
+      "season": {
+        "id": 742,
+        "startDate": "2021-08-13",
+        "endDate": "2022-05-14",
+        "currentMatchday": 34,
+        "winner": null
+      },
+      "id": 2003,
+      "utcDate": "2022-03-13T15:00:00Z",
+      "status": "FINISHED",
+      "venue": "Stadium",
+      "matchday": 3,
+      "stage": "REGULAR_SEASON",
+      "group": null,
+      "lastUpdated": "2022-03-13T15:00:00Z",
+      "homeTeam": {
+        "id": 65,
+        "name": "Manchester City FC",
+        "shortName": "Man City",
+        "tla": "MCI",
+        "crest": "https://crests.football-data.org/65.png"
+      },
+      "awayTeam": {
+        "id": 3,
+        "name": "Club 3",
+        "shortName": "C3",
+        "tla": "C3",
+        "crest": "https://crests.football-data.org/3.png"
+      },
+      "score": {
+        "winner": null,
+        "duration": "REGULAR",
+        "fullTime": {
+          "home": 0,
+          "away": 2
+        },
+        "halfTime": {
+          "home": 0,
+          "away": 1
+        }
+      },
+      "goals": [],
+      "referees": [
+        {
+          "id": 9,
+          "name": "Ref"
+        }
+      ],
+      "minute": "90",
+      "injuryTime": null
+    },
+    {
+      "area": {
+        "id": 1,
+        "name": "x",
+        "code": "X",
+        "flag": null
+      },
+      "competition": {
+        "id": 2021,
+        "name": "Premier League",
+        "code": "PL",
+        "type": "LEAGUE",
+        "emblem": "https://crests.football-data.org/PL.png"
+      },
+      "season": {
+        "id": 742,
+        "startDate": "2021-08-13",
+        "endDate": "2022-05-14",
+        "currentMatchday": 34,
+        "winner": null
+      },
+      "id": 2004,
+      "utcDate": "2022-04-14T15:00:00Z",
+      "status": "FINISHED",
+      "venue": "Stadium",
+      "matchday": 4,
+      "stage": "REGULAR_SEASON",
+      "group": null,
+      "lastUpdated": "2022-04-14T15:00:00Z",
+      "homeTeam": {
+        "id": 4,
+        "name": "Club 4",
+        "shortName": "C4",
+        "tla": "C4",
+        "crest": "https://crests.football-data.org/4.png"
+      },
+      "awayTeam": {
+        "id": 65,
+        "name": "Manchester City FC",
+        "shortName": "Man City",
+        "tla": "MCI",
+        "crest": "https://crests.football-data.org/65.png"
+      },
+      "score": {
+        "winner": null,
+        "duration": "REGULAR",
+        "fullTime": {
+          "home": 2,
+          "away": 1
+        },
+        "halfTime": {
+          "home": 0,
+          "away": 1
+        }
+      },
+      "goals": [],
+      "referees": [
+        {
+          "id": 9,
+          "name": "Ref"
+        }
+      ],
+      "minute": "90",
+      "injuryTime": null
+    },
+    {
+      "area": {
+        "id": 1,
+        "name": "x",
+        "code": "X",
+        "flag": null
+      },
+      "competition": {
+        "id": 2021,
+        "name": "Premier League",
+        "code": "PL",
+        "type": "LEAGUE",
+        "emblem": "https://crests.football-data.org/PL.png"
+      },
+      "season": {
+        "id": 742,
+        "startDate": "2021-08-13",
+        "endDate": "2022-05-14",
+        "currentMatchday": 34,
+        "winner": null
+      },
+      "id": 2005,
+      "utcDate": "2022-05-15T15:00:00Z",
+      "status": "FINISHED",
+      "venue": "Stadium",
+      "matchday": 5,
+      "stage": "REGULAR_SEASON",
+      "group": null,
+      "lastUpdated": "2022-05-15T15:00:00Z",
+      "homeTeam": {
+        "id": 65,
+        "name": "Manchester City FC",
+        "shortName": "Man City",
+        "tla": "MCI",
+        "crest": "https://crests.football-data.org/65.png"
+      },
+      "awayTeam": {
+        "id": 5,
+        "name": "Club 5",
+        "shortName": "C5",
+        "tla": "C5",
+        "crest": "https://crests.football-data.org/5.png"
+      },
+      "score": {
+        "winner": null,
+        "duration": "REGULAR",
+        "fullTime": {
+          "home": 1,
+          "away": 0
+        },
+        "halfTime": {
+          "home": 0,
+          "away": 1
+        }
+      },
+      "goals": [],
+      "referees": [
+        {
+          "id": 9,
+          "name": "Ref"
+        }
+      ],
+      "minute": "90",
+      "injuryTime": null
+    },
+    {
+      "area": {
+        "id": 1,
+        "name": "x",
+        "code": "X",
+        "flag": null
+      },
+      "competition": {
+        "id": 2021,
+        "name": "Premier League",
+        "code": "PL",
+        "type": "LEAGUE",
+        "emblem": "https://crests.football-data.org/PL.png"
+      },
+      "season": {
+        "id": 742,
+        "startDate": "2021-08-13",
+        "endDate": "2022-05-14",
+        "currentMatchday": 34,
+        "winner": null
+      },
+      "id": 2006,
+      "utcDate": "2022-06-16T15:00:00Z",
+      "status": "FINISHED",
+      "venue": "Stadium",
+      "matchday": 6,
+      "stage": "REGULAR_SEASON",
+      "group": null,
+      "lastUpdated": "2022-06-16T15:00:00Z",
+      "homeTeam": {
+        "id": 6,
+        "name": "Club 6",
+        "shortName": "C6",
+        "tla": "C6",
+        "crest": "https://crests.football-data.org/6.png"
+      },
+      "awayTeam": {
+        "id": 65,
+        "name": "Manchester City FC",
+        "shortName": "Man City",
+        "tla": "MCI",
+        "crest": "https://crests.football-data.org/65.png"
+      },
+      "score": {
+        "winner": null,
+        "duration": "REGULAR",
+        "fullTime": {
+          "home": 2,
+          "away": 2
+        },
+        "halfTime": {
+          "home": 0,
+          "away": 1
+        }
+      },
+      "goals": [],
+      "referees": [
+        {
+          "id": 9,
+          "name": "Ref"
+        }
+      ],
+      "minute": "90",
+      "injuryTime": null
+    },
+    {
+      "area": {
+        "id": 1,
+        "name": "x",
+        "code": "X",
+        "flag": null
+      },
+      "competition": {
+        "id": 2021,
+        "name": "Premier League",
+        "code": "PL",
+        "type": "LEAGUE",
+        "emblem": "https://crests.football-data.org/PL.png"
+      },
+      "season": {
+        "id": 742,
+        "startDate": "2021-08-13",
+        "endDate": "2022-05-14",
+        "currentMatchday": 34,
+        "winner": null
+      },
+      "id": 2007,
+      "utcDate": "2022-07-17T15:00:00Z",
+      "status": "FINISHED",
+      "venue": "Stadium",
+      "matchday": 7,
+      "stage": "REGULAR_SEASON",
+      "group": null,
+      "lastUpdated": "2022-07-17T15:00:00Z",
+      "homeTeam": {
+        "id": 65,
+        "name": "Manchester City FC",
+        "shortName": "Man City",
+        "tla": "MCI",
+        "crest": "https://crests.football-data.org/65.png"
+      },
+      "awayTeam": {
+        "id": 7,
+        "name": "Club 7",
+        "shortName": "C7",
+        "tla": "C7",
+        "crest": "https://crests.football-data.org/7.png"
+      },
+      "score": {
+        "winner": null,
+        "duration": "REGULAR",
+        "fullTime": {
+          "home": 0,
+          "away": 1
+        },
+        "halfTime": {
+          "home": 0,
+          "away": 1
+        }
+      },
+      "goals": [],
+      "referees": [
+        {
+          "id": 9,
+          "name": "Ref"
+        }
+      ],
+      "minute": "90",
+      "injuryTime": null
+    },
+    {
+      "area": {
+        "id": 1,
+        "name": "x",
+        "code": "X",
+        "flag": null
+      },
+      "competition": {
+        "id": 2021,
+        "name": "Premier League",
+        "code": "PL",
+        "type": "LEAGUE",
+        "emblem": "https://crests.football-data.org/PL.png"
+      },
+      "season": {
+        "id": 742,
+        "startDate": "2021-08-13",
+        "endDate": "2022-05-14",
+        "currentMatchday": 34,
+        "winner": null
+      },
+      "id": 2100,
+      "utcDate": "2022-05-22T15:00:00Z",
+      "status": "SCHEDULED",
+      "venue": "Stadium",
+      "matchday": 34,
+      "stage": "REGULAR_SEASON",
+      "group": null,
+      "lastUpdated": "2022-05-22T15:00:00Z",
+      "homeTeam": {
+        "id": 65,
+        "name": "Manchester City FC",
+        "shortName": "Man City",
+        "tla": "MCI",
+        "crest": "https://crests.football-data.org/65.png"
+      },
+      "awayTeam": {
+        "id": 90,
+        "name": "Club 90",
+        "shortName": "C90",
+        "tla": "C0",
+        "crest": "https://crests.football-data.org/90.png"
+      },
+      "score": {
+        "winner": null,
+        "duration": "REGULAR",
+        "fullTime": {
+          "home": null,
+          "away": null
+        },
+        "halfTime": {
+          "home": 0,
+          "away": 1
+        }
+      },
+      "goals": [],
+      "referees": [
+        {
+          "id": 9,
+          "name": "Ref"
+        }
+      ]
+    },
+    {
+      "area": {
+        "id": 1,
+        "name": "x",
+        "code": "X",
+        "flag": null
+      },
+      "competition": {
+        "id": 2021,
+        "name": "Premier League",
+        "code": "PL",
+        "type": "LEAGUE",
+        "emblem": "https://crests.football-data.org/PL.png"
+      },
+      "season": {
+        "id": 742,
+        "startDate": "2021-08-13",
+        "endDate": "2022-05-14",
+        "currentMatchday": 34,
+        "winner": null
+      },
+      "id": 2101,
+      "utcDate": "2022-05-29T15:00:00Z",
+      "status": "TIMED",
+      "venue": "Stadium",
+      "matchday": 34,
+      "stage": "REGULAR_SEASON",
+      "group": null,
+      "lastUpdated": "2022-05-29T15:00:00Z",
+      "homeTeam": {
+        "id": 91,
+        "name": "Club 91",
+        "shortName": "C91",
+        "tla": "C1",
+        "crest": "https://crests.football-data.org/91.png"
+      },
+      "awayTeam": {
+        "id": 65,
+        "name": "Manchester City FC",
+        "shortName": "Man City",
+        "tla": "MCI",
+        "crest": "https://crests.football-data.org/65.png"
+      },
+      "score": {
+        "winner": null,
+        "duration": "REGULAR",
+        "fullTime": {
+          "home": null,
+          "away": null
+        },
+        "halfTime": {
+          "home": 0,
+          "away": 1
+        }
+      },
+      "goals": [],
+      "referees": [
+        {
+          "id": 9,
+          "name": "Ref"
+        }
+      ]
+    }
+  ]
+}
