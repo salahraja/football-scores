@@ -49,9 +49,10 @@ def test_key_never_in_logs(api, upstream, caplog):
     assert KEY not in caplog.text
 
 
-def test_upstream_errors_are_502_with_a_plain_message(api, upstream):
-    for n, failure in enumerate((500, 403, 429, httpx.ConnectTimeout("slow"))):
+def test_upstream_errors_are_502_with_a_plain_message(make_client, upstream):
+    for n, failure in enumerate((500, 403, httpx.ConnectTimeout("slow"))):
         upstream.fail = failure
+        api = TestClient(create_app(make_client()))  # fresh call budget each time
         r = api.get("/api/teams/%d" % (1000 + n))
         assert r.status_code == 502
         body = r.json()

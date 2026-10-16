@@ -1,0 +1,90 @@
+{
+  "count": 2,
+  "competition": {
+    "id": 2019,
+    "name": "Serie A",
+    "code": "SA",
+    "type": "LEAGUE",
+    "emblem": "https://crests.football-data.org/SA.png"
+  },
+  "season": {
+    "id": 1,
+    "startDate": "2021-08-13",
+    "endDate": "2022-05-22"
+  },
+  "teams": [
+    {
+      "id": 109,
+      "name": "Juventus FC",
+      "shortName": "Juventus",
+      "tla": "JUV",
+      "crest": "https://crests.football-data.org/109.png",
+      "address": "x",
+      "website": "http://example.org",
+      "founded": 1897,
+      "clubColors": "Blue / White",
+      "venue": "Allianz Stadium",
+      "runningCompetitions": [
+        {
+          "id": 0,
+          "name": "SA",
+          "code": "SA",
+          "type": "LEAGUE",
+          "emblem": "https://crests.football-data.org/SA.png"
+        },
+        {
+          "id": 0,
+          "name": "CL",
+          "code": "CL",
+          "type": "LEAGUE",
+          "emblem": "https://crests.football-data.org/CL.png"
+        }
+      ],
+      "coach": {
+        "id": 1,
+        "name": "Pep"
+      },
+      "marketValue": 1,
+      "squad": [
+        {
+          "id": 11656,
+          "name": "A Player",
+          "position": "Goalkeeper"
+        }
+      ]
+    },
+    {
+      "id": 98,
+      "name": "AC Milan",
+      "shortName": "Milan",
+      "tla": "MIL",
+      "crest": "https://crests.football-data.org/98.png",
+      "address": "x",
+      "website": "http://example.org",
+      "founded": 1899,
+      "clubColors": "Blue / White",
+      "venue": "San Siro",
+      "runningCompetitions": [
+        {
+          "id": 0,
+          "name": "SA",
+          "code": "SA",
+          "type": "LEAGUE",
+          "emblem": "https://crests.football-data.org/SA.png"
+        }
+      ],
+      "coach": {
+        "id": 1,
+        "name": "Pep"
+      },
+      "marketValue": 1,
+      "squad": [
+        {
+          "id": 11656,
+          "name": "A Player",
+          "position": "Goalkeeper"
+        }
+      ]
+    }
+  ]
+}

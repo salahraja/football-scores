@@ -40,7 +40,16 @@
         "name": "Manchester City FC",
         "shortName": "Man City",
         "tla": "MCI",
-        "crest": "https://crests.football-data.org/65.png"
+        "crest": "https://crests.football-data.org/65.png",
+        "coach": {
+          "id": 1,
+          "name": "Some Coach",
+          "nationality": "Italy"
+        },
+        "leagueRank": 3,
+        "formation": "4-2-3-1",
+        "lineup": [],
+        "bench": []
       },
       "awayTeam": {
         "id": 1,
@@ -68,7 +77,7 @@
           "name": "Ref"
         }
       ],
-      "minute": "90",
+      "minute": 90,
       "injuryTime": null
     },
     {
@@ -112,7 +121,16 @@
         "name": "Manchester City FC",
         "shortName": "Man City",
         "tla": "MCI",
-        "crest": "https://crests.football-data.org/65.png"
+        "crest": "https://crests.football-data.org/65.png",
+        "coach": {
+          "id": 1,
+          "name": "Some Coach",
+          "nationality": "Italy"
+        },
+        "leagueRank": 3,
+        "formation": "4-2-3-1",
+        "lineup": [],
+        "bench": []
       },
       "score": {
         "winner": null,
@@ -133,7 +151,7 @@
           "name": "Ref"
         }
       ],
-      "minute": "90",
+      "minute": 90,
       "injuryTime": null
     },
     {
@@ -170,7 +188,16 @@
         "name": "Manchester City FC",
         "shortName": "Man City",
         "tla": "MCI",
-        "crest": "https://crests.football-data.org/65.png"
+        "crest": "https://crests.football-data.org/65.png",
+        "coach": {
+          "id": 1,
+          "name": "Some Coach",
+          "nationality": "Italy"
+        },
+        "leagueRank": 3,
+        "formation": "4-2-3-1",
+        "lineup": [],
+        "bench": []
       },
       "awayTeam": {
         "id": 3,
@@ -198,7 +225,7 @@
           "name": "Ref"
         }
       ],
-      "minute": "90",
+      "minute": 90,
       "injuryTime": null
     },
     {
@@ -242,7 +269,16 @@
         "name": "Manchester City FC",
         "shortName": "Man City",
         "tla": "MCI",
-        "crest": "https://crests.football-data.org/65.png"
+        "crest": "https://crests.football-data.org/65.png",
+        "coach": {
+          "id": 1,
+          "name": "Some Coach",
+          "nationality": "Italy"
+        },
+        "leagueRank": 3,
+        "formation": "4-2-3-1",
+        "lineup": [],
+        "bench": []
       },
       "score": {
         "winner": null,
@@ -263,7 +299,7 @@
           "name": "Ref"
         }
       ],
-      "minute": "90",
+      "minute": 90,
       "injuryTime": null
     },
     {
@@ -300,7 +336,16 @@
         "name": "Manchester City FC",
         "shortName": "Man City",
         "tla": "MCI",
-        "crest": "https://crests.football-data.org/65.png"
+        "crest": "https://crests.football-data.org/65.png",
+        "coach": {
+          "id": 1,
+          "name": "Some Coach",
+          "nationality": "Italy"
+        },
+        "leagueRank": 3,
+        "formation": "4-2-3-1",
+        "lineup": [],
+        "bench": []
       },
       "awayTeam": {
         "id": 5,
@@ -328,7 +373,7 @@
           "name": "Ref"
         }
       ],
-      "minute": "90",
+      "minute": 90,
       "injuryTime": null
     },
     {
@@ -372,7 +417,16 @@
         "name": "Manchester City FC",
         "shortName": "Man City",
         "tla": "MCI",
-        "crest": "https://crests.football-data.org/65.png"
+        "crest": "https://crests.football-data.org/65.png",
+        "coach": {
+          "id": 1,
+          "name": "Some Coach",
+          "nationality": "Italy"
+        },
+        "leagueRank": 3,
+        "formation": "4-2-3-1",
+        "lineup": [],
+        "bench": []
       },
       "score": {
         "winner": null,
@@ -393,7 +447,7 @@
           "name": "Ref"
         }
       ],
-      "minute": "90",
+      "minute": 90,
       "injuryTime": null
     },
     {
@@ -430,7 +484,16 @@
         "name": "Manchester City FC",
         "shortName": "Man City",
         "tla": "MCI",
-        "crest": "https://crests.football-data.org/65.png"
+        "crest": "https://crests.football-data.org/65.png",
+        "coach": {
+          "id": 1,
+          "name": "Some Coach",
+          "nationality": "Italy"
+        },
+        "leagueRank": 3,
+        "formation": "4-2-3-1",
+        "lineup": [],
+        "bench": []
       },
       "awayTeam": {
         "id": 7,
@@ -458,7 +521,7 @@
           "name": "Ref"
         }
       ],
-      "minute": "90",
+      "minute": 90,
       "injuryTime": null
     },
     {
@@ -495,7 +558,16 @@
         "name": "Manchester City FC",
         "shortName": "Man City",
         "tla": "MCI",
-        "crest": "https://crests.football-data.org/65.png"
+        "crest": "https://crests.football-data.org/65.png",
+        "coach": {
+          "id": 1,
+          "name": "Some Coach",
+          "nationality": "Italy"
+        },
+        "leagueRank": 3,
+        "formation": "4-2-3-1",
+        "lineup": [],
+        "bench": []
       },
       "awayTeam": {
         "id": 90,
@@ -565,7 +637,16 @@
         "name": "Manchester City FC",
         "shortName": "Man City",
         "tla": "MCI",
-        "crest": "https://crests.football-data.org/65.png"
+        "crest": "https://crests.football-data.org/65.png",
+        "coach": {
+          "id": 1,
+          "name": "Some Coach",
+          "nationality": "Italy"
+        },
+        "leagueRank": 3,
+        "formation": "4-2-3-1",
+        "lineup": [],
+        "bench": []
       },
       "score": {
         "winner": null,

@@ -62,7 +62,7 @@ def test_stale_array_response_uses_header(api, upstream, clock):
     upstream.fail = 500
     r = api.get("/api/today")
     assert r.status_code == 200 and r.headers["X-Stale"] == "true"
-    assert isinstance(r.json(), list)
+    assert r.json()["stale"] is True
 
 
 def test_upstream_down_serves_stale_when_cached(api, upstream, clock):

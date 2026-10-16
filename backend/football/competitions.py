@@ -1,8 +1,16 @@
-"""The six competitions the app serves, and their qualification/relegation zones.
+"""The six competitions the app serves, and their qualification/relegation zones for 2026-27.
 
 Zones are a small constant table, not API data (football-data.org does not give them).
-They follow the usual European-place layout and change a little each season with UEFA
-rules, so treat them as the common case: `from` and `to` are inclusive table positions.
+`from` and `to` are inclusive table positions.
+
+Source: the UEFA Champions League 2026-27 access list (UEFA regulations, as summarised at
+https://en.wikipedia.org/wiki/2026%E2%80%9327_UEFA_Champions_League, updated 14 Oct 2026):
+the two associations with the best 2025-26 coefficients, England and Spain, get a fifth
+league-phase place (a European Performance Spot, EPS). France's fourth place is treated as
+a league-path qualifying place (taken from the review of this table, not from that page).
+The Europa/Conference rows are the usual layout, not sourced. EPS goes to different associations
+from year to year, and the Europa/Conference positions below move with it and with
+domestic cup winners, so re-check this table every summer.
 """
 
 CREST_URL = "https://crests.football-data.org/{code}.png"
@@ -29,14 +37,15 @@ def _zone(label, first, last):
 
 ZONES = {
     "PL": {
-        "championsLeague": _zone("Champions League", 1, 4),
-        "europaLeague": _zone("Europa League", 5, 5),
+        "championsLeague": _zone("Champions League", 1, 5),
+        "europaLeague": _zone("Europa League", 6, 6),
+        "conferenceLeague": _zone("Conference League", 7, 7),
         "relegation": _zone("Relegation", 18, 20),
     },
     "PD": {
-        "championsLeague": _zone("Champions League", 1, 4),
-        "europaLeague": _zone("Europa League", 5, 6),
-        "conferenceLeague": _zone("Conference League", 7, 7),
+        "championsLeague": _zone("Champions League", 1, 5),
+        "europaLeague": _zone("Europa League", 6, 7),
+        "conferenceLeague": _zone("Conference League", 8, 8),
         "relegation": _zone("Relegation", 18, 20),
     },
     "BL1": {
@@ -54,8 +63,9 @@ ZONES = {
     },
     "FL1": {
         "championsLeague": _zone("Champions League", 1, 3),
-        "europaLeague": _zone("Europa League", 4, 4),
-        "conferenceLeague": _zone("Conference League", 5, 5),
+        "championsLeagueQualifying": _zone("Champions League qualifying (league path)", 4, 4),
+        "europaLeague": _zone("Europa League", 5, 5),
+        "conferenceLeague": _zone("Conference League", 6, 6),
         "relegationPlayoff": _zone("Relegation play-off", 16, 16),
         "relegation": _zone("Relegation", 17, 18),
     },

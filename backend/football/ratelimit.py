@@ -25,3 +25,21 @@ class RateLimiter:
                 return False
             self._stamps.append(now)
             return True
+
+
+class PerKeyLimiter:
+    """A RateLimiter per key (here: per client address)."""
+
+    MAX_KEYS = 5000
+
+    def __init__(self, limit, window, clock):
+        self.limit, self.window, self.clock = limit, window, clock
+        self._limiters = {}
+        self._lock = threading.Lock()
+
+    def try_acquire(self, key):
+        with self._lock:
+            if len(self._limiters) >= self.MAX_KEYS and key not in self._limiters:
+                self._limiters.clear()  # crude, but bounds memory under an address flood
+            limiter = self._limiters.setdefault(key, RateLimiter(self.limit, self.window, self.clock))
+        return limiter.try_acquire()

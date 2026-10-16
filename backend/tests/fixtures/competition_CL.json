@@ -1,0 +1,22 @@
+{
+  "id": 2001,
+  "area": {
+    "id": 1,
+    "name": "x",
+    "code": "X",
+    "flag": null
+  },
+  "name": "UEFA Champions League",
+  "code": "CL",
+  "type": "LEAGUE",
+  "emblem": "https://crests.football-data.org/CL.png",
+  "currentSeason": {
+    "id": 999,
+    "startDate": "2021-08-21",
+    "endDate": "2022-05-22",
+    "currentMatchday": 8,
+    "winner": null
+  },
+  "seasons": [],
+  "lastUpdated": "2022-03-20T08:58:54Z"
+}

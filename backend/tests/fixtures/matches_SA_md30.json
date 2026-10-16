@@ -94,7 +94,7 @@
           "name": "Ref"
         }
       ],
-      "minute": "90",
+      "minute": 90,
       "injuryTime": null
     }
   ]

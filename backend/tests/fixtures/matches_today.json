@@ -88,8 +88,8 @@
           "name": "Ref"
         }
       ],
-      "minute": "90",
-      "injuryTime": null
+      "minute": 90,
+      "injuryTime": 5
     },
     {
       "area": {
@@ -171,7 +171,7 @@
           "name": "Ref"
         }
       ],
-      "minute": "67",
+      "minute": 67,
       "injuryTime": null
     },
     {

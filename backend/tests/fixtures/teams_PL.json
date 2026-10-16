@@ -1,0 +1,137 @@
+{
+  "count": 3,
+  "competition": {
+    "id": 2021,
+    "name": "Premier League",
+    "code": "PL",
+    "type": "LEAGUE",
+    "emblem": "https://crests.football-data.org/PL.png"
+  },
+  "season": {
+    "id": 733,
+    "startDate": "2021-08-13",
+    "endDate": "2022-05-22"
+  },
+  "teams": [
+    {
+      "id": 65,
+      "name": "Manchester City FC",
+      "shortName": "Man City",
+      "tla": "MCI",
+      "crest": "https://crests.football-data.org/65.png",
+      "address": "x",
+      "website": "http://example.org",
+      "founded": 1880,
+      "clubColors": "Blue / White",
+      "venue": "Etihad Stadium",
+      "runningCompetitions": [
+        {
+          "id": 0,
+          "name": "PL",
+          "code": "PL",
+          "type": "LEAGUE",
+          "emblem": "https://crests.football-data.org/PL.png"
+        },
+        {
+          "id": 0,
+          "name": "CL",
+          "code": "CL",
+          "type": "LEAGUE",
+          "emblem": "https://crests.football-data.org/CL.png"
+        }
+      ],
+      "coach": {
+        "id": 1,
+        "name": "Pep"
+      },
+      "marketValue": 1,
+      "squad": [
+        {
+          "id": 11656,
+          "name": "A Player",
+          "position": "Goalkeeper"
+        }
+      ]
+    },
+    {
+      "id": 64,
+      "name": "Liverpool FC",
+      "shortName": "Liverpool",
+      "tla": "LIV",
+      "crest": "https://crests.football-data.org/64.png",
+      "address": "x",
+      "website": "http://example.org",
+      "founded": 1892,
+      "clubColors": "Blue / White",
+      "venue": "Anfield",
+      "runningCompetitions": [
+        {
+          "id": 0,
+          "name": "PL",
+          "code": "PL",
+          "type": "LEAGUE",
+          "emblem": "https://crests.football-data.org/PL.png"
+        },
+        {
+          "id": 0,
+          "name": "CL",
+          "code": "CL",
+          "type": "LEAGUE",
+          "emblem": "https://crests.football-data.org/CL.png"
+        }
+      ],
+      "coach": {
+        "id": 1,
+        "name": "Pep"
+      },
+      "marketValue": 1,
+      "squad": [
+        {
+          "id": 11656,
+          "name": "A Player",
+          "position": "Goalkeeper"
+        }
+      ]
+    },
+    {
+      "id": 61,
+      "name": "Chelsea FC",
+      "shortName": "Chelsea",
+      "tla": "CHE",
+      "crest": "https://crests.football-data.org/61.png",
+      "address": "x",
+      "website": "http://example.org",
+      "founded": 1905,
+      "clubColors": "Blue / White",
+      "venue": "Stamford Bridge",
+      "runningCompetitions": [
+        {
+          "id": 0,
+          "name": "PL",
+          "code": "PL",
+          "type": "LEAGUE",
+          "emblem": "https://crests.football-data.org/PL.png"
+        },
+        {
+          "id": 0,
+          "name": "CL",
+          "code": "CL",
+          "type": "LEAGUE",
+          "emblem": "https://crests.football-data.org/CL.png"
+        }
+      ],
+      "coach": {
+        "id": 1,
+        "name": "Pep"
+      },
+      "marketValue": 1,
+      "squad": [
+        {
+          "id": 11656,
+          "name": "A Player",
+          "position": "Goalkeeper"
+        }
+      ]
+    }
+  ]
+}

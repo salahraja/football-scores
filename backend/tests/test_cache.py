@@ -10,7 +10,7 @@ CASES = [
     ("/api/today", "/matches", 60),
     ("/api/competitions/SA/matches", "/competitions/SA/matches", 5 * 60),
     ("/api/competitions/PL/standings", "/competitions/PL/standings", 10 * 60),
-    ("/api/teams/65", "/teams/65", 60 * 60),
+    ("/api/teams/65", "/competitions/PL/teams", 24 * 60 * 60),
 ]
 
 
@@ -31,7 +31,7 @@ def test_team_matches_use_the_five_minute_ttl(api, upstream, clock):
     clock.advance(5 * 60)
     api.get("/api/teams/65")
     assert count(upstream, "/teams/65/matches") == 2
-    assert count(upstream, "/teams/65") == 1
+    assert count(upstream, "/competitions/PL/teams") == 1
 
 
 def test_different_matchdays_are_cached_separately(api, upstream):

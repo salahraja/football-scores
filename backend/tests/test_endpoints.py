@@ -17,19 +17,22 @@ def test_competitions_shape_and_no_upstream_call(api, upstream):
 def test_today_shape(api, upstream):
     r = api.get("/api/today")
     assert r.status_code == 200
-    body = r.json()
+    envelope = r.json()
+    assert set(envelope) == {"matches", "stale", "fetchedAt", "age"}
+    assert envelope["stale"] is False and envelope["fetchedAt"] == "2022-05-14T12:00:00Z"
+    body = envelope["matches"]
     # The fixture has one match on the next day; it is dropped.
     assert [m["id"] for m in body] == [329400, 1003, 1004]
     for m in body:
         assert MATCH_KEYS <= set(m)
         assert set(m["homeTeam"]) == TEAM_KEYS
-        assert set(m["score"]) == {"home", "away"}
+        assert {"home", "away"} <= set(m["score"])
         assert set(m["competition"]) == {"code", "name", "emblem"}
     live = body[1]
     assert live["status"] == "IN_PLAY" and live["minute"] == 67
-    assert live["score"] == {"home": 1, "away": 1}
+    assert live["score"] == {"home": 1, "away": 1, "duration": "REGULAR"}
     assert "minute" not in body[0]  # finished match: no live minute
-    assert body[2]["score"] == {"home": None, "away": None}
+    assert body[2]["score"]["home"] is None and body[2]["score"]["away"] is None
     _, params, _ = upstream.calls[0]
     assert params["competitions"] == "PL,PD,BL1,SA,FL1,CL"
     assert params["dateFrom"] == "2022-05-14"
@@ -92,7 +95,9 @@ def test_team_shape(api):
     assert [m["id"] for m in recent] == [2007, 2006, 2005, 2004, 2003]  # newest first
     assert [m["result"] for m in recent] == ["L", "D", "W", "L", "L"]
     assert body["positions"] == [{"competition": "PL", "position": 1, "points": 90}]
-    assert body["stale"] is False
+    # City also play in the Champions League; that table is not fetched cold, so the page
+    # says it is partial (stale) rather than spending a third upstream call.
+    assert body["stale"] is True
     assert "squad" not in body and "squad" not in body["team"]
 
 
