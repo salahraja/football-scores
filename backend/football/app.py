@@ -26,7 +26,7 @@ from .client import (
     UpstreamBusy,
     UpstreamError,
 )
-from .competitions import CODES, COMPETITIONS
+from .competitions import CODES, COMPETITIONS, TEAM_SEARCH_ORDER
 from .ratelimit import PerKeyLimiter
 
 log = logging.getLogger("football.app")
@@ -47,7 +47,8 @@ class Meta:
 
     def __init__(self, client):
         self.client = client
-        self.stale = False
+        self.stale = False  # some of it is old data
+        self.partial = False  # some of it was left out to save upstream calls
         self.oldest = None
 
     def add(self, fetched):
@@ -61,6 +62,7 @@ class Meta:
             response.headers["X-Stale"] = "true"
         return {
             "stale": self.stale,
+            "partial": self.partial,
             "fetchedAt": iso(self.oldest),
             "age": max(0, int(self.client.clock() - self.oldest)),
         }
@@ -206,24 +208,29 @@ def create_app(client=None):
         body = standings_for(code_or_404(code), meta)
         return {**body, **meta.out(response)}
 
-    def team_index(meta):
-        """team id -> {team, codes}, from the six competitions' team lists (cached 24 h).
+    def find_team(team_id, meta):
+        """Look the team up in the six competitions' team lists, one list at a time.
 
-        Returns (index, first_error). first_error is set when a list could not be had, which
-        means "not in the index" is not yet proof that a team does not exist.
+        Lists are cached for 24 h and fetched at low priority, so a cold process never spends
+        the calls reserved for the home views. Stops at the first list that has the team.
+        Returns (team or None, first_error). A team is only known not to exist once every list
+        has been read; until then the caller gets the error that stopped the search.
         """
-        index, first_error = {}, None
-        for code in CODES:
+        first_error = None
+        for code in TEAM_SEARCH_ORDER:
             try:
-                data = meta.add(client.get("/competitions/%s/teams" % code, TTL_INDEX, check=shape.ok_teams))
+                data = meta.add(
+                    client.get("/competitions/%s/teams" % code, TTL_INDEX, check=shape.ok_teams, low_priority=True)
+                )
             except NotFound:
                 continue
             except SOFT_FAILURES as exc:
                 first_error = first_error or exc
                 continue
             for t in data["teams"]:
-                index.setdefault(t["id"], {"team": t, "codes": []})["codes"].append(code)
-        return index, first_error
+                if t["id"] == team_id:
+                    return t, code, first_error
+        return None, None, first_error
 
     def client_address(request):
         forwarded = request.headers.get("x-forwarded-for")
@@ -236,37 +243,48 @@ def create_app(client=None):
         if not team_limiter.try_acquire(client_address(request)):
             raise HTTPException(429, "Too many team requests; try again in a minute", {"Retry-After": "60"})
         meta = Meta(client)
-        index, index_error = team_index(meta)
-        found = index.get(team_id)
-        if found is None:
-            if index_error is not None:
-                raise index_error
+        info, found_in, list_error = find_team(team_id, meta)
+        if info is None:
+            if list_error is not None:
+                raise list_error
             raise HTTPException(404, "Unknown team")
-        info = found["team"]
+        if list_error is not None:
+            meta.partial = True  # a list could not be read before the team turned up
 
-        data = meta.add(client.get("/teams/%d/matches" % team_id, TTL_MATCHES, check=shape.ok_matches))
-        matches = sorted(data["matches"], key=lambda m: m.get("utcDate") or "")
+        try:
+            data = meta.add(client.get("/teams/%d/matches" % team_id, TTL_MATCHES, check=shape.ok_matches, low_priority=True))
+            matches = sorted(data["matches"], key=lambda m: m.get("utcDate") or "")
+        except SOFT_FAILURES:
+            matches, meta.partial = [], True
         finished = [m for m in matches if shape.result_for(team_id, m)]
         upcoming = [m for m in matches if m.get("status") in shape.UPCOMING_STATUSES]
-        recent = [{**shape.match(m), "result": shape.result_for(team_id, m)} for m in finished[-5:]]
+        recent = []
+        for m in finished[-5:]:
+            entry = {**shape.match(m), "result": shape.result_for(team_id, m)}
+            shootout = shape.shootout_for(team_id, m)
+            if shootout:
+                entry["shootout"] = shootout
+            recent.append(entry)
 
         # Positions come from cached league tables; at most one table is fetched cold, so
-        # the whole page costs no more than two upstream calls once the index is warm.
+        # the whole page costs no more than two upstream calls. A table left out is partial.
+        running = [c.get("code") for c in info.get("runningCompetitions") or []]
+        codes = [c for c in CODES if c in running] or [found_in]
         positions, cold = [], 1
-        for code in found["codes"]:
+        for code in codes:
             try:
-                table = standings_for(code, meta, cache_only=True)
+                table = standings_for(code, meta, cache_only=True, low_priority=True)
             except CacheMiss:
                 if cold <= 0:
-                    meta.stale = True  # a position was left out
+                    meta.partial = True
                     continue
                 cold -= 1
                 try:
-                    table = standings_for(code, meta)
+                    table = standings_for(code, meta, low_priority=True)
                 except NotFound:
                     continue  # this competition has no table (a cup)
                 except SOFT_FAILURES:
-                    meta.stale = True
+                    meta.partial = True
                     continue
             row = next((r for r in table["table"] if r["team"]["id"] == team_id), None)
             if row:

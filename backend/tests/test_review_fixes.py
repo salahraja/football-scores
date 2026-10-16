@@ -62,28 +62,28 @@ def test_a_failed_flight_wakes_the_waiters_and_is_not_cached(make_client, upstre
 
 # 3. Team ids ----------------------------------------------------------------------------
 
-def test_unknown_team_is_404_with_no_further_upstream_calls(api, upstream):
-    assert api.get("/api/teams/424242").status_code == 404  # builds the index: 6 calls
+def test_unknown_team_is_404_once_the_index_is_complete(api, upstream, clock):
+    # Cold: five lists fit in the budget left after the reserve for the home views, the sixth does not.
+    assert api.get("/api/teams/424242").status_code == 429
+    assert len(upstream.calls) == 5
+    clock.advance(61)
+    assert api.get("/api/teams/424242").status_code == 404  # the sixth list arrives
+    assert set(upstream.paths()) == {"/competitions/%s/teams" % c for c in ["PL", "PD", "BL1", "SA", "FL1", "CL"]}
     used = len(upstream.calls)
-    assert used == 6 and set(upstream.paths()) == {"/competitions/%s/teams" % c for c in
-                                                   ["PL", "PD", "BL1", "SA", "FL1", "CL"]}
     for _ in range(5):
         assert api.get("/api/teams/424242").status_code == 404
-    assert len(upstream.calls) == used
+    assert len(upstream.calls) == used  # now answered from the cache, no calls
 
 
-def test_team_page_costs_at_most_two_cold_calls_once_the_index_is_warm(api, upstream):
-    api.get("/api/teams/424242")
-    before = len(upstream.calls)
+def test_team_page_costs_at_most_two_cold_calls_once_its_list_is_cached(api, upstream):
     body = api.get("/api/teams/65").json()
-    assert len(upstream.calls) - before <= 2
     assert body["positions"] == [{"competition": "PL", "position": 1, "points": 90}]
-    # CL standings were not fetched to stay inside the budget, so the page says it is partial.
-    assert body["stale"] is True
-    # A second team in the same league reuses the cached league table.
+    # CL standings were not fetched to stay inside the budget: partial data, but not old data.
+    assert body["partial"] is True and body["stale"] is False
     before = len(upstream.calls)
     assert api.get("/api/teams/64").status_code == 200
-    assert "/competitions/PL/standings" not in upstream.paths()[before:]
+    new = upstream.paths()[before:]
+    assert len(new) <= 2 and "/competitions/PL/standings" not in new and "/competitions/PL/teams" not in new
 
 
 def test_team_data_comes_from_the_index(api):
@@ -97,9 +97,8 @@ def test_team_index_incomplete_and_not_found_is_an_error_not_a_404(api, upstream
 
 
 def test_teams_are_limited_per_client(api, upstream):
-    api.get("/api/teams/424242")
-    codes = [api.get("/api/teams/424242").status_code for _ in range(30)]
-    assert codes[:29] == [404] * 29 and codes[29] == 429  # 30 per minute, one used above
+    codes = [api.get("/api/teams/65").status_code for _ in range(31)]
+    assert codes[:30] == [200] * 30 and codes[30] == 429  # 30 per minute
     assert api.get("/api/competitions").status_code == 200  # other routes are not limited
 
 

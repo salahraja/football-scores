@@ -57,6 +57,7 @@ class FakeUpstream:
             "/competitions/CL": "competition_CL.json",
             "/competitions/PD": "competition_PD.json",
             "/competitions/PL/standings": "standings_PL.json",
+            "/competitions/SA/standings": "standings_PL.json",  # content is the PL table; only the route matters
             "/competitions/PL/teams": "teams_PL.json",
             "/competitions/CL/teams": "teams_CL.json",
             "/competitions/SA/teams": "teams_SA.json",

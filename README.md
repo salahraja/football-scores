@@ -66,15 +66,15 @@ Competition codes: `PL`, `PD`, `BL1`, `SA` (the default), `FL1`, `CL`. Errors ar
 | `GET /api/competitions/{code}/standings` | `{season: {label, startDate, endDate, currentMatchday}, table: [row], zones, stale, fetchedAt, age}` |
 | `GET /api/teams/{id}` | `{team: {id, name, shortName, crest, venue, founded}, nextMatch, recentMatches, positions: [{competition, position, points}], stale, fetchedAt, age}` |
 
-Every object response ends with `stale` (bool), `fetchedAt` (UTC ISO time of the oldest data in it) and `age` (seconds since then). A stale response also has the header `X-Stale: true`, which the CORS config exposes to browsers.
+Every object response ends with `stale` (bool: some of it is old data), `partial` (bool: some of it was deliberately left out to save upstream calls), `fetchedAt` (UTC ISO time of the oldest data in it) and `age` (seconds since then). A stale response also has the header `X-Stale: true`, which the CORS config exposes to browsers.
 
 `match` is `{id, competition: {code, name, emblem}, utcDate, status, minute?, injuryTime?, homeTeam, awayTeam, score}`, where a team is `{id, name, shortName, crest}`. `minute` and `injuryTime` are integers and appear only while a match is `IN_PLAY`, `PAUSED`, `EXTRA_TIME`, `PENALTY_SHOOTOUT` or `SUSPENDED`.
 
 `score` is `{home, away, duration, penalties?}`. `home`/`away` are the result after 90 minutes plus extra time, never the provider's `fullTime`, which adds the shootout goals. `duration` is `REGULAR`, `EXTRA_TIME` or `PENALTY_SHOOTOUT`; the shootout is `penalties: {home, away}`, present only for `PENALTY_SHOOTOUT`. So a 1-1 game won 6-5 on penalties is `{home: 1, away: 1, duration: "PENALTY_SHOOTOUT", penalties: {home: 6, away: 5}}`.
 
-In `recentMatches` (last 5, newest first) each match also has `result`: `W`, `D` or `L` for that team (a shootout counts as a draw). `nextMatch` is the team's next unfinished match, including one in play. A standings `row` is `{position, team, played, won, draw, lost, goalsFor, goalsAgainst, goalDifference, points, form}`.
+In `recentMatches` (last 5, newest first) each match also has `result`: `W`, `D` or `L` for that team (a shootout counts as a draw), and `shootout`: `W` or `L` when penalties decided it. `nextMatch` is the team's next unfinished match, including one in play. A standings `row` is `{position, team, played, won, draw, lost, goalsFor, goalsAgainst, goalDifference, points, form}`.
 
-The team page checks the id against a 24-hour index built from the six competitions' team lists (six upstream calls when cold, none after), so an unknown id is a 404 without spending the call budget. Once the index is warm a team page makes at most two upstream calls (its fixtures and one league table); positions in tables that are not cached are left out and the page is marked `stale`.
+The team page finds the team by reading the competitions' team lists one at a time (SA, PL, PD, BL1, FL1, CL), stopping at the first that has it; lists are cached for 24 hours. Team pages are low priority: 4 of the 9 calls a minute are kept for the home views (today, standings, matches; matches cost two calls), so a cold start cannot starve them. An id is a 404 only once all six lists have been read; until then the answer is the error that stopped the search (for example 429). Then the page costs at most two more calls (fixtures and one league table). Anything left out to save calls (a table, the fixtures) sets `partial: true` and the page is still returned.
 
 `zones` maps a zone id to `{label, from, to}` (inclusive table positions), for example `"relegation": {"label": "Relegation", "from": 18, "to": 20}`. It comes from a constant table in `backend/football/competitions.py`, not from the API. The 2026-27 Champions League places follow the UEFA access list (England and Spain have a fifth place through the European Performance Spots; see the sources in that file). Those spots go to different countries each year, so the table needs a check every summer.
 
@@ -83,7 +83,7 @@ The team page checks the id against a 24-hour index built from the six competiti
 Every upstream call goes through `football.client.FootballClient`.
 
 - TTLs: today/live 60 s, matches 5 min (also competition details and a team's fixtures), standings 10 min, team index 24 h.
-- Concurrent requests for the same cold key share one upstream call.
+- Concurrent requests for the same cold key share one upstream call; a waiter gives up after 12 s with a 503.
 - At most 9 upstream calls in any 60 seconds across the process (a sliding window on a monotonic clock, so the limit holds for every minute, not just on average).
 - When the budget is spent or football-data.org fails (not for a 404), an expired cached copy up to 24 hours old is served instead and marked stale. With nothing usable cached the answer is 429 (budget), 502 (failure) or 503 (copy too old).
 - A reply of an unexpected shape is a 502 and is not cached.

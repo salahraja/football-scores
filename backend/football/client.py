@@ -21,6 +21,12 @@ TTL_STANDINGS = 10 * 60
 TTL_TEAMS = 60 * 60
 TTL_INDEX = 24 * 60 * 60  # which teams play in which competition
 
+# Of the 9 calls a minute, this many are kept back for the home views (today, standings,
+# matches). Matches cost two calls (competition detail, then the matches), so today +
+# standings + matches need four. Team pages may only spend what is left.
+HOME_RESERVE = 4
+FLIGHT_WAIT = 12  # seconds a request waits on another request's upstream call
+
 MAX_STALE = 24 * 60 * 60  # an expired copy older than this is never served
 
 
@@ -81,11 +87,12 @@ class FootballClient:
         self._flights = {}
         self._flights_lock = threading.Lock()
 
-    def get(self, path, ttl, params=None, check=None, cache_only=False):
+    def get(self, path, ttl, params=None, check=None, cache_only=False, low_priority=False):
         """Return Fetched. Fresh cache, else one upstream call, else a stale copy, else raise.
 
         check(body) -> bool vets an upstream body before it is cached.
         cache_only: fresh cache or CacheMiss, never an upstream call.
+        low_priority: may not use the calls reserved for the home views.
         """
         params = {k: v for k, v in (params or {}).items() if v is not None}
         key = path + "?" + json.dumps(params, sort_keys=True)
@@ -102,13 +109,14 @@ class FootballClient:
             if leader:
                 flight = self._flights[key] = _Flight()
         if not leader:
-            flight.done.wait()
+            if not flight.done.wait(FLIGHT_WAIT):
+                raise UpstreamBusy("The football data provider is busy; try again in a minute")
             if flight.error is not None:
                 raise flight.error
             return flight.result
         try:
             # Another flight may have finished between our cache read and registering.
-            flight.result = self._fresh(key, ttl) or self._load(key, path, params, check)
+            flight.result = self._fresh(key, ttl) or self._load(key, path, params, check, low_priority)
             return flight.result
         except BaseException as exc:
             flight.error = exc
@@ -125,9 +133,9 @@ class FootballClient:
             return Fetched(entry[1], entry[0], False)
         return None
 
-    def _load(self, key, path, params, check):
+    def _load(self, key, path, params, check, low_priority):
         try:
-            body = self._fetch(path, params, check)
+            body = self._fetch(path, params, check, low_priority)
         except (RateLimited, UpstreamError, UpstreamBusy) as exc:
             entry = self.cache.get(key)
             if entry is None:
@@ -139,10 +147,10 @@ class FootballClient:
         self.cache.put(key, now, body)
         return Fetched(body, now, False)
 
-    def _fetch(self, path, params, check):
+    def _fetch(self, path, params, check, low_priority):
         if not self._api_key:
             raise MissingKey("FOOTBALL_DATA_KEY is not set on the server")
-        if not self.limiter.try_acquire():
+        if not self.limiter.try_acquire(HOME_RESERVE if low_priority else 0):
             raise RateLimited("Too many requests to the data provider; try again in a minute")
         try:
             resp = self._http_get(BASE_URL + path, params, {"X-Auth-Token": self._api_key})

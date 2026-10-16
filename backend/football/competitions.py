@@ -29,6 +29,8 @@ for _c in COMPETITIONS:
 
 CODES = [c["code"] for c in COMPETITIONS]
 DEFAULT_CODE = "SA"
+# Order in which team lists are searched when looking a team up: the default league first.
+TEAM_SEARCH_ORDER = ["SA", "PL", "PD", "BL1", "FL1", "CL"]
 
 
 def _zone(label, first, last):

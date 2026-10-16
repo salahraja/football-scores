@@ -153,6 +153,16 @@ def standings(payload, code):
     }
 
 
+def shootout_for(team_id, m):
+    """W/L for the team if the match was decided on penalties, else None."""
+    s = score(m)
+    pens = s.get("penalties")
+    if m.get("status") != "FINISHED" or not pens or pens["home"] == pens["away"]:
+        return None
+    is_home = (m.get("homeTeam") or {}).get("id") == team_id
+    return "W" if (pens["home"] > pens["away"]) == is_home else "L"
+
+
 def result_for(team_id, m):
     """W/D/L from one team's point of view, or None if the match has no final score.
 

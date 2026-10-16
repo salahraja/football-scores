@@ -18,7 +18,7 @@ def test_today_shape(api, upstream):
     r = api.get("/api/today")
     assert r.status_code == 200
     envelope = r.json()
-    assert set(envelope) == {"matches", "stale", "fetchedAt", "age"}
+    assert set(envelope) == {"matches", "stale", "partial", "fetchedAt", "age"}
     assert envelope["stale"] is False and envelope["fetchedAt"] == "2022-05-14T12:00:00Z"
     body = envelope["matches"]
     # The fixture has one match on the next day; it is dropped.
@@ -96,8 +96,8 @@ def test_team_shape(api):
     assert [m["result"] for m in recent] == ["L", "D", "W", "L", "L"]
     assert body["positions"] == [{"competition": "PL", "position": 1, "points": 90}]
     # City also play in the Champions League; that table is not fetched cold, so the page
-    # says it is partial (stale) rather than spending a third upstream call.
-    assert body["stale"] is True
+    # says it is partial rather than spending a third upstream call.
+    assert body["stale"] is False and body["partial"] is True
     assert "squad" not in body and "squad" not in body["team"]
 
 

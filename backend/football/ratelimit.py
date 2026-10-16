@@ -1,5 +1,5 @@
 import threading
-from collections import deque
+from collections import OrderedDict, deque
 
 
 class RateLimiter:
@@ -16,30 +16,35 @@ class RateLimiter:
         self._stamps = deque()
         self._lock = threading.Lock()
 
-    def try_acquire(self):
+    def try_acquire(self, reserve=0):
+        """Take a slot, unless that would leave fewer than `reserve` for callers who may use them."""
         with self._lock:
             now = self.clock()
             while self._stamps and now - self._stamps[0] >= self.window:
                 self._stamps.popleft()
-            if len(self._stamps) >= self.limit:
+            if len(self._stamps) >= self.limit - reserve:
                 return False
             self._stamps.append(now)
             return True
 
 
 class PerKeyLimiter:
-    """A RateLimiter per key (here: per client address)."""
+    """A RateLimiter per key (here: per client address); the least recently used keys go first."""
 
     MAX_KEYS = 5000
 
     def __init__(self, limit, window, clock):
         self.limit, self.window, self.clock = limit, window, clock
-        self._limiters = {}
+        self._limiters = OrderedDict()
         self._lock = threading.Lock()
 
     def try_acquire(self, key):
         with self._lock:
-            if len(self._limiters) >= self.MAX_KEYS and key not in self._limiters:
-                self._limiters.clear()  # crude, but bounds memory under an address flood
-            limiter = self._limiters.setdefault(key, RateLimiter(self.limit, self.window, self.clock))
+            limiter = self._limiters.get(key)
+            if limiter is None:
+                limiter = self._limiters[key] = RateLimiter(self.limit, self.window, self.clock)
+                while len(self._limiters) > self.MAX_KEYS:
+                    self._limiters.popitem(last=False)
+            else:
+                self._limiters.move_to_end(key)
         return limiter.try_acquire()
