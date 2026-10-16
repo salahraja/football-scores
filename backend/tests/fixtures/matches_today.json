@@ -1,0 +1,340 @@
+{
+  "filters": {
+    "dateFrom": "2022-05-14",
+    "dateTo": "2022-05-15"
+  },
+  "resultSet": {
+    "count": 4,
+    "competitions": "BL1,SA,PL"
+  },
+  "matches": [
+    {
+      "area": {
+        "id": 1,
+        "name": "x",
+        "code": "X",
+        "flag": null
+      },
+      "competition": {
+        "id": 2002,
+        "name": "Bundesliga",
+        "code": "BL1",
+        "type": "LEAGUE",
+        "emblem": "https://crests.football-data.org/BL1.png"
+      },
+      "season": {
+        "id": 742,
+        "startDate": "2021-08-13",
+        "endDate": "2022-05-14",
+        "currentMatchday": 34,
+        "winner": null
+      },
+      "id": 329400,
+      "utcDate": "2022-05-14T13:30:00Z",
+      "status": "FINISHED",
+      "venue": "Stadium",
+      "matchday": 34,
+      "stage": "REGULAR_SEASON",
+      "group": null,
+      "lastUpdated": "2022-05-14T13:30:00Z",
+      "homeTeam": {
+        "id": 4,
+        "name": "Borussia Dortmund",
+        "shortName": "Dortmund",
+        "tla": "BVB",
+        "crest": "https://crests.football-data.org/4.png",
+        "coach": {
+          "id": 1,
+          "name": "Some Coach",
+          "nationality": "Italy"
+        },
+        "leagueRank": 3,
+        "formation": "4-2-3-1",
+        "lineup": [],
+        "bench": []
+      },
+      "awayTeam": {
+        "id": 9,
+        "name": "Hertha BSC",
+        "shortName": "Hertha BSC",
+        "tla": "BSC",
+        "crest": "https://crests.football-data.org/9.png",
+        "coach": {
+          "id": 1,
+          "name": "Some Coach",
+          "nationality": "Italy"
+        },
+        "leagueRank": 3,
+        "formation": "4-2-3-1",
+        "lineup": [],
+        "bench": []
+      },
+      "score": {
+        "winner": null,
+        "duration": "REGULAR",
+        "fullTime": {
+          "home": 2,
+          "away": 1
+        },
+        "halfTime": {
+          "home": 0,
+          "away": 1
+        }
+      },
+      "goals": [],
+      "referees": [
+        {
+          "id": 9,
+          "name": "Ref"
+        }
+      ],
+      "minute": 90,
+      "injuryTime": 5
+    },
+    {
+      "area": {
+        "id": 1,
+        "name": "x",
+        "code": "X",
+        "flag": null
+      },
+      "competition": {
+        "id": 2019,
+        "name": "Serie A",
+        "code": "SA",
+        "type": "LEAGUE",
+        "emblem": "https://crests.football-data.org/SA.png"
+      },
+      "season": {
+        "id": 742,
+        "startDate": "2021-08-13",
+        "endDate": "2022-05-14",
+        "currentMatchday": 34,
+        "winner": null
+      },
+      "id": 1003,
+      "utcDate": "2022-05-14T18:45:00Z",
+      "status": "IN_PLAY",
+      "venue": "Stadium",
+      "matchday": 34,
+      "stage": "REGULAR_SEASON",
+      "group": null,
+      "lastUpdated": "2022-05-14T18:45:00Z",
+      "homeTeam": {
+        "id": 109,
+        "name": "Juventus FC",
+        "shortName": "Juventus",
+        "tla": "JUV",
+        "crest": "https://crests.football-data.org/109.png",
+        "coach": {
+          "id": 1,
+          "name": "Some Coach",
+          "nationality": "Italy"
+        },
+        "leagueRank": 3,
+        "formation": "4-2-3-1",
+        "lineup": [],
+        "bench": []
+      },
+      "awayTeam": {
+        "id": 98,
+        "name": "AC Milan",
+        "shortName": "Milan",
+        "tla": "MIL",
+        "crest": "https://crests.football-data.org/98.png",
+        "coach": {
+          "id": 1,
+          "name": "Some Coach",
+          "nationality": "Italy"
+        },
+        "leagueRank": 3,
+        "formation": "4-2-3-1",
+        "lineup": [],
+        "bench": []
+      },
+      "score": {
+        "winner": null,
+        "duration": "REGULAR",
+        "fullTime": {
+          "home": 1,
+          "away": 1
+        },
+        "halfTime": {
+          "home": 0,
+          "away": 1
+        }
+      },
+      "goals": [],
+      "referees": [
+        {
+          "id": 9,
+          "name": "Ref"
+        }
+      ],
+      "minute": 67,
+      "injuryTime": null
+    },
+    {
+      "area": {
+        "id": 1,
+        "name": "x",
+        "code": "X",
+        "flag": null
+      },
+      "competition": {
+        "id": 2021,
+        "name": "Premier League",
+        "code": "PL",
+        "type": "LEAGUE",
+        "emblem": "https://crests.football-data.org/PL.png"
+      },
+      "season": {
+        "id": 742,
+        "startDate": "2021-08-13",
+        "endDate": "2022-05-14",
+        "currentMatchday": 34,
+        "winner": null
+      },
+      "id": 1004,
+      "utcDate": "2022-05-14T19:00:00Z",
+      "status": "TIMED",
+      "venue": "Stadium",
+      "matchday": 34,
+      "stage": "REGULAR_SEASON",
+      "group": null,
+      "lastUpdated": "2022-05-14T19:00:00Z",
+      "homeTeam": {
+        "id": 65,
+        "name": "Manchester City FC",
+        "shortName": "Man City",
+        "tla": "MCI",
+        "crest": "https://crests.football-data.org/65.png",
+        "coach": {
+          "id": 1,
+          "name": "Some Coach",
+          "nationality": "Italy"
+        },
+        "leagueRank": 3,
+        "formation": "4-2-3-1",
+        "lineup": [],
+        "bench": []
+      },
+      "awayTeam": {
+        "id": 57,
+        "name": "Arsenal FC",
+        "shortName": "Arsenal",
+        "tla": "ARS",
+        "crest": "https://crests.football-data.org/57.png",
+        "coach": {
+          "id": 1,
+          "name": "Some Coach",
+          "nationality": "Italy"
+        },
+        "leagueRank": 3,
+        "formation": "4-2-3-1",
+        "lineup": [],
+        "bench": []
+      },
+      "score": {
+        "winner": null,
+        "duration": "REGULAR",
+        "fullTime": {
+          "home": null,
+          "away": null
+        },
+        "halfTime": {
+          "home": 0,
+          "away": 1
+        }
+      },
+      "goals": [],
+      "referees": [
+        {
+          "id": 9,
+          "name": "Ref"
+        }
+      ]
+    },
+    {
+      "area": {
+        "id": 1,
+        "name": "x",
+        "code": "X",
+        "flag": null
+      },
+      "competition": {
+        "id": 2021,
+        "name": "Premier League",
+        "code": "PL",
+        "type": "LEAGUE",
+        "emblem": "https://crests.football-data.org/PL.png"
+      },
+      "season": {
+        "id": 742,
+        "startDate": "2021-08-13",
+        "endDate": "2022-05-14",
+        "currentMatchday": 34,
+        "winner": null
+      },
+      "id": 1005,
+      "utcDate": "2022-05-15T14:00:00Z",
+      "status": "TIMED",
+      "venue": "Stadium",
+      "matchday": 34,
+      "stage": "REGULAR_SEASON",
+      "group": null,
+      "lastUpdated": "2022-05-15T14:00:00Z",
+      "homeTeam": {
+        "id": 64,
+        "name": "Liverpool FC",
+        "shortName": "Liverpool",
+        "tla": "LIV",
+        "crest": "https://crests.football-data.org/64.png",
+        "coach": {
+          "id": 1,
+          "name": "Some Coach",
+          "nationality": "Italy"
+        },
+        "leagueRank": 3,
+        "formation": "4-2-3-1",
+        "lineup": [],
+        "bench": []
+      },
+      "awayTeam": {
+        "id": 61,
+        "name": "Chelsea FC",
+        "shortName": "Chelsea",
+        "tla": "CHE",
+        "crest": "https://crests.football-data.org/61.png",
+        "coach": {
+          "id": 1,
+          "name": "Some Coach",
+          "nationality": "Italy"
+        },
+        "leagueRank": 3,
+        "formation": "4-2-3-1",
+        "lineup": [],
+        "bench": []
+      },
+      "score": {
+        "winner": null,
+        "duration": "REGULAR",
+        "fullTime": {
+          "home": null,
+          "away": null
+        },
+        "halfTime": {
+          "home": 0,
+          "away": 1
+        }
+      },
+      "goals": [],
+      "referees": [
+        {
+          "id": 9,
+          "name": "Ref"
+        }
+      ]
+    }
+  ]
+}

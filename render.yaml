@@ -1,0 +1,22 @@
+# One service: FastAPI serves the API and the built Vue app (frontend/dist).
+services:
+  - type: web
+    name: football-scores
+    runtime: python
+    plan: free
+    buildCommand: cd frontend && npm ci && npm run build && cd ../backend && pip install .
+    startCommand: cd backend && uvicorn football.app:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /healthz
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      - key: NODE_VERSION
+        value: 22.12.0
+      # Secrets and per-environment values: set these in the Render dashboard.
+      - key: FOOTBALL_DATA_KEY
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      # Not needed when the app and API share one address; only for a front end hosted elsewhere.
+      - key: CORS_ORIGINS
+        sync: false

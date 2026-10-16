@@ -1,0 +1,556 @@
+{
+  "filters": {
+    "season": "2021",
+    "matchday": "8"
+  },
+  "resultSet": {
+    "count": 6
+  },
+  "competition": {
+    "id": 2001,
+    "name": "UEFA Champions League",
+    "code": "CL",
+    "type": "LEAGUE",
+    "emblem": "https://crests.football-data.org/CL.png"
+  },
+  "matches": [
+    {
+      "area": {
+        "id": 1,
+        "name": "x",
+        "code": "X",
+        "flag": null
+      },
+      "competition": {
+        "id": 2001,
+        "name": "UEFA Champions League",
+        "code": "CL",
+        "type": "LEAGUE",
+        "emblem": "https://crests.football-data.org/CL.png"
+      },
+      "season": {
+        "id": 742,
+        "startDate": "2021-08-13",
+        "endDate": "2022-05-14",
+        "currentMatchday": 34,
+        "winner": null
+      },
+      "id": 4001,
+      "utcDate": "2022-05-14T19:00:00Z",
+      "status": "FINISHED",
+      "venue": "Stadium",
+      "matchday": 8,
+      "stage": "REGULAR_SEASON",
+      "group": null,
+      "lastUpdated": "2022-05-14T19:00:00Z",
+      "homeTeam": {
+        "id": 4,
+        "name": "Borussia Dortmund",
+        "shortName": "Dortmund",
+        "tla": "BVB",
+        "crest": "https://crests.football-data.org/4.png",
+        "coach": {
+          "id": 1,
+          "name": "Some Coach",
+          "nationality": "Italy"
+        },
+        "leagueRank": 3,
+        "formation": "4-2-3-1",
+        "lineup": [],
+        "bench": []
+      },
+      "awayTeam": {
+        "id": 9,
+        "name": "Hertha BSC",
+        "shortName": "Hertha BSC",
+        "tla": "BSC",
+        "crest": "https://crests.football-data.org/9.png",
+        "coach": {
+          "id": 1,
+          "name": "Some Coach",
+          "nationality": "Italy"
+        },
+        "leagueRank": 3,
+        "formation": "4-2-3-1",
+        "lineup": [],
+        "bench": []
+      },
+      "score": {
+        "winner": null,
+        "duration": "REGULAR",
+        "fullTime": {
+          "home": 2,
+          "away": 1
+        },
+        "halfTime": {
+          "home": 0,
+          "away": 1
+        }
+      },
+      "goals": [],
+      "referees": [
+        {
+          "id": 9,
+          "name": "Ref"
+        }
+      ],
+      "minute": 90,
+      "injuryTime": null
+    },
+    {
+      "area": {
+        "id": 1,
+        "name": "x",
+        "code": "X",
+        "flag": null
+      },
+      "competition": {
+        "id": 2001,
+        "name": "UEFA Champions League",
+        "code": "CL",
+        "type": "LEAGUE",
+        "emblem": "https://crests.football-data.org/CL.png"
+      },
+      "season": {
+        "id": 742,
+        "startDate": "2021-08-13",
+        "endDate": "2022-05-14",
+        "currentMatchday": 34,
+        "winner": null
+      },
+      "id": 4002,
+      "utcDate": "2022-05-14T19:00:00Z",
+      "status": "FINISHED",
+      "venue": "Stadium",
+      "matchday": 8,
+      "stage": "REGULAR_SEASON",
+      "group": null,
+      "lastUpdated": "2022-05-14T19:00:00Z",
+      "homeTeam": {
+        "id": 109,
+        "name": "Juventus FC",
+        "shortName": "Juventus",
+        "tla": "JUV",
+        "crest": "https://crests.football-data.org/109.png",
+        "coach": {
+          "id": 1,
+          "name": "Some Coach",
+          "nationality": "Italy"
+        },
+        "leagueRank": 3,
+        "formation": "4-2-3-1",
+        "lineup": [],
+        "bench": []
+      },
+      "awayTeam": {
+        "id": 98,
+        "name": "AC Milan",
+        "shortName": "Milan",
+        "tla": "MIL",
+        "crest": "https://crests.football-data.org/98.png",
+        "coach": {
+          "id": 1,
+          "name": "Some Coach",
+          "nationality": "Italy"
+        },
+        "leagueRank": 3,
+        "formation": "4-2-3-1",
+        "lineup": [],
+        "bench": []
+      },
+      "score": {
+        "winner": "HOME_TEAM",
+        "duration": "EXTRA_TIME",
+        "fullTime": {
+          "homeTeam": 2,
+          "awayTeam": 1
+        },
+        "halfTime": {
+          "homeTeam": 1,
+          "awayTeam": 1
+        },
+        "regularTime": {
+          "homeTeam": 1,
+          "awayTeam": 1
+        },
+        "extraTime": {
+          "homeTeam": 1,
+          "awayTeam": 0
+        }
+      },
+      "goals": [],
+      "referees": [
+        {
+          "id": 9,
+          "name": "Ref"
+        }
+      ],
+      "minute": 120,
+      "injuryTime": null
+    },
+    {
+      "area": {
+        "id": 1,
+        "name": "x",
+        "code": "X",
+        "flag": null
+      },
+      "competition": {
+        "id": 2001,
+        "name": "UEFA Champions League",
+        "code": "CL",
+        "type": "LEAGUE",
+        "emblem": "https://crests.football-data.org/CL.png"
+      },
+      "season": {
+        "id": 742,
+        "startDate": "2021-08-13",
+        "endDate": "2022-05-14",
+        "currentMatchday": 34,
+        "winner": null
+      },
+      "id": 4003,
+      "utcDate": "2022-05-14T19:00:00Z",
+      "status": "FINISHED",
+      "venue": "Stadium",
+      "matchday": 8,
+      "stage": "REGULAR_SEASON",
+      "group": null,
+      "lastUpdated": "2022-05-14T19:00:00Z",
+      "homeTeam": {
+        "id": 86,
+        "name": "Real Madrid CF",
+        "shortName": "Real Madrid",
+        "tla": "RMA",
+        "crest": "https://crests.football-data.org/86.png",
+        "coach": {
+          "id": 1,
+          "name": "Some Coach",
+          "nationality": "Italy"
+        },
+        "leagueRank": 3,
+        "formation": "4-2-3-1",
+        "lineup": [],
+        "bench": []
+      },
+      "awayTeam": {
+        "id": 81,
+        "name": "FC Barcelona",
+        "shortName": "Barca",
+        "tla": "FCB",
+        "crest": "https://crests.football-data.org/81.png",
+        "coach": {
+          "id": 1,
+          "name": "Some Coach",
+          "nationality": "Italy"
+        },
+        "leagueRank": 3,
+        "formation": "4-2-3-1",
+        "lineup": [],
+        "bench": []
+      },
+      "score": {
+        "winner": "HOME_TEAM",
+        "duration": "PENALTY_SHOOTOUT",
+        "fullTime": {
+          "homeTeam": 7,
+          "awayTeam": 6
+        },
+        "halfTime": {
+          "homeTeam": 1,
+          "awayTeam": 1
+        },
+        "regularTime": {
+          "homeTeam": 1,
+          "awayTeam": 1
+        },
+        "extraTime": {
+          "homeTeam": 0,
+          "awayTeam": 0
+        },
+        "penalties": {
+          "homeTeam": 6,
+          "awayTeam": 5
+        }
+      },
+      "goals": [],
+      "referees": [
+        {
+          "id": 9,
+          "name": "Ref"
+        }
+      ],
+      "minute": 120,
+      "injuryTime": null
+    },
+    {
+      "area": {
+        "id": 1,
+        "name": "x",
+        "code": "X",
+        "flag": null
+      },
+      "competition": {
+        "id": 2001,
+        "name": "UEFA Champions League",
+        "code": "CL",
+        "type": "LEAGUE",
+        "emblem": "https://crests.football-data.org/CL.png"
+      },
+      "season": {
+        "id": 742,
+        "startDate": "2021-08-13",
+        "endDate": "2022-05-14",
+        "currentMatchday": 34,
+        "winner": null
+      },
+      "id": 4004,
+      "utcDate": "2022-05-14T19:00:00Z",
+      "status": "EXTRA_TIME",
+      "venue": "Stadium",
+      "matchday": 8,
+      "stage": "REGULAR_SEASON",
+      "group": null,
+      "lastUpdated": "2022-05-14T19:00:00Z",
+      "homeTeam": {
+        "id": 108,
+        "name": "FC Internazionale Milano",
+        "shortName": "Inter",
+        "tla": "INT",
+        "crest": "https://crests.football-data.org/108.png",
+        "coach": {
+          "id": 1,
+          "name": "Some Coach",
+          "nationality": "Italy"
+        },
+        "leagueRank": 3,
+        "formation": "4-2-3-1",
+        "lineup": [],
+        "bench": []
+      },
+      "awayTeam": {
+        "id": 100,
+        "name": "AS Roma",
+        "shortName": "Roma",
+        "tla": "ROM",
+        "crest": "https://crests.football-data.org/100.png",
+        "coach": {
+          "id": 1,
+          "name": "Some Coach",
+          "nationality": "Italy"
+        },
+        "leagueRank": 3,
+        "formation": "4-2-3-1",
+        "lineup": [],
+        "bench": []
+      },
+      "score": {
+        "winner": "HOME_TEAM",
+        "duration": "EXTRA_TIME",
+        "fullTime": {
+          "homeTeam": 1,
+          "awayTeam": 1
+        },
+        "halfTime": {
+          "homeTeam": 1,
+          "awayTeam": 1
+        },
+        "regularTime": {
+          "homeTeam": 1,
+          "awayTeam": 1
+        },
+        "extraTime": {
+          "homeTeam": 0,
+          "awayTeam": 0
+        }
+      },
+      "goals": [],
+      "referees": [
+        {
+          "id": 9,
+          "name": "Ref"
+        }
+      ],
+      "minute": 105,
+      "injuryTime": null
+    },
+    {
+      "area": {
+        "id": 1,
+        "name": "x",
+        "code": "X",
+        "flag": null
+      },
+      "competition": {
+        "id": 2001,
+        "name": "UEFA Champions League",
+        "code": "CL",
+        "type": "LEAGUE",
+        "emblem": "https://crests.football-data.org/CL.png"
+      },
+      "season": {
+        "id": 742,
+        "startDate": "2021-08-13",
+        "endDate": "2022-05-14",
+        "currentMatchday": 34,
+        "winner": null
+      },
+      "id": 4005,
+      "utcDate": "2022-05-14T19:00:00Z",
+      "status": "PENALTY_SHOOTOUT",
+      "venue": "Stadium",
+      "matchday": 8,
+      "stage": "REGULAR_SEASON",
+      "group": null,
+      "lastUpdated": "2022-05-14T19:00:00Z",
+      "homeTeam": {
+        "id": 65,
+        "name": "Manchester City FC",
+        "shortName": "Man City",
+        "tla": "MCI",
+        "crest": "https://crests.football-data.org/65.png",
+        "coach": {
+          "id": 1,
+          "name": "Some Coach",
+          "nationality": "Italy"
+        },
+        "leagueRank": 3,
+        "formation": "4-2-3-1",
+        "lineup": [],
+        "bench": []
+      },
+      "awayTeam": {
+        "id": 57,
+        "name": "Arsenal FC",
+        "shortName": "Arsenal",
+        "tla": "ARS",
+        "crest": "https://crests.football-data.org/57.png",
+        "coach": {
+          "id": 1,
+          "name": "Some Coach",
+          "nationality": "Italy"
+        },
+        "leagueRank": 3,
+        "formation": "4-2-3-1",
+        "lineup": [],
+        "bench": []
+      },
+      "score": {
+        "winner": "HOME_TEAM",
+        "duration": "PENALTY_SHOOTOUT",
+        "fullTime": {
+          "homeTeam": 4,
+          "awayTeam": 3
+        },
+        "halfTime": {
+          "homeTeam": 1,
+          "awayTeam": 1
+        },
+        "regularTime": {
+          "homeTeam": 1,
+          "awayTeam": 1
+        },
+        "extraTime": {
+          "homeTeam": 0,
+          "awayTeam": 0
+        },
+        "penalties": {
+          "homeTeam": 3,
+          "awayTeam": 2
+        }
+      },
+      "goals": [],
+      "referees": [
+        {
+          "id": 9,
+          "name": "Ref"
+        }
+      ],
+      "minute": 120,
+      "injuryTime": 2
+    },
+    {
+      "area": {
+        "id": 1,
+        "name": "x",
+        "code": "X",
+        "flag": null
+      },
+      "competition": {
+        "id": 2001,
+        "name": "UEFA Champions League",
+        "code": "CL",
+        "type": "LEAGUE",
+        "emblem": "https://crests.football-data.org/CL.png"
+      },
+      "season": {
+        "id": 742,
+        "startDate": "2021-08-13",
+        "endDate": "2022-05-14",
+        "currentMatchday": 34,
+        "winner": null
+      },
+      "id": 4006,
+      "utcDate": "2022-05-14T19:00:00Z",
+      "status": "SUSPENDED",
+      "venue": "Stadium",
+      "matchday": 8,
+      "stage": "REGULAR_SEASON",
+      "group": null,
+      "lastUpdated": "2022-05-14T19:00:00Z",
+      "homeTeam": {
+        "id": 64,
+        "name": "Liverpool FC",
+        "shortName": "Liverpool",
+        "tla": "LIV",
+        "crest": "https://crests.football-data.org/64.png",
+        "coach": {
+          "id": 1,
+          "name": "Some Coach",
+          "nationality": "Italy"
+        },
+        "leagueRank": 3,
+        "formation": "4-2-3-1",
+        "lineup": [],
+        "bench": []
+      },
+      "awayTeam": {
+        "id": 61,
+        "name": "Chelsea FC",
+        "shortName": "Chelsea",
+        "tla": "CHE",
+        "crest": "https://crests.football-data.org/61.png",
+        "coach": {
+          "id": 1,
+          "name": "Some Coach",
+          "nationality": "Italy"
+        },
+        "leagueRank": 3,
+        "formation": "4-2-3-1",
+        "lineup": [],
+        "bench": []
+      },
+      "score": {
+        "winner": null,
+        "duration": "REGULAR",
+        "fullTime": {
+          "home": 0,
+          "away": 0
+        },
+        "halfTime": {
+          "home": 0,
+          "away": 1
+        }
+      },
+      "goals": [],
+      "referees": [
+        {
+          "id": 9,
+          "name": "Ref"
+        }
+      ],
+      "minute": 34,
+      "injuryTime": null
+    }
+  ]
+}
