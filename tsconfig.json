@@ -2,7 +2,6 @@
   "compilerOptions": {
     "target": "es2022",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
@@ -13,12 +12,9 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "noImplicitAny": false,
-    "incremental": true,
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "types": ["vite/client"],
+    "paths": { "@/*": ["./src/*"] }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["src/**/*.ts", "src/**/*.vue", "tests/**/*.ts", "vite.config.ts"],
   "exclude": ["node_modules"]
 }
