@@ -132,3 +132,23 @@ Compiler commit a108677. Each has a minimal repro.
 9. **No overrun check on any platform without mmap** (see Limits): an input larger than the region silently corrupts. The doc `docs/design/wasm.md` section 2 calls for growth checks; they are not there yet.
 10. Diagnostics: the first error of a program with several mistakes in a generic call chain prints the stdlib frame first (item 3); otherwise error text was good.
 
+
+## Decision table (measured 2026-10-26; the Mac was under heavy load, load average 30 to 90, so read times as rough)
+100x season = 2,000 table rows + 38,000 events (7.6 MB). Times: `node scripts/bench.ts 100 9`, median of 9, whole process for both output files.
+
+| | TS only | Goose (CLI; wasm64 in brackets) | Python (stdlib) |
+|---|---|---|---|
+| Correct vs repo fixtures | reference; original 10 tests pass | 14/14 fixtures identical, 100x identical (wasm: same) | 14/14 identical, 100x identical, 10 unittests |
+| Run time, 100x, both files | 215 ms (incl. node start) | 44 ms (wasm in-process after load: 3 + 35 ms) | 525 ms |
+| Build step | none | compiler built once (70 s), CLI 3 s, wasm 4 s | none |
+| Lines | 56 (helpers + build.ts) | 174 + 11 build.sh (wasm adds 256: entry, shim64.c, patch, scripts, loader) | 118 (+ 80 test lines) |
+| Workarounds needed | 0 | 4 for the CLI (collation table, `as` field name, `return` in a sort block, `-q` stdout line); 6 more for wasm (patched generated C, wasm64 not wasm32, own libc shim, wasi-sdk download, size cap, loader) | 1 (collation table: stdlib has no ICU) |
+| Toolchain / bus factor | Node, already required | 2-month-old compiler, one author, built from source (cmake, C++), generated-C patching breaks on upgrade | python3, stdlib only, decades stable |
+| Deploy | static JSON, nothing special | static JSON; CI needs the compiler or a cached binary; wasm64 in browsers untested | static JSON; CI needs python3 (on most images) |
+| Fits stack rules | yes, but he is moving past JS/TS | experiment only (his Goose watch item) | yes: Python is the default for new work |
+
+Recommendation: keep the Vue front end in TS either way (a static Vue 3 UI cannot be Python or Goose). For the data layer use Python. It is the
+only non-TS option with no new toolchain, the same bytes as TS, and nothing to maintain beyond 118 lines. Keep Goose as a parked experiment and an
+independent second implementation in the parity tests; re-test when Goose ships a WASM backend or fixes layouts for 4-byte pointers. Goose is
+fastest (about 12x faster than Python here), but the data is 20 rows in real use, so the speed buys nothing. TS-only is also a sound answer
+today: the logic is 56 lines and ICU is built in.
