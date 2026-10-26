@@ -1,0 +1,106 @@
+[
+ {
+  "id": 101,
+  "position": 0,
+  "team": {
+   "id": 2,
+   "name": "Inter"
+  },
+  "matches": 10,
+  "wins": 7,
+  "draws": 2,
+  "losses": 1,
+  "points": 0
+ },
+ {
+  "id": 102,
+  "position": 0,
+  "team": {
+   "id": 1,
+   "name": "Juventus"
+  },
+  "matches": 10,
+  "wins": 7,
+  "draws": 2,
+  "losses": 1,
+  "points": 0
+ },
+ {
+  "id": 103,
+  "position": 0,
+  "team": {
+   "id": 4,
+   "name": "Napoli"
+  },
+  "matches": 10,
+  "wins": 6,
+  "draws": 2,
+  "losses": 2,
+  "points": 0
+ },
+ {
+  "id": 104,
+  "position": 0,
+  "team": {
+   "id": 3,
+   "name": "Milan"
+  },
+  "matches": 10,
+  "wins": 5,
+  "draws": 4,
+  "losses": 1,
+  "points": 0
+ },
+ {
+  "id": 105,
+  "position": 0,
+  "team": {
+   "id": 7,
+   "name": "Atalanta"
+  },
+  "matches": 10,
+  "wins": 5,
+  "draws": 2,
+  "losses": 3,
+  "points": 0
+ },
+ {
+  "id": 106,
+  "position": 0,
+  "team": {
+   "id": 5,
+   "name": "Roma"
+  },
+  "matches": 10,
+  "wins": 4,
+  "draws": 3,
+  "losses": 3,
+  "points": 0
+ },
+ {
+  "id": 107,
+  "position": 0,
+  "team": {
+   "id": 6,
+   "name": "Lazio"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 3,
+  "losses": 4,
+  "points": 0
+ },
+ {
+  "id": 108,
+  "position": 0,
+  "team": {
+   "id": 8,
+   "name": "Fiorentina"
+  },
+  "matches": 10,
+  "wins": 2,
+  "draws": 2,
+  "losses": 6,
+  "points": 0
+ }
+]

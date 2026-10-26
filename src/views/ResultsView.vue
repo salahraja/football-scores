@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import { getResults } from "../data";
-import { groupByRound, outcome } from "../data/helpers";
-const rounds = [...groupByRound(getResults())];
+import { getResultRounds } from "../data";
+const rounds = getResultRounds();
 </script>
 
 <template>
   <section>
     <h1>Match Results</h1>
     <p class="note">Sample data</p>
-    <template v-for="[round, events] in rounds" :key="round">
+    <template v-for="{ round, events } in rounds" :key="round">
       <h2 class="round">Matchday {{ round }}</h2>
       <div class="cards">
-        <article v-for="e in events" :key="e.id" class="card" :data-outcome="outcome(e.homeScore.current, e.awayScore.current)">
+        <article v-for="e in events" :key="e.id" class="card" :data-outcome="e.outcome">
           <p class="status">{{ e.status.type }}</p>
           <div class="teams">
             <div class="side">

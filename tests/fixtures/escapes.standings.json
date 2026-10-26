@@ -1,0 +1,158 @@
+[
+ {
+  "id": 1,
+  "position": 0,
+  "team": {
+   "id": 1,
+   "name": "Say \"hi\""
+  },
+  "matches": 10,
+  "wins": 1,
+  "draws": 0,
+  "losses": 9,
+  "points": 0
+ },
+ {
+  "id": 2,
+  "position": 0,
+  "team": {
+   "id": 2,
+   "name": "back\\slash"
+  },
+  "matches": 10,
+  "wins": 1,
+  "draws": 0,
+  "losses": 9,
+  "points": 0
+ },
+ {
+  "id": 3,
+  "position": 0,
+  "team": {
+   "id": 3,
+   "name": "tab\there"
+  },
+  "matches": 10,
+  "wins": 1,
+  "draws": 0,
+  "losses": 9,
+  "points": 0
+ },
+ {
+  "id": 4,
+  "position": 0,
+  "team": {
+   "id": 4,
+   "name": "new\nline"
+  },
+  "matches": 10,
+  "wins": 1,
+  "draws": 0,
+  "losses": 9,
+  "points": 0
+ },
+ {
+  "id": 5,
+  "position": 0,
+  "team": {
+   "id": 5,
+   "name": "ctl\u0001\u001f"
+  },
+  "matches": 10,
+  "wins": 1,
+  "draws": 0,
+  "losses": 9,
+  "points": 0
+ },
+ {
+  "id": 6,
+  "position": 0,
+  "team": {
+   "id": 6,
+   "name": "slash/solidus"
+  },
+  "matches": 10,
+  "wins": 1,
+  "draws": 0,
+  "losses": 9,
+  "points": 0
+ },
+ {
+  "id": 7,
+  "position": 0,
+  "team": {
+   "id": 7,
+   "name": "line sep"
+  },
+  "matches": 10,
+  "wins": 1,
+  "draws": 0,
+  "losses": 9,
+  "points": 0
+ },
+ {
+  "id": 8,
+  "position": 0,
+  "team": {
+   "id": 8,
+   "name": "del"
+  },
+  "matches": 10,
+  "wins": 1,
+  "draws": 0,
+  "losses": 9,
+  "points": 0
+ },
+ {
+  "id": 9,
+  "position": 0,
+  "team": {
+   "id": 9,
+   "name": "emoji 😀"
+  },
+  "matches": 10,
+  "wins": 1,
+  "draws": 0,
+  "losses": 9,
+  "points": 0
+ },
+ {
+  "id": 10,
+  "position": 0,
+  "team": {
+   "id": 10,
+   "name": "astral 𝄞"
+  },
+  "matches": 10,
+  "wins": 1,
+  "draws": 0,
+  "losses": 9,
+  "points": 0
+ },
+ {
+  "id": 11,
+  "position": 0,
+  "team": {
+   "id": 11,
+   "name": "quote'single"
+  },
+  "matches": 10,
+  "wins": 1,
+  "draws": 0,
+  "losses": 9,
+  "points": 0
+ },
+ {
+  "id": 12,
+  "position": 0,
+  "team": {
+   "id": 12,
+   "name": "<b>&amp;</b>"
+  },
+  "matches": 10,
+  "wins": 1,
+  "draws": 0,
+  "losses": 9,
+  "points": 0
+ }
+]
