@@ -5,10 +5,14 @@
 //   wasm    : the same Goose code compiled to wasm64 (goose/wasm/build.sh), loaded in-process by src/data/goose-wasm.ts
 //   python  : python/footy.py, stdlib only (python3 -I)
 import { spawnSync } from "node:child_process";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { existsSync, readFileSync } from "node:fs";
 import { loadGooseWasm } from "../src/data/goose-wasm.ts";
 import { resultsData, serialize, standingsData } from "../src/data/build.ts";
 
+const HERE = dirname(fileURLToPath(import.meta.url));
+const PY = join(HERE, "..", "python", "footy.py");
 export const GOOSE_BIN = process.env.GOOSE_FOOTY ?? "/private/tmp/goose-spike/out/footy";
 export const WASM_PATH = process.env.GOOSE_WASM ?? "/private/tmp/wasm-fs/goose-footy.wasm";
 const wasm = existsSync(WASM_PATH) ? await loadGooseWasm(readFileSync(WASM_PATH)) : null;
@@ -18,7 +22,7 @@ export const available: Record<Engine, () => boolean> = {
   ts: () => true,
   goose: () => existsSync(GOOSE_BIN),
   wasm: () => wasm !== null,
-  python: () => existsSync(new URL("../python/footy.py", import.meta.url)),
+  python: () => existsSync(PY),
 };
 
 function run(cmd: string, args: string[], input: string): string {
@@ -37,6 +41,6 @@ export function runEngine(engine: Engine, kind: Kind, text: string): string {
   }
   if (engine === "wasm") return kind === "results" ? wasm!.results(text) : wasm!.standings(text);
   if (engine === "goose") return run(GOOSE_BIN, [kind], text);
-  if (engine === "python") return run("python3", ["-I", new URL("../python/footy.py", import.meta.url).pathname, kind], text);
+  if (engine === "python") return run("python3", ["-I", PY, kind], text);
   throw new Error(`unknown engine ${engine as string}`);
 }
