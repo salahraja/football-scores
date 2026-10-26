@@ -25,6 +25,23 @@ npm run typecheck  # vue-tsc, the checker of record
 `npm run typecheck:tsrs` runs the experimental `tsrs` checker. It does not
 understand `.vue` files, so it is not a substitute for `vue-tsc`.
 
+## Python
+
+The same build-time data layer exists in plain Python, standard library only: `python/footy.py` (118 lines) and `python/test_footy.py`.
+No packages, no `uv`, no virtualenv: just `python3` (3.9 or newer; developed on 3.14).
+
+```sh
+python3 -I python/footy.py standings < data/raw/standings.json > src/data/generated/standings.json
+python3 -I python/footy.py results   < data/raw/results.json   > src/data/generated/results.json
+npm run data                  # engine auto = python, falls back to TS if python3 is missing
+DATA_ENGINE=python DATA_VERIFY=1 npm run data   # also fail unless byte-identical to the TS engine
+npm run test:python           # python3 -I -m unittest discover -s python  (compares with tests/golden = TS output)
+node scripts/parity.mjs python
+```
+
+It uses the same collation rule as Goose (`data/collation.json`, see "Name order" below) so its bytes match TS and Goose on every
+fixture. Python is the default `auto` engine on this branch; Goose is still buildable (`DATA_ENGINE=goose`) for comparison.
+
 ## Goose
 
 The build-time data layer is written twice: in TypeScript (`src/data/helpers.ts`, `src/data/build.ts`, the original logic and the
@@ -77,7 +94,7 @@ Needs the official [wasi-sdk](https://github.com/WebAssembly/wasi-sdk/releases) 
 ### The one switch and the fallback
 
 `VITE_DATA=generated` makes the app read `src/data/generated/*.json`; without it the app computes everything in TS at load, as before.
-`npm run data` (engine `auto`) builds the Goose CLI and uses it; if Goose cannot be built it prints a warning and runs the TS engine, so
+`npm run data` (engine `auto`; on the main Goose branch it builds the Goose CLI and uses it, on this branch it uses Python); if the engine cannot run it prints a warning and runs the TS engine, so
 a machine without Goose still produces the same files. `src/data/generated/` is not committed. If Goose is unavailable nothing breaks:
 the default build never touches it, and `DATA_ENGINE=ts` gives the same JSON.
 

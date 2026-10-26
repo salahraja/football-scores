@@ -15,7 +15,8 @@
     "build:data": "npm run data && VITE_DATA=generated npm run build",
     "goose:build": "sh goose/build.sh",
     "goose:wasm": "sh goose/wasm/build.sh",
-    "parity": "node scripts/parity.mjs goose && node scripts/parity.mjs wasm"
+    "parity": "node scripts/parity.mjs python && node scripts/parity.mjs goose && node scripts/parity.mjs wasm",
+    "test:python": "python3 -I -m unittest discover -s python"
   },
   "dependencies": {
     "vue": "^3.5.0",
