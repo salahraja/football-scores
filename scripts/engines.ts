@@ -7,7 +7,8 @@
 import { spawnSync } from "node:child_process";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { existsSync, readFileSync } from "node:fs";
+import { closeSync, existsSync, mkdtempSync, openSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { loadGooseWasm } from "../src/data/goose-wasm.ts";
 import { resultsData, serialize, standingsData } from "../src/data/build.ts";
 
@@ -25,10 +26,21 @@ export const available: Record<Engine, () => boolean> = {
   python: () => existsSync(PY),
 };
 
+// stdin comes from a temp file, not a pipe: Node's spawnSync `input` pipe occasionally never delivers EOF to a
+// child that is slow to start (about 1 run in 100 under load; reproduced with `sh -c 'sleep 0.03; wc -c'`).
 function run(cmd: string, args: string[], input: string): string {
-  const r = spawnSync(cmd, args, { input, env: CLEAN, maxBuffer: 1 << 30 });
-  if (r.status !== 0) throw new Error(`${cmd} ${args.join(" ")} failed (${r.status}): ${r.stderr}`);
-  return r.stdout.toString("utf8");
+  const dir = mkdtempSync(join(tmpdir(), "fs-eng-"));
+  const file = join(dir, "in.json");
+  writeFileSync(file, input);
+  const fd = openSync(file, "r");
+  try {
+    const r = spawnSync(cmd, args, { stdio: [fd, "pipe", "pipe"], env: CLEAN, maxBuffer: 1 << 30, timeout: 300_000 });
+    if (r.status !== 0) throw new Error(`${cmd} ${args.join(" ")} failed (${r.status}): ${r.stderr}`);
+    return r.stdout.toString("utf8");
+  } finally {
+    closeSync(fd);
+    rmSync(dir, { recursive: true });
+  }
 }
 
 /** kind is "standings" or "results"; text is the raw JSON text. Returns the engine's output text. */
