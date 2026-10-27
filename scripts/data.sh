@@ -24,7 +24,7 @@ use_goose() {
 }
 
 use_python() {
-  command -v python3 >/dev/null || return 1
+  trap 'rm -f "$OUT"/*.tmp' EXIT
   python3 -I python/footy.py standings < "$RAW/standings.json" > "$OUT/standings.json.tmp" || return 1
   python3 -I python/footy.py results < "$RAW/results.json" > "$OUT/results.json.tmp" || return 1
   mv "$OUT/standings.json.tmp" "$OUT/standings.json"
@@ -36,7 +36,15 @@ case "$ENGINE" in
   ts) node scripts/gen-ts.mjs "$RAW" "$OUT" ;;
   goose) use_goose ;;
   python) use_python ;;
-  auto) use_python 2>/dev/null || { echo "warning: python3 unavailable, falling back to the TS engine" >&2; rm -f "$OUT"/*.tmp; node scripts/gen-ts.mjs "$RAW" "$OUT"; } ;;
+  auto)
+    if ! command -v python3 >/dev/null; then
+      echo "warning: python3 missing, using the TS engine" >&2
+      node scripts/gen-ts.mjs "$RAW" "$OUT"
+    elif ! use_python; then
+      echo "warning: the Python engine failed (its error is above), using the TS engine" >&2
+      rm -f "$OUT"/*.tmp
+      node scripts/gen-ts.mjs "$RAW" "$OUT"
+    fi ;;
   *) echo "DATA_ENGINE must be python, goose, ts or auto" >&2; exit 2 ;;
 esac
 
