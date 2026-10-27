@@ -33,14 +33,14 @@ No packages, no `uv`, no virtualenv: just `python3` (3.9 or newer; developed on 
 ```sh
 python3 -I python/footy.py standings < data/raw/standings.json > src/data/generated/standings.json
 python3 -I python/footy.py results   < data/raw/results.json   > src/data/generated/results.json
-npm run data                  # engine auto = python, falls back to TS if python3 is missing
+npm run data                  # engine auto = Goose if installed, else Python, else TS (each step down prints a warning)
 DATA_ENGINE=python DATA_VERIFY=1 npm run data   # also fail unless byte-identical to the TS engine
 npm run test:python           # python3 -I -m unittest discover -s python  (compares with tests/golden = TS output)
 node scripts/parity.mjs python
 ```
 
 It uses the same collation rule as Goose (`data/collation.json`, see "Name order" below) so its bytes match TS and Goose on every
-fixture. Python is the default `auto` engine on this branch; Goose is still buildable (`DATA_ENGINE=goose`) for comparison.
+fixture. Goose is the default `auto` engine when its compiler is installed at `~/.local/share/goose-lang/build/goose` (a CMake build of github.com/aardappel/goose; set `GOOSE=` to use another path); Python is the fallback.
 
 ## Goose
 
@@ -94,7 +94,7 @@ Needs the official [wasi-sdk](https://github.com/WebAssembly/wasi-sdk/releases) 
 ### The one switch and the fallback
 
 `VITE_DATA=generated` makes the app read `src/data/generated/*.json`; without it the app computes everything in TS at load, as before.
-`npm run data` (engine `auto`; on the main Goose branch it builds the Goose CLI and uses it, on this branch it uses Python); if the engine cannot run it prints a warning and runs the TS engine, so
+`npm run data` (engine `auto`; it builds the Goose CLI and uses it, or uses Python when the Goose compiler is not installed); if the engine cannot run it prints a warning and runs the TS engine, so
 a machine without Goose still produces the same files. `src/data/generated/` is not committed. If Goose is unavailable nothing breaks:
 the default build never touches it, and `DATA_ENGINE=ts` gives the same JSON.
 

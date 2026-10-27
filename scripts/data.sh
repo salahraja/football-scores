@@ -3,7 +3,7 @@
 # DATA_ENGINE=goose  build and run the Goose CLI (clean environment); fail if it cannot
 # DATA_ENGINE=ts     the original TypeScript logic
 # DATA_ENGINE=python python3 python/footy.py (standard library only)
-# DATA_ENGINE=auto   (default) Python if python3 is there, otherwise TS with a warning
+# DATA_ENGINE=auto   (default) Goose if its compiler is installed, else Python, else TS, each with a warning when it steps down
 # DATA_VERIFY=1      also run the TS engine and fail unless the outputs are byte-identical
 set -e
 cd "$(dirname "$0")/.."
@@ -13,6 +13,7 @@ OUT=${DATA_OUT:-src/data/generated}
 mkdir -p "$OUT"
 
 use_goose() {
+  trap 'rm -f "$OUT"/*.tmp' EXIT
   BIN=$(sh goose/build.sh) || return 1
   [ -x "$BIN" ] || return 1
   # the binary is untrusted-ish: run it with an empty environment
@@ -37,13 +38,20 @@ case "$ENGINE" in
   goose) use_goose ;;
   python) use_python ;;
   auto)
-    if ! command -v python3 >/dev/null; then
-      echo "warning: python3 missing, using the TS engine" >&2
-      node scripts/gen-ts.mjs "$RAW" "$OUT"
-    elif ! use_python; then
-      echo "warning: the Python engine failed (its error is above), using the TS engine" >&2
+    GOOSE_BIN=${GOOSE:-$HOME/.local/share/goose-lang/build/goose}
+    if [ -x "$GOOSE_BIN" ] && use_goose; then
+      :
+    else
+      [ -x "$GOOSE_BIN" ] && echo "warning: the Goose engine failed (its error is above), trying Python" >&2
       rm -f "$OUT"/*.tmp
-      node scripts/gen-ts.mjs "$RAW" "$OUT"
+      if ! command -v python3 >/dev/null; then
+        echo "warning: python3 missing, using the TS engine" >&2
+        node scripts/gen-ts.mjs "$RAW" "$OUT"
+      elif ! use_python; then
+        echo "warning: the Python engine failed (its error is above), using the TS engine" >&2
+        rm -f "$OUT"/*.tmp
+        node scripts/gen-ts.mjs "$RAW" "$OUT"
+      fi
     fi ;;
   *) echo "DATA_ENGINE must be python, goose, ts or auto" >&2; exit 2 ;;
 esac
