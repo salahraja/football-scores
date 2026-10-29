@@ -2,6 +2,7 @@
   "name": "football-scores",
   "version": "0.2.0",
   "private": true,
+  "engines": { "node": ">=22.23" },
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,7 +13,9 @@
     "typecheck:tsrs": "tsrs --noEmit",
     "data": "sh scripts/data.sh",
     "data:ts": "DATA_ENGINE=ts sh scripts/data.sh",
+    "data:fetch": "node scripts/fetch-data.mjs",
     "build:data": "npm run data && VITE_DATA=generated npm run build",
+    "build:live": "node scripts/fetch-data.mjs && npm run data && VITE_DATA=generated npm run build",
     "goose:build": "sh goose/build.sh",
     "goose:wasm": "sh goose/wasm/build.sh",
     "parity": "node scripts/parity.mjs python && node scripts/parity.mjs goose && node scripts/parity.mjs wasm",

@@ -7,9 +7,32 @@ via `prefers-color-scheme`).
 
 ## Data
 
-The pages show **sample data** (`src/data/sample.ts`), not live results. There is
-no API key, no network call and no backend. Once a host and a data API are
-chosen, replace the two functions in `src/data/index.ts`.
+The live site shows Serie A standings and results from [football-data.org](https://www.football-data.org/), fetched **at build
+time** (there is no backend and no network call from the browser). `npm run build:live` does three steps:
+
+1. `node scripts/fetch-data.mjs` (Node, no dependencies): with `FOOTBALL_DATA_TOKEN` set, two calls (`/v4/competitions/SA/standings`
+   and `/matches`, header `X-Auth-Token`; the free tier allows 10 calls a minute) written to `data/raw/standings.json` and
+   `data/raw/results.json`. With no token, or if the API fails (HTTP error, 429 after one retry, bad shape), it prints a warning,
+   writes nothing and keeps the committed snapshot, so a build never fails for lack of data. The token is never printed or written.
+2. `npm run data`: the Goose engine turns `data/raw` into `src/data/generated` (see Goose below). It runs with an empty environment,
+   so it cannot see the token.
+3. `VITE_DATA=generated npm run build`: Vite bundles the generated JSON into the site.
+
+Without `VITE_DATA=generated` (plain `npm run dev` / `npm run build`) the app shows **sample data** (`src/data/sample.ts`).
+Running the fetch locally overwrites the committed snapshot in `data/raw` (use `DATA_RAW=/some/dir` to write elsewhere); do not commit that.
+Points are always `3 x wins + draws`, computed by the engines, so a points deduction in the API is not reflected.
+
+## Deploy on Netlify
+
+`netlify.toml` holds the build command, `dist` as the publish directory, a `/* -> /index.html` rewrite (the app uses history routing)
+and a few security headers. Create the site from the repository, then add one environment variable (Site configuration, Environment
+variables): **`FOOTBALL_DATA_TOKEN`** = your football-data.org API token. Without it the site builds from the committed snapshot.
+New data appears on each deploy (trigger a deploy, or a Netlify build hook on a schedule).
+
+Node: the build pins **Node 24** (`NODE_VERSION` in `netlify.toml`, `.nvmrc`, and `engines` `>=22.23` in `package.json`). The Goose wasm is
+wasm64 (memory64): checked here, Node 22.18.0 refuses it (`invalid memory limits flags 0x4`), Node 22.23.4 and 24.22.2 run it by
+default, and the data step plus the full `build:live` pipeline were run under 24.22.2. Netlify has no Goose compiler, so `auto`
+picks the committed wasm there.
 
 ## Run
 
@@ -33,14 +56,14 @@ No packages, no `uv`, no virtualenv: just `python3` (3.9 or newer; developed on 
 ```sh
 python3 -I python/footy.py standings < data/raw/standings.json > src/data/generated/standings.json
 python3 -I python/footy.py results   < data/raw/results.json   > src/data/generated/results.json
-npm run data                  # engine auto = Goose if installed, else Python, else TS (each step down prints a warning)
+npm run data                  # engine auto = native Goose, else the committed wasm, else Python, else TS (warning at each step down)
 DATA_ENGINE=python DATA_VERIFY=1 npm run data   # also fail unless byte-identical to the TS engine
 npm run test:python           # python3 -I -m unittest discover -s python  (compares with tests/golden = TS output)
 node scripts/parity.mjs python
 ```
 
 It uses the same collation rule as Goose (`data/collation.json`, see "Name order" below) so its bytes match TS and Goose on every
-fixture. Goose is the default `auto` engine when its compiler is installed at `~/.local/share/goose-lang/build/goose` (a CMake build of github.com/aardappel/goose; set `GOOSE=` to use another path); Python is the fallback.
+fixture. Goose is the default `auto` engine when its compiler is installed at `~/.local/share/goose-lang/build/goose` (a CMake build of github.com/aardappel/goose; set `GOOSE=` to use another path); then the committed wasm, then Python.
 
 ## Goose
 
@@ -53,50 +76,67 @@ months old, one author, no package ecosystem. Nothing the app needs at run time 
 | Piece | Language | Why |
 |---|---|---|
 | Table (points, tie-breaks, positions), results grouped by round with outcomes, name collation | Goose (`goose/footy.goose`) and TS (`src/data/build.ts`) | pure computation on JSON: the part Goose can do. Output is identical, byte for byte |
-| Fetching data | none yet (the app shows sample data) | Goose has no HTTP. When a fetch step exists it is a shell script with curl writing `data/raw/*.json` |
+| Fetching data | Node (`scripts/fetch-data.mjs`) | Goose has no HTTP. The fetch writes `data/raw/*.json`; Goose never sees the token |
 | Vue app, router, views, tests, Vite | TS | Goose has no DOM and no JS interop |
-| Calling Goose from the browser | `src/data/goose-wasm.ts` (60 lines) loading `goose-footy.wasm` | Goose has no WASM backend; this is a C to wasm64 workaround, see `docs/goose-spike.md`. Proven in Node only, not used by the app |
+| Calling Goose from the browser | `src/data/goose-wasm.ts` (60 lines) loading `goose/dist/goose-footy.wasm` | Goose has no WASM backend; this is a C to wasm64 workaround, see `docs/goose-spike.md`. Used by Node at build time (`scripts/run-wasm.mjs`, `DATA_ENGINE=wasm`); not loaded by the browser app |
 
 ### Build and run (clean environment)
 
 Goose is untrusted code. Every command below runs with an empty environment (`env -i`, `PATH` only): no tokens, no cloud credentials.
 
 ```sh
-# 1. The Goose compiler, once (about 70 s; cmake via pip because it is not installed here)
-python3 -m venv /private/tmp/goose-spike/venv && /private/tmp/goose-spike/venv/bin/pip install cmake
-git clone --depth 1 https://github.com/aardappel/goose /private/tmp/goose-spike/goose
-cd /private/tmp/goose-spike/goose
-env -i PATH=/private/tmp/goose-spike/venv/bin:/usr/bin:/bin:/opt/homebrew/bin HOME=/private/tmp/goose-home cmake -B build -DCMAKE_BUILD_TYPE=Release
-env -i PATH=/private/tmp/goose-spike/venv/bin:/usr/bin:/bin:/opt/homebrew/bin HOME=/private/tmp/goose-home cmake --build build -j8
+# 1. The Goose compiler, once (about 70 s; cmake via pip if it is not installed). Installed at ~/.local/share/goose-lang;
+#    this repo was built and tested with github.com/aardappel/goose commit a108677d.
+python3 -m venv ~/.cache/goose-venv && ~/.cache/goose-venv/bin/pip install cmake
+git clone https://github.com/aardappel/goose ~/.local/share/goose-lang
+cd ~/.local/share/goose-lang && git checkout a108677d
+PATH=~/.cache/goose-venv/bin:$PATH cmake -B build -DCMAKE_BUILD_TYPE=Release && PATH=~/.cache/goose-venv/bin:$PATH cmake --build build -j8
 
 # 2. This repo
 npm ci
-npm run goose:build           # goose/cli.goose -> /private/tmp/goose-spike/out/footy  (3 s)
-npm run data                  # data/raw/*.json -> src/data/generated/*.json with Goose (falls back to TS, see below)
+npm run goose:build           # goose/cli.goose -> ~/.cache/football-scores-goose/footy  (3 s)
+npm run data                  # data/raw/*.json -> src/data/generated/*.json with the best engine available (see below)
 DATA_VERIFY=1 npm run data    # same, then fail unless the output is byte-identical to the TS engine
-DATA_ENGINE=goose npm run data  # Goose or fail;  DATA_ENGINE=ts npm run data  # TS only
+DATA_ENGINE=goose npm run data  # native Goose or fail;  DATA_ENGINE=wasm  # the committed wasm or fail;  DATA_ENGINE=ts  # TS only
 npm run build:data            # data, then a Vite build that reads the generated JSON (VITE_DATA=generated)
-npm run parity                # every fixture in tests/fixtures through the Goose CLI and the wasm build vs TS
-npm test                      # vitest (engine tests skip an engine that is not built)
+npm run build:live            # fetch from football-data.org first (needs FOOTBALL_DATA_TOKEN), then build:data
+npm run parity                # every fixture in tests/fixtures through Python, the Goose CLI and the wasm build vs TS
+npm test                      # vitest (engine tests skip an engine that is not built; the wasm is committed, so it always runs)
 npm run typecheck             # vue-tsc
 ```
 
-Use another compiler location with `GOOSE=/path/to/goose`, another output with `OUT=/path`. Node 22.18 or newer is needed (scripts import `.ts` files directly).
+Use another compiler location with `GOOSE=/path/to/goose`, another output with `OUT=/path`. Node 22.18 or newer is needed to run the
+scripts (they import `.ts` files directly); the wasm engine needs 22.23 or newer (see Deploy on Netlify).
 
-### WASM (optional, experimental)
+### WASM engine (committed, used on Netlify)
 
-Needs the official [wasi-sdk](https://github.com/WebAssembly/wasi-sdk/releases) clang (only its clang and headers are used) under `/private/tmp/wasi-sdk`:
-`wasi-sdk-34.0-arm64-macos.tar.gz`, 180,322,002 bytes, sha256 `9c59398106b417f8f14913380fdf0097a8cc0ff4af9eb3ce0065a859e88d49e9`
-(the digest GitHub's release API lists for the asset; it matched `shasum -a 256` of the download). Then `npm run goose:wasm` writes
-`/private/tmp/wasm-fs/goose-footy.wasm` (82 KB, 38 KB gzipped). It is wasm64 (memory64), so it needs Node 22+ or a browser with memory64
-(not tested in browsers here). Inputs over 16 MB are refused by the loader because the wasm build has no overrun detection.
+`goose/dist/goose-footy.wasm` (82 KB) is the Goose data layer compiled to wasm64 (memory64) and **committed**, with
+`goose/dist/goose-footy.wasm.sha256`. Any machine with Node 22.23+ can run Goose at build time without a Goose compiler:
+`DATA_ENGINE=wasm npm run data` runs `scripts/run-wasm.mjs` with an empty environment. `auto` prefers native Goose, then this wasm,
+then Python, then TS. `tests/wasm-committed.test.ts` fails if the file does not match its checksum, and `tests/engines.test.ts` and
+`node scripts/parity.mjs wasm` fail if its output differs from the TS reference on any fixture. Inputs over 16 MB are refused by the
+loader because the wasm build has no overrun detection. Not tested in browsers.
+
+#### Rebuilding the wasm (only after changing `goose/*.goose`)
+
+Needs two tools outside the repo, neither under `/tmp`:
+
+- the Goose compiler (step 1 above), default path `~/.local/share/goose-lang/build/goose`, override with `GOOSE=`;
+- the official [wasi-sdk](https://github.com/WebAssembly/wasi-sdk/releases) 34 (only its clang and headers are used), unpacked so that
+  `~/.local/share/wasi-sdk/wasi-sdk-34.0-arm64-macos/bin/clang` exists, override with `SDK=`. The asset is
+  `wasi-sdk-34.0-arm64-macos.tar.gz`, 180,322,002 bytes, sha256 `9c59398106b417f8f14913380fdf0097a8cc0ff4af9eb3ce0065a859e88d49e9`
+  (the digest GitHub's release API lists for the asset; it matched `shasum -a 256` of the download). On another platform take the
+  matching asset of the same release and point `SDK=` at it.
+
+Then `npm run goose:wasm` rewrites `goose/dist/goose-footy.wasm` and its `.sha256` (scratch files go to `~/.cache/football-scores-wasm`,
+override with `W=`; a missing tool stops with a message naming the variable to set). The build is deterministic for a given compiler
+and SDK (two runs gave the same sha256). Run `npm test` and `node scripts/parity.mjs wasm`, then commit both files.
 
 ### The one switch and the fallback
 
 `VITE_DATA=generated` makes the app read `src/data/generated/*.json`; without it the app computes everything in TS at load, as before.
-`npm run data` (engine `auto`; it builds the Goose CLI and uses it, or uses Python when the Goose compiler is not installed); if the engine cannot run it prints a warning and runs the TS engine, so
-a machine without Goose still produces the same files. `src/data/generated/` is not committed. If Goose is unavailable nothing breaks:
-the default build never touches it, and `DATA_ENGINE=ts` gives the same JSON.
+`npm run data` (engine `auto`) uses native Goose if its compiler is installed, else the committed wasm, else Python, else TS; each step
+down prints a warning, and every engine writes the same bytes. `src/data/generated/` is not committed.
 
 ### Name order (the localeCompare difference)
 

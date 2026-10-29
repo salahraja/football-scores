@@ -1,0 +1,25 @@
+# Netlify build. Set FOOTBALL_DATA_TOKEN in the site's environment variables (a football-data.org API token).
+# Without it the build still works and publishes the committed snapshot in data/raw.
+[build]
+  # fetch (needs the token, keeps the snapshot if it fails) -> Goose via the committed wasm (empty environment) -> Vite
+  command = "node scripts/fetch-data.mjs && npm run data && VITE_DATA=generated npm run build"
+  publish = "dist"
+
+[build.environment]
+  # wasm64 (memory64) runs by default from Node 22.23 and 24; 22.18 and older fail. See README.
+  NODE_VERSION = "24"
+
+# The app uses history routing (createWebHistory): every path serves index.html.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "DENY"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Content-Security-Policy = "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; base-uri 'self'; frame-ancestors 'none'"
