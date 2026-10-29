@@ -8,14 +8,15 @@ import { spawnSync } from "node:child_process";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { closeSync, existsSync, mkdtempSync, openSync, readFileSync, rmSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
+import { homedir, tmpdir } from "node:os";
 import { loadGooseWasm } from "../src/data/goose-wasm.ts";
 import { resultsData, serialize, standingsData } from "../src/data/build.ts";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const PY = join(HERE, "..", "python", "footy.py");
-export const GOOSE_BIN = process.env.GOOSE_FOOTY ?? "/private/tmp/goose-spike/out/footy";
-export const WASM_PATH = process.env.GOOSE_WASM ?? "/private/tmp/wasm-fs/goose-footy.wasm";
+export const GOOSE_BIN = process.env.GOOSE_FOOTY ?? join(homedir(), ".cache", "football-scores-goose", "footy");
+/** The committed wasm (goose/dist, rebuilt by goose/wasm/build.sh). */
+export const WASM_PATH = process.env.GOOSE_WASM ?? join(HERE, "..", "goose", "dist", "goose-footy.wasm");
 const wasm = existsSync(WASM_PATH) ? await loadGooseWasm(readFileSync(WASM_PATH)) : null;
 const CLEAN = { PATH: "/usr/bin:/bin" };
 

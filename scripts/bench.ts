@@ -9,7 +9,7 @@ import { mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { performance } from "node:perf_hooks";
-import { available, runEngine, type Engine, type Kind } from "./engines.ts";
+import { available, GOOSE_BIN, runEngine, type Engine, type Kind } from "./engines.ts";
 
 const factor = process.argv[2] ?? "100";
 const runs = Number(process.argv[3] ?? 5);
@@ -38,7 +38,7 @@ for (const e of engines) {
 }
 // What `npm run data` actually pays: whole processes, both files, wall time (start-up included).
 const out = mkdtempSync(join(tmpdir(), "fs-bench-out-"));
-const goose = process.env.GOOSE_FOOTY ?? "/private/tmp/goose-spike/out/footy";
+const goose = GOOSE_BIN;
 const cli: Record<string, string> = {
   ts: `node scripts/gen-ts.mjs ${dir} ${out}`,
   goose: `env -i PATH=/usr/bin:/bin ${goose} standings < ${dir}/standings.json > ${out}/s.json && env -i PATH=/usr/bin:/bin ${goose} results < ${dir}/results.json > ${out}/r.json`,
