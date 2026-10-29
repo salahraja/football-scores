@@ -2,7 +2,6 @@
 
 <template>
   <header class="navbar">
-    <p class="badge">Under&nbsp;<code>construction.</code></p>
     <nav class="links" aria-label="Main">
       <router-link to="/">Home</router-link>
       <router-link to="/standings">League Table</router-link>
