@@ -25,10 +25,6 @@ code { font-family: var(--font-mono); font-weight: 700; }
   gap: var(--space-3); max-width: var(--max-width); margin: 0 auto; padding: var(--space-3);
   font-family: var(--font-mono); font-size: 0.875rem; color: var(--accent);
 }
-.badge {
-  margin: 0; padding: var(--space-3); border: 1px solid var(--border);
-  border-radius: 12px; background: var(--bg-card); box-shadow: var(--shadow);
-}
 .links { display: flex; gap: var(--space-4); font-family: var(--font-sans); font-weight: 600; }
 .links a { text-decoration: none; padding: var(--space-1) 0; }
 .links a.router-link-exact-active { border-bottom: 2px solid currentColor; }
