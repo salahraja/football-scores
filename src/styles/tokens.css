@@ -1,12 +1,25 @@
 :root {
-  --bg: #f4f6f7;
-  --bg-card: #ffffff;
-  --fg: #111418;
-  --fg-muted: #6b7280;
-  --accent: #008fd7;
-  --border: #e4e4e7;
-  --shadow: 0 1px 3px rgb(0 0 0 / 0.12), 0 1px 2px rgb(0 0 0 / 0.08);
-  --radius: 8px;
+  /* clay palette (light): soft pastel surfaces, text kept at AA contrast */
+  --bg: #e9eef6;
+  --bg-card: #f3f0fb;
+  --bg-chip: #dff3ec;
+  --fg: #1d2233;
+  --fg-muted: #4b5468;
+  --accent: #00659a;
+  --border: transparent;
+  --clay-hi: rgb(255 255 255 / 0.85);
+  --clay-lo: rgb(99 113 160 / 0.28);
+  --clay-drop: rgb(99 113 160 / 0.30);
+  --shadow:
+    8px 8px 18px var(--clay-drop),
+    -6px -6px 14px rgb(255 255 255 / 0.7),
+    inset 4px 4px 8px var(--clay-hi),
+    inset -4px -4px 8px var(--clay-lo);
+  --shadow-pressed:
+    3px 3px 8px var(--clay-drop),
+    inset 5px 5px 10px var(--clay-lo),
+    inset -3px -3px 8px var(--clay-hi);
+  --radius: 22px;
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 1rem;
@@ -19,11 +32,23 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #000000;
-    --bg-card: #18181b;
-    --fg: #f5f5f5;
-    --fg-muted: #a1a1aa;
-    --border: #262626;
-    --shadow: 0 1px 3px rgb(0 0 0 / 0.6);
+    --bg: #1b1e2b;
+    --bg-card: #262a3d;
+    --bg-chip: #23382f;
+    --fg: #f1f3fa;
+    --fg-muted: #b4bad0;
+    --accent: #7cc7f5;
+    --clay-hi: rgb(150 165 230 / 0.16);
+    --clay-lo: rgb(5 7 16 / 0.55);
+    --clay-drop: rgb(5 7 16 / 0.55);
+    --shadow:
+      8px 8px 18px var(--clay-drop),
+      -5px -5px 12px rgb(120 135 200 / 0.08),
+      inset 4px 4px 8px var(--clay-hi),
+      inset -4px -4px 8px var(--clay-lo);
+    --shadow-pressed:
+      3px 3px 8px var(--clay-drop),
+      inset 5px 5px 10px var(--clay-lo),
+      inset -3px -3px 8px var(--clay-hi);
   }
 }
