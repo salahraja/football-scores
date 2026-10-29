@@ -1,0 +1,54 @@
+[
+ {
+  "id": 5,
+  "position": 0,
+  "team": {
+   "id": 5,
+   "name": "Same"
+  },
+  "matches": 10,
+  "wins": 1,
+  "draws": 1,
+  "losses": 8,
+  "points": 0
+ },
+ {
+  "id": 3,
+  "position": 0,
+  "team": {
+   "id": 3,
+   "name": "Same"
+  },
+  "matches": 10,
+  "wins": 1,
+  "draws": 1,
+  "losses": 8,
+  "points": 0
+ },
+ {
+  "id": 9,
+  "position": 0,
+  "team": {
+   "id": 9,
+   "name": "Same"
+  },
+  "matches": 10,
+  "wins": 1,
+  "draws": 1,
+  "losses": 8,
+  "points": 0
+ },
+ {
+  "id": 1,
+  "position": 0,
+  "team": {
+   "id": 1,
+   "name": "Same"
+  },
+  "matches": 10,
+  "wins": 2,
+  "draws": 0,
+  "losses": 8,
+  "points": 0
+ }
+]

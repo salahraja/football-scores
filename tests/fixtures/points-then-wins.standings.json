@@ -1,0 +1,54 @@
+[
+ {
+  "id": 1,
+  "position": 0,
+  "team": {
+   "id": 1,
+   "name": "Zed"
+  },
+  "matches": 10,
+  "wins": 2,
+  "draws": 3,
+  "losses": 5,
+  "points": 0
+ },
+ {
+  "id": 2,
+  "position": 0,
+  "team": {
+   "id": 2,
+   "name": "Amy"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 0,
+  "losses": 7,
+  "points": 0
+ },
+ {
+  "id": 3,
+  "position": 0,
+  "team": {
+   "id": 3,
+   "name": "Bob"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 0,
+  "losses": 7,
+  "points": 0
+ },
+ {
+  "id": 4,
+  "position": 0,
+  "team": {
+   "id": 4,
+   "name": "Cat"
+  },
+  "matches": 10,
+  "wins": 0,
+  "draws": 9,
+  "losses": 1,
+  "points": 0
+ }
+]

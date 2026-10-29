@@ -1,0 +1,48 @@
+[
+ {
+  "id": 1,
+  "homeScore": {
+   "current": 1
+  },
+  "homeTeam": {
+   "id": 1,
+   "name": "Say \"hi\""
+  },
+  "awayScore": {
+   "current": 1
+  },
+  "awayTeam": {
+   "id": 2,
+   "name": "new\nline"
+  },
+  "status": {
+   "type": "ctl\u0001\u001f"
+  },
+  "roundInfo": {
+   "round": 1
+  }
+ },
+ {
+  "id": 2,
+  "homeScore": {
+   "current": 0
+  },
+  "homeTeam": {
+   "id": 3,
+   "name": "emoji 😀"
+  },
+  "awayScore": {
+   "current": 2
+  },
+  "awayTeam": {
+   "id": 4,
+   "name": "astral 𝄞"
+  },
+  "status": {
+   "type": "x\"y"
+  },
+  "roundInfo": {
+   "round": 1
+  }
+ }
+]

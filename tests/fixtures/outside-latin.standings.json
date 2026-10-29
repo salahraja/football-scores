@@ -1,0 +1,184 @@
+[
+ {
+  "id": 1,
+  "position": 0,
+  "team": {
+   "id": 1,
+   "name": "Zagreb"
+  },
+  "matches": 10,
+  "wins": 1,
+  "draws": 0,
+  "losses": 9,
+  "points": 0
+ },
+ {
+  "id": 2,
+  "position": 0,
+  "team": {
+   "id": 2,
+   "name": "Ωmega"
+  },
+  "matches": 10,
+  "wins": 1,
+  "draws": 0,
+  "losses": 9,
+  "points": 0
+ },
+ {
+  "id": 3,
+  "position": 0,
+  "team": {
+   "id": 3,
+   "name": "Спартак"
+  },
+  "matches": 10,
+  "wins": 1,
+  "draws": 0,
+  "losses": 9,
+  "points": 0
+ },
+ {
+  "id": 4,
+  "position": 0,
+  "team": {
+   "id": 4,
+   "name": "日本"
+  },
+  "matches": 10,
+  "wins": 1,
+  "draws": 0,
+  "losses": 9,
+  "points": 0
+ },
+ {
+  "id": 5,
+  "position": 0,
+  "team": {
+   "id": 5,
+   "name": "😀"
+  },
+  "matches": 10,
+  "wins": 1,
+  "draws": 0,
+  "losses": 9,
+  "points": 0
+ },
+ {
+  "id": 6,
+  "position": 0,
+  "team": {
+   "id": 6,
+   "name": "Ünal"
+  },
+  "matches": 10,
+  "wins": 1,
+  "draws": 0,
+  "losses": 9,
+  "points": 0
+ },
+ {
+  "id": 7,
+  "position": 0,
+  "team": {
+   "id": 7,
+   "name": "ß-test"
+  },
+  "matches": 10,
+  "wins": 1,
+  "draws": 0,
+  "losses": 9,
+  "points": 0
+ },
+ {
+  "id": 8,
+  "position": 0,
+  "team": {
+   "id": 8,
+   "name": "Æsir"
+  },
+  "matches": 10,
+  "wins": 1,
+  "draws": 0,
+  "losses": 9,
+  "points": 0
+ },
+ {
+  "id": 9,
+  "position": 0,
+  "team": {
+   "id": 9,
+   "name": "Strasse"
+  },
+  "matches": 10,
+  "wins": 1,
+  "draws": 0,
+  "losses": 9,
+  "points": 0
+ },
+ {
+  "id": 10,
+  "position": 0,
+  "team": {
+   "id": 10,
+   "name": "½ price"
+  },
+  "matches": 10,
+  "wins": 1,
+  "draws": 0,
+  "losses": 9,
+  "points": 0
+ },
+ {
+  "id": 11,
+  "position": 0,
+  "team": {
+   "id": 11,
+   "name": "ǅ"
+  },
+  "matches": 10,
+  "wins": 1,
+  "draws": 0,
+  "losses": 9,
+  "points": 0
+ },
+ {
+  "id": 12,
+  "position": 0,
+  "team": {
+   "id": 12,
+   "name": "ﬁnal"
+  },
+  "matches": 10,
+  "wins": 1,
+  "draws": 0,
+  "losses": 9,
+  "points": 0
+ },
+ {
+  "id": 13,
+  "position": 0,
+  "team": {
+   "id": 13,
+   "name": "ƀ"
+  },
+  "matches": 10,
+  "wins": 1,
+  "draws": 0,
+  "losses": 9,
+  "points": 0
+ },
+ {
+  "id": 14,
+  "position": 0,
+  "team": {
+   "id": 14,
+   "name": "é (decomposed)"
+  },
+  "matches": 10,
+  "wins": 1,
+  "draws": 0,
+  "losses": 9,
+  "points": 0
+ }
+]

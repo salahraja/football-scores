@@ -1,0 +1,808 @@
+[
+ {
+  "id": 1,
+  "position": 0,
+  "team": {
+   "id": 1,
+   "name": "zeta"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 2,
+  "position": 0,
+  "team": {
+   "id": 2,
+   "name": "Alpha"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 3,
+  "position": 0,
+  "team": {
+   "id": 3,
+   "name": "Émile"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 4,
+  "position": 0,
+  "team": {
+   "id": 4,
+   "name": "émile"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 5,
+  "position": 0,
+  "team": {
+   "id": 5,
+   "name": "Emile"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 6,
+  "position": 0,
+  "team": {
+   "id": 6,
+   "name": "ÉMILE"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 7,
+  "position": 0,
+  "team": {
+   "id": 7,
+   "name": "e"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 8,
+  "position": 0,
+  "team": {
+   "id": 8,
+   "name": "E"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 9,
+  "position": 0,
+  "team": {
+   "id": 9,
+   "name": "Eb"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 10,
+  "position": 0,
+  "team": {
+   "id": 10,
+   "name": "éb"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 11,
+  "position": 0,
+  "team": {
+   "id": 11,
+   "name": "alpha"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 12,
+  "position": 0,
+  "team": {
+   "id": 12,
+   "name": "ALPHA"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 13,
+  "position": 0,
+  "team": {
+   "id": 13,
+   "name": "Ålesund"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 14,
+  "position": 0,
+  "team": {
+   "id": 14,
+   "name": "Aalborg"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 15,
+  "position": 0,
+  "team": {
+   "id": 15,
+   "name": "Zürich"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 16,
+  "position": 0,
+  "team": {
+   "id": 16,
+   "name": "Zurich"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 17,
+  "position": 0,
+  "team": {
+   "id": 17,
+   "name": "zurich"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 18,
+  "position": 0,
+  "team": {
+   "id": 18,
+   "name": "Östersund"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 19,
+  "position": 0,
+  "team": {
+   "id": 19,
+   "name": "Ostersund"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 20,
+  "position": 0,
+  "team": {
+   "id": 20,
+   "name": "Ñuñoa"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 21,
+  "position": 0,
+  "team": {
+   "id": 21,
+   "name": "Nunoa"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 22,
+  "position": 0,
+  "team": {
+   "id": 22,
+   "name": "Łódź"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 23,
+  "position": 0,
+  "team": {
+   "id": 23,
+   "name": "Lodz"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 24,
+  "position": 0,
+  "team": {
+   "id": 24,
+   "name": "Đồng"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 25,
+  "position": 0,
+  "team": {
+   "id": 25,
+   "name": "Dong"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 26,
+  "position": 0,
+  "team": {
+   "id": 26,
+   "name": "İstanbul"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 27,
+  "position": 0,
+  "team": {
+   "id": 27,
+   "name": "Istanbul"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 28,
+  "position": 0,
+  "team": {
+   "id": 28,
+   "name": "Çankaya"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 29,
+  "position": 0,
+  "team": {
+   "id": 29,
+   "name": "Cankaya"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 30,
+  "position": 0,
+  "team": {
+   "id": 30,
+   "name": "Atlético Madrid"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 31,
+  "position": 0,
+  "team": {
+   "id": 31,
+   "name": "Atletico Madrid"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 32,
+  "position": 0,
+  "team": {
+   "id": 32,
+   "name": "Atlético  Madrid"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 33,
+  "position": 0,
+  "team": {
+   "id": 33,
+   "name": "AC Milan"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 34,
+  "position": 0,
+  "team": {
+   "id": 34,
+   "name": "A.C. Milan"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 35,
+  "position": 0,
+  "team": {
+   "id": 35,
+   "name": "AC-Milan"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 36,
+  "position": 0,
+  "team": {
+   "id": 36,
+   "name": "ac_milan"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 37,
+  "position": 0,
+  "team": {
+   "id": 37,
+   "name": "Inter 1908"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 38,
+  "position": 0,
+  "team": {
+   "id": 38,
+   "name": "Inter 2"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 39,
+  "position": 0,
+  "team": {
+   "id": 39,
+   "name": "Inter10"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 40,
+  "position": 0,
+  "team": {
+   "id": 40,
+   "name": "Inter9"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 41,
+  "position": 0,
+  "team": {
+   "id": 41,
+   "name": "Man City"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 42,
+  "position": 0,
+  "team": {
+   "id": 42,
+   "name": "man city"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 43,
+  "position": 0,
+  "team": {
+   "id": 43,
+   "name": "Man. City"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 44,
+  "position": 0,
+  "team": {
+   "id": 44,
+   "name": "(Loan)"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 45,
+  "position": 0,
+  "team": {
+   "id": 45,
+   "name": "'Sampdoria'"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 46,
+  "position": 0,
+  "team": {
+   "id": 46,
+   "name": "St. Pauli"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 47,
+  "position": 0,
+  "team": {
+   "id": 47,
+   "name": "St Pauli"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 48,
+  "position": 0,
+  "team": {
+   "id": 48,
+   "name": "Saint-Étienne"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 49,
+  "position": 0,
+  "team": {
+   "id": 49,
+   "name": "Saint Etienne"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 50,
+  "position": 0,
+  "team": {
+   "id": 50,
+   "name": "Спартак"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 51,
+  "position": 0,
+  "team": {
+   "id": 51,
+   "name": "Ελλάς"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 52,
+  "position": 0,
+  "team": {
+   "id": 52,
+   "name": "Zeta"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 53,
+  "position": 0,
+  "team": {
+   "id": 53,
+   "name": "ze"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 54,
+  "position": 0,
+  "team": {
+   "id": 54,
+   "name": "Z"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 55,
+  "position": 0,
+  "team": {
+   "id": 55,
+   "name": "z"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 56,
+  "position": 0,
+  "team": {
+   "id": 56,
+   "name": ""
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 57,
+  "position": 0,
+  "team": {
+   "id": 57,
+   "name": " leading space"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 58,
+  "position": 0,
+  "team": {
+   "id": 58,
+   "name": "Oeuvre"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 59,
+  "position": 0,
+  "team": {
+   "id": 59,
+   "name": "Ÿ"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 60,
+  "position": 0,
+  "team": {
+   "id": 60,
+   "name": "ÿ"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 61,
+  "position": 0,
+  "team": {
+   "id": 61,
+   "name": "Y"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ },
+ {
+  "id": 62,
+  "position": 0,
+  "team": {
+   "id": 62,
+   "name": "y"
+  },
+  "matches": 10,
+  "wins": 3,
+  "draws": 1,
+  "losses": 6,
+  "points": 0
+ }
+]
