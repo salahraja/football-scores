@@ -93,15 +93,23 @@ export function toResultsRaw(body) {
   return out;
 }
 
-/** Fetches both files. Returns { standings, results } (raw rows) or throws FetchError. */
+/** "2026-27" from the standings reply's season dates, or undefined. */
+export function seasonLabel(body) {
+  const a = /^(\d{4})-/.exec(body?.season?.startDate ?? "")?.[1];
+  const b = /^(\d{4})-/.exec(body?.season?.endDate ?? "")?.[1];
+  return a && b ? (a === b ? a : `${a}-${b.slice(2)}`) : undefined;
+}
+
+/** Fetches both files. Returns { standings, results, season } or throws FetchError. */
 export async function fetchRaw(token, opts) {
-  const standings = toStandingsRaw(await getJson(`/competitions/${COMPETITION}/standings`, token, opts));
+  const sBody = await getJson(`/competitions/${COMPETITION}/standings`, token, opts);
+  const standings = toStandingsRaw(sBody);
   const results = toResultsRaw(await getJson(`/competitions/${COMPETITION}/matches`, token, opts));
-  return { standings, results };
+  return { standings, results, season: seasonLabel(sBody) };
 }
 
 /** Writes both files only after both fetches worked. Returns true if it wrote them. */
-export async function run({ token, dir, fetchFn, sleep } = {}) {
+export async function run({ token, dir, fetchFn, sleep, now = () => new Date() } = {}) {
   if (!token) {
     console.warn("fetch-data: warning: FOOTBALL_DATA_TOKEN is not set, keeping the committed snapshot in " + dir);
     return false;
@@ -120,6 +128,10 @@ export async function run({ token, dir, fetchFn, sleep } = {}) {
     writeFileSync(tmp, JSON.stringify(rows, null, 1) + "\n");
     renameSync(tmp, join(dir, file));
   }
+  // where the data came from; scripts/data.sh copies this into src/data/generated/meta.json
+  const meta = { source: "live", fetchedAt: now().toISOString(), ...(data.season ? { season: data.season } : {}) };
+  writeFileSync(join(dir, "meta.json.tmp"), JSON.stringify(meta) + "\n");
+  renameSync(join(dir, "meta.json.tmp"), join(dir, "meta.json"));
   console.log(`fetch-data: wrote ${data.standings.length} table rows and ${data.results.length} finished matches to ${dir}`);
   return true;
 }

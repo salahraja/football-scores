@@ -17,7 +17,22 @@ function fromGenerated<T>(name: string): T {
   return v as T;
 }
 
-export const getStandings = (): StandingRow[] =>
+export interface DataMeta {
+  source: "live" | "snapshot";
+  fetchedAt?: string;
+  season?: string;
+  engine?: string;
+}
+
+/** Where the shown data came from, in words. The dev path (no VITE_DATA) is always sample data. */
+export function describeSource(meta?: DataMeta | null): string {
+  if (meta?.source === "live" && meta.fetchedAt) return `Live from football-data.org, updated ${meta.fetchedAt.slice(0, 10)}`;
+  return "Sample data (saved snapshot)";
+}
+export const getDataNote = (): string =>
+  useGenerated ? describeSource(generated["./generated/meta.json"] as DataMeta | undefined) : "Sample data";
+
+export const getStandings =(): StandingRow[] =>
   useGenerated ? fromGenerated<StandingRow[]>("standings") : buildTable(sampleStandings);
 export const getResults = (): MatchEvent[] => sampleResults;
 /** Results grouped by round, newest round first, each event carrying its outcome. */

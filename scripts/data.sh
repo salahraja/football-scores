@@ -6,7 +6,8 @@
 # DATA_ENGINE=wasm   the committed Goose wasm (goose/dist) run by Node: Goose with no Goose compiler (this is what Netlify uses)
 # DATA_ENGINE=auto   (default) native Goose if its compiler is installed, else the committed wasm, else Python, else TS,
 #                    each with a warning when it steps down
-# DATA_VERIFY=1      also run the TS engine and fail unless the outputs are byte-identical
+# Also writes $OUT/meta.json: {source: live|snapshot, fetchedAt, season, engine}, read by the views.
+# DATA_VERIFY=1     also run the TS engine and fail unless the outputs are byte-identical
 set -e
 cd "$(dirname "$0")/.."
 ENGINE=${DATA_ENGINE:-auto}
@@ -23,7 +24,7 @@ use_goose() {
   env -i PATH=/usr/bin:/bin "$BIN" results < "$RAW/results.json" > "$OUT/results.json.tmp" || return 1
   mv "$OUT/standings.json.tmp" "$OUT/standings.json"
   mv "$OUT/results.json.tmp" "$OUT/results.json"
-  echo "engine=goose  wrote $OUT/standings.json and $OUT/results.json"
+  USED=goose; echo "engine=goose  wrote $OUT/standings.json and $OUT/results.json"
 }
 
 use_python() {
@@ -32,7 +33,7 @@ use_python() {
   python3 -I python/footy.py results < "$RAW/results.json" > "$OUT/results.json.tmp" || return 1
   mv "$OUT/standings.json.tmp" "$OUT/standings.json"
   mv "$OUT/results.json.tmp" "$OUT/results.json"
-  echo "engine=python  wrote $OUT/standings.json and $OUT/results.json"
+  USED=python; echo "engine=python  wrote $OUT/standings.json and $OUT/results.json"
 }
 
 use_wasm() {
@@ -44,7 +45,7 @@ use_wasm() {
   env -i PATH=/usr/bin:/bin "$NODE" scripts/run-wasm.mjs results < "$RAW/results.json" > "$OUT/results.json.tmp" || return 1
   mv "$OUT/standings.json.tmp" "$OUT/standings.json"
   mv "$OUT/results.json.tmp" "$OUT/results.json"
-  echo "engine=wasm  wrote $OUT/standings.json and $OUT/results.json"
+  USED=wasm; echo "engine=wasm  wrote $OUT/standings.json and $OUT/results.json"
 }
 
 # Python, then TS, each with a warning when it steps down.
@@ -52,16 +53,16 @@ fall_back_to_python() {
   rm -f "$OUT"/*.tmp
   if ! command -v python3 >/dev/null; then
     echo "warning: python3 missing, using the TS engine" >&2
-    node scripts/gen-ts.mjs "$RAW" "$OUT"
+    USED=ts; node scripts/gen-ts.mjs "$RAW" "$OUT"
   elif ! use_python; then
     echo "warning: the Python engine failed (its error is above), using the TS engine" >&2
     rm -f "$OUT"/*.tmp
-    node scripts/gen-ts.mjs "$RAW" "$OUT"
+    USED=ts; node scripts/gen-ts.mjs "$RAW" "$OUT"
   fi
 }
 
 case "$ENGINE" in
-  ts) node scripts/gen-ts.mjs "$RAW" "$OUT" ;;
+  ts) USED=ts; node scripts/gen-ts.mjs "$RAW" "$OUT" ;;
   wasm) use_wasm ;;
   goose) use_goose ;;
   python) use_python ;;
@@ -79,6 +80,9 @@ case "$ENGINE" in
     fi ;;
   *) echo "DATA_ENGINE must be python, goose, wasm, ts or auto" >&2; exit 2 ;;
 esac
+
+# where the data came from (live or snapshot) and which engine made it, for the page captions
+node scripts/write-meta.mjs "$RAW" "$OUT" "${USED:-unknown}"
 
 if [ "${DATA_VERIFY:-0}" = 1 ]; then
   T=$(mktemp -d)

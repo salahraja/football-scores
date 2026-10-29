@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { StandingRow } from "../data/types";
-defineProps<{ rows: StandingRow[] }>();
+withDefaults(defineProps<{ rows: StandingRow[]; note?: string }>(), { note: "Sample data" });
 </script>
 
 <template>
   <table class="standings">
-    <caption class="sr-only">Serie A standings (sample data)</caption>
+    <caption class="sr-only">Serie A standings ({{ note }})</caption>
     <thead>
       <tr>
         <th scope="col"><span class="sr-only">Position</span></th>

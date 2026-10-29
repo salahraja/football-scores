@@ -18,6 +18,13 @@ time** (there is no backend and no network call from the browser). `npm run buil
    so it cannot see the token.
 3. `VITE_DATA=generated npm run build`: Vite bundles the generated JSON into the site.
 
+Early in a season, while there are zero finished matches, the fetch keeps the committed snapshot, so the previous season shows until
+the first match finishes. A FINISHED match with a null score (or any other unexpected shape) also makes the whole fetch keep the snapshot.
+
+The pages say where their data came from. The data step writes `src/data/generated/meta.json` (`source` is `live` or `snapshot`,
+plus `fetchedAt` and `season` for live, and the `engine` used); the fetch records its source in `data/raw/meta.json`. The views show
+"Live from football-data.org, updated <date>" or "Sample data (saved snapshot)", and "Sample data" on the plain dev path.
+
 Without `VITE_DATA=generated` (plain `npm run dev` / `npm run build`) the app shows **sample data** (`src/data/sample.ts`).
 Running the fetch locally overwrites the committed snapshot in `data/raw` (use `DATA_RAW=/some/dir` to write elsewhere); do not commit that.
 Points are always `3 x wins + draws`, computed by the engines, so a points deduction in the API is not reflected.
@@ -129,8 +136,10 @@ Needs two tools outside the repo, neither under `/tmp`:
   matching asset of the same release and point `SDK=` at it.
 
 Then `npm run goose:wasm` rewrites `goose/dist/goose-footy.wasm` and its `.sha256` (scratch files go to `~/.cache/football-scores-wasm`,
-override with `W=`; a missing tool stops with a message naming the variable to set). The build is deterministic for a given compiler
-and SDK (two runs gave the same sha256). Run `npm test` and `node scripts/parity.mjs wasm`, then commit both files.
+override with `W=`; a missing tool stops with a message naming the variable to set). The build is **not** byte-reproducible: four rebuilds on one machine
+gave four different sha256 values, all of which worked (cause unknown: Goose or clang, not investigated). So a rebuild is checked by
+behaviour, not by hash: run `npm test` and `node scripts/parity.mjs wasm` (14/14), then commit the new wasm together with its new
+`.sha256`. The `.sha256` file pins the committed artifact (the test catches a corrupted or half-updated file), not the build.
 
 ### The one switch and the fallback
 

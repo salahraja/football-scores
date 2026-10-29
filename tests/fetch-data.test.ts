@@ -9,6 +9,7 @@ import { resultsData, standingsData } from "../src/data/build";
 // Small invented replies in the football-data.org v4 shape (extra fields are the kind the real API adds).
 const standingsBody = {
   competition: { code: "SA" },
+  season: { startDate: "2026-08-23", endDate: "2027-05-30" },
   standings: [
     { type: "HOME", table: [] },
     {
@@ -76,7 +77,7 @@ describe("run", () => {
 
   it("writes both files with the token in X-Auth-Token and two calls only", async () => {
     const fetchFn = vi.fn(async (url: string, _init?: { headers: Record<string, string> }) => reply(200, url.includes("/standings") ? standingsBody : matchesBody));
-    expect(await run({ token: SECRET, dir, fetchFn })).toBe(true);
+    expect(await run({ token: SECRET, dir, fetchFn, now: () => new Date("2026-10-28T12:00:00Z") })).toBe(true);
     expect(fetchFn).toHaveBeenCalledTimes(2);
     expect(fetchFn.mock.calls[0][1]?.headers).toEqual({ "X-Auth-Token": SECRET });
     expect(fetchFn.mock.calls.map((c) => c[0])).toEqual([
@@ -84,8 +85,24 @@ describe("run", () => {
       "https://api.football-data.org/v4/competitions/SA/matches",
     ]);
     expect(JSON.parse(readFileSync(join(dir, "standings.json"), "utf8"))).toHaveLength(2);
-    expect(readdirSync(dir).sort()).toEqual(["results.json", "standings.json"]);
+    expect(readdirSync(dir).sort()).toEqual(["meta.json", "results.json", "standings.json"]);
+    expect(JSON.parse(readFileSync(join(dir, "meta.json"), "utf8"))).toEqual({ source: "live", fetchedAt: "2026-10-28T12:00:00.000Z", season: "2026-27" });
     expect(printed()).not.toContain(SECRET);
+  });
+
+  it("a finished match with null scores keeps the snapshot (no meta written)", async () => {
+    const bad = { matches: [{ ...matchesBody.matches[0], score: { fullTime: { home: null, away: null } } }] };
+    const fetchFn = async (url: string) => reply(200, url.includes("/standings") ? standingsBody : bad);
+    expect(await run({ token: SECRET, dir, fetchFn })).toBe(false);
+    expect(snapshotKept()).toBe(true);
+    expect(readdirSync(dir).sort()).toEqual(["results.json", "standings.json"]);
+  });
+
+  it("zero finished matches keeps the snapshot", async () => {
+    const none = { matches: [matchesBody.matches[2]] };
+    const fetchFn = async (url: string) => reply(200, url.includes("/standings") ? standingsBody : none);
+    expect(await run({ token: SECRET, dir, fetchFn })).toBe(false);
+    expect(snapshotKept()).toBe(true);
   });
 
   it("missing token: no call, snapshot kept, warning", async () => {

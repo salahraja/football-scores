@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { getResultRounds } from "../data";
+import { getDataNote, getResultRounds } from "../data";
 const rounds = getResultRounds();
+const note = getDataNote();
 </script>
 
 <template>
   <section>
     <h1>Match Results</h1>
-    <p class="note">Sample data</p>
+    <p class="note">{{ note }}</p>
     <template v-for="{ round, events } in rounds" :key="round">
       <h2 class="round">Matchday {{ round }}</h2>
       <div class="cards">

@@ -8,4 +8,5 @@ export function run(opts?: {
   dir?: string;
   fetchFn?: (url: string, init?: any) => Promise<Response>;
   sleep?: (ms: number) => Promise<void>;
+  now?: () => Date;
 }): Promise<boolean>;
