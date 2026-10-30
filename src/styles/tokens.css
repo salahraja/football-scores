@@ -1,29 +1,42 @@
 :root {
-  --bg: #f4f6f7;
-  --bg-card: #ffffff;
-  --fg: #111418;
-  --fg-muted: #6b7280;
-  --accent: #008fd7;
-  --border: #e4e4e7;
-  --shadow: 0 1px 3px rgb(0 0 0 / 0.12), 0 1px 2px rgb(0 0 0 / 0.08);
-  --radius: 8px;
+  /* Stadio clay (Salah, 2026-10-30): one colour family per surface, tone on tone; shadows are the surface's own hue, darker, never
+     grey; brick red is the one accent. Prototype: docs/prototype/clay.html. */
+  --bg: #dde1e8;
+  --bg-card: #e5e8ee;
+  --clay-hi: #f7f8fa;
+  --clay-lo: #b4bccb;
+  --clay-deep: #7d889e;
+  --fg: #1b1c20;
+  --fg-muted: #5b6273;
+  --accent: #b3261e;
+  --accent-hi: #d94a3f;
+  --accent-lo: #7e140e;
+  --on-accent: #ffffff;
+  --border: #c9cfd9;
+  --shadow: 0 30px 50px -18px rgb(125 136 158 / 55%), 0 8px 16px -6px rgb(125 136 158 / 30%);
+  --radius: 40px;
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 1rem;
   --space-4: 1.5rem;
   --space-5: 2.5rem;
-  --font-sans: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* SF Pro Rounded on Apple devices; the site's CSP allows no outside fonts, so elsewhere the system face */
+  --font-sans: ui-rounded, "SF Pro Rounded", "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  --max-width: 64rem;
+  --max-width: 70rem;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #000000;
-    --bg-card: #18181b;
-    --fg: #f5f5f5;
-    --fg-muted: #a1a1aa;
-    --border: #262626;
-    --shadow: 0 1px 3px rgb(0 0 0 / 0.6);
+    /* night clay: the same pieces in deep slate */
+    --bg: #1d2027;
+    --bg-card: #252931;
+    --clay-hi: #343943;
+    --clay-lo: #121419;
+    --clay-deep: #000000;
+    --fg: #eef0f3;
+    --fg-muted: #a3a9b4;
+    --border: #353a44;
+    --shadow: 0 30px 50px -18px rgb(0 0 0 / 70%), 0 8px 16px -6px rgb(0 0 0 / 45%);
   }
 }
