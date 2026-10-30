@@ -12,30 +12,24 @@ body {
 }
 a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
 
-/* ---- clay: hand-pressed pieces (the look Salah picked, 2026-10-30). The box is clear; its ::before is the clay body: an uneven
-   outline (each box its own radii), a wobbly pressed edge from the SVG filter #press in App.vue (on the body only, so text stays sharp),
-   a lit top-left rim, a shadowed lower bulge, a soft cast shadow and a faint grain. Each piece leans a little, as if set down by hand. ---- */
-.clay { position: relative; isolation: isolate; padding: var(--space-4); color: var(--fg); transform: rotate(var(--tilt, 0deg)); }
+/* ---- clay (the look Salah picked, 2026-10-30): the box is clear; its ::before is the clay body: one clean rounded shape for every
+   box (he asked for no random outlines), a lit top-left rim, a shadowed lower bulge, a soft cast shadow and a faint grain. ---- */
+.clay { position: relative; isolation: isolate; padding: var(--space-4); color: var(--fg); }
 .clay::before {
-  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: var(--clay-r, 40px);
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: var(--radius);
   background-color: var(--fill, var(--bg-card));
   background-image: radial-gradient(rgb(0 0 0 / 4%) 1.2px, transparent 2px), radial-gradient(rgb(255 255 255 / 6%) 1px, transparent 1.6px);
   background-size: 9px 11px, 7px 6px; background-position: 0 0, 3px 4px;
   box-shadow: inset 9px 10px 14px rgb(255 255 255 / 50%), inset -12px -15px 24px rgb(0 0 0 / 22%), 18px 24px 40px -14px rgb(27 28 32 / 45%);
-  filter: url(#press);
 }
 .clay.dark { --fill: #1b1c20; color: #fff; }
 .clay.dark::before { box-shadow: inset 8px 9px 14px rgb(255 255 255 / 14%), inset -12px -15px 24px rgb(0 0 0 / 55%), 18px 24px 40px -14px rgb(27 28 32 / 55%); }
 .clay.accent { --fill: var(--accent); color: var(--on-accent); }
 .clay.grey { --fill: var(--grey); }
-.clay:nth-of-type(4n+1) { --clay-r: 46px 34px 58px 30px / 38px 54px 30px 50px; --tilt: -0.6deg; }
-.clay:nth-of-type(4n+2) { --clay-r: 30px 56px 36px 50px / 52px 32px 48px 36px; --tilt: 0.7deg; }
-.clay:nth-of-type(4n+3) { --clay-r: 54px 38px 44px 62px / 34px 58px 40px 46px; --tilt: -0.4deg; }
-.clay:nth-of-type(4n+4) { --clay-r: 38px 60px 30px 44px / 48px 30px 56px 42px; --tilt: 0.5deg; }
 @media (prefers-color-scheme: dark) { .clay::before { box-shadow: inset 8px 9px 14px rgb(255 255 255 / 10%), inset -12px -15px 24px rgb(0 0 0 / 50%), 18px 24px 40px -14px rgb(0 0 0 / 60%); } }
 @media (prefers-reduced-motion: no-preference) {
   .clay { transition: transform 260ms cubic-bezier(.2, .9, .3, 1.2); }
-  .clay:hover { transform: rotate(0deg) translateY(-3px); }
+  .clay:hover { transform: translateY(-3px); }
 }
 .dent { background: var(--bg-card); color: var(--fg); border-radius: 14px 18px 12px 20px; }
 
