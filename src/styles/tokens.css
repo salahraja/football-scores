@@ -1,42 +1,37 @@
 :root {
-  /* Stadio clay (Salah, 2026-10-30): one colour family per surface, tone on tone; shadows are the surface's own hue, darker, never
-     grey; brick red is the one accent. Prototype: docs/prototype/clay.html. */
-  --bg: #dde1e8;
-  --bg-card: #e5e8ee;
-  --clay-hi: #f7f8fa;
-  --clay-lo: #b4bccb;
-  --clay-deep: #7d889e;
+  /* Stadio (Salah, 2026-10-30): slate-to-paper, brick red condensed capitals, near-black; boxes are hand-pressed clay
+     (docs/prototype/stadio-variants.html, Poster + Full clay, the look he picked). */
+  --bg: #eeeeec;
+  --bg-card: #f7f7f5;
+  --grey: #e0dfdb;
+  --slate: #6f7e98;
+  --slate-2: #a9b3c3;
   --fg: #1b1c20;
-  --fg-muted: #5b6273;
+  --fg-muted: #5b5f68;
   --accent: #b3261e;
-  --accent-hi: #d94a3f;
-  --accent-lo: #7e140e;
   --on-accent: #ffffff;
-  --border: #c9cfd9;
-  --shadow: 0 30px 50px -18px rgb(125 136 158 / 55%), 0 8px 16px -6px rgb(125 136 158 / 30%);
+  --border: rgb(27 28 32 / 12%);
   --radius: 40px;
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 1rem;
   --space-4: 1.5rem;
   --space-5: 2.5rem;
-  /* SF Pro Rounded on Apple devices; the site's CSP allows no outside fonts, so elsewhere the system face */
-  --font-sans: ui-rounded, "SF Pro Rounded", "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --font-sans: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  --max-width: 70rem;
+  --max-width: 72rem;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    /* night clay: the same pieces in deep slate */
-    --bg: #1d2027;
-    --bg-card: #252931;
-    --clay-hi: #343943;
-    --clay-lo: #121419;
-    --clay-deep: #000000;
+    --bg: #17191d;
+    --bg-card: #23262c;
+    --grey: #2c3037;
+    --slate: #2c3442;
+    --slate-2: #3b4556;
     --fg: #eef0f3;
     --fg-muted: #a3a9b4;
-    --border: #353a44;
-    --shadow: 0 30px 50px -18px rgb(0 0 0 / 70%), 0 8px 16px -6px rgb(0 0 0 / 45%);
+    --border: rgb(255 255 255 / 12%);
   }
 }
