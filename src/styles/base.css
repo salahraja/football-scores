@@ -128,3 +128,10 @@ code { font-family: var(--font-mono); font-weight: 700; }
 .more { display: inline-block; margin-top: var(--space-3); font-weight: 600; color: inherit; }
 .slot { margin: 0; border: 1.5px dashed currentColor; border-radius: 22px 30px 20px 28px; padding: var(--space-3); opacity: 0.85; }
 @media (max-width: 860px) { .board__grid { grid-template-columns: minmax(0, 1fr); } }
+/* a phone: the glass nav stays one row (the avatar without its label) */
+@media (max-width: 560px) {
+  .navbar { flex-wrap: nowrap; gap: 6px; margin-inline: 10px; }
+  .links { flex-wrap: nowrap; gap: 2px; } .links a { padding: 8px 10px; white-space: nowrap; }
+  .by span { display: none; } .by img { width: 30px; height: auto; }
+}
+@media (max-width: 360px) { .by { display: none; } }
