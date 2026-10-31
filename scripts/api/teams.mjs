@@ -18,7 +18,8 @@ export function slug(name) {
     .normalize("NFD").replace(/[̀-ͯ]/g, "")
     .toLowerCase().replace(/&/g, " and ").replace(/[^a-z0-9]+/g, " ")
     // Single letters are initials of club words ("S.L. Benfica", "F.C. Porto", "A.C. Milan"), never the club's name.
-    .split(" ").filter((w) => w.length > 1 && !CLUB_WORDS.has(w) && !/^\d+$/.test(w));
+    // "and" joins two place names ("Brighton & Hove Albion"); one source writes it, another drops it ("Brighton Hove Albion").
+    .split(" ").filter((w) => w.length > 1 && w !== "and" && !CLUB_WORDS.has(w) && !/^\d+$/.test(w));
   return words.join("-");
 }
 

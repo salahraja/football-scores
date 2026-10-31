@@ -22,7 +22,7 @@ const page = (out: string, path: string) => readFileSync(join(out, path), "utf8"
 describe("league pages", () => {
   it("makes one page per league and an index that links them all", () => {
     const out = site();
-    expect(readdirSync(join(out, "leagues")).filter((f) => !f.includes(".")).sort())
+    expect(readdirSync(join(out, "leagues")).filter((f) => !f.includes(".") && f !== "fonts").sort())
       .toEqual(["de-1", "en-1", "en-2", "es-1", "fr-1", "it-1", "nl-1", "pt-1"]);
     const index = page(out, "leagues/index.html");
     for (const id of ["it-1", "en-1", "pt-1"]) expect(index).toContain(`href="/leagues/${id}/"`);
@@ -57,7 +57,8 @@ describe("league pages", () => {
     build({ input, wikipedia: tmp(), out, seasons: ["2025-26"], now: "2026-05-25T09:00:00Z" });
     pages({ api: join(out, "api/v1"), out });
     const html = page(out, "leagues/it-1/index.html");
-    expect(html).toContain("Waiting for the result");
+    expect(html).toContain("<h2>This week</h2>");
+    expect(html.indexOf("<h2>This week</h2>")).toBeLessThan(html.indexOf('<table class="standings">'));  // first thing after the title
     expect(html).not.toContain("Next fixtures</h2>\n<ul");
     expect((html.match(/·[^<]*\d{2}:\d{2} Italy time/g) ?? []).length).toBe(0);  // a kick-off time is shown once, in the middle
   });
