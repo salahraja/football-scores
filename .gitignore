@@ -31,4 +31,6 @@ data/openfootball/
 data/wikipedia/
 public/api/
 public/api.next/
+public/leagues/
+public/leagues.next/
 public/api.old/
