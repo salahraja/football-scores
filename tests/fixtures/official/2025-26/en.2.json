@@ -1,0 +1,270 @@
+{
+ "source": "https://en.wikipedia.org/?oldid=1381756413",
+ "title": "2025–26 EFL Championship",
+ "table": [
+  {
+   "pos": 1,
+   "team": "Coventry City",
+   "p": 46,
+   "w": 28,
+   "d": 11,
+   "l": 7,
+   "gf": 97,
+   "ga": 45,
+   "pts": 95
+  },
+  {
+   "pos": 2,
+   "team": "Ipswich Town",
+   "p": 46,
+   "w": 23,
+   "d": 15,
+   "l": 8,
+   "gf": 80,
+   "ga": 47,
+   "pts": 84
+  },
+  {
+   "pos": 3,
+   "team": "Millwall",
+   "p": 46,
+   "w": 24,
+   "d": 11,
+   "l": 11,
+   "gf": 64,
+   "ga": 49,
+   "pts": 83
+  },
+  {
+   "pos": 4,
+   "team": "Southampton",
+   "p": 46,
+   "w": 22,
+   "d": 14,
+   "l": 10,
+   "gf": 82,
+   "ga": 56,
+   "pts": 80
+  },
+  {
+   "pos": 5,
+   "team": "Middlesbrough",
+   "p": 46,
+   "w": 22,
+   "d": 14,
+   "l": 10,
+   "gf": 72,
+   "ga": 47,
+   "pts": 80
+  },
+  {
+   "pos": 6,
+   "team": "Hull City",
+   "p": 46,
+   "w": 21,
+   "d": 10,
+   "l": 15,
+   "gf": 70,
+   "ga": 66,
+   "pts": 73
+  },
+  {
+   "pos": 7,
+   "team": "Wrexham",
+   "p": 46,
+   "w": 19,
+   "d": 14,
+   "l": 13,
+   "gf": 69,
+   "ga": 65,
+   "pts": 71
+  },
+  {
+   "pos": 8,
+   "team": "Derby County",
+   "p": 46,
+   "w": 20,
+   "d": 9,
+   "l": 17,
+   "gf": 67,
+   "ga": 59,
+   "pts": 69
+  },
+  {
+   "pos": 9,
+   "team": "Norwich City",
+   "p": 46,
+   "w": 19,
+   "d": 8,
+   "l": 19,
+   "gf": 63,
+   "ga": 56,
+   "pts": 65
+  },
+  {
+   "pos": 10,
+   "team": "Birmingham City",
+   "p": 46,
+   "w": 17,
+   "d": 13,
+   "l": 16,
+   "gf": 57,
+   "ga": 56,
+   "pts": 64
+  },
+  {
+   "pos": 11,
+   "team": "Swansea City",
+   "p": 46,
+   "w": 18,
+   "d": 10,
+   "l": 18,
+   "gf": 57,
+   "ga": 59,
+   "pts": 64
+  },
+  {
+   "pos": 12,
+   "team": "Bristol City",
+   "p": 46,
+   "w": 17,
+   "d": 11,
+   "l": 18,
+   "gf": 59,
+   "ga": 59,
+   "pts": 62
+  },
+  {
+   "pos": 13,
+   "team": "Sheffield United",
+   "p": 46,
+   "w": 18,
+   "d": 6,
+   "l": 22,
+   "gf": 66,
+   "ga": 66,
+   "pts": 60
+  },
+  {
+   "pos": 14,
+   "team": "Preston North End",
+   "p": 46,
+   "w": 15,
+   "d": 15,
+   "l": 16,
+   "gf": 55,
+   "ga": 62,
+   "pts": 60
+  },
+  {
+   "pos": 15,
+   "team": "Queens Park Rangers",
+   "p": 46,
+   "w": 16,
+   "d": 10,
+   "l": 20,
+   "gf": 61,
+   "ga": 73,
+   "pts": 58
+  },
+  {
+   "pos": 16,
+   "team": "Watford",
+   "p": 46,
+   "w": 14,
+   "d": 15,
+   "l": 17,
+   "gf": 53,
+   "ga": 65,
+   "pts": 57
+  },
+  {
+   "pos": 17,
+   "team": "Stoke City",
+   "p": 46,
+   "w": 15,
+   "d": 10,
+   "l": 21,
+   "gf": 51,
+   "ga": 56,
+   "pts": 55
+  },
+  {
+   "pos": 18,
+   "team": "Portsmouth",
+   "p": 46,
+   "w": 14,
+   "d": 13,
+   "l": 19,
+   "gf": 49,
+   "ga": 64,
+   "pts": 55
+  },
+  {
+   "pos": 19,
+   "team": "Charlton Athletic",
+   "p": 46,
+   "w": 13,
+   "d": 14,
+   "l": 19,
+   "gf": 44,
+   "ga": 58,
+   "pts": 53
+  },
+  {
+   "pos": 20,
+   "team": "Blackburn Rovers",
+   "p": 46,
+   "w": 13,
+   "d": 13,
+   "l": 20,
+   "gf": 42,
+   "ga": 56,
+   "pts": 52
+  },
+  {
+   "pos": 21,
+   "team": "West Bromwich Albion",
+   "p": 46,
+   "w": 13,
+   "d": 14,
+   "l": 19,
+   "gf": 48,
+   "ga": 58,
+   "pts": 51
+  },
+  {
+   "pos": 22,
+   "team": "Oxford United",
+   "p": 46,
+   "w": 11,
+   "d": 14,
+   "l": 21,
+   "gf": 45,
+   "ga": 59,
+   "pts": 47
+  },
+  {
+   "pos": 23,
+   "team": "Leicester City",
+   "p": 46,
+   "w": 12,
+   "d": 16,
+   "l": 18,
+   "gf": 58,
+   "ga": 68,
+   "pts": 46
+  },
+  {
+   "pos": 24,
+   "team": "Sheffield Wednesday",
+   "p": 46,
+   "w": 2,
+   "d": 12,
+   "l": 32,
+   "gf": 29,
+   "ga": 89,
+   "pts": 0
+  }
+ ]
+}

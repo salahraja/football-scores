@@ -1,0 +1,2453 @@
+{
+ "source": "https://en.wikipedia.org/?oldid=1380192197",
+ "matches": [
+  {
+   "home": "AFC Ajax",
+   "away": "AZ Alkmaar",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "AFC Ajax",
+   "away": "Excelsior Rotterdam",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "AFC Ajax",
+   "away": "Feyenoord",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "AFC Ajax",
+   "away": "Fortuna Sittard",
+   "ft": [
+    4,
+    1
+   ]
+  },
+  {
+   "home": "AFC Ajax",
+   "away": "Go Ahead Eagles",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "AFC Ajax",
+   "away": "FC Groningen",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "AFC Ajax",
+   "away": "SC Heerenveen",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "AFC Ajax",
+   "away": "Heracles Almelo",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "AFC Ajax",
+   "away": "NAC Breda",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "AFC Ajax",
+   "away": "NEC Nijmegen",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "AFC Ajax",
+   "away": "PEC Zwolle",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "AFC Ajax",
+   "away": "PSV Eindhoven",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "AFC Ajax",
+   "away": "Sparta Rotterdam",
+   "ft": [
+    4,
+    0
+   ]
+  },
+  {
+   "home": "AFC Ajax",
+   "away": "SC Telstar",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "AFC Ajax",
+   "away": "FC Twente",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "AFC Ajax",
+   "away": "FC Utrecht",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "AFC Ajax",
+   "away": "FC Volendam",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "AZ Alkmaar",
+   "away": "AFC Ajax",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "AZ Alkmaar",
+   "away": "Excelsior Rotterdam",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "AZ Alkmaar",
+   "away": "Feyenoord",
+   "ft": [
+    3,
+    3
+   ]
+  },
+  {
+   "home": "AZ Alkmaar",
+   "away": "Fortuna Sittard",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "AZ Alkmaar",
+   "away": "Go Ahead Eagles",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "AZ Alkmaar",
+   "away": "FC Groningen",
+   "ft": [
+    4,
+    1
+   ]
+  },
+  {
+   "home": "AZ Alkmaar",
+   "away": "SC Heerenveen",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "AZ Alkmaar",
+   "away": "Heracles Almelo",
+   "ft": [
+    4,
+    0
+   ]
+  },
+  {
+   "home": "AZ Alkmaar",
+   "away": "NAC Breda",
+   "ft": [
+    3,
+    3
+   ]
+  },
+  {
+   "home": "AZ Alkmaar",
+   "away": "NEC Nijmegen",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "AZ Alkmaar",
+   "away": "PEC Zwolle",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "AZ Alkmaar",
+   "away": "PSV Eindhoven",
+   "ft": [
+    1,
+    5
+   ]
+  },
+  {
+   "home": "AZ Alkmaar",
+   "away": "Sparta Rotterdam",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "AZ Alkmaar",
+   "away": "SC Telstar",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "AZ Alkmaar",
+   "away": "FC Twente",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "AZ Alkmaar",
+   "away": "FC Utrecht",
+   "ft": [
+    4,
+    1
+   ]
+  },
+  {
+   "home": "AZ Alkmaar",
+   "away": "FC Volendam",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Excelsior Rotterdam",
+   "away": "AFC Ajax",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Excelsior Rotterdam",
+   "away": "AZ Alkmaar",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Excelsior Rotterdam",
+   "away": "Feyenoord",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Excelsior Rotterdam",
+   "away": "Fortuna Sittard",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Excelsior Rotterdam",
+   "away": "Go Ahead Eagles",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Excelsior Rotterdam",
+   "away": "FC Groningen",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Excelsior Rotterdam",
+   "away": "SC Heerenveen",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Excelsior Rotterdam",
+   "away": "Heracles Almelo",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Excelsior Rotterdam",
+   "away": "NAC Breda",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Excelsior Rotterdam",
+   "away": "NEC Nijmegen",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Excelsior Rotterdam",
+   "away": "PEC Zwolle",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Excelsior Rotterdam",
+   "away": "PSV Eindhoven",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Excelsior Rotterdam",
+   "away": "Sparta Rotterdam",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Excelsior Rotterdam",
+   "away": "SC Telstar",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Excelsior Rotterdam",
+   "away": "FC Twente",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Excelsior Rotterdam",
+   "away": "FC Utrecht",
+   "ft": [
+    5,
+    0
+   ]
+  },
+  {
+   "home": "Excelsior Rotterdam",
+   "away": "FC Volendam",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Feyenoord",
+   "away": "AFC Ajax",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Feyenoord",
+   "away": "AZ Alkmaar",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Feyenoord",
+   "away": "Excelsior Rotterdam",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Feyenoord",
+   "away": "Fortuna Sittard",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Feyenoord",
+   "away": "Go Ahead Eagles",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Feyenoord",
+   "away": "FC Groningen",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Feyenoord",
+   "away": "SC Heerenveen",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Feyenoord",
+   "away": "Heracles Almelo",
+   "ft": [
+    4,
+    2
+   ]
+  },
+  {
+   "home": "Feyenoord",
+   "away": "NAC Breda",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Feyenoord",
+   "away": "NEC Nijmegen",
+   "ft": [
+    2,
+    4
+   ]
+  },
+  {
+   "home": "Feyenoord",
+   "away": "PEC Zwolle",
+   "ft": [
+    6,
+    1
+   ]
+  },
+  {
+   "home": "Feyenoord",
+   "away": "PSV Eindhoven",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "Feyenoord",
+   "away": "Sparta Rotterdam",
+   "ft": [
+    3,
+    4
+   ]
+  },
+  {
+   "home": "Feyenoord",
+   "away": "SC Telstar",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Feyenoord",
+   "away": "FC Twente",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Feyenoord",
+   "away": "FC Utrecht",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Feyenoord",
+   "away": "FC Volendam",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Fortuna Sittard",
+   "away": "AFC Ajax",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Fortuna Sittard",
+   "away": "AZ Alkmaar",
+   "ft": [
+    4,
+    3
+   ]
+  },
+  {
+   "home": "Fortuna Sittard",
+   "away": "Excelsior Rotterdam",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Fortuna Sittard",
+   "away": "Feyenoord",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Fortuna Sittard",
+   "away": "Go Ahead Eagles",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Fortuna Sittard",
+   "away": "FC Groningen",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Fortuna Sittard",
+   "away": "SC Heerenveen",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Fortuna Sittard",
+   "away": "Heracles Almelo",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Fortuna Sittard",
+   "away": "NAC Breda",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Fortuna Sittard",
+   "away": "NEC Nijmegen",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Fortuna Sittard",
+   "away": "PEC Zwolle",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Fortuna Sittard",
+   "away": "PSV Eindhoven",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Fortuna Sittard",
+   "away": "Sparta Rotterdam",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Fortuna Sittard",
+   "away": "SC Telstar",
+   "ft": [
+    1,
+    4
+   ]
+  },
+  {
+   "home": "Fortuna Sittard",
+   "away": "FC Twente",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Fortuna Sittard",
+   "away": "FC Utrecht",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Fortuna Sittard",
+   "away": "FC Volendam",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Go Ahead Eagles",
+   "away": "AFC Ajax",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Go Ahead Eagles",
+   "away": "AZ Alkmaar",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Go Ahead Eagles",
+   "away": "Excelsior Rotterdam",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Go Ahead Eagles",
+   "away": "Feyenoord",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Go Ahead Eagles",
+   "away": "Fortuna Sittard",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Go Ahead Eagles",
+   "away": "FC Groningen",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Go Ahead Eagles",
+   "away": "SC Heerenveen",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Go Ahead Eagles",
+   "away": "Heracles Almelo",
+   "ft": [
+    4,
+    0
+   ]
+  },
+  {
+   "home": "Go Ahead Eagles",
+   "away": "NAC Breda",
+   "ft": [
+    6,
+    0
+   ]
+  },
+  {
+   "home": "Go Ahead Eagles",
+   "away": "NEC Nijmegen",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Go Ahead Eagles",
+   "away": "PEC Zwolle",
+   "ft": [
+    5,
+    0
+   ]
+  },
+  {
+   "home": "Go Ahead Eagles",
+   "away": "PSV Eindhoven",
+   "ft": [
+    1,
+    4
+   ]
+  },
+  {
+   "home": "Go Ahead Eagles",
+   "away": "Sparta Rotterdam",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Go Ahead Eagles",
+   "away": "SC Telstar",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Go Ahead Eagles",
+   "away": "FC Twente",
+   "ft": [
+    1,
+    4
+   ]
+  },
+  {
+   "home": "Go Ahead Eagles",
+   "away": "FC Utrecht",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Go Ahead Eagles",
+   "away": "FC Volendam",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "FC Groningen",
+   "away": "AFC Ajax",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "FC Groningen",
+   "away": "AZ Alkmaar",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "FC Groningen",
+   "away": "Excelsior Rotterdam",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "FC Groningen",
+   "away": "Feyenoord",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "FC Groningen",
+   "away": "Fortuna Sittard",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "FC Groningen",
+   "away": "Go Ahead Eagles",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "FC Groningen",
+   "away": "SC Heerenveen",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "FC Groningen",
+   "away": "Heracles Almelo",
+   "ft": [
+    4,
+    0
+   ]
+  },
+  {
+   "home": "FC Groningen",
+   "away": "NAC Breda",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "FC Groningen",
+   "away": "NEC Nijmegen",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "FC Groningen",
+   "away": "PEC Zwolle",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "FC Groningen",
+   "away": "PSV Eindhoven",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "FC Groningen",
+   "away": "Sparta Rotterdam",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "FC Groningen",
+   "away": "SC Telstar",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "FC Groningen",
+   "away": "FC Twente",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "FC Groningen",
+   "away": "FC Utrecht",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "FC Groningen",
+   "away": "FC Volendam",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "SC Heerenveen",
+   "away": "AFC Ajax",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "SC Heerenveen",
+   "away": "AZ Alkmaar",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "SC Heerenveen",
+   "away": "Excelsior Rotterdam",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "SC Heerenveen",
+   "away": "Feyenoord",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "SC Heerenveen",
+   "away": "Fortuna Sittard",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "SC Heerenveen",
+   "away": "Go Ahead Eagles",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "SC Heerenveen",
+   "away": "FC Groningen",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "SC Heerenveen",
+   "away": "Heracles Almelo",
+   "ft": [
+    4,
+    1
+   ]
+  },
+  {
+   "home": "SC Heerenveen",
+   "away": "NAC Breda",
+   "ft": [
+    3,
+    3
+   ]
+  },
+  {
+   "home": "SC Heerenveen",
+   "away": "NEC Nijmegen",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "SC Heerenveen",
+   "away": "PEC Zwolle",
+   "ft": [
+    4,
+    2
+   ]
+  },
+  {
+   "home": "SC Heerenveen",
+   "away": "PSV Eindhoven",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "SC Heerenveen",
+   "away": "Sparta Rotterdam",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "SC Heerenveen",
+   "away": "SC Telstar",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "SC Heerenveen",
+   "away": "FC Twente",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "SC Heerenveen",
+   "away": "FC Utrecht",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "SC Heerenveen",
+   "away": "FC Volendam",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Heracles Almelo",
+   "away": "AFC Ajax",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Heracles Almelo",
+   "away": "AZ Alkmaar",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Heracles Almelo",
+   "away": "Excelsior Rotterdam",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Heracles Almelo",
+   "away": "Feyenoord",
+   "ft": [
+    0,
+    7
+   ]
+  },
+  {
+   "home": "Heracles Almelo",
+   "away": "Fortuna Sittard",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Heracles Almelo",
+   "away": "Go Ahead Eagles",
+   "ft": [
+    4,
+    2
+   ]
+  },
+  {
+   "home": "Heracles Almelo",
+   "away": "FC Groningen",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Heracles Almelo",
+   "away": "SC Heerenveen",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Heracles Almelo",
+   "away": "NAC Breda",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Heracles Almelo",
+   "away": "NEC Nijmegen",
+   "ft": [
+    1,
+    4
+   ]
+  },
+  {
+   "home": "Heracles Almelo",
+   "away": "PEC Zwolle",
+   "ft": [
+    8,
+    2
+   ]
+  },
+  {
+   "home": "Heracles Almelo",
+   "away": "PSV Eindhoven",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Heracles Almelo",
+   "away": "Sparta Rotterdam",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Heracles Almelo",
+   "away": "SC Telstar",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Heracles Almelo",
+   "away": "FC Twente",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Heracles Almelo",
+   "away": "FC Utrecht",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Heracles Almelo",
+   "away": "FC Volendam",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "NAC Breda",
+   "away": "AFC Ajax",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "NAC Breda",
+   "away": "AZ Alkmaar",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "NAC Breda",
+   "away": "Excelsior Rotterdam",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "NAC Breda",
+   "away": "Feyenoord",
+   "ft": [
+    3,
+    3
+   ]
+  },
+  {
+   "home": "NAC Breda",
+   "away": "Fortuna Sittard",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "NAC Breda",
+   "away": "Go Ahead Eagles",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "NAC Breda",
+   "away": "FC Groningen",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "NAC Breda",
+   "away": "SC Heerenveen",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "NAC Breda",
+   "away": "Heracles Almelo",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "NAC Breda",
+   "away": "NEC Nijmegen",
+   "ft": [
+    3,
+    4
+   ]
+  },
+  {
+   "home": "NAC Breda",
+   "away": "PEC Zwolle",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "NAC Breda",
+   "away": "PSV Eindhoven",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "NAC Breda",
+   "away": "Sparta Rotterdam",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "NAC Breda",
+   "away": "SC Telstar",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "NAC Breda",
+   "away": "FC Twente",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "NAC Breda",
+   "away": "FC Utrecht",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "NAC Breda",
+   "away": "FC Volendam",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "NEC Nijmegen",
+   "away": "AFC Ajax",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "NEC Nijmegen",
+   "away": "AZ Alkmaar",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "NEC Nijmegen",
+   "away": "Excelsior Rotterdam",
+   "ft": [
+    5,
+    0
+   ]
+  },
+  {
+   "home": "NEC Nijmegen",
+   "away": "Feyenoord",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "NEC Nijmegen",
+   "away": "Fortuna Sittard",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "NEC Nijmegen",
+   "away": "Go Ahead Eagles",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "NEC Nijmegen",
+   "away": "FC Groningen",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "NEC Nijmegen",
+   "away": "SC Heerenveen",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "NEC Nijmegen",
+   "away": "Heracles Almelo",
+   "ft": [
+    4,
+    1
+   ]
+  },
+  {
+   "home": "NEC Nijmegen",
+   "away": "NAC Breda",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "NEC Nijmegen",
+   "away": "PEC Zwolle",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "NEC Nijmegen",
+   "away": "PSV Eindhoven",
+   "ft": [
+    3,
+    5
+   ]
+  },
+  {
+   "home": "NEC Nijmegen",
+   "away": "Sparta Rotterdam",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "NEC Nijmegen",
+   "away": "SC Telstar",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "NEC Nijmegen",
+   "away": "FC Twente",
+   "ft": [
+    3,
+    3
+   ]
+  },
+  {
+   "home": "NEC Nijmegen",
+   "away": "FC Utrecht",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "NEC Nijmegen",
+   "away": "FC Volendam",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "PEC Zwolle",
+   "away": "AFC Ajax",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "PEC Zwolle",
+   "away": "AZ Alkmaar",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "PEC Zwolle",
+   "away": "Excelsior Rotterdam",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "PEC Zwolle",
+   "away": "Feyenoord",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "PEC Zwolle",
+   "away": "Fortuna Sittard",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "PEC Zwolle",
+   "away": "Go Ahead Eagles",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "PEC Zwolle",
+   "away": "FC Groningen",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "PEC Zwolle",
+   "away": "SC Heerenveen",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "PEC Zwolle",
+   "away": "Heracles Almelo",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "PEC Zwolle",
+   "away": "NAC Breda",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "PEC Zwolle",
+   "away": "NEC Nijmegen",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "PEC Zwolle",
+   "away": "PSV Eindhoven",
+   "ft": [
+    0,
+    4
+   ]
+  },
+  {
+   "home": "PEC Zwolle",
+   "away": "Sparta Rotterdam",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "PEC Zwolle",
+   "away": "SC Telstar",
+   "ft": [
+    4,
+    1
+   ]
+  },
+  {
+   "home": "PEC Zwolle",
+   "away": "FC Twente",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "PEC Zwolle",
+   "away": "FC Utrecht",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "PEC Zwolle",
+   "away": "FC Volendam",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "PSV Eindhoven",
+   "away": "AFC Ajax",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "PSV Eindhoven",
+   "away": "AZ Alkmaar",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "PSV Eindhoven",
+   "away": "Excelsior Rotterdam",
+   "ft": [
+    5,
+    1
+   ]
+  },
+  {
+   "home": "PSV Eindhoven",
+   "away": "Feyenoord",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "PSV Eindhoven",
+   "away": "Fortuna Sittard",
+   "ft": [
+    5,
+    2
+   ]
+  },
+  {
+   "home": "PSV Eindhoven",
+   "away": "Go Ahead Eagles",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "PSV Eindhoven",
+   "away": "FC Groningen",
+   "ft": [
+    4,
+    2
+   ]
+  },
+  {
+   "home": "PSV Eindhoven",
+   "away": "SC Heerenveen",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "PSV Eindhoven",
+   "away": "Heracles Almelo",
+   "ft": [
+    4,
+    3
+   ]
+  },
+  {
+   "home": "PSV Eindhoven",
+   "away": "NAC Breda",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "PSV Eindhoven",
+   "away": "NEC Nijmegen",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "PSV Eindhoven",
+   "away": "PEC Zwolle",
+   "ft": [
+    6,
+    1
+   ]
+  },
+  {
+   "home": "PSV Eindhoven",
+   "away": "Sparta Rotterdam",
+   "ft": [
+    6,
+    1
+   ]
+  },
+  {
+   "home": "PSV Eindhoven",
+   "away": "SC Telstar",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "PSV Eindhoven",
+   "away": "FC Twente",
+   "ft": [
+    5,
+    1
+   ]
+  },
+  {
+   "home": "PSV Eindhoven",
+   "away": "FC Utrecht",
+   "ft": [
+    4,
+    3
+   ]
+  },
+  {
+   "home": "PSV Eindhoven",
+   "away": "FC Volendam",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Sparta Rotterdam",
+   "away": "AFC Ajax",
+   "ft": [
+    3,
+    3
+   ]
+  },
+  {
+   "home": "Sparta Rotterdam",
+   "away": "AZ Alkmaar",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Sparta Rotterdam",
+   "away": "Excelsior Rotterdam",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "Sparta Rotterdam",
+   "away": "Feyenoord",
+   "ft": [
+    0,
+    4
+   ]
+  },
+  {
+   "home": "Sparta Rotterdam",
+   "away": "Fortuna Sittard",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Sparta Rotterdam",
+   "away": "Go Ahead Eagles",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Sparta Rotterdam",
+   "away": "FC Groningen",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Sparta Rotterdam",
+   "away": "SC Heerenveen",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Sparta Rotterdam",
+   "away": "Heracles Almelo",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Sparta Rotterdam",
+   "away": "NAC Breda",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Sparta Rotterdam",
+   "away": "NEC Nijmegen",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Sparta Rotterdam",
+   "away": "PEC Zwolle",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Sparta Rotterdam",
+   "away": "PSV Eindhoven",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Sparta Rotterdam",
+   "away": "SC Telstar",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Sparta Rotterdam",
+   "away": "FC Twente",
+   "ft": [
+    1,
+    5
+   ]
+  },
+  {
+   "home": "Sparta Rotterdam",
+   "away": "FC Utrecht",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Sparta Rotterdam",
+   "away": "FC Volendam",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "SC Telstar",
+   "away": "AFC Ajax",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "SC Telstar",
+   "away": "AZ Alkmaar",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "SC Telstar",
+   "away": "Excelsior Rotterdam",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "SC Telstar",
+   "away": "Feyenoord",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "SC Telstar",
+   "away": "Fortuna Sittard",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "SC Telstar",
+   "away": "Go Ahead Eagles",
+   "ft": [
+    4,
+    2
+   ]
+  },
+  {
+   "home": "SC Telstar",
+   "away": "FC Groningen",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "SC Telstar",
+   "away": "SC Heerenveen",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "SC Telstar",
+   "away": "Heracles Almelo",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "SC Telstar",
+   "away": "NAC Breda",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "SC Telstar",
+   "away": "NEC Nijmegen",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "SC Telstar",
+   "away": "PEC Zwolle",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "SC Telstar",
+   "away": "PSV Eindhoven",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "SC Telstar",
+   "away": "Sparta Rotterdam",
+   "ft": [
+    4,
+    1
+   ]
+  },
+  {
+   "home": "SC Telstar",
+   "away": "FC Twente",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "SC Telstar",
+   "away": "FC Utrecht",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "SC Telstar",
+   "away": "FC Volendam",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "FC Twente",
+   "away": "AFC Ajax",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "FC Twente",
+   "away": "AZ Alkmaar",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "FC Twente",
+   "away": "Excelsior Rotterdam",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "FC Twente",
+   "away": "Feyenoord",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "FC Twente",
+   "away": "Fortuna Sittard",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "FC Twente",
+   "away": "Go Ahead Eagles",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "FC Twente",
+   "away": "FC Groningen",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "FC Twente",
+   "away": "SC Heerenveen",
+   "ft": [
+    5,
+    0
+   ]
+  },
+  {
+   "home": "FC Twente",
+   "away": "Heracles Almelo",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "FC Twente",
+   "away": "NAC Breda",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "FC Twente",
+   "away": "NEC Nijmegen",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "FC Twente",
+   "away": "PEC Zwolle",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "FC Twente",
+   "away": "PSV Eindhoven",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "FC Twente",
+   "away": "Sparta Rotterdam",
+   "ft": [
+    4,
+    0
+   ]
+  },
+  {
+   "home": "FC Twente",
+   "away": "SC Telstar",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "FC Twente",
+   "away": "FC Utrecht",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "FC Twente",
+   "away": "FC Volendam",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "FC Utrecht",
+   "away": "AFC Ajax",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "FC Utrecht",
+   "away": "AZ Alkmaar",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "FC Utrecht",
+   "away": "Excelsior Rotterdam",
+   "ft": [
+    4,
+    1
+   ]
+  },
+  {
+   "home": "FC Utrecht",
+   "away": "Feyenoord",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "FC Utrecht",
+   "away": "Fortuna Sittard",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "FC Utrecht",
+   "away": "Go Ahead Eagles",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "FC Utrecht",
+   "away": "FC Groningen",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "FC Utrecht",
+   "away": "SC Heerenveen",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "FC Utrecht",
+   "away": "Heracles Almelo",
+   "ft": [
+    4,
+    0
+   ]
+  },
+  {
+   "home": "FC Utrecht",
+   "away": "NAC Breda",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "FC Utrecht",
+   "away": "NEC Nijmegen",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "FC Utrecht",
+   "away": "PEC Zwolle",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "FC Utrecht",
+   "away": "PSV Eindhoven",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "FC Utrecht",
+   "away": "Sparta Rotterdam",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "FC Utrecht",
+   "away": "SC Telstar",
+   "ft": [
+    4,
+    1
+   ]
+  },
+  {
+   "home": "FC Utrecht",
+   "away": "FC Twente",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "FC Utrecht",
+   "away": "FC Volendam",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "FC Volendam",
+   "away": "AFC Ajax",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "FC Volendam",
+   "away": "AZ Alkmaar",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "FC Volendam",
+   "away": "Excelsior Rotterdam",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "FC Volendam",
+   "away": "Feyenoord",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "FC Volendam",
+   "away": "Fortuna Sittard",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "FC Volendam",
+   "away": "Go Ahead Eagles",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "FC Volendam",
+   "away": "FC Groningen",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "FC Volendam",
+   "away": "SC Heerenveen",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "FC Volendam",
+   "away": "Heracles Almelo",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "FC Volendam",
+   "away": "NAC Breda",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "FC Volendam",
+   "away": "NEC Nijmegen",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "FC Volendam",
+   "away": "PEC Zwolle",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "FC Volendam",
+   "away": "PSV Eindhoven",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "FC Volendam",
+   "away": "Sparta Rotterdam",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "FC Volendam",
+   "away": "SC Telstar",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "FC Volendam",
+   "away": "FC Twente",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "FC Volendam",
+   "away": "FC Utrecht",
+   "ft": [
+    2,
+    1
+   ]
+  }
+ ]
+}

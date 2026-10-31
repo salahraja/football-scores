@@ -1,0 +1,4421 @@
+{
+ "source": "https://en.wikipedia.org/?oldid=1381756413",
+ "matches": [
+  {
+   "home": "Birmingham City F.C.",
+   "away": "Blackburn Rovers F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Birmingham City F.C.",
+   "away": "Bristol City F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Birmingham City F.C.",
+   "away": "Charlton Athletic F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Birmingham City F.C.",
+   "away": "Coventry City F.C.",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Birmingham City F.C.",
+   "away": "Derby County F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Birmingham City F.C.",
+   "away": "Hull City A.F.C.",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "Birmingham City F.C.",
+   "away": "Ipswich Town F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Birmingham City F.C.",
+   "away": "Leicester City F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Birmingham City F.C.",
+   "away": "Middlesbrough F.C.",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Birmingham City F.C.",
+   "away": "Millwall F.C.",
+   "ft": [
+    4,
+    0
+   ]
+  },
+  {
+   "home": "Birmingham City F.C.",
+   "away": "Norwich City F.C.",
+   "ft": [
+    4,
+    1
+   ]
+  },
+  {
+   "home": "Birmingham City F.C.",
+   "away": "Oxford United F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Birmingham City F.C.",
+   "away": "Portsmouth F.C.",
+   "ft": [
+    4,
+    0
+   ]
+  },
+  {
+   "home": "Birmingham City F.C.",
+   "away": "Preston North End F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Birmingham City F.C.",
+   "away": "Queens Park Rangers F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Birmingham City F.C.",
+   "away": "Sheffield United F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Birmingham City F.C.",
+   "away": "Sheffield Wednesday F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Birmingham City F.C.",
+   "away": "Southampton F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Birmingham City F.C.",
+   "away": "Stoke City F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Birmingham City F.C.",
+   "away": "Swansea City A.F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Birmingham City F.C.",
+   "away": "Watford F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Birmingham City F.C.",
+   "away": "West Bromwich Albion F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Birmingham City F.C.",
+   "away": "Wrexham A.F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Blackburn Rovers F.C.",
+   "away": "Birmingham City F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Blackburn Rovers F.C.",
+   "away": "Bristol City F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Blackburn Rovers F.C.",
+   "away": "Charlton Athletic F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Blackburn Rovers F.C.",
+   "away": "Coventry City F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Blackburn Rovers F.C.",
+   "away": "Derby County F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Blackburn Rovers F.C.",
+   "away": "Hull City A.F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Blackburn Rovers F.C.",
+   "away": "Ipswich Town F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Blackburn Rovers F.C.",
+   "away": "Leicester City F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Blackburn Rovers F.C.",
+   "away": "Middlesbrough F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Blackburn Rovers F.C.",
+   "away": "Millwall F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Blackburn Rovers F.C.",
+   "away": "Norwich City F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Blackburn Rovers F.C.",
+   "away": "Oxford United F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Blackburn Rovers F.C.",
+   "away": "Portsmouth F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Blackburn Rovers F.C.",
+   "away": "Preston North End F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Blackburn Rovers F.C.",
+   "away": "Queens Park Rangers F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Blackburn Rovers F.C.",
+   "away": "Sheffield United F.C.",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Blackburn Rovers F.C.",
+   "away": "Sheffield Wednesday F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Blackburn Rovers F.C.",
+   "away": "Southampton F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Blackburn Rovers F.C.",
+   "away": "Stoke City F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Blackburn Rovers F.C.",
+   "away": "Swansea City A.F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Blackburn Rovers F.C.",
+   "away": "Watford F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Blackburn Rovers F.C.",
+   "away": "West Bromwich Albion F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Blackburn Rovers F.C.",
+   "away": "Wrexham A.F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Bristol City F.C.",
+   "away": "Birmingham City F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Bristol City F.C.",
+   "away": "Blackburn Rovers F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Bristol City F.C.",
+   "away": "Charlton Athletic F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Bristol City F.C.",
+   "away": "Coventry City F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Bristol City F.C.",
+   "away": "Derby County F.C.",
+   "ft": [
+    0,
+    5
+   ]
+  },
+  {
+   "home": "Bristol City F.C.",
+   "away": "Hull City A.F.C.",
+   "ft": [
+    4,
+    2
+   ]
+  },
+  {
+   "home": "Bristol City F.C.",
+   "away": "Ipswich Town F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Bristol City F.C.",
+   "away": "Leicester City F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Bristol City F.C.",
+   "away": "Middlesbrough F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Bristol City F.C.",
+   "away": "Millwall F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Bristol City F.C.",
+   "away": "Norwich City F.C.",
+   "ft": [
+    2,
+    4
+   ]
+  },
+  {
+   "home": "Bristol City F.C.",
+   "away": "Oxford United F.C.",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Bristol City F.C.",
+   "away": "Portsmouth F.C.",
+   "ft": [
+    5,
+    0
+   ]
+  },
+  {
+   "home": "Bristol City F.C.",
+   "away": "Preston North End F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Bristol City F.C.",
+   "away": "Queens Park Rangers F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Bristol City F.C.",
+   "away": "Sheffield United F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Bristol City F.C.",
+   "away": "Sheffield Wednesday F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Bristol City F.C.",
+   "away": "Southampton F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Bristol City F.C.",
+   "away": "Stoke City F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Bristol City F.C.",
+   "away": "Swansea City A.F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Bristol City F.C.",
+   "away": "Watford F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Bristol City F.C.",
+   "away": "West Bromwich Albion F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Bristol City F.C.",
+   "away": "Wrexham A.F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Charlton Athletic F.C.",
+   "away": "Birmingham City F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Charlton Athletic F.C.",
+   "away": "Blackburn Rovers F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Charlton Athletic F.C.",
+   "away": "Bristol City F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Charlton Athletic F.C.",
+   "away": "Coventry City F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Charlton Athletic F.C.",
+   "away": "Derby County F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Charlton Athletic F.C.",
+   "away": "Hull City A.F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Charlton Athletic F.C.",
+   "away": "Ipswich Town F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Charlton Athletic F.C.",
+   "away": "Leicester City F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Charlton Athletic F.C.",
+   "away": "Middlesbrough F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Charlton Athletic F.C.",
+   "away": "Millwall F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Charlton Athletic F.C.",
+   "away": "Norwich City F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Charlton Athletic F.C.",
+   "away": "Oxford United F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Charlton Athletic F.C.",
+   "away": "Portsmouth F.C.",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Charlton Athletic F.C.",
+   "away": "Preston North End F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Charlton Athletic F.C.",
+   "away": "Queens Park Rangers F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Charlton Athletic F.C.",
+   "away": "Sheffield United F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Charlton Athletic F.C.",
+   "away": "Sheffield Wednesday F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Charlton Athletic F.C.",
+   "away": "Southampton F.C.",
+   "ft": [
+    1,
+    5
+   ]
+  },
+  {
+   "home": "Charlton Athletic F.C.",
+   "away": "Stoke City F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Charlton Athletic F.C.",
+   "away": "Swansea City A.F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Charlton Athletic F.C.",
+   "away": "Watford F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Charlton Athletic F.C.",
+   "away": "West Bromwich Albion F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Charlton Athletic F.C.",
+   "away": "Wrexham A.F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Coventry City F.C.",
+   "away": "Birmingham City F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Coventry City F.C.",
+   "away": "Blackburn Rovers F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Coventry City F.C.",
+   "away": "Bristol City F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Coventry City F.C.",
+   "away": "Charlton Athletic F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Coventry City F.C.",
+   "away": "Derby County F.C.",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Coventry City F.C.",
+   "away": "Hull City A.F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Coventry City F.C.",
+   "away": "Ipswich Town F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Coventry City F.C.",
+   "away": "Leicester City F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Coventry City F.C.",
+   "away": "Middlesbrough F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Coventry City F.C.",
+   "away": "Millwall F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Coventry City F.C.",
+   "away": "Norwich City F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Coventry City F.C.",
+   "away": "Oxford United F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Coventry City F.C.",
+   "away": "Portsmouth F.C.",
+   "ft": [
+    5,
+    1
+   ]
+  },
+  {
+   "home": "Coventry City F.C.",
+   "away": "Preston North End F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Coventry City F.C.",
+   "away": "Queens Park Rangers F.C.",
+   "ft": [
+    7,
+    1
+   ]
+  },
+  {
+   "home": "Coventry City F.C.",
+   "away": "Sheffield United F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Coventry City F.C.",
+   "away": "Sheffield Wednesday F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Coventry City F.C.",
+   "away": "Southampton F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Coventry City F.C.",
+   "away": "Stoke City F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Coventry City F.C.",
+   "away": "Swansea City A.F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Coventry City F.C.",
+   "away": "Watford F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Coventry City F.C.",
+   "away": "West Bromwich Albion F.C.",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Coventry City F.C.",
+   "away": "Wrexham A.F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Derby County F.C.",
+   "away": "Birmingham City F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Derby County F.C.",
+   "away": "Blackburn Rovers F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Derby County F.C.",
+   "away": "Bristol City F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Derby County F.C.",
+   "away": "Charlton Athletic F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Derby County F.C.",
+   "away": "Coventry City F.C.",
+   "ft": [
+    3,
+    5
+   ]
+  },
+  {
+   "home": "Derby County F.C.",
+   "away": "Hull City A.F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Derby County F.C.",
+   "away": "Ipswich Town F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Derby County F.C.",
+   "away": "Leicester City F.C.",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Derby County F.C.",
+   "away": "Middlesbrough F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Derby County F.C.",
+   "away": "Millwall F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Derby County F.C.",
+   "away": "Norwich City F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Derby County F.C.",
+   "away": "Oxford United F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Derby County F.C.",
+   "away": "Portsmouth F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Derby County F.C.",
+   "away": "Preston North End F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Derby County F.C.",
+   "away": "Queens Park Rangers F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Derby County F.C.",
+   "away": "Sheffield United F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Derby County F.C.",
+   "away": "Sheffield Wednesday F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Derby County F.C.",
+   "away": "Southampton F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Derby County F.C.",
+   "away": "Stoke City F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Derby County F.C.",
+   "away": "Swansea City A.F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Derby County F.C.",
+   "away": "Watford F.C.",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "Derby County F.C.",
+   "away": "West Bromwich Albion F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Derby County F.C.",
+   "away": "Wrexham A.F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Hull City A.F.C.",
+   "away": "Birmingham City F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Hull City A.F.C.",
+   "away": "Blackburn Rovers F.C.",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Hull City A.F.C.",
+   "away": "Bristol City F.C.",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "Hull City A.F.C.",
+   "away": "Charlton Athletic F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Hull City A.F.C.",
+   "away": "Coventry City F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Hull City A.F.C.",
+   "away": "Derby County F.C.",
+   "ft": [
+    4,
+    2
+   ]
+  },
+  {
+   "home": "Hull City A.F.C.",
+   "away": "Ipswich Town F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Hull City A.F.C.",
+   "away": "Leicester City F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Hull City A.F.C.",
+   "away": "Middlesbrough F.C.",
+   "ft": [
+    1,
+    4
+   ]
+  },
+  {
+   "home": "Hull City A.F.C.",
+   "away": "Millwall F.C.",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Hull City A.F.C.",
+   "away": "Norwich City F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Hull City A.F.C.",
+   "away": "Oxford United F.C.",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Hull City A.F.C.",
+   "away": "Portsmouth F.C.",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Hull City A.F.C.",
+   "away": "Preston North End F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Hull City A.F.C.",
+   "away": "Queens Park Rangers F.C.",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Hull City A.F.C.",
+   "away": "Sheffield United F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Hull City A.F.C.",
+   "away": "Sheffield Wednesday F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Hull City A.F.C.",
+   "away": "Southampton F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Hull City A.F.C.",
+   "away": "Stoke City F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Hull City A.F.C.",
+   "away": "Swansea City A.F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Hull City A.F.C.",
+   "away": "Watford F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Hull City A.F.C.",
+   "away": "West Bromwich Albion F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Hull City A.F.C.",
+   "away": "Wrexham A.F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Ipswich Town F.C.",
+   "away": "Birmingham City F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Ipswich Town F.C.",
+   "away": "Blackburn Rovers F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Ipswich Town F.C.",
+   "away": "Bristol City F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Ipswich Town F.C.",
+   "away": "Charlton Athletic F.C.",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Ipswich Town F.C.",
+   "away": "Coventry City F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Ipswich Town F.C.",
+   "away": "Derby County F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Ipswich Town F.C.",
+   "away": "Hull City A.F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Ipswich Town F.C.",
+   "away": "Leicester City F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Ipswich Town F.C.",
+   "away": "Middlesbrough F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Ipswich Town F.C.",
+   "away": "Millwall F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Ipswich Town F.C.",
+   "away": "Norwich City F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Ipswich Town F.C.",
+   "away": "Oxford United F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Ipswich Town F.C.",
+   "away": "Portsmouth F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Ipswich Town F.C.",
+   "away": "Preston North End F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Ipswich Town F.C.",
+   "away": "Queens Park Rangers F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Ipswich Town F.C.",
+   "away": "Sheffield United F.C.",
+   "ft": [
+    5,
+    0
+   ]
+  },
+  {
+   "home": "Ipswich Town F.C.",
+   "away": "Sheffield Wednesday F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Ipswich Town F.C.",
+   "away": "Southampton F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Ipswich Town F.C.",
+   "away": "Stoke City F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Ipswich Town F.C.",
+   "away": "Swansea City A.F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Ipswich Town F.C.",
+   "away": "Watford F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Ipswich Town F.C.",
+   "away": "West Bromwich Albion F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Ipswich Town F.C.",
+   "away": "Wrexham A.F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Leicester City F.C.",
+   "away": "Birmingham City F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Leicester City F.C.",
+   "away": "Blackburn Rovers F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Leicester City F.C.",
+   "away": "Bristol City F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Leicester City F.C.",
+   "away": "Charlton Athletic F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Leicester City F.C.",
+   "away": "Coventry City F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Leicester City F.C.",
+   "away": "Derby County F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Leicester City F.C.",
+   "away": "Hull City A.F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Leicester City F.C.",
+   "away": "Ipswich Town F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Leicester City F.C.",
+   "away": "Middlesbrough F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Leicester City F.C.",
+   "away": "Millwall F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Leicester City F.C.",
+   "away": "Norwich City F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Leicester City F.C.",
+   "away": "Oxford United F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Leicester City F.C.",
+   "away": "Portsmouth F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Leicester City F.C.",
+   "away": "Preston North End F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Leicester City F.C.",
+   "away": "Queens Park Rangers F.C.",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Leicester City F.C.",
+   "away": "Sheffield United F.C.",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "Leicester City F.C.",
+   "away": "Sheffield Wednesday F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Leicester City F.C.",
+   "away": "Southampton F.C.",
+   "ft": [
+    3,
+    4
+   ]
+  },
+  {
+   "home": "Leicester City F.C.",
+   "away": "Stoke City F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Leicester City F.C.",
+   "away": "Swansea City A.F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Leicester City F.C.",
+   "away": "Watford F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Leicester City F.C.",
+   "away": "West Bromwich Albion F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Leicester City F.C.",
+   "away": "Wrexham A.F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Middlesbrough F.C.",
+   "away": "Birmingham City F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Middlesbrough F.C.",
+   "away": "Blackburn Rovers F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Middlesbrough F.C.",
+   "away": "Bristol City F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Middlesbrough F.C.",
+   "away": "Charlton Athletic F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Middlesbrough F.C.",
+   "away": "Coventry City F.C.",
+   "ft": [
+    2,
+    4
+   ]
+  },
+  {
+   "home": "Middlesbrough F.C.",
+   "away": "Derby County F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Middlesbrough F.C.",
+   "away": "Hull City A.F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Middlesbrough F.C.",
+   "away": "Ipswich Town F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Middlesbrough F.C.",
+   "away": "Leicester City F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Middlesbrough F.C.",
+   "away": "Millwall F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Middlesbrough F.C.",
+   "away": "Norwich City F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Middlesbrough F.C.",
+   "away": "Oxford United F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Middlesbrough F.C.",
+   "away": "Portsmouth F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Middlesbrough F.C.",
+   "away": "Preston North End F.C.",
+   "ft": [
+    4,
+    0
+   ]
+  },
+  {
+   "home": "Middlesbrough F.C.",
+   "away": "Queens Park Rangers F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Middlesbrough F.C.",
+   "away": "Sheffield United F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Middlesbrough F.C.",
+   "away": "Sheffield Wednesday F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Middlesbrough F.C.",
+   "away": "Southampton F.C.",
+   "ft": [
+    4,
+    0
+   ]
+  },
+  {
+   "home": "Middlesbrough F.C.",
+   "away": "Stoke City F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Middlesbrough F.C.",
+   "away": "Swansea City A.F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Middlesbrough F.C.",
+   "away": "Watford F.C.",
+   "ft": [
+    5,
+    1
+   ]
+  },
+  {
+   "home": "Middlesbrough F.C.",
+   "away": "West Bromwich Albion F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Middlesbrough F.C.",
+   "away": "Wrexham A.F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Millwall F.C.",
+   "away": "Birmingham City F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Millwall F.C.",
+   "away": "Blackburn Rovers F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Millwall F.C.",
+   "away": "Bristol City F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Millwall F.C.",
+   "away": "Charlton Athletic F.C.",
+   "ft": [
+    4,
+    0
+   ]
+  },
+  {
+   "home": "Millwall F.C.",
+   "away": "Coventry City F.C.",
+   "ft": [
+    0,
+    4
+   ]
+  },
+  {
+   "home": "Millwall F.C.",
+   "away": "Derby County F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Millwall F.C.",
+   "away": "Hull City A.F.C.",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Millwall F.C.",
+   "away": "Ipswich Town F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Millwall F.C.",
+   "away": "Leicester City F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Millwall F.C.",
+   "away": "Middlesbrough F.C.",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Millwall F.C.",
+   "away": "Norwich City F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Millwall F.C.",
+   "away": "Oxford United F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Millwall F.C.",
+   "away": "Portsmouth F.C.",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Millwall F.C.",
+   "away": "Preston North End F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Millwall F.C.",
+   "away": "Queens Park Rangers F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Millwall F.C.",
+   "away": "Sheffield United F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Millwall F.C.",
+   "away": "Sheffield Wednesday F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Millwall F.C.",
+   "away": "Southampton F.C.",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Millwall F.C.",
+   "away": "Stoke City F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Millwall F.C.",
+   "away": "Swansea City A.F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Millwall F.C.",
+   "away": "Watford F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Millwall F.C.",
+   "away": "West Bromwich Albion F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Millwall F.C.",
+   "away": "Wrexham A.F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Norwich City F.C.",
+   "away": "Birmingham City F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Norwich City F.C.",
+   "away": "Blackburn Rovers F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Norwich City F.C.",
+   "away": "Bristol City F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Norwich City F.C.",
+   "away": "Charlton Athletic F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Norwich City F.C.",
+   "away": "Coventry City F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Norwich City F.C.",
+   "away": "Derby County F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Norwich City F.C.",
+   "away": "Hull City A.F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Norwich City F.C.",
+   "away": "Ipswich Town F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Norwich City F.C.",
+   "away": "Leicester City F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Norwich City F.C.",
+   "away": "Middlesbrough F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Norwich City F.C.",
+   "away": "Millwall F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Norwich City F.C.",
+   "away": "Oxford United F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Norwich City F.C.",
+   "away": "Portsmouth F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Norwich City F.C.",
+   "away": "Preston North End F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Norwich City F.C.",
+   "away": "Queens Park Rangers F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Norwich City F.C.",
+   "away": "Sheffield United F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Norwich City F.C.",
+   "away": "Sheffield Wednesday F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Norwich City F.C.",
+   "away": "Southampton F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Norwich City F.C.",
+   "away": "Stoke City F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Norwich City F.C.",
+   "away": "Swansea City A.F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Norwich City F.C.",
+   "away": "Watford F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Norwich City F.C.",
+   "away": "West Bromwich Albion F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Norwich City F.C.",
+   "away": "Wrexham A.F.C.",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "Oxford United F.C.",
+   "away": "Birmingham City F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Oxford United F.C.",
+   "away": "Blackburn Rovers F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Oxford United F.C.",
+   "away": "Bristol City F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Oxford United F.C.",
+   "away": "Charlton Athletic F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Oxford United F.C.",
+   "away": "Coventry City F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Oxford United F.C.",
+   "away": "Derby County F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Oxford United F.C.",
+   "away": "Hull City A.F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Oxford United F.C.",
+   "away": "Ipswich Town F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Oxford United F.C.",
+   "away": "Leicester City F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Oxford United F.C.",
+   "away": "Middlesbrough F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Oxford United F.C.",
+   "away": "Millwall F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Oxford United F.C.",
+   "away": "Norwich City F.C.",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Oxford United F.C.",
+   "away": "Portsmouth F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Oxford United F.C.",
+   "away": "Preston North End F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Oxford United F.C.",
+   "away": "Queens Park Rangers F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Oxford United F.C.",
+   "away": "Sheffield United F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Oxford United F.C.",
+   "away": "Sheffield Wednesday F.C.",
+   "ft": [
+    4,
+    1
+   ]
+  },
+  {
+   "home": "Oxford United F.C.",
+   "away": "Southampton F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Oxford United F.C.",
+   "away": "Stoke City F.C.",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Oxford United F.C.",
+   "away": "Swansea City A.F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Oxford United F.C.",
+   "away": "Watford F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Oxford United F.C.",
+   "away": "West Bromwich Albion F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Oxford United F.C.",
+   "away": "Wrexham A.F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Portsmouth F.C.",
+   "away": "Birmingham City F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Portsmouth F.C.",
+   "away": "Blackburn Rovers F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Portsmouth F.C.",
+   "away": "Bristol City F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Portsmouth F.C.",
+   "away": "Charlton Athletic F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Portsmouth F.C.",
+   "away": "Coventry City F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Portsmouth F.C.",
+   "away": "Derby County F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Portsmouth F.C.",
+   "away": "Hull City A.F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Portsmouth F.C.",
+   "away": "Ipswich Town F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Portsmouth F.C.",
+   "away": "Leicester City F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Portsmouth F.C.",
+   "away": "Middlesbrough F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Portsmouth F.C.",
+   "away": "Millwall F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Portsmouth F.C.",
+   "away": "Norwich City F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Portsmouth F.C.",
+   "away": "Oxford United F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Portsmouth F.C.",
+   "away": "Preston North End F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Portsmouth F.C.",
+   "away": "Queens Park Rangers F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Portsmouth F.C.",
+   "away": "Sheffield United F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Portsmouth F.C.",
+   "away": "Sheffield Wednesday F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Portsmouth F.C.",
+   "away": "Southampton F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Portsmouth F.C.",
+   "away": "Stoke City F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Portsmouth F.C.",
+   "away": "Swansea City A.F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Portsmouth F.C.",
+   "away": "Watford F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Portsmouth F.C.",
+   "away": "West Bromwich Albion F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Portsmouth F.C.",
+   "away": "Wrexham A.F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Preston North End F.C.",
+   "away": "Birmingham City F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Preston North End F.C.",
+   "away": "Blackburn Rovers F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Preston North End F.C.",
+   "away": "Bristol City F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Preston North End F.C.",
+   "away": "Charlton Athletic F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Preston North End F.C.",
+   "away": "Coventry City F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Preston North End F.C.",
+   "away": "Derby County F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Preston North End F.C.",
+   "away": "Hull City A.F.C.",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Preston North End F.C.",
+   "away": "Ipswich Town F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Preston North End F.C.",
+   "away": "Leicester City F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Preston North End F.C.",
+   "away": "Middlesbrough F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Preston North End F.C.",
+   "away": "Millwall F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Preston North End F.C.",
+   "away": "Norwich City F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Preston North End F.C.",
+   "away": "Oxford United F.C.",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Preston North End F.C.",
+   "away": "Portsmouth F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Preston North End F.C.",
+   "away": "Queens Park Rangers F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Preston North End F.C.",
+   "away": "Sheffield United F.C.",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Preston North End F.C.",
+   "away": "Sheffield Wednesday F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Preston North End F.C.",
+   "away": "Southampton F.C.",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Preston North End F.C.",
+   "away": "Stoke City F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Preston North End F.C.",
+   "away": "Swansea City A.F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Preston North End F.C.",
+   "away": "Watford F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Preston North End F.C.",
+   "away": "West Bromwich Albion F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Preston North End F.C.",
+   "away": "Wrexham A.F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Queens Park Rangers F.C.",
+   "away": "Birmingham City F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Queens Park Rangers F.C.",
+   "away": "Blackburn Rovers F.C.",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Queens Park Rangers F.C.",
+   "away": "Bristol City F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Queens Park Rangers F.C.",
+   "away": "Charlton Athletic F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Queens Park Rangers F.C.",
+   "away": "Coventry City F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Queens Park Rangers F.C.",
+   "away": "Derby County F.C.",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "Queens Park Rangers F.C.",
+   "away": "Hull City A.F.C.",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Queens Park Rangers F.C.",
+   "away": "Ipswich Town F.C.",
+   "ft": [
+    1,
+    4
+   ]
+  },
+  {
+   "home": "Queens Park Rangers F.C.",
+   "away": "Leicester City F.C.",
+   "ft": [
+    4,
+    1
+   ]
+  },
+  {
+   "home": "Queens Park Rangers F.C.",
+   "away": "Middlesbrough F.C.",
+   "ft": [
+    0,
+    4
+   ]
+  },
+  {
+   "home": "Queens Park Rangers F.C.",
+   "away": "Millwall F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Queens Park Rangers F.C.",
+   "away": "Norwich City F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Queens Park Rangers F.C.",
+   "away": "Oxford United F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Queens Park Rangers F.C.",
+   "away": "Portsmouth F.C.",
+   "ft": [
+    6,
+    1
+   ]
+  },
+  {
+   "home": "Queens Park Rangers F.C.",
+   "away": "Preston North End F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Queens Park Rangers F.C.",
+   "away": "Sheffield United F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Queens Park Rangers F.C.",
+   "away": "Sheffield Wednesday F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Queens Park Rangers F.C.",
+   "away": "Southampton F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Queens Park Rangers F.C.",
+   "away": "Stoke City F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Queens Park Rangers F.C.",
+   "away": "Swansea City A.F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Queens Park Rangers F.C.",
+   "away": "Watford F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Queens Park Rangers F.C.",
+   "away": "West Bromwich Albion F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Queens Park Rangers F.C.",
+   "away": "Wrexham A.F.C.",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "Sheffield United F.C.",
+   "away": "Birmingham City F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Sheffield United F.C.",
+   "away": "Blackburn Rovers F.C.",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Sheffield United F.C.",
+   "away": "Bristol City F.C.",
+   "ft": [
+    1,
+    4
+   ]
+  },
+  {
+   "home": "Sheffield United F.C.",
+   "away": "Charlton Athletic F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Sheffield United F.C.",
+   "away": "Coventry City F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Sheffield United F.C.",
+   "away": "Derby County F.C.",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Sheffield United F.C.",
+   "away": "Hull City A.F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Sheffield United F.C.",
+   "away": "Ipswich Town F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Sheffield United F.C.",
+   "away": "Leicester City F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Sheffield United F.C.",
+   "away": "Middlesbrough F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Sheffield United F.C.",
+   "away": "Millwall F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Sheffield United F.C.",
+   "away": "Norwich City F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Sheffield United F.C.",
+   "away": "Oxford United F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Sheffield United F.C.",
+   "away": "Portsmouth F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Sheffield United F.C.",
+   "away": "Preston North End F.C.",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "Sheffield United F.C.",
+   "away": "Queens Park Rangers F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Sheffield United F.C.",
+   "away": "Sheffield Wednesday F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Sheffield United F.C.",
+   "away": "Southampton F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Sheffield United F.C.",
+   "away": "Stoke City F.C.",
+   "ft": [
+    4,
+    0
+   ]
+  },
+  {
+   "home": "Sheffield United F.C.",
+   "away": "Swansea City A.F.C.",
+   "ft": [
+    3,
+    3
+   ]
+  },
+  {
+   "home": "Sheffield United F.C.",
+   "away": "Watford F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Sheffield United F.C.",
+   "away": "West Bromwich Albion F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Sheffield United F.C.",
+   "away": "Wrexham A.F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Sheffield Wednesday F.C.",
+   "away": "Birmingham City F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Sheffield Wednesday F.C.",
+   "away": "Blackburn Rovers F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Sheffield Wednesday F.C.",
+   "away": "Bristol City F.C.",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Sheffield Wednesday F.C.",
+   "away": "Charlton Athletic F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Sheffield Wednesday F.C.",
+   "away": "Coventry City F.C.",
+   "ft": [
+    0,
+    5
+   ]
+  },
+  {
+   "home": "Sheffield Wednesday F.C.",
+   "away": "Derby County F.C.",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Sheffield Wednesday F.C.",
+   "away": "Hull City A.F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Sheffield Wednesday F.C.",
+   "away": "Ipswich Town F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Sheffield Wednesday F.C.",
+   "away": "Leicester City F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Sheffield Wednesday F.C.",
+   "away": "Middlesbrough F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Sheffield Wednesday F.C.",
+   "away": "Millwall F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Sheffield Wednesday F.C.",
+   "away": "Norwich City F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Sheffield Wednesday F.C.",
+   "away": "Oxford United F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Sheffield Wednesday F.C.",
+   "away": "Portsmouth F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Sheffield Wednesday F.C.",
+   "away": "Preston North End F.C.",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "Sheffield Wednesday F.C.",
+   "away": "Queens Park Rangers F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Sheffield Wednesday F.C.",
+   "away": "Sheffield United F.C.",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Sheffield Wednesday F.C.",
+   "away": "Southampton F.C.",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Sheffield Wednesday F.C.",
+   "away": "Stoke City F.C.",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Sheffield Wednesday F.C.",
+   "away": "Swansea City A.F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Sheffield Wednesday F.C.",
+   "away": "Watford F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Sheffield Wednesday F.C.",
+   "away": "West Bromwich Albion F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Sheffield Wednesday F.C.",
+   "away": "Wrexham A.F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Southampton F.C.",
+   "away": "Birmingham City F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Southampton F.C.",
+   "away": "Blackburn Rovers F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Southampton F.C.",
+   "away": "Bristol City F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Southampton F.C.",
+   "away": "Charlton Athletic F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Southampton F.C.",
+   "away": "Coventry City F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Southampton F.C.",
+   "away": "Derby County F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Southampton F.C.",
+   "away": "Hull City A.F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Southampton F.C.",
+   "away": "Ipswich Town F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Southampton F.C.",
+   "away": "Leicester City F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Southampton F.C.",
+   "away": "Middlesbrough F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Southampton F.C.",
+   "away": "Millwall F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Southampton F.C.",
+   "away": "Norwich City F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Southampton F.C.",
+   "away": "Oxford United F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Southampton F.C.",
+   "away": "Portsmouth F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Southampton F.C.",
+   "away": "Preston North End F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Southampton F.C.",
+   "away": "Queens Park Rangers F.C.",
+   "ft": [
+    5,
+    0
+   ]
+  },
+  {
+   "home": "Southampton F.C.",
+   "away": "Sheffield United F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Southampton F.C.",
+   "away": "Sheffield Wednesday F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Southampton F.C.",
+   "away": "Stoke City F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Southampton F.C.",
+   "away": "Swansea City A.F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Southampton F.C.",
+   "away": "Watford F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Southampton F.C.",
+   "away": "West Bromwich Albion F.C.",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Southampton F.C.",
+   "away": "Wrexham A.F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Stoke City F.C.",
+   "away": "Birmingham City F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Stoke City F.C.",
+   "away": "Blackburn Rovers F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Stoke City F.C.",
+   "away": "Bristol City F.C.",
+   "ft": [
+    5,
+    1
+   ]
+  },
+  {
+   "home": "Stoke City F.C.",
+   "away": "Charlton Athletic F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Stoke City F.C.",
+   "away": "Coventry City F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Stoke City F.C.",
+   "away": "Derby County F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Stoke City F.C.",
+   "away": "Hull City A.F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Stoke City F.C.",
+   "away": "Ipswich Town F.C.",
+   "ft": [
+    3,
+    3
+   ]
+  },
+  {
+   "home": "Stoke City F.C.",
+   "away": "Leicester City F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Stoke City F.C.",
+   "away": "Middlesbrough F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Stoke City F.C.",
+   "away": "Millwall F.C.",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Stoke City F.C.",
+   "away": "Norwich City F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Stoke City F.C.",
+   "away": "Oxford United F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Stoke City F.C.",
+   "away": "Portsmouth F.C.",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Stoke City F.C.",
+   "away": "Preston North End F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Stoke City F.C.",
+   "away": "Queens Park Rangers F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Stoke City F.C.",
+   "away": "Sheffield United F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Stoke City F.C.",
+   "away": "Sheffield Wednesday F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Stoke City F.C.",
+   "away": "Southampton F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Stoke City F.C.",
+   "away": "Swansea City A.F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Stoke City F.C.",
+   "away": "Watford F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Stoke City F.C.",
+   "away": "West Bromwich Albion F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Stoke City F.C.",
+   "away": "Wrexham A.F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Swansea City A.F.C.",
+   "away": "Birmingham City F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Swansea City A.F.C.",
+   "away": "Blackburn Rovers F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Swansea City A.F.C.",
+   "away": "Bristol City F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Swansea City A.F.C.",
+   "away": "Charlton Athletic F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Swansea City A.F.C.",
+   "away": "Coventry City F.C.",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Swansea City A.F.C.",
+   "away": "Derby County F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Swansea City A.F.C.",
+   "away": "Hull City A.F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Swansea City A.F.C.",
+   "away": "Ipswich Town F.C.",
+   "ft": [
+    1,
+    4
+   ]
+  },
+  {
+   "home": "Swansea City A.F.C.",
+   "away": "Leicester City F.C.",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Swansea City A.F.C.",
+   "away": "Middlesbrough F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Swansea City A.F.C.",
+   "away": "Millwall F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Swansea City A.F.C.",
+   "away": "Norwich City F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Swansea City A.F.C.",
+   "away": "Oxford United F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Swansea City A.F.C.",
+   "away": "Portsmouth F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Swansea City A.F.C.",
+   "away": "Preston North End F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Swansea City A.F.C.",
+   "away": "Queens Park Rangers F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Swansea City A.F.C.",
+   "away": "Sheffield United F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Swansea City A.F.C.",
+   "away": "Sheffield Wednesday F.C.",
+   "ft": [
+    4,
+    0
+   ]
+  },
+  {
+   "home": "Swansea City A.F.C.",
+   "away": "Southampton F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Swansea City A.F.C.",
+   "away": "Stoke City F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Swansea City A.F.C.",
+   "away": "Watford F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Swansea City A.F.C.",
+   "away": "West Bromwich Albion F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Swansea City A.F.C.",
+   "away": "Wrexham A.F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Watford F.C.",
+   "away": "Birmingham City F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Watford F.C.",
+   "away": "Blackburn Rovers F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Watford F.C.",
+   "away": "Bristol City F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Watford F.C.",
+   "away": "Charlton Athletic F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Watford F.C.",
+   "away": "Coventry City F.C.",
+   "ft": [
+    0,
+    4
+   ]
+  },
+  {
+   "home": "Watford F.C.",
+   "away": "Derby County F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Watford F.C.",
+   "away": "Hull City A.F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Watford F.C.",
+   "away": "Ipswich Town F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Watford F.C.",
+   "away": "Leicester City F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Watford F.C.",
+   "away": "Middlesbrough F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Watford F.C.",
+   "away": "Millwall F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Watford F.C.",
+   "away": "Norwich City F.C.",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Watford F.C.",
+   "away": "Oxford United F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Watford F.C.",
+   "away": "Portsmouth F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Watford F.C.",
+   "away": "Preston North End F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Watford F.C.",
+   "away": "Queens Park Rangers F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Watford F.C.",
+   "away": "Sheffield United F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Watford F.C.",
+   "away": "Sheffield Wednesday F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Watford F.C.",
+   "away": "Southampton F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Watford F.C.",
+   "away": "Stoke City F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Watford F.C.",
+   "away": "Swansea City A.F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Watford F.C.",
+   "away": "West Bromwich Albion F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Watford F.C.",
+   "away": "Wrexham A.F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "West Bromwich Albion F.C.",
+   "away": "Birmingham City F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "West Bromwich Albion F.C.",
+   "away": "Blackburn Rovers F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "West Bromwich Albion F.C.",
+   "away": "Bristol City F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "West Bromwich Albion F.C.",
+   "away": "Charlton Athletic F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "West Bromwich Albion F.C.",
+   "away": "Coventry City F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "West Bromwich Albion F.C.",
+   "away": "Derby County F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "West Bromwich Albion F.C.",
+   "away": "Hull City A.F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "West Bromwich Albion F.C.",
+   "away": "Ipswich Town F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "West Bromwich Albion F.C.",
+   "away": "Leicester City F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "West Bromwich Albion F.C.",
+   "away": "Middlesbrough F.C.",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "West Bromwich Albion F.C.",
+   "away": "Millwall F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "West Bromwich Albion F.C.",
+   "away": "Norwich City F.C.",
+   "ft": [
+    0,
+    5
+   ]
+  },
+  {
+   "home": "West Bromwich Albion F.C.",
+   "away": "Oxford United F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "West Bromwich Albion F.C.",
+   "away": "Portsmouth F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "West Bromwich Albion F.C.",
+   "away": "Preston North End F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "West Bromwich Albion F.C.",
+   "away": "Queens Park Rangers F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "West Bromwich Albion F.C.",
+   "away": "Sheffield United F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "West Bromwich Albion F.C.",
+   "away": "Sheffield Wednesday F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "West Bromwich Albion F.C.",
+   "away": "Southampton F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "West Bromwich Albion F.C.",
+   "away": "Stoke City F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "West Bromwich Albion F.C.",
+   "away": "Swansea City A.F.C.",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "West Bromwich Albion F.C.",
+   "away": "Watford F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "West Bromwich Albion F.C.",
+   "away": "Wrexham A.F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Wrexham A.F.C.",
+   "away": "Birmingham City F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Wrexham A.F.C.",
+   "away": "Blackburn Rovers F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Wrexham A.F.C.",
+   "away": "Bristol City F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Wrexham A.F.C.",
+   "away": "Charlton Athletic F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Wrexham A.F.C.",
+   "away": "Coventry City F.C.",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Wrexham A.F.C.",
+   "away": "Derby County F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Wrexham A.F.C.",
+   "away": "Hull City A.F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Wrexham A.F.C.",
+   "away": "Ipswich Town F.C.",
+   "ft": [
+    5,
+    3
+   ]
+  },
+  {
+   "home": "Wrexham A.F.C.",
+   "away": "Leicester City F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Wrexham A.F.C.",
+   "away": "Middlesbrough F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Wrexham A.F.C.",
+   "away": "Millwall F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Wrexham A.F.C.",
+   "away": "Norwich City F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Wrexham A.F.C.",
+   "away": "Oxford United F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Wrexham A.F.C.",
+   "away": "Portsmouth F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Wrexham A.F.C.",
+   "away": "Preston North End F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Wrexham A.F.C.",
+   "away": "Queens Park Rangers F.C.",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Wrexham A.F.C.",
+   "away": "Sheffield United F.C.",
+   "ft": [
+    5,
+    3
+   ]
+  },
+  {
+   "home": "Wrexham A.F.C.",
+   "away": "Sheffield Wednesday F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Wrexham A.F.C.",
+   "away": "Southampton F.C.",
+   "ft": [
+    1,
+    5
+   ]
+  },
+  {
+   "home": "Wrexham A.F.C.",
+   "away": "Stoke City F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Wrexham A.F.C.",
+   "away": "Swansea City A.F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Wrexham A.F.C.",
+   "away": "Watford F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Wrexham A.F.C.",
+   "away": "West Bromwich Albion F.C.",
+   "ft": [
+    2,
+    3
+   ]
+  }
+ ]
+}

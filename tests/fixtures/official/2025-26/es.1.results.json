@@ -1,0 +1,3045 @@
+{
+ "source": "https://en.wikipedia.org/?oldid=1381093914",
+ "matches": [
+  {
+   "home": "Deportivo Alavés",
+   "away": "Athletic Bilbao",
+   "ft": [
+    2,
+    4
+   ]
+  },
+  {
+   "home": "Deportivo Alavés",
+   "away": "Atlético Madrid",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Deportivo Alavés",
+   "away": "FC Barcelona",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Deportivo Alavés",
+   "away": "RC Celta de Vigo",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Deportivo Alavés",
+   "away": "Elche CF",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Deportivo Alavés",
+   "away": "RCD Espanyol",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Deportivo Alavés",
+   "away": "Getafe CF",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Deportivo Alavés",
+   "away": "Girona FC",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Deportivo Alavés",
+   "away": "Levante UD",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Deportivo Alavés",
+   "away": "RCD Mallorca",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Deportivo Alavés",
+   "away": "CA Osasuna",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Deportivo Alavés",
+   "away": "Real Oviedo",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Deportivo Alavés",
+   "away": "Rayo Vallecano",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Deportivo Alavés",
+   "away": "Real Betis",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Deportivo Alavés",
+   "away": "Real Madrid CF",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Deportivo Alavés",
+   "away": "Real Sociedad",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Deportivo Alavés",
+   "away": "Sevilla FC",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Deportivo Alavés",
+   "away": "Valencia CF",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Deportivo Alavés",
+   "away": "Villarreal CF",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Athletic Bilbao",
+   "away": "Deportivo Alavés",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Athletic Bilbao",
+   "away": "Atlético Madrid",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Athletic Bilbao",
+   "away": "FC Barcelona",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Athletic Bilbao",
+   "away": "RC Celta de Vigo",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Athletic Bilbao",
+   "away": "Elche CF",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Athletic Bilbao",
+   "away": "RCD Espanyol",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Athletic Bilbao",
+   "away": "Getafe CF",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Athletic Bilbao",
+   "away": "Girona FC",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Athletic Bilbao",
+   "away": "Levante UD",
+   "ft": [
+    4,
+    2
+   ]
+  },
+  {
+   "home": "Athletic Bilbao",
+   "away": "RCD Mallorca",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Athletic Bilbao",
+   "away": "CA Osasuna",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Athletic Bilbao",
+   "away": "Real Oviedo",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Athletic Bilbao",
+   "away": "Rayo Vallecano",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Athletic Bilbao",
+   "away": "Real Betis",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Athletic Bilbao",
+   "away": "Real Madrid CF",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Athletic Bilbao",
+   "away": "Real Sociedad",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Athletic Bilbao",
+   "away": "Sevilla FC",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Athletic Bilbao",
+   "away": "Valencia CF",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Athletic Bilbao",
+   "away": "Villarreal CF",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Atlético Madrid",
+   "away": "Deportivo Alavés",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Atlético Madrid",
+   "away": "Athletic Bilbao",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Atlético Madrid",
+   "away": "FC Barcelona",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Atlético Madrid",
+   "away": "RC Celta de Vigo",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Atlético Madrid",
+   "away": "Elche CF",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Atlético Madrid",
+   "away": "RCD Espanyol",
+   "ft": [
+    4,
+    2
+   ]
+  },
+  {
+   "home": "Atlético Madrid",
+   "away": "Getafe CF",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Atlético Madrid",
+   "away": "Girona FC",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Atlético Madrid",
+   "away": "Levante UD",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Atlético Madrid",
+   "away": "RCD Mallorca",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Atlético Madrid",
+   "away": "CA Osasuna",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Atlético Madrid",
+   "away": "Real Oviedo",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Atlético Madrid",
+   "away": "Rayo Vallecano",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Atlético Madrid",
+   "away": "Real Betis",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Atlético Madrid",
+   "away": "Real Madrid CF",
+   "ft": [
+    5,
+    2
+   ]
+  },
+  {
+   "home": "Atlético Madrid",
+   "away": "Real Sociedad",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Atlético Madrid",
+   "away": "Sevilla FC",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Atlético Madrid",
+   "away": "Valencia CF",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Atlético Madrid",
+   "away": "Villarreal CF",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "FC Barcelona",
+   "away": "Deportivo Alavés",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "FC Barcelona",
+   "away": "Athletic Bilbao",
+   "ft": [
+    4,
+    0
+   ]
+  },
+  {
+   "home": "FC Barcelona",
+   "away": "Atlético Madrid",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "FC Barcelona",
+   "away": "RC Celta de Vigo",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "FC Barcelona",
+   "away": "Elche CF",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "FC Barcelona",
+   "away": "RCD Espanyol",
+   "ft": [
+    4,
+    1
+   ]
+  },
+  {
+   "home": "FC Barcelona",
+   "away": "Getafe CF",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "FC Barcelona",
+   "away": "Girona FC",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "FC Barcelona",
+   "away": "Levante UD",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "FC Barcelona",
+   "away": "RCD Mallorca",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "FC Barcelona",
+   "away": "CA Osasuna",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "FC Barcelona",
+   "away": "Real Oviedo",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "FC Barcelona",
+   "away": "Rayo Vallecano",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "FC Barcelona",
+   "away": "Real Betis",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "FC Barcelona",
+   "away": "Real Madrid CF",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "FC Barcelona",
+   "away": "Real Sociedad",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "FC Barcelona",
+   "away": "Sevilla FC",
+   "ft": [
+    5,
+    2
+   ]
+  },
+  {
+   "home": "FC Barcelona",
+   "away": "Valencia CF",
+   "ft": [
+    6,
+    0
+   ]
+  },
+  {
+   "home": "FC Barcelona",
+   "away": "Villarreal CF",
+   "ft": [
+    4,
+    1
+   ]
+  },
+  {
+   "home": "RC Celta de Vigo",
+   "away": "Deportivo Alavés",
+   "ft": [
+    3,
+    4
+   ]
+  },
+  {
+   "home": "RC Celta de Vigo",
+   "away": "Athletic Bilbao",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "RC Celta de Vigo",
+   "away": "Atlético Madrid",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "RC Celta de Vigo",
+   "away": "FC Barcelona",
+   "ft": [
+    2,
+    4
+   ]
+  },
+  {
+   "home": "RC Celta de Vigo",
+   "away": "Elche CF",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "RC Celta de Vigo",
+   "away": "RCD Espanyol",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "RC Celta de Vigo",
+   "away": "Getafe CF",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "RC Celta de Vigo",
+   "away": "Girona FC",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "RC Celta de Vigo",
+   "away": "Levante UD",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "RC Celta de Vigo",
+   "away": "RCD Mallorca",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "RC Celta de Vigo",
+   "away": "CA Osasuna",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "RC Celta de Vigo",
+   "away": "Real Oviedo",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "RC Celta de Vigo",
+   "away": "Rayo Vallecano",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "RC Celta de Vigo",
+   "away": "Real Betis",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "RC Celta de Vigo",
+   "away": "Real Madrid CF",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "RC Celta de Vigo",
+   "away": "Real Sociedad",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "RC Celta de Vigo",
+   "away": "Sevilla FC",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "RC Celta de Vigo",
+   "away": "Valencia CF",
+   "ft": [
+    4,
+    1
+   ]
+  },
+  {
+   "home": "RC Celta de Vigo",
+   "away": "Villarreal CF",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Elche CF",
+   "away": "Deportivo Alavés",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Elche CF",
+   "away": "Athletic Bilbao",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Elche CF",
+   "away": "Atlético Madrid",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Elche CF",
+   "away": "FC Barcelona",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Elche CF",
+   "away": "RC Celta de Vigo",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Elche CF",
+   "away": "RCD Espanyol",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Elche CF",
+   "away": "Getafe CF",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Elche CF",
+   "away": "Girona FC",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Elche CF",
+   "away": "Levante UD",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Elche CF",
+   "away": "RCD Mallorca",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Elche CF",
+   "away": "CA Osasuna",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Elche CF",
+   "away": "Real Oviedo",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Elche CF",
+   "away": "Rayo Vallecano",
+   "ft": [
+    4,
+    0
+   ]
+  },
+  {
+   "home": "Elche CF",
+   "away": "Real Betis",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Elche CF",
+   "away": "Real Madrid CF",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Elche CF",
+   "away": "Real Sociedad",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Elche CF",
+   "away": "Sevilla FC",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Elche CF",
+   "away": "Valencia CF",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Elche CF",
+   "away": "Villarreal CF",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "RCD Espanyol",
+   "away": "Deportivo Alavés",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "RCD Espanyol",
+   "away": "Athletic Bilbao",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "RCD Espanyol",
+   "away": "Atlético Madrid",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "RCD Espanyol",
+   "away": "FC Barcelona",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "RCD Espanyol",
+   "away": "RC Celta de Vigo",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "RCD Espanyol",
+   "away": "Elche CF",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "RCD Espanyol",
+   "away": "Getafe CF",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "RCD Espanyol",
+   "away": "Girona FC",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "RCD Espanyol",
+   "away": "Levante UD",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "RCD Espanyol",
+   "away": "RCD Mallorca",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "RCD Espanyol",
+   "away": "CA Osasuna",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "RCD Espanyol",
+   "away": "Real Oviedo",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "RCD Espanyol",
+   "away": "Rayo Vallecano",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "RCD Espanyol",
+   "away": "Real Betis",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "RCD Espanyol",
+   "away": "Real Madrid CF",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "RCD Espanyol",
+   "away": "Real Sociedad",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "RCD Espanyol",
+   "away": "Sevilla FC",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "RCD Espanyol",
+   "away": "Valencia CF",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "RCD Espanyol",
+   "away": "Villarreal CF",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Getafe CF",
+   "away": "Deportivo Alavés",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Getafe CF",
+   "away": "Athletic Bilbao",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Getafe CF",
+   "away": "Atlético Madrid",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Getafe CF",
+   "away": "FC Barcelona",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Getafe CF",
+   "away": "RC Celta de Vigo",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Getafe CF",
+   "away": "Elche CF",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Getafe CF",
+   "away": "RCD Espanyol",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Getafe CF",
+   "away": "Girona FC",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Getafe CF",
+   "away": "Levante UD",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Getafe CF",
+   "away": "RCD Mallorca",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Getafe CF",
+   "away": "CA Osasuna",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Getafe CF",
+   "away": "Real Oviedo",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Getafe CF",
+   "away": "Rayo Vallecano",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Getafe CF",
+   "away": "Real Betis",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Getafe CF",
+   "away": "Real Madrid CF",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Getafe CF",
+   "away": "Real Sociedad",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Getafe CF",
+   "away": "Sevilla FC",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Getafe CF",
+   "away": "Valencia CF",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Getafe CF",
+   "away": "Villarreal CF",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Girona FC",
+   "away": "Deportivo Alavés",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Girona FC",
+   "away": "Athletic Bilbao",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Girona FC",
+   "away": "Atlético Madrid",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Girona FC",
+   "away": "FC Barcelona",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Girona FC",
+   "away": "RC Celta de Vigo",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Girona FC",
+   "away": "Elche CF",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Girona FC",
+   "away": "RCD Espanyol",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Girona FC",
+   "away": "Getafe CF",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Girona FC",
+   "away": "Levante UD",
+   "ft": [
+    0,
+    4
+   ]
+  },
+  {
+   "home": "Girona FC",
+   "away": "RCD Mallorca",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Girona FC",
+   "away": "CA Osasuna",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Girona FC",
+   "away": "Real Oviedo",
+   "ft": [
+    3,
+    3
+   ]
+  },
+  {
+   "home": "Girona FC",
+   "away": "Rayo Vallecano",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Girona FC",
+   "away": "Real Betis",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "Girona FC",
+   "away": "Real Madrid CF",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Girona FC",
+   "away": "Real Sociedad",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Girona FC",
+   "away": "Sevilla FC",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Girona FC",
+   "away": "Valencia CF",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Girona FC",
+   "away": "Villarreal CF",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Levante UD",
+   "away": "Deportivo Alavés",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Levante UD",
+   "away": "Athletic Bilbao",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Levante UD",
+   "away": "Atlético Madrid",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Levante UD",
+   "away": "FC Barcelona",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "Levante UD",
+   "away": "RC Celta de Vigo",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Levante UD",
+   "away": "Elche CF",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Levante UD",
+   "away": "RCD Espanyol",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Levante UD",
+   "away": "Getafe CF",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Levante UD",
+   "away": "Girona FC",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Levante UD",
+   "away": "RCD Mallorca",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Levante UD",
+   "away": "CA Osasuna",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Levante UD",
+   "away": "Real Oviedo",
+   "ft": [
+    4,
+    2
+   ]
+  },
+  {
+   "home": "Levante UD",
+   "away": "Rayo Vallecano",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Levante UD",
+   "away": "Real Betis",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Levante UD",
+   "away": "Real Madrid CF",
+   "ft": [
+    1,
+    4
+   ]
+  },
+  {
+   "home": "Levante UD",
+   "away": "Real Sociedad",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Levante UD",
+   "away": "Sevilla FC",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Levante UD",
+   "away": "Valencia CF",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Levante UD",
+   "away": "Villarreal CF",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "RCD Mallorca",
+   "away": "Deportivo Alavés",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "RCD Mallorca",
+   "away": "Athletic Bilbao",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "RCD Mallorca",
+   "away": "Atlético Madrid",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "RCD Mallorca",
+   "away": "FC Barcelona",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "RCD Mallorca",
+   "away": "RC Celta de Vigo",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "RCD Mallorca",
+   "away": "Elche CF",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "RCD Mallorca",
+   "away": "RCD Espanyol",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "RCD Mallorca",
+   "away": "Getafe CF",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "RCD Mallorca",
+   "away": "Girona FC",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "RCD Mallorca",
+   "away": "Levante UD",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "RCD Mallorca",
+   "away": "CA Osasuna",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "RCD Mallorca",
+   "away": "Real Oviedo",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "RCD Mallorca",
+   "away": "Rayo Vallecano",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "RCD Mallorca",
+   "away": "Real Betis",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "RCD Mallorca",
+   "away": "Real Madrid CF",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "RCD Mallorca",
+   "away": "Real Sociedad",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "RCD Mallorca",
+   "away": "Sevilla FC",
+   "ft": [
+    4,
+    1
+   ]
+  },
+  {
+   "home": "RCD Mallorca",
+   "away": "Valencia CF",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "RCD Mallorca",
+   "away": "Villarreal CF",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "CA Osasuna",
+   "away": "Deportivo Alavés",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "CA Osasuna",
+   "away": "Athletic Bilbao",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "CA Osasuna",
+   "away": "Atlético Madrid",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "CA Osasuna",
+   "away": "FC Barcelona",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "CA Osasuna",
+   "away": "RC Celta de Vigo",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "CA Osasuna",
+   "away": "Elche CF",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "CA Osasuna",
+   "away": "RCD Espanyol",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "CA Osasuna",
+   "away": "Getafe CF",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "CA Osasuna",
+   "away": "Girona FC",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "CA Osasuna",
+   "away": "Levante UD",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "CA Osasuna",
+   "away": "RCD Mallorca",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "CA Osasuna",
+   "away": "Real Oviedo",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "CA Osasuna",
+   "away": "Rayo Vallecano",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "CA Osasuna",
+   "away": "Real Betis",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "CA Osasuna",
+   "away": "Real Madrid CF",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "CA Osasuna",
+   "away": "Real Sociedad",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "CA Osasuna",
+   "away": "Sevilla FC",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "CA Osasuna",
+   "away": "Valencia CF",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "CA Osasuna",
+   "away": "Villarreal CF",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Real Oviedo",
+   "away": "Deportivo Alavés",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Real Oviedo",
+   "away": "Athletic Bilbao",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Real Oviedo",
+   "away": "Atlético Madrid",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Real Oviedo",
+   "away": "FC Barcelona",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Real Oviedo",
+   "away": "RC Celta de Vigo",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Real Oviedo",
+   "away": "Elche CF",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Real Oviedo",
+   "away": "RCD Espanyol",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Real Oviedo",
+   "away": "Getafe CF",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Real Oviedo",
+   "away": "Girona FC",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Real Oviedo",
+   "away": "Levante UD",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Real Oviedo",
+   "away": "RCD Mallorca",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Real Oviedo",
+   "away": "CA Osasuna",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Real Oviedo",
+   "away": "Rayo Vallecano",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Real Oviedo",
+   "away": "Real Betis",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Real Oviedo",
+   "away": "Real Madrid CF",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Real Oviedo",
+   "away": "Real Sociedad",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Real Oviedo",
+   "away": "Sevilla FC",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Real Oviedo",
+   "away": "Valencia CF",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Real Oviedo",
+   "away": "Villarreal CF",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Rayo Vallecano",
+   "away": "Deportivo Alavés",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Rayo Vallecano",
+   "away": "Athletic Bilbao",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Rayo Vallecano",
+   "away": "Atlético Madrid",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Rayo Vallecano",
+   "away": "FC Barcelona",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Rayo Vallecano",
+   "away": "RC Celta de Vigo",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Rayo Vallecano",
+   "away": "Elche CF",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Rayo Vallecano",
+   "away": "RCD Espanyol",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Rayo Vallecano",
+   "away": "Getafe CF",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Rayo Vallecano",
+   "away": "Girona FC",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Rayo Vallecano",
+   "away": "Levante UD",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Rayo Vallecano",
+   "away": "RCD Mallorca",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Rayo Vallecano",
+   "away": "CA Osasuna",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Rayo Vallecano",
+   "away": "Real Oviedo",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Rayo Vallecano",
+   "away": "Real Betis",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Rayo Vallecano",
+   "away": "Real Madrid CF",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Rayo Vallecano",
+   "away": "Real Sociedad",
+   "ft": [
+    3,
+    3
+   ]
+  },
+  {
+   "home": "Rayo Vallecano",
+   "away": "Sevilla FC",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Rayo Vallecano",
+   "away": "Valencia CF",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Rayo Vallecano",
+   "away": "Villarreal CF",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Real Betis",
+   "away": "Deportivo Alavés",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Real Betis",
+   "away": "Athletic Bilbao",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Real Betis",
+   "away": "Atlético Madrid",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Real Betis",
+   "away": "FC Barcelona",
+   "ft": [
+    3,
+    5
+   ]
+  },
+  {
+   "home": "Real Betis",
+   "away": "RC Celta de Vigo",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Real Betis",
+   "away": "Elche CF",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Real Betis",
+   "away": "RCD Espanyol",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Real Betis",
+   "away": "Getafe CF",
+   "ft": [
+    4,
+    0
+   ]
+  },
+  {
+   "home": "Real Betis",
+   "away": "Girona FC",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Real Betis",
+   "away": "Levante UD",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Real Betis",
+   "away": "RCD Mallorca",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Real Betis",
+   "away": "CA Osasuna",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Real Betis",
+   "away": "Real Oviedo",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Real Betis",
+   "away": "Rayo Vallecano",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Real Betis",
+   "away": "Real Madrid CF",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Real Betis",
+   "away": "Real Sociedad",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Real Betis",
+   "away": "Sevilla FC",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Real Betis",
+   "away": "Valencia CF",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Real Betis",
+   "away": "Villarreal CF",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Real Madrid CF",
+   "away": "Deportivo Alavés",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Real Madrid CF",
+   "away": "Athletic Bilbao",
+   "ft": [
+    4,
+    2
+   ]
+  },
+  {
+   "home": "Real Madrid CF",
+   "away": "Atlético Madrid",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Real Madrid CF",
+   "away": "FC Barcelona",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Real Madrid CF",
+   "away": "RC Celta de Vigo",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Real Madrid CF",
+   "away": "Elche CF",
+   "ft": [
+    4,
+    1
+   ]
+  },
+  {
+   "home": "Real Madrid CF",
+   "away": "RCD Espanyol",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Real Madrid CF",
+   "away": "Getafe CF",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Real Madrid CF",
+   "away": "Girona FC",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Real Madrid CF",
+   "away": "Levante UD",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Real Madrid CF",
+   "away": "RCD Mallorca",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Real Madrid CF",
+   "away": "CA Osasuna",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Real Madrid CF",
+   "away": "Real Oviedo",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Real Madrid CF",
+   "away": "Rayo Vallecano",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Real Madrid CF",
+   "away": "Real Betis",
+   "ft": [
+    5,
+    1
+   ]
+  },
+  {
+   "home": "Real Madrid CF",
+   "away": "Real Sociedad",
+   "ft": [
+    4,
+    1
+   ]
+  },
+  {
+   "home": "Real Madrid CF",
+   "away": "Sevilla FC",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Real Madrid CF",
+   "away": "Valencia CF",
+   "ft": [
+    4,
+    0
+   ]
+  },
+  {
+   "home": "Real Madrid CF",
+   "away": "Villarreal CF",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Real Sociedad",
+   "away": "Deportivo Alavés",
+   "ft": [
+    3,
+    3
+   ]
+  },
+  {
+   "home": "Real Sociedad",
+   "away": "Athletic Bilbao",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Real Sociedad",
+   "away": "Atlético Madrid",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Real Sociedad",
+   "away": "FC Barcelona",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Real Sociedad",
+   "away": "RC Celta de Vigo",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Real Sociedad",
+   "away": "Elche CF",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Real Sociedad",
+   "away": "RCD Espanyol",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Real Sociedad",
+   "away": "Getafe CF",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Real Sociedad",
+   "away": "Girona FC",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Real Sociedad",
+   "away": "Levante UD",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Real Sociedad",
+   "away": "RCD Mallorca",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Real Sociedad",
+   "away": "CA Osasuna",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Real Sociedad",
+   "away": "Real Oviedo",
+   "ft": [
+    3,
+    3
+   ]
+  },
+  {
+   "home": "Real Sociedad",
+   "away": "Rayo Vallecano",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Real Sociedad",
+   "away": "Real Betis",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Real Sociedad",
+   "away": "Real Madrid CF",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Real Sociedad",
+   "away": "Sevilla FC",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Real Sociedad",
+   "away": "Valencia CF",
+   "ft": [
+    3,
+    4
+   ]
+  },
+  {
+   "home": "Real Sociedad",
+   "away": "Villarreal CF",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "Sevilla FC",
+   "away": "Deportivo Alavés",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Sevilla FC",
+   "away": "Athletic Bilbao",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Sevilla FC",
+   "away": "Atlético Madrid",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Sevilla FC",
+   "away": "FC Barcelona",
+   "ft": [
+    4,
+    1
+   ]
+  },
+  {
+   "home": "Sevilla FC",
+   "away": "RC Celta de Vigo",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Sevilla FC",
+   "away": "Elche CF",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Sevilla FC",
+   "away": "RCD Espanyol",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Sevilla FC",
+   "away": "Getafe CF",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Sevilla FC",
+   "away": "Girona FC",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Sevilla FC",
+   "away": "Levante UD",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Sevilla FC",
+   "away": "RCD Mallorca",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Sevilla FC",
+   "away": "CA Osasuna",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Sevilla FC",
+   "away": "Real Oviedo",
+   "ft": [
+    4,
+    0
+   ]
+  },
+  {
+   "home": "Sevilla FC",
+   "away": "Rayo Vallecano",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Sevilla FC",
+   "away": "Real Betis",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Sevilla FC",
+   "away": "Real Madrid CF",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Sevilla FC",
+   "away": "Real Sociedad",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Sevilla FC",
+   "away": "Valencia CF",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Sevilla FC",
+   "away": "Villarreal CF",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Valencia CF",
+   "away": "Deportivo Alavés",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Valencia CF",
+   "away": "Athletic Bilbao",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Valencia CF",
+   "away": "Atlético Madrid",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Valencia CF",
+   "away": "FC Barcelona",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Valencia CF",
+   "away": "RC Celta de Vigo",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "Valencia CF",
+   "away": "Elche CF",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Valencia CF",
+   "away": "RCD Espanyol",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Valencia CF",
+   "away": "Getafe CF",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Valencia CF",
+   "away": "Girona FC",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Valencia CF",
+   "away": "Levante UD",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Valencia CF",
+   "away": "RCD Mallorca",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Valencia CF",
+   "away": "CA Osasuna",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Valencia CF",
+   "away": "Real Oviedo",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Valencia CF",
+   "away": "Rayo Vallecano",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Valencia CF",
+   "away": "Real Betis",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Valencia CF",
+   "away": "Real Madrid CF",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Valencia CF",
+   "away": "Real Sociedad",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Valencia CF",
+   "away": "Sevilla FC",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Valencia CF",
+   "away": "Villarreal CF",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Villarreal CF",
+   "away": "Deportivo Alavés",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Villarreal CF",
+   "away": "Athletic Bilbao",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Villarreal CF",
+   "away": "Atlético Madrid",
+   "ft": [
+    5,
+    1
+   ]
+  },
+  {
+   "home": "Villarreal CF",
+   "away": "FC Barcelona",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Villarreal CF",
+   "away": "RC Celta de Vigo",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Villarreal CF",
+   "away": "Elche CF",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Villarreal CF",
+   "away": "RCD Espanyol",
+   "ft": [
+    4,
+    1
+   ]
+  },
+  {
+   "home": "Villarreal CF",
+   "away": "Getafe CF",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Villarreal CF",
+   "away": "Girona FC",
+   "ft": [
+    5,
+    0
+   ]
+  },
+  {
+   "home": "Villarreal CF",
+   "away": "Levante UD",
+   "ft": [
+    5,
+    1
+   ]
+  },
+  {
+   "home": "Villarreal CF",
+   "away": "RCD Mallorca",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Villarreal CF",
+   "away": "CA Osasuna",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Villarreal CF",
+   "away": "Real Oviedo",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Villarreal CF",
+   "away": "Rayo Vallecano",
+   "ft": [
+    4,
+    0
+   ]
+  },
+  {
+   "home": "Villarreal CF",
+   "away": "Real Betis",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Villarreal CF",
+   "away": "Real Madrid CF",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Villarreal CF",
+   "away": "Real Sociedad",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Villarreal CF",
+   "away": "Sevilla FC",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "Villarreal CF",
+   "away": "Valencia CF",
+   "ft": [
+    2,
+    1
+   ]
+  }
+ ]
+}
