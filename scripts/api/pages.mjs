@@ -58,11 +58,15 @@ a:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
   grid-template-areas: "prev home mid away next" ". state state state ." ". events events events ." ". when when when ."; }
 .feature .prev { grid-area: prev; } .feature .next { grid-area: next; } .feature .home { grid-area: home; } .feature .mid { grid-area: mid; }
 .feature .away { grid-area: away; } .feature .state { grid-area: state; } .feature .events { grid-area: events; } .feature .when { grid-area: when; }
-.feature .home, .feature .away { font: 800 clamp(1.25rem, 6.4vw, 5.5rem)/0.92 var(--display); text-transform: uppercase; overflow-wrap: normal; min-width: 0; }
-/* a phone: the game arrows go under the score, beside the date, so the names keep their width */
+/* each team's column is what is left of the poster after the arrows and the score, halved; the names' longest word (--w, set by the
+   page and again by the script when the game changes) must fit it, at about 0.55 em a letter; a word that still does not fit wraps */
+.feature .home, .feature .away { text-transform: uppercase; overflow-wrap: break-word; min-width: 0;
+  font: 800 min(clamp(1.25rem, 6.4vw, 5.5rem), calc((min(100vw, 64rem) - 160px - 1.7 * min(12vw, 9.5rem)) / 2 / (var(--w, 8) * 0.55)))/0.92 var(--display); }
+/* a phone: the poster stacks (home, score, away, each the full width, so a long name stays big) and the game arrows go beside the date */
 @media (max-width: 560px) {
-  .feature { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-    grid-template-areas: "home mid away" "state state state" "events events events" "prev when next"; }
+  .feature { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); row-gap: 2px;
+    grid-template-areas: "home home home" "mid mid mid" "away away away" "state state state" "events events events" "prev when next"; }
+  .poster .feature .home, .poster .feature .away { text-align: center; font-size: min(9vw, calc((100vw - 40px) / (var(--w, 8) * 0.55))); }
   .feature .prev { justify-self: end; } .feature .next { justify-self: start; }
   .arrow { width: 40px; height: 40px; }
 }
@@ -98,7 +102,7 @@ h2 { font: 800 1.9rem/1 var(--display); text-transform: uppercase; margin: 0 0 0
 .games > li { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 0.5rem; align-items: center; padding: 10px 0;
   border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
 .games > li:last-child { border-bottom: 0; }
-.games .home { text-align: right; } .games .home, .games .away { overflow-wrap: anywhere; min-width: 0; }
+.games .home { text-align: right; } .games .home, .games .away { overflow-wrap: break-word; hyphens: auto; min-width: 0; }
 .games .mid { font: 800 1.35rem/1 var(--display); padding: 5px 10px; border-radius: 12px; min-width: 3.4rem; text-align: center;
   background: rgb(255 255 255 / 80%); color: #1b1c20; box-shadow: 0 1px 2px rgb(27 28 32 / 12%); }
 .games .state { grid-column: 1 / -1; text-align: center; color: var(--accent); font-weight: 700; font-size: 0.8125rem; }
@@ -153,7 +157,8 @@ function featured(week, latest, names, today) {
   if (!m) return "";
   // the arrows step through the page's games (live.js shows them; without it the poster just shows this game)
   const arrow = (dir, step, label) => `<button class="arrow ${dir}" type="button" data-step="${step}" aria-label="${label}" hidden><span aria-hidden="true">${step < 0 ? "‹" : "›"}</span></button>`;
-  return `<div class="feature"${marks(m)}>${arrow("prev", -1, "Previous game")}<span class="home">${esc(names[m.home])}</span><span class="mid">${esc(mid(m))}</span><span class="away">${esc(names[m.away])}</span>${arrow("next", 1, "Next game")}<span class="when">${esc(m.round ?? "")} · ${short(m.date)}</span></div>`;
+  const longest = Math.max(...`${names[m.home]} ${names[m.away]}`.split(/\s+/).map((w) => w.length));
+  return `<div class="feature"${marks(m)} style="--w: ${longest}">${arrow("prev", -1, "Previous game")}<span class="home">${esc(names[m.home])}</span><span class="mid">${esc(mid(m))}</span><span class="away">${esc(names[m.away])}</span>${arrow("next", 1, "Next game")}<span class="when">${esc(m.round ?? "")} · ${short(m.date)}</span></div>`;
 }
 
 function leaguePage(league, competition, api, before, after) {
@@ -233,6 +238,10 @@ export function liveScript() {
   window.golboardLive = { teamId: teamId };
   // the poster's arrows step through every game on the page, in page order, going round; once used, the poster stays where it was put
   var feature = document.querySelector ? document.querySelector(".feature") : null;
+  function fit(el) {
+    var words = (text(el, ".home") + " " + text(el, ".away")).split(/\\s+/);
+    el.style.setProperty("--w", String(Math.max.apply(null, words.map(function (w) { return w.length; }))));
+  }
   function games() { return Array.prototype.slice.call(document.querySelectorAll(".games > li")); }
   function text(el, k) { var x = el.querySelector(k); return x ? x.textContent : ""; }
   function step(by) {
@@ -247,6 +256,7 @@ export function liveScript() {
       if (mine) mine.remove();
       if (theirs) feature.insertBefore(theirs.cloneNode(true), feature.querySelector(".when"));
     });
+    fit(feature);
     feature.dataset.pinned = "1";
   }
   if (feature) {
@@ -312,6 +322,7 @@ export function liveScript() {
     ps.textContent = on.querySelector(".state").textContent;
     var old = poster.querySelector(".events");
     if (old) old.remove();
+    fit(poster);
   }
   function poll() {
     var mine = rows();

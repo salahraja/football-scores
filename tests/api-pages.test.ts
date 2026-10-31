@@ -110,6 +110,14 @@ describe("league pages", () => {
     expect(html).not.toContain('<span class="mid">–</span>');
   });
 
+  it("sizes the poster's team names to their longest word, so a long one never runs under the score", () => {
+    const html = page(site(), "leagues/de-1/index.html");
+    const feature = html.match(/<div class="feature"[^>]*>/)![0];
+    const names = [...html.slice(html.indexOf(feature)).matchAll(/<span class="(?:home|away)">([^<]*)<\/span>/g)].slice(0, 2).map((m) => m[1]);
+    const longest = Math.max(...names.join(" ").split(/\s+/).map((w) => w.length));
+    expect(feature).toContain(`style="--w: ${longest}"`);
+  });
+
   it("credits the sources the page used, and no others", () => {
     const html = page(site(), "leagues/it-1/index.html");
     expect(html).toContain('href="https://github.com/openfootball/football.json"');

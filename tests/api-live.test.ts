@@ -205,6 +205,8 @@ describe("in the browser", () => {
     (document.querySelector(".feature .prev") as HTMLButtonElement).click();
     expect(feature.querySelector(".home")!.textContent).toBe("Torino");
     expect(feature.dataset.pinned).toBe("1");
+    expect(feature.style.getPropertyValue("--w")).toBe("6");  // re-fitted to the longest word now shown: "Torino"
+
   });
 
   it("does nothing on a day with no games on the page", async () => {
