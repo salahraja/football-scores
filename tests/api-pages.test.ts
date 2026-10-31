@@ -63,17 +63,50 @@ describe("league pages", () => {
     expect((html.match(/·[^<]*\d{2}:\d{2} Italy time/g) ?? []).length).toBe(0);  // a kick-off time is shown once, in the middle
   });
 
+  it("has arrows to the previous and next league, going round", () => {
+    const out = site();
+    const it1 = page(out, "leagues/it-1/index.html"), en2 = page(out, "leagues/en-2/index.html");
+    expect(it1).toMatch(/<a class="arrow prev" href="\/leagues\/en-2\/" aria-label="Previous league: Championship">/);
+    expect(it1).toMatch(/<a class="arrow next" href="\/leagues\/en-1\/" aria-label="Next league: Premier League">/);
+    expect(en2).toMatch(/<a class="arrow next" href="\/leagues\/it-1\/"/);
+  });
+
+  it("has arrows to step through the games on the poster", () => {
+    const html = page(site(), "leagues/it-1/index.html");
+    expect(html).toContain('<button class="arrow prev" type="button" data-step="-1" aria-label="Previous game" hidden>');
+    expect(html).toContain('<button class="arrow next" type="button" data-step="1" aria-label="Next game" hidden>');
+    expect(html).toContain('<script src="/leagues/live.js" defer></script>');  // the arrows need it, so every league page loads it
+  });
+
+  it("starts the poster on today's game, and puts an old game still without a result at the end of this week", () => {
+    const input = tmp(), out = tmp();
+    const season = JSON.parse(readFileSync("tests/fixtures/openfootball/2025-26/it.1.json", "utf8"));
+    const lastDay = season.matches.at(-1).date;
+    for (const m of season.matches) if (m.date === lastDay) delete m.score;
+    const old = season.matches.find((m: { date: string }) => m.date < "2026-05-10");
+    delete old.score;  // a game from weeks ago that never got a result (postponed)
+    mkdirSync(join(input, "2025-26"), { recursive: true });
+    writeFileSync(join(input, "2025-26", "it.1.json"), JSON.stringify(season));
+    build({ input, wikipedia: tmp(), out, seasons: ["2025-26"], now: `${lastDay}T09:00:00Z` });
+    pages({ api: join(out, "api/v1"), out });
+    const html = page(out, "leagues/it-1/index.html");
+    expect(html).toMatch(new RegExp(`<div class="feature" data-date="${lastDay}"`));
+    const week = html.slice(html.indexOf('id="week"'), html.indexOf('id="table"'));
+    expect(week.lastIndexOf(`data-date="${old.date}"`)).toBeGreaterThan(week.lastIndexOf(`data-date="${lastDay}"`));
+    expect(week).toContain("result not in");
+  });
+
   it("credits the sources the page used, and no others", () => {
     const html = page(site(), "leagues/it-1/index.html");
     expect(html).toContain('href="https://github.com/openfootball/football.json"');
     expect(html).not.toContain("wikipedia.org");
   });
 
-  it("has no scripts, escapes names, and keeps each page small", () => {
+  it("has one small script, escapes names, and keeps each page small", () => {
     const out = site();
     for (const id of ["it-1", "en-2"]) {
       const html = page(out, `leagues/${id}/index.html`);
-      expect(html).not.toMatch(/<script/i);
+      expect(html.match(/<script[^>]*>/gi)).toEqual(['<script src="/leagues/live.js" defer>']);  // the one script, for arrows and live scores
       expect(html.length).toBeLessThan(40_000);
     }
     expect(page(out, "leagues/en-1/index.html")).toContain("Brighton &amp; Hove Albion");
