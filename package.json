@@ -19,7 +19,10 @@
     "goose:build": "sh goose/build.sh",
     "goose:wasm": "sh goose/wasm/build.sh",
     "parity": "node scripts/parity.mjs python && node scripts/parity.mjs goose && node scripts/parity.mjs wasm",
-    "test:python": "python3 -I -m unittest discover -s python"
+    "test:python": "python3 -I -m unittest discover -s python",
+    "api:fetch": "node scripts/api/fetch-openfootball.mjs",
+    "api:build": "node scripts/api/build.mjs",
+    "api": "npm run api:fetch && npm run api:build"
   },
   "dependencies": {
     "vue": "^3.5.0",

@@ -45,7 +45,7 @@ describe("every league game's score equals the official result", () => {
 
 describe("a stale correction is refused, never applied quietly", () => {
   it("throws when the source no longer has what the correction expected", () => {
-    const m = { id: "x", date: "2026-05-16", home: "a", away: "b", stage: "league", status: "finished", score: { ft: [1, 1], ht: null } };
+    const m = { id: "x", date: "2026-05-16", home: "a", away: "b", stage: "league", status: "finished", score: { ft: [1, 1] as [number, number], ht: null } };
     expect(() => applyCorrections([m], [{ date: "2026-05-16", home: "a", away: "b", had: [2, 1], ft: [1, 1], source: "s" }])).toThrow(/expected/);
     expect(() => applyCorrections([m], [{ date: "2026-05-17", home: "a", away: "b", had: null, ft: [0, 0], source: "s" }])).toThrow(/no matching game/);
   });
