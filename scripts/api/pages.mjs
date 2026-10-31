@@ -6,6 +6,7 @@ import { mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { leagues } from "./config.mjs";
+import { CLUB_WORDS, aliasMap, slug } from "./teams.mjs";
 
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const day = (iso) => new Date(`${iso}T12:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
@@ -43,6 +44,7 @@ h2 { font-size: 1.125rem; margin: 2rem 0 0.75rem; }
   border-radius: var(--radius); padding: 0.6rem 0.75rem; font-variant-numeric: tabular-nums; }
 .games .home { text-align: right; }
 .games .mid { min-width: 4.5rem; text-align: center; font-weight: 700; }
+.games .state { grid-column: 1 / -1; color: var(--accent); font-size: 0.8125rem; font-weight: 600; }
 .games .when { grid-column: 1 / -1; color: var(--muted); font-size: 0.8125rem; }
 .list { list-style: none; padding: 0; display: grid; gap: 4px; }
 .list a { display: block; background: var(--card); border-radius: var(--radius); padding: 0.85rem 1rem; text-decoration: none; font-weight: 600; color: var(--fg); }
@@ -53,7 +55,7 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 @media (max-width: 400px) { .standings .wdl { display: none; } }
 `;
 
-function shell({ title, description, path, body }) {
+function shell({ title, description, path, body, live = null }) {
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -66,8 +68,8 @@ function shell({ title, description, path, body }) {
 <meta property="og:type" content="website">
 <link rel="canonical" href="${esc(path)}">
 <link rel="stylesheet" href="/leagues/site.css">
-</head>
-<body>
+${live ? '<script src="/leagues/live.js" defer></script>\n' : ""}</head>
+<body${live ? ` data-sportscore="${esc(live)}"` : ""}>
 <main class="page">
 <a class="site" href="/leagues/">golboard</a>
 ${body}
@@ -80,7 +82,8 @@ ${body}
 function game(m, names) {
   const mid = m.score ? `${m.score.ft[0]}–${m.score.ft[1]}` : (m.time ?? "–");
   const when = `${esc(m.round ?? "")} · ${short(m.date)}`;
-  return `<li><span class="home">${esc(names[m.home])}</span><span class="mid">${esc(mid)}</span><span class="away">${esc(names[m.away])}</span><span class="when">${when}</span></li>`;
+  const marks = m.score ? "" : ` data-date="${m.date}" data-home="${esc(m.home)}" data-away="${esc(m.away)}"`;
+  return `<li${marks}><span class="home">${esc(names[m.home])}</span><span class="mid">${esc(mid)}</span><span class="away">${esc(names[m.away])}</span><span class="when">${when}</span></li>`;
 }
 
 function leaguePage(league, competition, api) {
@@ -98,6 +101,8 @@ function leaguePage(league, competition, api) {
   const waiting = league_games.filter((m) => !m.score && m.date <= today).sort((a, b) => b.date.localeCompare(a.date));
   const next = league_games.filter((m) => !m.score && m.date > today).sort((a, b) => (a.date + (a.time ?? "")).localeCompare(b.date + (b.time ?? ""))).slice(0, 10);
   const used = [...new Set(matches.map((m) => (m.source === "correction" ? "openfootball" : m.source)))].filter((s) => SOURCES[s]);
+  // live scores from SportScore only where it covers the league and the page has games still to play
+  const live = league.sportscore && (waiting.length || next.length) ? league.sportscore : null;
   const upTo = meta.lastResult ? `Results up to ${day(meta.lastResult)}` : "No results yet";
   const rows = table.map((r) => `<tr class="row"><td>${r.position}</td><th scope="row" class="left">${esc(teams[r.team])}</th><td>${r.played}</td>`
     + `<td class="wdl">${r.won}</td><td class="wdl">${r.drawn}</td><td class="wdl">${r.lost}</td><td>${r.gd > 0 ? "+" : ""}${r.gd}</td><td class="pts">${r.points}</td></tr>`).join("\n");
@@ -113,20 +118,60 @@ ${rows}
 <h2>Latest results</h2>
 ${latest.length ? `<ul class="games">${latest.map((m) => game(m, teams)).join("\n")}</ul>` : '<p class="note">None yet.</p>'}
 ${waiting.length ? `<h2>Waiting for the result</h2>
-<p class="note">Played, or due today; the score is not in our sources yet.</p>
-<ul class="games">${waiting.map((m) => game(m, teams)).join("\n")}</ul>` : ""}
+<p class="note">Today's games, and any game whose result is not in yet.</p>
+<ul class="games" aria-live="polite">${waiting.map((m) => game(m, teams)).join("\n")}</ul>` : ""}
 <h2>Next fixtures</h2>
-${next.length ? `<ul class="games">${next.map((m) => game(m, teams)).join("\n")}</ul>` : '<p class="note">None left this season.</p>'}
-<footer>Results from ${used.map((s) => SOURCES[s]).join(" and ")}. Kick-off times are ${esc(league.clock)}.</footer>`;
-  return shell({ title: `${league.name} table, results and fixtures`, path: `/leagues/${league.id}/`, body,
+${next.length ? `<ul class="games" aria-live="polite">${next.map((m) => game(m, teams)).join("\n")}</ul>` : '<p class="note">None left this season.</p>'}
+<footer>Results from ${used.map((s) => SOURCES[s]).join(" and ")}. Kick-off times are ${esc(league.clock)}.${live ? ' Live scores <a href="https://sportscore.com/">powered by SportScore</a>.' : ""}</footer>`;
+  return shell({ title: `${league.name} table, results and fixtures`, path: `/leagues/${league.id}/`, body, live,
     description: `${league.name} ${season}: the table, the latest results and the next fixtures. ${upTo}.` });
+}
+
+/** The browser script for live scores (/leagues/live.js). It names clubs with the same slug and aliases as teams.mjs (the function's own
+ *  source is copied in, so the two cannot drift), asks SportScore once a minute for today's games of the page's league, writes each score
+ *  and state into the row with the same two teams, and stops when they have all finished. Without it the page is still complete. */
+export function liveScript() {
+  return `(function () {
+  var CLUB_WORDS = new Set(${JSON.stringify([...CLUB_WORDS])});
+  var aliases = ${JSON.stringify(aliasMap())};
+  var slug = ${slug.toString()};
+  function teamId(name) { var s = slug(name); return aliases[s] !== undefined ? aliases[s] : s; }
+  window.golboardLive = { teamId: teamId };
+  var league = document.body && document.body.dataset ? document.body.dataset.sportscore : null;
+  if (!league) return;
+  function today() { return new Date().toISOString().slice(0, 10); }
+  function rows() { return Array.prototype.filter.call(document.querySelectorAll("li[data-home]"), function (r) { return r.dataset.date === today(); }); }
+  function show(row, m) {
+    if (m.status === "upcoming" || m.home_score == null || m.away_score == null) return;
+    row.querySelector(".mid").textContent = m.home_score + "\u2013" + m.away_score;
+    var state = row.querySelector(".state");
+    if (!state) { state = document.createElement("span"); state.className = "state"; row.insertBefore(state, row.querySelector(".when")); }
+    state.textContent = m.status === "finished" ? "Full time" : "Live \u00b7 " + (m.status_text || "");
+    row.dataset.state = m.status;
+  }
+  function poll() {
+    var mine = rows();
+    if (!mine.length) return;
+    var url = "https://sportscore.com/api/v1/fixtures/?sport=football&date=" + today() + "&competition=" + encodeURIComponent(league);
+    window.fetch(url).then(function (r) { return r.ok ? r.json() : { matches: [] }; }).then(function (data) {
+      (data.matches || []).forEach(function (m) {
+        var home = teamId(m.home), away = teamId(m.away);
+        mine.forEach(function (row) { if (row.dataset.home === home && row.dataset.away === away) show(row, m); });
+      });
+    }).catch(function () {}).then(function () {
+      if (mine.some(function (r) { return r.dataset.state !== "finished"; })) setTimeout(poll, 60000);
+    });
+  }
+  poll();
+})();
+`;
 }
 
 /** Write <out>/leagues/ from the API at <api>: index.html, site.css and <league>/index.html. All or nothing, like the API build. */
 export function pages({ api = "public/api/v1", out = "public" } = {}) {
   const { competitions } = JSON.parse(readFileSync(join(api, "competitions.json"), "utf8"));
   const byId = new Map(competitions.map((c) => [c.id, c]));
-  const files = new Map([["site.css", CSS]]);
+  const files = new Map([["site.css", CSS], ["live.js", liveScript()]]);
   const served = leagues().filter((l) => byId.has(l.id));
   for (const league of served) files.set(`${league.id}/index.html`, leaguePage(league, byId.get(league.id), api));
   files.set("index.html", shell({ title: "Leagues", path: "/leagues/", description: "Tables, results and fixtures for eight European leagues.",

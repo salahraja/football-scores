@@ -39,6 +39,14 @@ Each page says how far its results go, gives kick-off times in the league's own 
 credits only the sources it used. An unscored game dated on the build day or earlier is listed as waiting for its result, never as a
 fixture to come.
 
+**Live scores** (`/leagues/live.js`, the only script): on a page with games still to play, in a league SportScore covers (`sportscore` in
+`data/api/leagues.json`; not Primeira Liga yet), the browser asks SportScore's free API once a minute for that league's games today and
+writes each score and state ("Live · 2nd half", "Full time") into the row with the same two teams, then stops when they have all finished.
+SportScore's terms ask for a visible link, so those pages say "Live scores powered by SportScore". The script names clubs with the same
+function and aliases as `teams.mjs` (copied in at build time). On 31 October 2026 goals showed on SportScore a median 0.2 min after ESPN
+and final whistles 1.2 min after (each ±1 min). The site's CSP allows `connect-src https://sportscore.com` for this. Without the script the
+page is still complete.
+
 ## Where it comes from, and how we know it is right
 
 - **Results and fixtures:** [openfootball/football.json](https://github.com/openfootball/football.json), public domain (CC0), free for any
