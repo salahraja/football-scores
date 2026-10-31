@@ -11,7 +11,8 @@ app or page can read it. Built by `npm run api` (download, then build) into `pub
 | `api/v1/<league>/<season>/matches.json` | `{ competition, season, matches: [{ id, round, stage, date, time, home, away, status, score, source }] }` |
 | `api/v1/<league>/<season>/table.json` | `{ competition, season, table: [{ position, team, played, won, drawn, lost, gf, ga, gd, points, adjustment }], adjustments }` |
 | `api/v1/<league>/<season>/teams.json` | `{ competition, season, teams: { <team id>: <name> } }` |
-| `api/v1/meta.json` | version, when it was built, the sources and their licences, and per league season: games finished and to play, the date of the last result, corrections applied |
+| `api/v1/meta.json` | version, when it was built, the sources and their licences, per league season: games finished and to play, the date of the last result, corrections applied; and `files`: every other file of the build with the sha256 of its bytes |
+| `api/v1/schema.json` | the contract: a JSON Schema (2020-12) with one `$defs` entry per file type (`competitions`, `matches`, `table`, `teams`, `meta`). Kept in `data/api/schema.json` |
 
 League ids: `it-1` Serie A, `en-1` Premier League, `es-1` LaLiga, `de-1` Bundesliga, `fr-1` Ligue 1, `nl-1` Eredivisie, `pt-1` Primeira
 Liga, `en-2` Championship. Seasons look like `2026-27`.
@@ -20,6 +21,13 @@ A match: `status` is `finished` (with `score.ft`, and `score.ht` when known) or 
 play-off games never count in a table. `source` is `openfootball`, or `correction` with `correctionSource` naming the official record.
 A match id is `<league>:<date>:<home>-<away>`. Team ids are our own (`inter`, `napoli`, `manchester-united`): one id per club whatever a
 source calls it (`scripts/api/teams.mjs`, `data/api/aliases.json`).
+
+## The contract
+
+The web pages and the iPhone app read the same shapes, so the shapes are written down once, in `data/api/schema.json`, and published
+with the data. `tests/api-schema.test.ts` builds the API and checks every file against it, and checks a broken file is caught. A reader can
+check `meta.files` too: a file whose sha256 does not match comes from a half-published or older build. Change the schema in the same
+change as the data it describes.
 
 ## Where it comes from, and how we know it is right
 
