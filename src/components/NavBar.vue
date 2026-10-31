@@ -7,9 +7,5 @@
       <router-link to="/standings">League Table</router-link>
       <router-link to="/results">Match Results</router-link>
     </nav>
-    <a class="by" href="https://www.salahs.org/" target="_blank" rel="noopener noreferrer">
-      <span>By</span>
-      <img src="/salahav.png" alt="Salah avatar" width="41" height="47" />
-    </a>
   </header>
 </template>
