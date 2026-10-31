@@ -25,6 +25,20 @@ function score(value) {
   return m ? [Number(m[1]), Number(m[2])] : null;
 }
 
+/** [{ name, short }] for each club in the grid: the linked article's title (what teamId maps) and the link's text, the short name fans
+ *  use ("[[RCD Espanyol|Espanyol]]" gives Espanyol; openfootball's "Espanyol Barcelona" read like two teams on the poster). */
+export function parseNames(wikitext) {
+  const out = [];
+  for (const [, kind, , b, value] of wikitext.matchAll(PARAM)) {
+    if (kind !== "name" || b) continue;
+    const link = value.match(/\[\[([^\]|]+)(?:\|([^\]]*))?\]\]/);
+    const name = clubName(value);
+    const short = link && link[2] ? link[2].trim() : name;
+    if (name && !out.some((n) => n.name === name)) out.push({ name, short });
+  }
+  return out;
+}
+
 /** [{ home, away, ft }] for every game in the grid with a score, home and away as the clubs' article titles. */
 export function parseResults(wikitext) {
   const names = new Map();

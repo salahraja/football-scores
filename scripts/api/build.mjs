@@ -9,7 +9,8 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { leagues, loadAdjustments, loadCorrections } from "./config.mjs";
 import { applyCorrections, parseSeason } from "./openfootball.mjs";
 import { computeTable } from "./table.mjs";
-import { applyResults, parseResults } from "./wikipedia.mjs";
+import { teamId } from "./teams.mjs";
+import { applyResults, parseNames, parseResults } from "./wikipedia.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const OPENFOOTBALL = { name: "openfootball", url: "https://github.com/openfootball/football.json", licence: "CC0-1.0" };
@@ -55,6 +56,8 @@ export function build({ input = "data/openfootball", wikipedia = join(ROOT, "dat
         const merged = applyResults(parsed.matches, parseResults(saved.wikitext), parsed.teams, `https://en.wikipedia.org/?oldid=${saved.revid}`, now.slice(0, 10));
         parsed.matches = merged.matches;
         wiki = { revision: saved.revid, filled: merged.filled, disagreements: merged.disagreements };
+        // the short names fans use, where the grid has them (openfootball's "Espanyol Barcelona" reads like two teams)
+        for (const { name, short } of parseNames(saved.wikitext)) if (parsed.teams[teamId(name)]) parsed.teams[teamId(name)] = short;
         usedWikipedia = true;
       }
       mutate?.(parsed);

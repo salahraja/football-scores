@@ -140,7 +140,7 @@ ${body}
 }
 
 const marks = (m) => (m.score ? "" : ` data-date="${m.date}" data-home="${esc(m.home)}" data-away="${esc(m.away)}"`);
-const mid = (m) => (m.score ? `${m.score.ft[0]}–${m.score.ft[1]}` : (m.time ?? "–"));
+const mid = (m) => (m.score ? `${m.score.ft[0]}–${m.score.ft[1]}` : (m.time ?? "vs"));  // a lone dash looked like a score
 
 function game(m, names, today = null) {
   const late = today && !m.score && m.date < today ? " · result not in" : "";

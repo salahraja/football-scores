@@ -96,6 +96,20 @@ describe("league pages", () => {
     expect(week).toContain("result not in");
   });
 
+  it("says vs, not a dash, between two teams when a game has no kick-off time", () => {
+    const input = tmp(), out = tmp();
+    const season = JSON.parse(readFileSync("tests/fixtures/openfootball/2025-26/it.1.json", "utf8"));
+    const last = season.matches.at(-1);
+    delete last.score; delete last.time;
+    mkdirSync(join(input, "2025-26"), { recursive: true });
+    writeFileSync(join(input, "2025-26", "it.1.json"), JSON.stringify(season));
+    build({ input, wikipedia: tmp(), out, seasons: ["2025-26"], now: `${last.date}T09:00:00Z` });
+    pages({ api: join(out, "api/v1"), out });
+    const html = page(out, "leagues/it-1/index.html");
+    expect(html).toContain('<span class="mid">vs</span>');
+    expect(html).not.toContain('<span class="mid">–</span>');
+  });
+
   it("credits the sources the page used, and no others", () => {
     const html = page(site(), "leagues/it-1/index.html");
     expect(html).toContain('href="https://github.com/openfootball/football.json"');
