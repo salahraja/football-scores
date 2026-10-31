@@ -29,6 +29,12 @@ Without `VITE_DATA=generated` (plain `npm run dev` / `npm run build`) the app sh
 Running the fetch locally overwrites the committed snapshot in `data/raw` (use `DATA_RAW=/some/dir` to write elsewhere); do not commit that.
 Points are always `3 x wins + draws`, computed by the engines, so a points deduction in the API is not reflected.
 
+## Our own API (golboard)
+
+`npm run api` downloads openfootball's public-domain results for eight leagues and builds a static JSON API in `public/api/v1/`
+(competitions, matches, tables, teams, meta). Tables are computed with each league's own rules and checked against the official 2025-26
+record in the tests. Format and sources: `docs/api.md`.
+
 ## Deploy on Netlify
 
 `netlify.toml` holds the build command, `dist` as the publish directory, a `/* -> /index.html` rewrite (the app uses history routing)

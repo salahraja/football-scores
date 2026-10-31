@@ -1,0 +1,226 @@
+{
+ "source": "https://en.wikipedia.org/?oldid=1380557932",
+ "title": "2025–26 Premier League",
+ "table": [
+  {
+   "pos": 1,
+   "team": "Arsenal",
+   "p": 38,
+   "w": 26,
+   "d": 7,
+   "l": 5,
+   "gf": 71,
+   "ga": 27,
+   "pts": 85
+  },
+  {
+   "pos": 2,
+   "team": "Manchester City",
+   "p": 38,
+   "w": 23,
+   "d": 9,
+   "l": 6,
+   "gf": 77,
+   "ga": 35,
+   "pts": 78
+  },
+  {
+   "pos": 3,
+   "team": "Manchester United",
+   "p": 38,
+   "w": 20,
+   "d": 11,
+   "l": 7,
+   "gf": 69,
+   "ga": 50,
+   "pts": 71
+  },
+  {
+   "pos": 4,
+   "team": "Aston Villa",
+   "p": 38,
+   "w": 19,
+   "d": 8,
+   "l": 11,
+   "gf": 56,
+   "ga": 49,
+   "pts": 65
+  },
+  {
+   "pos": 5,
+   "team": "Liverpool",
+   "p": 38,
+   "w": 17,
+   "d": 9,
+   "l": 12,
+   "gf": 63,
+   "ga": 53,
+   "pts": 60
+  },
+  {
+   "pos": 6,
+   "team": "Bournemouth",
+   "p": 38,
+   "w": 13,
+   "d": 18,
+   "l": 7,
+   "gf": 58,
+   "ga": 54,
+   "pts": 57
+  },
+  {
+   "pos": 7,
+   "team": "Sunderland",
+   "p": 38,
+   "w": 14,
+   "d": 12,
+   "l": 12,
+   "gf": 42,
+   "ga": 48,
+   "pts": 54
+  },
+  {
+   "pos": 8,
+   "team": "Brighton & Hove Albion",
+   "p": 38,
+   "w": 14,
+   "d": 11,
+   "l": 13,
+   "gf": 52,
+   "ga": 46,
+   "pts": 53
+  },
+  {
+   "pos": 9,
+   "team": "Brentford",
+   "p": 38,
+   "w": 14,
+   "d": 11,
+   "l": 13,
+   "gf": 55,
+   "ga": 52,
+   "pts": 53
+  },
+  {
+   "pos": 10,
+   "team": "Chelsea",
+   "p": 38,
+   "w": 14,
+   "d": 10,
+   "l": 14,
+   "gf": 58,
+   "ga": 52,
+   "pts": 52
+  },
+  {
+   "pos": 11,
+   "team": "Fulham",
+   "p": 38,
+   "w": 15,
+   "d": 7,
+   "l": 16,
+   "gf": 47,
+   "ga": 51,
+   "pts": 52
+  },
+  {
+   "pos": 12,
+   "team": "Newcastle United",
+   "p": 38,
+   "w": 14,
+   "d": 7,
+   "l": 17,
+   "gf": 53,
+   "ga": 55,
+   "pts": 49
+  },
+  {
+   "pos": 13,
+   "team": "Everton",
+   "p": 38,
+   "w": 13,
+   "d": 10,
+   "l": 15,
+   "gf": 47,
+   "ga": 50,
+   "pts": 49
+  },
+  {
+   "pos": 14,
+   "team": "Leeds United",
+   "p": 38,
+   "w": 11,
+   "d": 14,
+   "l": 13,
+   "gf": 49,
+   "ga": 56,
+   "pts": 47
+  },
+  {
+   "pos": 15,
+   "team": "Crystal Palace",
+   "p": 38,
+   "w": 11,
+   "d": 12,
+   "l": 15,
+   "gf": 41,
+   "ga": 51,
+   "pts": 45
+  },
+  {
+   "pos": 16,
+   "team": "Nottingham Forest",
+   "p": 38,
+   "w": 11,
+   "d": 11,
+   "l": 16,
+   "gf": 48,
+   "ga": 51,
+   "pts": 44
+  },
+  {
+   "pos": 17,
+   "team": "Tottenham Hotspur",
+   "p": 38,
+   "w": 10,
+   "d": 11,
+   "l": 17,
+   "gf": 48,
+   "ga": 57,
+   "pts": 41
+  },
+  {
+   "pos": 18,
+   "team": "West Ham United",
+   "p": 38,
+   "w": 10,
+   "d": 9,
+   "l": 19,
+   "gf": 46,
+   "ga": 65,
+   "pts": 39
+  },
+  {
+   "pos": 19,
+   "team": "Burnley",
+   "p": 38,
+   "w": 4,
+   "d": 10,
+   "l": 24,
+   "gf": 38,
+   "ga": 75,
+   "pts": 22
+  },
+  {
+   "pos": 20,
+   "team": "Wolverhampton Wanderers",
+   "p": 38,
+   "w": 3,
+   "d": 11,
+   "l": 24,
+   "gf": 27,
+   "ga": 68,
+   "pts": 20
+  }
+ ]
+}
