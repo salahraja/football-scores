@@ -1,6 +1,10 @@
 {
   "_about": "Team names that differ by more than club words and accents, mapped to our id (the slug teams.mjs makes, on the left). Each one was found by the official-table test, where two sources named the same club differently.",
   "aliases": {
+    "real-racing-santander": "racing-santander",
+    "cambuur-leeuwarden": "cambuur",
+    "willem-ii-tilburg": "willem-ii",
+    "cs-maritimo": "maritimo",
     "internazionale-milano": "inter",
     "inter-milan": "inter",
     "atalanta-bc": "atalanta",

@@ -59,13 +59,15 @@
             }
           ]
         },
-        "source": { "enum": ["openfootball", "correction"] },
-        "correctionSource": { "type": "string", "pattern": "^https://" }
+        "source": { "enum": ["openfootball", "correction", "wikipedia"] },
+        "correctionSource": { "type": "string", "pattern": "^https://" },
+        "sourceUrl": { "type": "string", "pattern": "^https://" }
       },
       "allOf": [
         { "if": { "properties": { "status": { "const": "finished" } } }, "then": { "properties": { "score": { "type": "object" } } } },
         { "if": { "properties": { "status": { "const": "scheduled" } } }, "then": { "properties": { "score": { "type": "null" } } } },
-        { "if": { "properties": { "source": { "const": "correction" } } }, "then": { "required": ["correctionSource"] } }
+        { "if": { "properties": { "source": { "const": "correction" } } }, "then": { "required": ["correctionSource"] } },
+        { "if": { "properties": { "source": { "const": "wikipedia" } } }, "then": { "required": ["sourceUrl"] } }
       ]
     },
 
@@ -167,7 +169,26 @@
                 "finished": { "$ref": "#/$defs/count" },
                 "scheduled": { "$ref": "#/$defs/count" },
                 "lastResult": { "oneOf": [{ "$ref": "#/$defs/date" }, { "type": "null" }] },
-                "corrections": { "$ref": "#/$defs/count" }
+                "corrections": { "$ref": "#/$defs/count" },
+                "wikipedia": {
+                  "description": "The Wikipedia revision whose results grid scored games openfootball had not, how many, and any score the two disagree on (openfootball's is kept).",
+                  "type": "object",
+                  "required": ["revision", "filled", "disagreements"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "revision": { "type": "integer", "minimum": 1 },
+                    "filled": { "$ref": "#/$defs/count" },
+                    "disagreements": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["match", "openfootball", "wikipedia"],
+                        "additionalProperties": false,
+                        "properties": { "match": { "type": "string" }, "openfootball": { "$ref": "#/$defs/pair" }, "wikipedia": { "$ref": "#/$defs/pair" } }
+                      }
+                    }
+                  }
+                }
               }
             }
           }

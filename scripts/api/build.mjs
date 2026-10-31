@@ -1,5 +1,5 @@
 // golboard's API: a folder of static JSON built from saved source files (no server, and no key in any app).
-//   node scripts/api/build.mjs [--input data/openfootball] [--out public] [--seasons 2025-26,2026-27]
+//   node scripts/api/build.mjs [--input data/openfootball] [--wikipedia data/wikipedia] [--out public] [--seasons 2025-26,2026-27]
 // writes <out>/api/v1/competitions.json, <out>/api/v1/<league>/<season>/{matches,table,teams}.json and <out>/api/v1/meta.json.
 // Every season is checked before anything is written; one failure and nothing is written, so the last good API stays up.
 import { createHash } from "node:crypto";
@@ -9,9 +9,11 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { leagues, loadAdjustments, loadCorrections } from "./config.mjs";
 import { applyCorrections, parseSeason } from "./openfootball.mjs";
 import { computeTable } from "./table.mjs";
+import { applyResults, parseResults } from "./wikipedia.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const OPENFOOTBALL = { name: "openfootball", url: "https://github.com/openfootball/football.json", licence: "CC0-1.0" };
+const WIKIPEDIA = { name: "Wikipedia", url: "https://en.wikipedia.org/", licence: "CC-BY-SA-4.0" };
 const goal = (n) => Number.isInteger(n) && n >= 0 && n < 50;
 
 /** Problems with one league season, in plain words; empty when it is fine. */
@@ -32,11 +34,12 @@ export function validate(season, teams) {
 }
 
 /** Build everything in memory, check it, then write it all at once. Throws (writing nothing) when any season fails validation. */
-export function build({ input = "data/openfootball", out = "public", seasons = ["2025-26", "2026-27"], now = new Date().toISOString(), mutate } = {}) {
+export function build({ input = "data/openfootball", wikipedia = join(ROOT, "data/wikipedia"), out = "public", seasons = ["2025-26", "2026-27"], now = new Date().toISOString(), mutate } = {}) {
   const files = new Map();
   const meta = { version: 1, generatedAt: now, sources: [OPENFOOTBALL], leagues: {} };
   const competitions = [];
   const problems = [];
+  let usedWikipedia = false;
   for (const league of leagues()) {
     const have = [];
     for (const season of seasons) {
@@ -44,6 +47,16 @@ export function build({ input = "data/openfootball", out = "public", seasons = [
       if (!existsSync(path)) continue;
       const parsed = parseSeason(JSON.parse(readFileSync(path, "utf8")), league.id);
       parsed.matches = applyCorrections(parsed.matches, loadCorrections(season, league.id));
+      // Wikipedia's grid scores the games openfootball has not got to yet; it never overwrites a score openfootball has (wikipedia.mjs).
+      const page = join(wikipedia, season, `${league.id}.json`);
+      let wiki = null;
+      if (existsSync(page)) {
+        const saved = JSON.parse(readFileSync(page, "utf8"));
+        const merged = applyResults(parsed.matches, parseResults(saved.wikitext), parsed.teams, `https://en.wikipedia.org/?oldid=${saved.revid}`, now.slice(0, 10));
+        parsed.matches = merged.matches;
+        wiki = { revision: saved.revid, filled: merged.filled, disagreements: merged.disagreements };
+        usedWikipedia = true;
+      }
       mutate?.(parsed);
       problems.push(...validate(parsed, parsed.teams).map((p) => `${league.id} ${season}: ${p}`));
       const adjustments = loadAdjustments(season, league.id);
@@ -57,11 +70,12 @@ export function build({ input = "data/openfootball", out = "public", seasons = [
       meta.leagues[league.id] ??= {};
       meta.leagues[league.id][season] = { finished: finished.length, scheduled: parsed.matches.length - finished.length,
         lastResult: finished.reduce((d, m) => (m.date > d ? m.date : d), "") || null,
-        corrections: parsed.matches.filter((m) => m.source === "correction").length };
+        corrections: parsed.matches.filter((m) => m.source === "correction").length, ...(wiki ? { wikipedia: wiki } : {}) };
       have.push(season);
     }
     if (have.length) competitions.push({ id: league.id, name: league.name, country: league.country, seasons: have, current: have.at(-1) });
   }
+  if (usedWikipedia) meta.sources.push(WIKIPEDIA);
   if (problems.length) throw new Error(`validation failed, nothing written:\n${problems.slice(0, 20).join("\n")}`);
   files.set("api/v1/competitions.json", { competitions });
   // The contract travels with the data, so a reader can check what it got against the shapes it was promised (tests/api-schema.test.ts).
@@ -88,7 +102,7 @@ export function build({ input = "data/openfootball", out = "public", seasons = [
 if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
   const arg = (name, fallback) => { const i = process.argv.indexOf(`--${name}`); return i > 0 ? process.argv[i + 1] : fallback; };
   const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-  const done = build({ input: arg("input", join(root, "data/openfootball")), out: arg("out", join(root, "public")),
+  const done = build({ input: arg("input", join(root, "data/openfootball")), wikipedia: arg("wikipedia", join(root, "data/wikipedia")), out: arg("out", join(root, "public")),
     seasons: arg("seasons", "2025-26,2026-27").split(",") });
   console.log(`api: ${done.files} files for ${done.competitions} competitions`);
 }
