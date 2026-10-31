@@ -9,6 +9,7 @@ import { build } from "../scripts/api/build.mjs";
 import { fetchPages } from "../scripts/api/fetch-wikipedia.mjs";
 import { parseSeason } from "../scripts/api/openfootball.mjs";
 import { teamId } from "../scripts/api/teams.mjs";
+import type { Match } from "../scripts/api/types.d.mts";
 import { applyResults, parseResults } from "../scripts/api/wikipedia.mjs";
 
 // Wikipedia's season pages have every played league game in a results grid that volunteers fill in within hours (the 2026-27 pages were
@@ -52,8 +53,9 @@ describe("reading Wikipedia's results grid", () => {
 });
 
 describe("filling in openfootball's season", () => {
-  const game = (home: string, away: string, ft: number[] | null, stage = "league") => ({ id: `x:${home}-${away}`, round: "Matchday 1", stage,
-    date: "2026-10-31", time: null, home, away, status: ft ? "finished" : "scheduled", score: ft ? { ft, ht: null } : null, source: "openfootball" });
+  const game = (home: string, away: string, ft: [number, number] | null, stage: Match["stage"] = "league"): Match => ({ id: `x:${home}-${away}`,
+    round: "Matchday 1", stage, date: "2026-10-31", time: null, home, away, status: ft ? "finished" : "scheduled", score: ft ? { ft, ht: null } : null,
+    source: "openfootball" });
   const teams = { inter: "Inter", milan: "Milan", napoli: "Napoli" };
 
   it("scores the games openfootball has not, keeps the ones it has, and reports where the two differ", () => {
