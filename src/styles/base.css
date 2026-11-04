@@ -107,8 +107,15 @@ code { font-family: var(--font-mono); font-weight: 700; }
 }
 .poster__title { font: 800 clamp(5rem, 24vw, 21rem)/0.82 var(--font-display); color: var(--accent); text-transform: uppercase; margin: 0; white-space: nowrap; letter-spacing: -0.01em; }
 .poster__result { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: clamp(8px, 2vw, 22px); max-width: var(--max-width); margin: var(--space-2) auto 0; }
-.poster__team { font: 800 clamp(2.2rem, 8vw, 6.4rem)/0.9 var(--font-display); text-transform: uppercase; color: var(--fg); overflow-wrap: anywhere; min-width: 0; }
+.poster__team { font: 800 clamp(2.2rem, 8vw, 6.4rem)/0.9 var(--font-display); text-transform: uppercase; color: var(--fg); min-width: 0; }
 .poster__team.home { text-align: right; } .poster__team.away { text-align: left; }
+/* Narrow phones (360px and under): a club's name no longer fits beside the score, so the result stacks, as on a scoreboard:
+   home club, score, away club, all centred. Names never break mid-word. */
+@media (max-width: 360px) {
+  .poster__result { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .poster__team.home, .poster__team.away { text-align: center; }
+  .poster__score { text-align: center; }
+}
 .poster__score { font: 800 clamp(3.4rem, 13vw, 11rem)/0.85 var(--font-display); color: var(--accent); }
 .poster__meta { margin: var(--space-2) 0 0; color: var(--fg); opacity: 0.75; }
 .board__grid { display: grid; gap: var(--space-5); grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: start; margin-top: var(--space-5); }
