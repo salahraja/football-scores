@@ -23,7 +23,7 @@
     "parity": "node scripts/parity.mjs python && node scripts/parity.mjs goose && node scripts/parity.mjs wasm",
     "test:python": "python3 -I -m unittest discover -s python",
     "api:fetch": "node scripts/api/fetch-openfootball.mjs && node scripts/api/fetch-wikipedia.mjs",
-    "api:build": "node scripts/api/build.mjs",
+    "api:build": "node scripts/api/build.mjs && node scripts/api/pages.mjs",
     "api": "npm run api:fetch && npm run api:build"
   },
   "dependencies": {

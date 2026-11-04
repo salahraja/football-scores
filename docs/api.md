@@ -30,6 +30,15 @@ with the data. `tests/api-schema.test.ts` builds the API and checks every file a
 check `meta.files` too: a file whose sha256 does not match comes from a half-published or older build. Change the schema in the same
 change as the data it describes.
 
+## Pages
+
+`npm run api:build` also writes plain HTML pages from the API it just built (`scripts/api/pages.mjs`): `/leagues/` and
+`/leagues/<league>/` with the table, the latest results, games waiting for a result, and the next fixtures. No JavaScript (in our test on a
+throttled phone a page like this showed in 376 ms against 912 ms for the Vue app), one stylesheet (`/leagues/site.css`), light and dark.
+Each page says how far its results go, gives kick-off times in the league's own time zone (`clock` in `data/api/leagues.json`), and
+credits only the sources it used. An unscored game dated on the build day or earlier is listed as waiting for its result, never as a
+fixture to come.
+
 ## Where it comes from, and how we know it is right
 
 - **Results and fixtures:** [openfootball/football.json](https://github.com/openfootball/football.json), public domain (CC0), free for any
