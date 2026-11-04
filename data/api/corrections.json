@@ -1,0 +1,61 @@
+{
+  "_about": "Scores our sources have wrong or missing, put right from an official record. Each says what the source had and where the right score was read. tests/api.test.ts fails if a correction is no longer needed (the source has been fixed) or if any league game still differs from the official results.",
+  "2025-26": {
+    "fr-1": [
+      {
+        "date": "2026-05-17",
+        "home": "nantes",
+        "away": "toulouse",
+        "had": null,
+        "ft": [
+          0,
+          0
+        ],
+        "source": "https://en.wikipedia.org/?oldid=1380907420"
+      }
+    ],
+    "nl-1": [
+      {
+        "date": "2026-05-10",
+        "home": "nac-breda",
+        "away": "heerenveen",
+        "had": null,
+        "ft": [
+          2,
+          0
+        ],
+        "source": "https://en.wikipedia.org/?oldid=1380192197"
+      }
+    ],
+    "pt-1": [
+      {
+        "date": "2026-05-16",
+        "home": "casa-pia",
+        "away": "rio-ave",
+        "had": [
+          2,
+          1
+        ],
+        "ft": [
+          1,
+          1
+        ],
+        "source": "https://en.wikipedia.org/?oldid=1380192446"
+      },
+      {
+        "date": "2026-05-16",
+        "home": "moreirense",
+        "away": "avs",
+        "had": [
+          0,
+          1
+        ],
+        "ft": [
+          0,
+          0
+        ],
+        "source": "https://en.wikipedia.org/?oldid=1380192446"
+      }
+    ]
+  }
+}

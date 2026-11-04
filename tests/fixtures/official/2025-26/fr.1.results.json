@@ -1,0 +1,2453 @@
+{
+ "source": "https://en.wikipedia.org/?oldid=1380907420",
+ "matches": [
+  {
+   "home": "Angers SCO",
+   "away": "AJ Auxerre",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Angers SCO",
+   "away": "Stade Brestois 29",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Angers SCO",
+   "away": "Le Havre AC",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Angers SCO",
+   "away": "RC Lens",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Angers SCO",
+   "away": "Lille OSC",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Angers SCO",
+   "away": "FC Lorient",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Angers SCO",
+   "away": "Olympique Lyonnais",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Angers SCO",
+   "away": "Olympique de Marseille",
+   "ft": [
+    2,
+    5
+   ]
+  },
+  {
+   "home": "Angers SCO",
+   "away": "FC Metz",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Angers SCO",
+   "away": "AS Monaco FC",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Angers SCO",
+   "away": "FC Nantes",
+   "ft": [
+    4,
+    1
+   ]
+  },
+  {
+   "home": "Angers SCO",
+   "away": "OGC Nice",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Angers SCO",
+   "away": "Paris FC",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Angers SCO",
+   "away": "Paris Saint-Germain FC",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Angers SCO",
+   "away": "Stade Rennais FC",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Angers SCO",
+   "away": "RC Strasbourg Alsace",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Angers SCO",
+   "away": "Toulouse FC",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "AJ Auxerre",
+   "away": "Angers SCO",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "AJ Auxerre",
+   "away": "Stade Brestois 29",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "AJ Auxerre",
+   "away": "Le Havre AC",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "AJ Auxerre",
+   "away": "RC Lens",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "AJ Auxerre",
+   "away": "Lille OSC",
+   "ft": [
+    3,
+    4
+   ]
+  },
+  {
+   "home": "AJ Auxerre",
+   "away": "FC Lorient",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "AJ Auxerre",
+   "away": "Olympique Lyonnais",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "AJ Auxerre",
+   "away": "Olympique de Marseille",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "AJ Auxerre",
+   "away": "FC Metz",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "AJ Auxerre",
+   "away": "AS Monaco FC",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "AJ Auxerre",
+   "away": "FC Nantes",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "AJ Auxerre",
+   "away": "OGC Nice",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "AJ Auxerre",
+   "away": "Paris FC",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "AJ Auxerre",
+   "away": "Paris Saint-Germain FC",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "AJ Auxerre",
+   "away": "Stade Rennais FC",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "AJ Auxerre",
+   "away": "RC Strasbourg Alsace",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "AJ Auxerre",
+   "away": "Toulouse FC",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Stade Brestois 29",
+   "away": "Angers SCO",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Stade Brestois 29",
+   "away": "AJ Auxerre",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Stade Brestois 29",
+   "away": "Le Havre AC",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Stade Brestois 29",
+   "away": "RC Lens",
+   "ft": [
+    3,
+    3
+   ]
+  },
+  {
+   "home": "Stade Brestois 29",
+   "away": "Lille OSC",
+   "ft": [
+    3,
+    3
+   ]
+  },
+  {
+   "home": "Stade Brestois 29",
+   "away": "FC Lorient",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Stade Brestois 29",
+   "away": "Olympique Lyonnais",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Stade Brestois 29",
+   "away": "Olympique de Marseille",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Stade Brestois 29",
+   "away": "FC Metz",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Stade Brestois 29",
+   "away": "AS Monaco FC",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Stade Brestois 29",
+   "away": "FC Nantes",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Stade Brestois 29",
+   "away": "OGC Nice",
+   "ft": [
+    4,
+    1
+   ]
+  },
+  {
+   "home": "Stade Brestois 29",
+   "away": "Paris FC",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Stade Brestois 29",
+   "away": "Paris Saint-Germain FC",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Stade Brestois 29",
+   "away": "Stade Rennais FC",
+   "ft": [
+    3,
+    4
+   ]
+  },
+  {
+   "home": "Stade Brestois 29",
+   "away": "RC Strasbourg Alsace",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Stade Brestois 29",
+   "away": "Toulouse FC",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Le Havre AC",
+   "away": "Angers SCO",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Le Havre AC",
+   "away": "AJ Auxerre",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Le Havre AC",
+   "away": "Stade Brestois 29",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Le Havre AC",
+   "away": "RC Lens",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Le Havre AC",
+   "away": "Lille OSC",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Le Havre AC",
+   "away": "FC Lorient",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Le Havre AC",
+   "away": "Olympique Lyonnais",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Le Havre AC",
+   "away": "Olympique de Marseille",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Le Havre AC",
+   "away": "FC Metz",
+   "ft": [
+    4,
+    4
+   ]
+  },
+  {
+   "home": "Le Havre AC",
+   "away": "AS Monaco FC",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Le Havre AC",
+   "away": "FC Nantes",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Le Havre AC",
+   "away": "OGC Nice",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Le Havre AC",
+   "away": "Paris FC",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Le Havre AC",
+   "away": "Paris Saint-Germain FC",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Le Havre AC",
+   "away": "Stade Rennais FC",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Le Havre AC",
+   "away": "RC Strasbourg Alsace",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Le Havre AC",
+   "away": "Toulouse FC",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "RC Lens",
+   "away": "Angers SCO",
+   "ft": [
+    5,
+    1
+   ]
+  },
+  {
+   "home": "RC Lens",
+   "away": "AJ Auxerre",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "RC Lens",
+   "away": "Stade Brestois 29",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "RC Lens",
+   "away": "Le Havre AC",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "RC Lens",
+   "away": "Lille OSC",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "RC Lens",
+   "away": "FC Lorient",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "RC Lens",
+   "away": "Olympique Lyonnais",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "RC Lens",
+   "away": "Olympique de Marseille",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "RC Lens",
+   "away": "FC Metz",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "RC Lens",
+   "away": "AS Monaco FC",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "RC Lens",
+   "away": "FC Nantes",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "RC Lens",
+   "away": "OGC Nice",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "RC Lens",
+   "away": "Paris FC",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "RC Lens",
+   "away": "Paris Saint-Germain FC",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "RC Lens",
+   "away": "Stade Rennais FC",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "RC Lens",
+   "away": "RC Strasbourg Alsace",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "RC Lens",
+   "away": "Toulouse FC",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Lille OSC",
+   "away": "Angers SCO",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Lille OSC",
+   "away": "AJ Auxerre",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Lille OSC",
+   "away": "Stade Brestois 29",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Lille OSC",
+   "away": "Le Havre AC",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Lille OSC",
+   "away": "RC Lens",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Lille OSC",
+   "away": "FC Lorient",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Lille OSC",
+   "away": "Olympique Lyonnais",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Lille OSC",
+   "away": "Olympique de Marseille",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Lille OSC",
+   "away": "FC Metz",
+   "ft": [
+    6,
+    1
+   ]
+  },
+  {
+   "home": "Lille OSC",
+   "away": "AS Monaco FC",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Lille OSC",
+   "away": "FC Nantes",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Lille OSC",
+   "away": "OGC Nice",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Lille OSC",
+   "away": "Paris FC",
+   "ft": [
+    4,
+    2
+   ]
+  },
+  {
+   "home": "Lille OSC",
+   "away": "Paris Saint-Germain FC",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Lille OSC",
+   "away": "Stade Rennais FC",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Lille OSC",
+   "away": "RC Strasbourg Alsace",
+   "ft": [
+    1,
+    4
+   ]
+  },
+  {
+   "home": "Lille OSC",
+   "away": "Toulouse FC",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "FC Lorient",
+   "away": "Angers SCO",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "FC Lorient",
+   "away": "AJ Auxerre",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "FC Lorient",
+   "away": "Stade Brestois 29",
+   "ft": [
+    3,
+    3
+   ]
+  },
+  {
+   "home": "FC Lorient",
+   "away": "Le Havre AC",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "FC Lorient",
+   "away": "RC Lens",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "FC Lorient",
+   "away": "Lille OSC",
+   "ft": [
+    1,
+    7
+   ]
+  },
+  {
+   "home": "FC Lorient",
+   "away": "Olympique Lyonnais",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "FC Lorient",
+   "away": "Olympique de Marseille",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "FC Lorient",
+   "away": "FC Metz",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "FC Lorient",
+   "away": "AS Monaco FC",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "FC Lorient",
+   "away": "FC Nantes",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "FC Lorient",
+   "away": "OGC Nice",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "FC Lorient",
+   "away": "Paris FC",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "FC Lorient",
+   "away": "Paris Saint-Germain FC",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "FC Lorient",
+   "away": "Stade Rennais FC",
+   "ft": [
+    4,
+    0
+   ]
+  },
+  {
+   "home": "FC Lorient",
+   "away": "RC Strasbourg Alsace",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "FC Lorient",
+   "away": "Toulouse FC",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Olympique Lyonnais",
+   "away": "Angers SCO",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Olympique Lyonnais",
+   "away": "AJ Auxerre",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Olympique Lyonnais",
+   "away": "Stade Brestois 29",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Olympique Lyonnais",
+   "away": "Le Havre AC",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Olympique Lyonnais",
+   "away": "RC Lens",
+   "ft": [
+    0,
+    4
+   ]
+  },
+  {
+   "home": "Olympique Lyonnais",
+   "away": "Lille OSC",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Olympique Lyonnais",
+   "away": "FC Lorient",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Olympique Lyonnais",
+   "away": "Olympique de Marseille",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Olympique Lyonnais",
+   "away": "FC Metz",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Olympique Lyonnais",
+   "away": "AS Monaco FC",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Olympique Lyonnais",
+   "away": "FC Nantes",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Olympique Lyonnais",
+   "away": "OGC Nice",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Olympique Lyonnais",
+   "away": "Paris FC",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Olympique Lyonnais",
+   "away": "Paris Saint-Germain FC",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "Olympique Lyonnais",
+   "away": "Stade Rennais FC",
+   "ft": [
+    4,
+    2
+   ]
+  },
+  {
+   "home": "Olympique Lyonnais",
+   "away": "RC Strasbourg Alsace",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Olympique Lyonnais",
+   "away": "Toulouse FC",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Olympique de Marseille",
+   "away": "Angers SCO",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Olympique de Marseille",
+   "away": "AJ Auxerre",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Olympique de Marseille",
+   "away": "Stade Brestois 29",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Olympique de Marseille",
+   "away": "Le Havre AC",
+   "ft": [
+    6,
+    2
+   ]
+  },
+  {
+   "home": "Olympique de Marseille",
+   "away": "RC Lens",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Olympique de Marseille",
+   "away": "Lille OSC",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Olympique de Marseille",
+   "away": "FC Lorient",
+   "ft": [
+    4,
+    0
+   ]
+  },
+  {
+   "home": "Olympique de Marseille",
+   "away": "Olympique Lyonnais",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Olympique de Marseille",
+   "away": "FC Metz",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Olympique de Marseille",
+   "away": "AS Monaco FC",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Olympique de Marseille",
+   "away": "FC Nantes",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Olympique de Marseille",
+   "away": "OGC Nice",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Olympique de Marseille",
+   "away": "Paris FC",
+   "ft": [
+    5,
+    2
+   ]
+  },
+  {
+   "home": "Olympique de Marseille",
+   "away": "Paris Saint-Germain FC",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Olympique de Marseille",
+   "away": "Stade Rennais FC",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Olympique de Marseille",
+   "away": "RC Strasbourg Alsace",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Olympique de Marseille",
+   "away": "Toulouse FC",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "FC Metz",
+   "away": "Angers SCO",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "FC Metz",
+   "away": "AJ Auxerre",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "FC Metz",
+   "away": "Stade Brestois 29",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "FC Metz",
+   "away": "Le Havre AC",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "FC Metz",
+   "away": "RC Lens",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "FC Metz",
+   "away": "Lille OSC",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "FC Metz",
+   "away": "FC Lorient",
+   "ft": [
+    0,
+    4
+   ]
+  },
+  {
+   "home": "FC Metz",
+   "away": "Olympique Lyonnais",
+   "ft": [
+    2,
+    5
+   ]
+  },
+  {
+   "home": "FC Metz",
+   "away": "Olympique de Marseille",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "FC Metz",
+   "away": "AS Monaco FC",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "FC Metz",
+   "away": "FC Nantes",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "FC Metz",
+   "away": "OGC Nice",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "FC Metz",
+   "away": "Paris FC",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "FC Metz",
+   "away": "Paris Saint-Germain FC",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "FC Metz",
+   "away": "Stade Rennais FC",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "FC Metz",
+   "away": "RC Strasbourg Alsace",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "FC Metz",
+   "away": "Toulouse FC",
+   "ft": [
+    3,
+    4
+   ]
+  },
+  {
+   "home": "AS Monaco FC",
+   "away": "Angers SCO",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "AS Monaco FC",
+   "away": "AJ Auxerre",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "AS Monaco FC",
+   "away": "Stade Brestois 29",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "AS Monaco FC",
+   "away": "Le Havre AC",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "AS Monaco FC",
+   "away": "RC Lens",
+   "ft": [
+    1,
+    4
+   ]
+  },
+  {
+   "home": "AS Monaco FC",
+   "away": "Lille OSC",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "AS Monaco FC",
+   "away": "FC Lorient",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "AS Monaco FC",
+   "away": "Olympique Lyonnais",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "AS Monaco FC",
+   "away": "Olympique de Marseille",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "AS Monaco FC",
+   "away": "FC Metz",
+   "ft": [
+    5,
+    2
+   ]
+  },
+  {
+   "home": "AS Monaco FC",
+   "away": "FC Nantes",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "AS Monaco FC",
+   "away": "OGC Nice",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "AS Monaco FC",
+   "away": "Paris FC",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "AS Monaco FC",
+   "away": "Paris Saint-Germain FC",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "AS Monaco FC",
+   "away": "Stade Rennais FC",
+   "ft": [
+    4,
+    0
+   ]
+  },
+  {
+   "home": "AS Monaco FC",
+   "away": "RC Strasbourg Alsace",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "AS Monaco FC",
+   "away": "Toulouse FC",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "FC Nantes",
+   "away": "Angers SCO",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "FC Nantes",
+   "away": "AJ Auxerre",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "FC Nantes",
+   "away": "Stade Brestois 29",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "FC Nantes",
+   "away": "Le Havre AC",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "FC Nantes",
+   "away": "RC Lens",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "FC Nantes",
+   "away": "Lille OSC",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "FC Nantes",
+   "away": "FC Lorient",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "FC Nantes",
+   "away": "Olympique Lyonnais",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "FC Nantes",
+   "away": "Olympique de Marseille",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "FC Nantes",
+   "away": "FC Metz",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "FC Nantes",
+   "away": "AS Monaco FC",
+   "ft": [
+    3,
+    5
+   ]
+  },
+  {
+   "home": "FC Nantes",
+   "away": "OGC Nice",
+   "ft": [
+    1,
+    4
+   ]
+  },
+  {
+   "home": "FC Nantes",
+   "away": "Paris FC",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "FC Nantes",
+   "away": "Paris Saint-Germain FC",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "FC Nantes",
+   "away": "Stade Rennais FC",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "FC Nantes",
+   "away": "RC Strasbourg Alsace",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "FC Nantes",
+   "away": "Toulouse FC",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "OGC Nice",
+   "away": "Angers SCO",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "OGC Nice",
+   "away": "AJ Auxerre",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "OGC Nice",
+   "away": "Stade Brestois 29",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "OGC Nice",
+   "away": "Le Havre AC",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "OGC Nice",
+   "away": "RC Lens",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "OGC Nice",
+   "away": "Lille OSC",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "OGC Nice",
+   "away": "FC Lorient",
+   "ft": [
+    3,
+    3
+   ]
+  },
+  {
+   "home": "OGC Nice",
+   "away": "Olympique Lyonnais",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "OGC Nice",
+   "away": "Olympique de Marseille",
+   "ft": [
+    1,
+    5
+   ]
+  },
+  {
+   "home": "OGC Nice",
+   "away": "FC Metz",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "OGC Nice",
+   "away": "AS Monaco FC",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "OGC Nice",
+   "away": "FC Nantes",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "OGC Nice",
+   "away": "Paris FC",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "OGC Nice",
+   "away": "Paris Saint-Germain FC",
+   "ft": [
+    0,
+    4
+   ]
+  },
+  {
+   "home": "OGC Nice",
+   "away": "Stade Rennais FC",
+   "ft": [
+    0,
+    4
+   ]
+  },
+  {
+   "home": "OGC Nice",
+   "away": "RC Strasbourg Alsace",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "OGC Nice",
+   "away": "Toulouse FC",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Paris FC",
+   "away": "Angers SCO",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Paris FC",
+   "away": "AJ Auxerre",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Paris FC",
+   "away": "Stade Brestois 29",
+   "ft": [
+    4,
+    0
+   ]
+  },
+  {
+   "home": "Paris FC",
+   "away": "Le Havre AC",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Paris FC",
+   "away": "RC Lens",
+   "ft": [
+    0,
+    5
+   ]
+  },
+  {
+   "home": "Paris FC",
+   "away": "Lille OSC",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Paris FC",
+   "away": "FC Lorient",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Paris FC",
+   "away": "Olympique Lyonnais",
+   "ft": [
+    3,
+    3
+   ]
+  },
+  {
+   "home": "Paris FC",
+   "away": "Olympique de Marseille",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Paris FC",
+   "away": "FC Metz",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Paris FC",
+   "away": "AS Monaco FC",
+   "ft": [
+    4,
+    1
+   ]
+  },
+  {
+   "home": "Paris FC",
+   "away": "FC Nantes",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Paris FC",
+   "away": "OGC Nice",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Paris FC",
+   "away": "Paris Saint-Germain FC",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Paris FC",
+   "away": "Stade Rennais FC",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Paris FC",
+   "away": "RC Strasbourg Alsace",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "Paris FC",
+   "away": "Toulouse FC",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Paris Saint-Germain FC",
+   "away": "Angers SCO",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Paris Saint-Germain FC",
+   "away": "AJ Auxerre",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Paris Saint-Germain FC",
+   "away": "Stade Brestois 29",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Paris Saint-Germain FC",
+   "away": "Le Havre AC",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Paris Saint-Germain FC",
+   "away": "RC Lens",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Paris Saint-Germain FC",
+   "away": "Lille OSC",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Paris Saint-Germain FC",
+   "away": "FC Lorient",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Paris Saint-Germain FC",
+   "away": "Olympique Lyonnais",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Paris Saint-Germain FC",
+   "away": "Olympique de Marseille",
+   "ft": [
+    5,
+    0
+   ]
+  },
+  {
+   "home": "Paris Saint-Germain FC",
+   "away": "FC Metz",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Paris Saint-Germain FC",
+   "away": "AS Monaco FC",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Paris Saint-Germain FC",
+   "away": "FC Nantes",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Paris Saint-Germain FC",
+   "away": "OGC Nice",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Paris Saint-Germain FC",
+   "away": "Paris FC",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Paris Saint-Germain FC",
+   "away": "Stade Rennais FC",
+   "ft": [
+    5,
+    0
+   ]
+  },
+  {
+   "home": "Paris Saint-Germain FC",
+   "away": "RC Strasbourg Alsace",
+   "ft": [
+    3,
+    3
+   ]
+  },
+  {
+   "home": "Paris Saint-Germain FC",
+   "away": "Toulouse FC",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Stade Rennais FC",
+   "away": "Angers SCO",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Stade Rennais FC",
+   "away": "AJ Auxerre",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Stade Rennais FC",
+   "away": "Stade Brestois 29",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Stade Rennais FC",
+   "away": "Le Havre AC",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Stade Rennais FC",
+   "away": "RC Lens",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Stade Rennais FC",
+   "away": "Lille OSC",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Stade Rennais FC",
+   "away": "FC Lorient",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Stade Rennais FC",
+   "away": "Olympique Lyonnais",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Stade Rennais FC",
+   "away": "Olympique de Marseille",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Stade Rennais FC",
+   "away": "FC Metz",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Stade Rennais FC",
+   "away": "AS Monaco FC",
+   "ft": [
+    4,
+    1
+   ]
+  },
+  {
+   "home": "Stade Rennais FC",
+   "away": "FC Nantes",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Stade Rennais FC",
+   "away": "OGC Nice",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Stade Rennais FC",
+   "away": "Paris FC",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Stade Rennais FC",
+   "away": "Paris Saint-Germain FC",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Stade Rennais FC",
+   "away": "RC Strasbourg Alsace",
+   "ft": [
+    4,
+    1
+   ]
+  },
+  {
+   "home": "Stade Rennais FC",
+   "away": "Toulouse FC",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "RC Strasbourg Alsace",
+   "away": "Angers SCO",
+   "ft": [
+    5,
+    0
+   ]
+  },
+  {
+   "home": "RC Strasbourg Alsace",
+   "away": "AJ Auxerre",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "RC Strasbourg Alsace",
+   "away": "Stade Brestois 29",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "RC Strasbourg Alsace",
+   "away": "Le Havre AC",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "RC Strasbourg Alsace",
+   "away": "RC Lens",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "RC Strasbourg Alsace",
+   "away": "Lille OSC",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "RC Strasbourg Alsace",
+   "away": "FC Lorient",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "RC Strasbourg Alsace",
+   "away": "Olympique Lyonnais",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "RC Strasbourg Alsace",
+   "away": "Olympique de Marseille",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "RC Strasbourg Alsace",
+   "away": "FC Metz",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "RC Strasbourg Alsace",
+   "away": "AS Monaco FC",
+   "ft": [
+    5,
+    4
+   ]
+  },
+  {
+   "home": "RC Strasbourg Alsace",
+   "away": "FC Nantes",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "RC Strasbourg Alsace",
+   "away": "OGC Nice",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "RC Strasbourg Alsace",
+   "away": "Paris FC",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "RC Strasbourg Alsace",
+   "away": "Paris Saint-Germain FC",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "RC Strasbourg Alsace",
+   "away": "Stade Rennais FC",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "RC Strasbourg Alsace",
+   "away": "Toulouse FC",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Toulouse FC",
+   "away": "Angers SCO",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Toulouse FC",
+   "away": "AJ Auxerre",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Toulouse FC",
+   "away": "Stade Brestois 29",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Toulouse FC",
+   "away": "Le Havre AC",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Toulouse FC",
+   "away": "RC Lens",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Toulouse FC",
+   "away": "Lille OSC",
+   "ft": [
+    0,
+    4
+   ]
+  },
+  {
+   "home": "Toulouse FC",
+   "away": "FC Lorient",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Toulouse FC",
+   "away": "Olympique Lyonnais",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Toulouse FC",
+   "away": "Olympique de Marseille",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Toulouse FC",
+   "away": "FC Metz",
+   "ft": [
+    4,
+    0
+   ]
+  },
+  {
+   "home": "Toulouse FC",
+   "away": "AS Monaco FC",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Toulouse FC",
+   "away": "FC Nantes",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Toulouse FC",
+   "away": "OGC Nice",
+   "ft": [
+    5,
+    1
+   ]
+  },
+  {
+   "home": "Toulouse FC",
+   "away": "Paris FC",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Toulouse FC",
+   "away": "Paris Saint-Germain FC",
+   "ft": [
+    3,
+    6
+   ]
+  },
+  {
+   "home": "Toulouse FC",
+   "away": "Stade Rennais FC",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Toulouse FC",
+   "away": "RC Strasbourg Alsace",
+   "ft": [
+    1,
+    0
+   ]
+  }
+ ]
+}

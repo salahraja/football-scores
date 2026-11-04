@@ -1,0 +1,10 @@
+{
+  "_about": "Points a league took away (or gave) outside the results, per season and league, by our team id. Each entry says why and where it was read, so a table that differs from the results always has a reason on file.",
+  "2025-26": {
+    "en-2": [
+      { "team": "west-bromwich-albion", "points": -2, "why": "deducted two points on 24 April 2026 for breaching league rules", "source": "https://en.wikipedia.org/wiki/2025%E2%80%9326_EFL_Championship" },
+      { "team": "leicester-city", "points": -6, "why": "deducted six points on 5 February 2026 for breaching league rules", "source": "https://en.wikipedia.org/wiki/2025%E2%80%9326_EFL_Championship" },
+      { "team": "sheffield-wednesday", "points": -18, "why": "deducted twelve points for entering administration (24 October 2025) and six more for missed payments (1 December 2025)", "source": "https://en.wikipedia.org/wiki/2025%E2%80%9326_EFL_Championship" }
+    ]
+  }
+}

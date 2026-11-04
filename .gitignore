@@ -25,3 +25,9 @@ npm-debug.log*
 
 # python bytecode
 __pycache__/
+
+# golboard API: downloaded sources and the built JSON (rebuilt by npm run api)
+data/openfootball/
+public/api/
+public/api.next/
+public/api.old/

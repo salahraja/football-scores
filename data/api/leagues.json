@@ -1,0 +1,13 @@
+{
+  "_about": "The leagues golboard's API serves, and how each orders its table when teams are level on points. Criteria, in order: points, gd (goal difference), gf (goals for), wins, h2h_points / h2h_gd / h2h_gf (among only the teams still level, from their games with each other), away_gf. Checked against each league's official 2025-26 final table (tests/api.test.ts). A rule this file gets wrong shows up there as two teams in the wrong order.",
+  "leagues": [
+    { "id": "it-1", "openfootball": "it.1", "name": "Serie A", "country": "Italy", "teams": 20, "tiebreak": ["points", "h2h_points", "h2h_gd", "gd", "gf"] },
+    { "id": "en-1", "openfootball": "en.1", "name": "Premier League", "country": "England", "teams": 20, "tiebreak": ["points", "gd", "gf", "h2h_points", "away_gf"] },
+    { "id": "es-1", "openfootball": "es.1", "name": "LaLiga", "country": "Spain", "teams": 20, "tiebreak": ["points", "h2h_points", "h2h_gd", "gd", "gf"] },
+    { "id": "de-1", "openfootball": "de.1", "name": "Bundesliga", "country": "Germany", "teams": 18, "tiebreak": ["points", "gd", "gf", "h2h_points", "away_gf"] },
+    { "id": "fr-1", "openfootball": "fr.1", "name": "Ligue 1", "country": "France", "teams": 18, "tiebreak": ["points", "gd", "h2h_points", "h2h_gd", "h2h_gf", "gf"] },
+    { "id": "nl-1", "openfootball": "nl.1", "name": "Eredivisie", "country": "Netherlands", "teams": 18, "tiebreak": ["points", "gd", "gf", "h2h_points", "h2h_gd"] },
+    { "id": "pt-1", "openfootball": "pt.1", "name": "Primeira Liga", "country": "Portugal", "teams": 18, "tiebreak": ["points", "h2h_points", "h2h_gd", "gd", "gf"] },
+    { "id": "en-2", "openfootball": "en.2", "name": "Championship", "country": "England", "teams": 24, "tiebreak": ["points", "gd", "gf", "h2h_points"] }
+  ]
+}

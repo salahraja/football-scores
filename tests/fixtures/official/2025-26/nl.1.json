@@ -1,0 +1,204 @@
+{
+ "source": "https://en.wikipedia.org/?oldid=1380192197",
+ "title": "2025–26 Eredivisie",
+ "table": [
+  {
+   "pos": 1,
+   "team": "PSV Eindhoven",
+   "p": 34,
+   "w": 27,
+   "d": 3,
+   "l": 4,
+   "gf": 101,
+   "ga": 45,
+   "pts": 84
+  },
+  {
+   "pos": 2,
+   "team": "Feyenoord",
+   "p": 34,
+   "w": 19,
+   "d": 8,
+   "l": 7,
+   "gf": 70,
+   "ga": 44,
+   "pts": 65
+  },
+  {
+   "pos": 3,
+   "team": "NEC",
+   "p": 34,
+   "w": 16,
+   "d": 11,
+   "l": 7,
+   "gf": 77,
+   "ga": 53,
+   "pts": 59
+  },
+  {
+   "pos": 4,
+   "team": "Twente",
+   "p": 34,
+   "w": 15,
+   "d": 13,
+   "l": 6,
+   "gf": 59,
+   "ga": 40,
+   "pts": 58
+  },
+  {
+   "pos": 5,
+   "team": "Ajax",
+   "p": 34,
+   "w": 14,
+   "d": 14,
+   "l": 6,
+   "gf": 62,
+   "ga": 41,
+   "pts": 56
+  },
+  {
+   "pos": 6,
+   "team": "Utrecht",
+   "p": 34,
+   "w": 15,
+   "d": 8,
+   "l": 11,
+   "gf": 55,
+   "ga": 42,
+   "pts": 53
+  },
+  {
+   "pos": 7,
+   "team": "AZ",
+   "p": 34,
+   "w": 14,
+   "d": 10,
+   "l": 10,
+   "gf": 58,
+   "ga": 51,
+   "pts": 52
+  },
+  {
+   "pos": 8,
+   "team": "Heerenveen",
+   "p": 34,
+   "w": 14,
+   "d": 9,
+   "l": 11,
+   "gf": 57,
+   "ga": 53,
+   "pts": 51
+  },
+  {
+   "pos": 9,
+   "team": "Groningen",
+   "p": 34,
+   "w": 14,
+   "d": 6,
+   "l": 14,
+   "gf": 49,
+   "ga": 45,
+   "pts": 48
+  },
+  {
+   "pos": 10,
+   "team": "Sparta Rotterdam",
+   "p": 34,
+   "w": 12,
+   "d": 7,
+   "l": 15,
+   "gf": 40,
+   "ga": 62,
+   "pts": 43
+  },
+  {
+   "pos": 11,
+   "team": "Fortuna Sittard",
+   "p": 34,
+   "w": 11,
+   "d": 6,
+   "l": 17,
+   "gf": 49,
+   "ga": 63,
+   "pts": 39
+  },
+  {
+   "pos": 12,
+   "team": "Go Ahead Eagles",
+   "p": 34,
+   "w": 8,
+   "d": 14,
+   "l": 12,
+   "gf": 54,
+   "ga": 53,
+   "pts": 38
+  },
+  {
+   "pos": 13,
+   "team": "Excelsior",
+   "p": 34,
+   "w": 10,
+   "d": 8,
+   "l": 16,
+   "gf": 43,
+   "ga": 56,
+   "pts": 38
+  },
+  {
+   "pos": 14,
+   "team": "Telstar",
+   "p": 34,
+   "w": 9,
+   "d": 10,
+   "l": 15,
+   "gf": 49,
+   "ga": 55,
+   "pts": 37
+  },
+  {
+   "pos": 15,
+   "team": "PEC Zwolle",
+   "p": 34,
+   "w": 9,
+   "d": 10,
+   "l": 15,
+   "gf": 44,
+   "ga": 71,
+   "pts": 37
+  },
+  {
+   "pos": 16,
+   "team": "Volendam",
+   "p": 34,
+   "w": 8,
+   "d": 8,
+   "l": 18,
+   "gf": 35,
+   "ga": 55,
+   "pts": 32
+  },
+  {
+   "pos": 17,
+   "team": "NAC Breda",
+   "p": 34,
+   "w": 6,
+   "d": 11,
+   "l": 17,
+   "gf": 35,
+   "ga": 58,
+   "pts": 29
+  },
+  {
+   "pos": 18,
+   "team": "Heracles Almelo",
+   "p": 34,
+   "w": 5,
+   "d": 4,
+   "l": 25,
+   "gf": 35,
+   "ga": 85,
+   "pts": 19
+  }
+ ]
+}

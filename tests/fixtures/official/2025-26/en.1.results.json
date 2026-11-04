@@ -1,0 +1,3045 @@
+{
+ "source": "https://en.wikipedia.org/?oldid=1380557932",
+ "matches": [
+  {
+   "home": "Arsenal F.C.",
+   "away": "Aston Villa F.C.",
+   "ft": [
+    4,
+    1
+   ]
+  },
+  {
+   "home": "Arsenal F.C.",
+   "away": "AFC Bournemouth",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Arsenal F.C.",
+   "away": "Brentford F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Arsenal F.C.",
+   "away": "Brighton & Hove Albion F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Arsenal F.C.",
+   "away": "Burnley F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Arsenal F.C.",
+   "away": "Chelsea F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Arsenal F.C.",
+   "away": "Crystal Palace F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Arsenal F.C.",
+   "away": "Everton F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Arsenal F.C.",
+   "away": "Fulham F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Arsenal F.C.",
+   "away": "Leeds United F.C.",
+   "ft": [
+    5,
+    0
+   ]
+  },
+  {
+   "home": "Arsenal F.C.",
+   "away": "Liverpool F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Arsenal F.C.",
+   "away": "Manchester City F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Arsenal F.C.",
+   "away": "Manchester United F.C.",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "Arsenal F.C.",
+   "away": "Newcastle United F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Arsenal F.C.",
+   "away": "Nottingham Forest F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Arsenal F.C.",
+   "away": "Sunderland A.F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Arsenal F.C.",
+   "away": "Tottenham Hotspur F.C.",
+   "ft": [
+    4,
+    1
+   ]
+  },
+  {
+   "home": "Arsenal F.C.",
+   "away": "West Ham United F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Arsenal F.C.",
+   "away": "Wolverhampton Wanderers F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Aston Villa F.C.",
+   "away": "Arsenal F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Aston Villa F.C.",
+   "away": "AFC Bournemouth",
+   "ft": [
+    4,
+    0
+   ]
+  },
+  {
+   "home": "Aston Villa F.C.",
+   "away": "Brentford F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Aston Villa F.C.",
+   "away": "Brighton & Hove Albion F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Aston Villa F.C.",
+   "away": "Burnley F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Aston Villa F.C.",
+   "away": "Chelsea F.C.",
+   "ft": [
+    1,
+    4
+   ]
+  },
+  {
+   "home": "Aston Villa F.C.",
+   "away": "Crystal Palace F.C.",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Aston Villa F.C.",
+   "away": "Everton F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Aston Villa F.C.",
+   "away": "Fulham F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Aston Villa F.C.",
+   "away": "Leeds United F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Aston Villa F.C.",
+   "away": "Liverpool F.C.",
+   "ft": [
+    4,
+    2
+   ]
+  },
+  {
+   "home": "Aston Villa F.C.",
+   "away": "Manchester City F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Aston Villa F.C.",
+   "away": "Manchester United F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Aston Villa F.C.",
+   "away": "Newcastle United F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Aston Villa F.C.",
+   "away": "Nottingham Forest F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Aston Villa F.C.",
+   "away": "Sunderland A.F.C.",
+   "ft": [
+    4,
+    3
+   ]
+  },
+  {
+   "home": "Aston Villa F.C.",
+   "away": "Tottenham Hotspur F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Aston Villa F.C.",
+   "away": "West Ham United F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Aston Villa F.C.",
+   "away": "Wolverhampton Wanderers F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "AFC Bournemouth",
+   "away": "Arsenal F.C.",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "AFC Bournemouth",
+   "away": "Aston Villa F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "AFC Bournemouth",
+   "away": "Brentford F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "AFC Bournemouth",
+   "away": "Brighton & Hove Albion F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "AFC Bournemouth",
+   "away": "Burnley F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "AFC Bournemouth",
+   "away": "Chelsea F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "AFC Bournemouth",
+   "away": "Crystal Palace F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "AFC Bournemouth",
+   "away": "Everton F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "AFC Bournemouth",
+   "away": "Fulham F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "AFC Bournemouth",
+   "away": "Leeds United F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "AFC Bournemouth",
+   "away": "Liverpool F.C.",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "AFC Bournemouth",
+   "away": "Manchester City F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "AFC Bournemouth",
+   "away": "Manchester United F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "AFC Bournemouth",
+   "away": "Newcastle United F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "AFC Bournemouth",
+   "away": "Nottingham Forest F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "AFC Bournemouth",
+   "away": "Sunderland A.F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "AFC Bournemouth",
+   "away": "Tottenham Hotspur F.C.",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "AFC Bournemouth",
+   "away": "West Ham United F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "AFC Bournemouth",
+   "away": "Wolverhampton Wanderers F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Brentford F.C.",
+   "away": "Arsenal F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Brentford F.C.",
+   "away": "Aston Villa F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Brentford F.C.",
+   "away": "AFC Bournemouth",
+   "ft": [
+    4,
+    1
+   ]
+  },
+  {
+   "home": "Brentford F.C.",
+   "away": "Brighton & Hove Albion F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Brentford F.C.",
+   "away": "Burnley F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Brentford F.C.",
+   "away": "Chelsea F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Brentford F.C.",
+   "away": "Crystal Palace F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Brentford F.C.",
+   "away": "Everton F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Brentford F.C.",
+   "away": "Fulham F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Brentford F.C.",
+   "away": "Leeds United F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Brentford F.C.",
+   "away": "Liverpool F.C.",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Brentford F.C.",
+   "away": "Manchester City F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Brentford F.C.",
+   "away": "Manchester United F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Brentford F.C.",
+   "away": "Newcastle United F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Brentford F.C.",
+   "away": "Nottingham Forest F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Brentford F.C.",
+   "away": "Sunderland A.F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Brentford F.C.",
+   "away": "Tottenham Hotspur F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Brentford F.C.",
+   "away": "West Ham United F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Brentford F.C.",
+   "away": "Wolverhampton Wanderers F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Brighton & Hove Albion F.C.",
+   "away": "Arsenal F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Brighton & Hove Albion F.C.",
+   "away": "Aston Villa F.C.",
+   "ft": [
+    3,
+    4
+   ]
+  },
+  {
+   "home": "Brighton & Hove Albion F.C.",
+   "away": "AFC Bournemouth",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Brighton & Hove Albion F.C.",
+   "away": "Brentford F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Brighton & Hove Albion F.C.",
+   "away": "Burnley F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Brighton & Hove Albion F.C.",
+   "away": "Chelsea F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Brighton & Hove Albion F.C.",
+   "away": "Crystal Palace F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Brighton & Hove Albion F.C.",
+   "away": "Everton F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Brighton & Hove Albion F.C.",
+   "away": "Fulham F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Brighton & Hove Albion F.C.",
+   "away": "Leeds United F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Brighton & Hove Albion F.C.",
+   "away": "Liverpool F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Brighton & Hove Albion F.C.",
+   "away": "Manchester City F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Brighton & Hove Albion F.C.",
+   "away": "Manchester United F.C.",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Brighton & Hove Albion F.C.",
+   "away": "Newcastle United F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Brighton & Hove Albion F.C.",
+   "away": "Nottingham Forest F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Brighton & Hove Albion F.C.",
+   "away": "Sunderland A.F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Brighton & Hove Albion F.C.",
+   "away": "Tottenham Hotspur F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Brighton & Hove Albion F.C.",
+   "away": "West Ham United F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Brighton & Hove Albion F.C.",
+   "away": "Wolverhampton Wanderers F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Burnley F.C.",
+   "away": "Arsenal F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Burnley F.C.",
+   "away": "Aston Villa F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Burnley F.C.",
+   "away": "AFC Bournemouth",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Burnley F.C.",
+   "away": "Brentford F.C.",
+   "ft": [
+    3,
+    4
+   ]
+  },
+  {
+   "home": "Burnley F.C.",
+   "away": "Brighton & Hove Albion F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Burnley F.C.",
+   "away": "Chelsea F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Burnley F.C.",
+   "away": "Crystal Palace F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Burnley F.C.",
+   "away": "Everton F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Burnley F.C.",
+   "away": "Fulham F.C.",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "Burnley F.C.",
+   "away": "Leeds United F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Burnley F.C.",
+   "away": "Liverpool F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Burnley F.C.",
+   "away": "Manchester City F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Burnley F.C.",
+   "away": "Manchester United F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Burnley F.C.",
+   "away": "Newcastle United F.C.",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Burnley F.C.",
+   "away": "Nottingham Forest F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Burnley F.C.",
+   "away": "Sunderland A.F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Burnley F.C.",
+   "away": "Tottenham Hotspur F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Burnley F.C.",
+   "away": "West Ham United F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Burnley F.C.",
+   "away": "Wolverhampton Wanderers F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Chelsea F.C.",
+   "away": "Arsenal F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Chelsea F.C.",
+   "away": "Aston Villa F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Chelsea F.C.",
+   "away": "AFC Bournemouth",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Chelsea F.C.",
+   "away": "Brentford F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Chelsea F.C.",
+   "away": "Brighton & Hove Albion F.C.",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Chelsea F.C.",
+   "away": "Burnley F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Chelsea F.C.",
+   "away": "Crystal Palace F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Chelsea F.C.",
+   "away": "Everton F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Chelsea F.C.",
+   "away": "Fulham F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Chelsea F.C.",
+   "away": "Leeds United F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Chelsea F.C.",
+   "away": "Liverpool F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Chelsea F.C.",
+   "away": "Manchester City F.C.",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Chelsea F.C.",
+   "away": "Manchester United F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Chelsea F.C.",
+   "away": "Newcastle United F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Chelsea F.C.",
+   "away": "Nottingham Forest F.C.",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Chelsea F.C.",
+   "away": "Sunderland A.F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Chelsea F.C.",
+   "away": "Tottenham Hotspur F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Chelsea F.C.",
+   "away": "West Ham United F.C.",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Chelsea F.C.",
+   "away": "Wolverhampton Wanderers F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Crystal Palace F.C.",
+   "away": "Arsenal F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Crystal Palace F.C.",
+   "away": "Aston Villa F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Crystal Palace F.C.",
+   "away": "AFC Bournemouth",
+   "ft": [
+    3,
+    3
+   ]
+  },
+  {
+   "home": "Crystal Palace F.C.",
+   "away": "Brentford F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Crystal Palace F.C.",
+   "away": "Brighton & Hove Albion F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Crystal Palace F.C.",
+   "away": "Burnley F.C.",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "Crystal Palace F.C.",
+   "away": "Chelsea F.C.",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Crystal Palace F.C.",
+   "away": "Everton F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Crystal Palace F.C.",
+   "away": "Fulham F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Crystal Palace F.C.",
+   "away": "Leeds United F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Crystal Palace F.C.",
+   "away": "Liverpool F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Crystal Palace F.C.",
+   "away": "Manchester City F.C.",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Crystal Palace F.C.",
+   "away": "Manchester United F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Crystal Palace F.C.",
+   "away": "Newcastle United F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Crystal Palace F.C.",
+   "away": "Nottingham Forest F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Crystal Palace F.C.",
+   "away": "Sunderland A.F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Crystal Palace F.C.",
+   "away": "Tottenham Hotspur F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Crystal Palace F.C.",
+   "away": "West Ham United F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Crystal Palace F.C.",
+   "away": "Wolverhampton Wanderers F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Everton F.C.",
+   "away": "Arsenal F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Everton F.C.",
+   "away": "Aston Villa F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Everton F.C.",
+   "away": "AFC Bournemouth",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Everton F.C.",
+   "away": "Brentford F.C.",
+   "ft": [
+    2,
+    4
+   ]
+  },
+  {
+   "home": "Everton F.C.",
+   "away": "Brighton & Hove Albion F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Everton F.C.",
+   "away": "Burnley F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Everton F.C.",
+   "away": "Chelsea F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Everton F.C.",
+   "away": "Crystal Palace F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Everton F.C.",
+   "away": "Fulham F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Everton F.C.",
+   "away": "Leeds United F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Everton F.C.",
+   "away": "Liverpool F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Everton F.C.",
+   "away": "Manchester City F.C.",
+   "ft": [
+    3,
+    3
+   ]
+  },
+  {
+   "home": "Everton F.C.",
+   "away": "Manchester United F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Everton F.C.",
+   "away": "Newcastle United F.C.",
+   "ft": [
+    1,
+    4
+   ]
+  },
+  {
+   "home": "Everton F.C.",
+   "away": "Nottingham Forest F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Everton F.C.",
+   "away": "Sunderland A.F.C.",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Everton F.C.",
+   "away": "Tottenham Hotspur F.C.",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Everton F.C.",
+   "away": "West Ham United F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Everton F.C.",
+   "away": "Wolverhampton Wanderers F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Fulham F.C.",
+   "away": "Arsenal F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Fulham F.C.",
+   "away": "Aston Villa F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Fulham F.C.",
+   "away": "AFC Bournemouth",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Fulham F.C.",
+   "away": "Brentford F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Fulham F.C.",
+   "away": "Brighton & Hove Albion F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Fulham F.C.",
+   "away": "Burnley F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Fulham F.C.",
+   "away": "Chelsea F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Fulham F.C.",
+   "away": "Crystal Palace F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Fulham F.C.",
+   "away": "Everton F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Fulham F.C.",
+   "away": "Leeds United F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Fulham F.C.",
+   "away": "Liverpool F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Fulham F.C.",
+   "away": "Manchester City F.C.",
+   "ft": [
+    4,
+    5
+   ]
+  },
+  {
+   "home": "Fulham F.C.",
+   "away": "Manchester United F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Fulham F.C.",
+   "away": "Newcastle United F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Fulham F.C.",
+   "away": "Nottingham Forest F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Fulham F.C.",
+   "away": "Sunderland A.F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Fulham F.C.",
+   "away": "Tottenham Hotspur F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Fulham F.C.",
+   "away": "West Ham United F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Fulham F.C.",
+   "away": "Wolverhampton Wanderers F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Leeds United F.C.",
+   "away": "Arsenal F.C.",
+   "ft": [
+    0,
+    4
+   ]
+  },
+  {
+   "home": "Leeds United F.C.",
+   "away": "Aston Villa F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Leeds United F.C.",
+   "away": "AFC Bournemouth",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Leeds United F.C.",
+   "away": "Brentford F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Leeds United F.C.",
+   "away": "Brighton & Hove Albion F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Leeds United F.C.",
+   "away": "Burnley F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Leeds United F.C.",
+   "away": "Chelsea F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Leeds United F.C.",
+   "away": "Crystal Palace F.C.",
+   "ft": [
+    4,
+    1
+   ]
+  },
+  {
+   "home": "Leeds United F.C.",
+   "away": "Everton F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Leeds United F.C.",
+   "away": "Fulham F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Leeds United F.C.",
+   "away": "Liverpool F.C.",
+   "ft": [
+    3,
+    3
+   ]
+  },
+  {
+   "home": "Leeds United F.C.",
+   "away": "Manchester City F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Leeds United F.C.",
+   "away": "Manchester United F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Leeds United F.C.",
+   "away": "Newcastle United F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Leeds United F.C.",
+   "away": "Nottingham Forest F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Leeds United F.C.",
+   "away": "Sunderland A.F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Leeds United F.C.",
+   "away": "Tottenham Hotspur F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Leeds United F.C.",
+   "away": "West Ham United F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Leeds United F.C.",
+   "away": "Wolverhampton Wanderers F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Liverpool F.C.",
+   "away": "Arsenal F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Liverpool F.C.",
+   "away": "Aston Villa F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Liverpool F.C.",
+   "away": "AFC Bournemouth",
+   "ft": [
+    4,
+    2
+   ]
+  },
+  {
+   "home": "Liverpool F.C.",
+   "away": "Brentford F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Liverpool F.C.",
+   "away": "Brighton & Hove Albion F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Liverpool F.C.",
+   "away": "Burnley F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Liverpool F.C.",
+   "away": "Chelsea F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Liverpool F.C.",
+   "away": "Crystal Palace F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Liverpool F.C.",
+   "away": "Everton F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Liverpool F.C.",
+   "away": "Fulham F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Liverpool F.C.",
+   "away": "Leeds United F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Liverpool F.C.",
+   "away": "Manchester City F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Liverpool F.C.",
+   "away": "Manchester United F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Liverpool F.C.",
+   "away": "Newcastle United F.C.",
+   "ft": [
+    4,
+    1
+   ]
+  },
+  {
+   "home": "Liverpool F.C.",
+   "away": "Nottingham Forest F.C.",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Liverpool F.C.",
+   "away": "Sunderland A.F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Liverpool F.C.",
+   "away": "Tottenham Hotspur F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Liverpool F.C.",
+   "away": "West Ham United F.C.",
+   "ft": [
+    5,
+    2
+   ]
+  },
+  {
+   "home": "Liverpool F.C.",
+   "away": "Wolverhampton Wanderers F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Manchester City F.C.",
+   "away": "Arsenal F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Manchester City F.C.",
+   "away": "Aston Villa F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Manchester City F.C.",
+   "away": "AFC Bournemouth",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Manchester City F.C.",
+   "away": "Brentford F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Manchester City F.C.",
+   "away": "Brighton & Hove Albion F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Manchester City F.C.",
+   "away": "Burnley F.C.",
+   "ft": [
+    5,
+    1
+   ]
+  },
+  {
+   "home": "Manchester City F.C.",
+   "away": "Chelsea F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Manchester City F.C.",
+   "away": "Crystal Palace F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Manchester City F.C.",
+   "away": "Everton F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Manchester City F.C.",
+   "away": "Fulham F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Manchester City F.C.",
+   "away": "Leeds United F.C.",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Manchester City F.C.",
+   "away": "Liverpool F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Manchester City F.C.",
+   "away": "Manchester United F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Manchester City F.C.",
+   "away": "Newcastle United F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Manchester City F.C.",
+   "away": "Nottingham Forest F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Manchester City F.C.",
+   "away": "Sunderland A.F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Manchester City F.C.",
+   "away": "Tottenham Hotspur F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Manchester City F.C.",
+   "away": "West Ham United F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Manchester City F.C.",
+   "away": "Wolverhampton Wanderers F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Manchester United F.C.",
+   "away": "Arsenal F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Manchester United F.C.",
+   "away": "Aston Villa F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Manchester United F.C.",
+   "away": "AFC Bournemouth",
+   "ft": [
+    4,
+    4
+   ]
+  },
+  {
+   "home": "Manchester United F.C.",
+   "away": "Brentford F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Manchester United F.C.",
+   "away": "Brighton & Hove Albion F.C.",
+   "ft": [
+    4,
+    2
+   ]
+  },
+  {
+   "home": "Manchester United F.C.",
+   "away": "Burnley F.C.",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Manchester United F.C.",
+   "away": "Chelsea F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Manchester United F.C.",
+   "away": "Crystal Palace F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Manchester United F.C.",
+   "away": "Everton F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Manchester United F.C.",
+   "away": "Fulham F.C.",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Manchester United F.C.",
+   "away": "Leeds United F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Manchester United F.C.",
+   "away": "Liverpool F.C.",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Manchester United F.C.",
+   "away": "Manchester City F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Manchester United F.C.",
+   "away": "Newcastle United F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Manchester United F.C.",
+   "away": "Nottingham Forest F.C.",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Manchester United F.C.",
+   "away": "Sunderland A.F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Manchester United F.C.",
+   "away": "Tottenham Hotspur F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Manchester United F.C.",
+   "away": "West Ham United F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Manchester United F.C.",
+   "away": "Wolverhampton Wanderers F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Newcastle United F.C.",
+   "away": "Arsenal F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Newcastle United F.C.",
+   "away": "Aston Villa F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Newcastle United F.C.",
+   "away": "AFC Bournemouth",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Newcastle United F.C.",
+   "away": "Brentford F.C.",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "Newcastle United F.C.",
+   "away": "Brighton & Hove Albion F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Newcastle United F.C.",
+   "away": "Burnley F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Newcastle United F.C.",
+   "away": "Chelsea F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Newcastle United F.C.",
+   "away": "Crystal Palace F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Newcastle United F.C.",
+   "away": "Everton F.C.",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "Newcastle United F.C.",
+   "away": "Fulham F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Newcastle United F.C.",
+   "away": "Leeds United F.C.",
+   "ft": [
+    4,
+    3
+   ]
+  },
+  {
+   "home": "Newcastle United F.C.",
+   "away": "Liverpool F.C.",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "Newcastle United F.C.",
+   "away": "Manchester City F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Newcastle United F.C.",
+   "away": "Manchester United F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Newcastle United F.C.",
+   "away": "Nottingham Forest F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Newcastle United F.C.",
+   "away": "Sunderland A.F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Newcastle United F.C.",
+   "away": "Tottenham Hotspur F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Newcastle United F.C.",
+   "away": "West Ham United F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Newcastle United F.C.",
+   "away": "Wolverhampton Wanderers F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Nottingham Forest F.C.",
+   "away": "Arsenal F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Nottingham Forest F.C.",
+   "away": "Aston Villa F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Nottingham Forest F.C.",
+   "away": "AFC Bournemouth",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Nottingham Forest F.C.",
+   "away": "Brentford F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Nottingham Forest F.C.",
+   "away": "Brighton & Hove Albion F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Nottingham Forest F.C.",
+   "away": "Burnley F.C.",
+   "ft": [
+    4,
+    1
+   ]
+  },
+  {
+   "home": "Nottingham Forest F.C.",
+   "away": "Chelsea F.C.",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Nottingham Forest F.C.",
+   "away": "Crystal Palace F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Nottingham Forest F.C.",
+   "away": "Everton F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Nottingham Forest F.C.",
+   "away": "Fulham F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Nottingham Forest F.C.",
+   "away": "Leeds United F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "Nottingham Forest F.C.",
+   "away": "Liverpool F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Nottingham Forest F.C.",
+   "away": "Manchester City F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Nottingham Forest F.C.",
+   "away": "Manchester United F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Nottingham Forest F.C.",
+   "away": "Newcastle United F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Nottingham Forest F.C.",
+   "away": "Sunderland A.F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Nottingham Forest F.C.",
+   "away": "Tottenham Hotspur F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Nottingham Forest F.C.",
+   "away": "West Ham United F.C.",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Nottingham Forest F.C.",
+   "away": "Wolverhampton Wanderers F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Sunderland A.F.C.",
+   "away": "Arsenal F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Sunderland A.F.C.",
+   "away": "Aston Villa F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Sunderland A.F.C.",
+   "away": "AFC Bournemouth",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "Sunderland A.F.C.",
+   "away": "Brentford F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Sunderland A.F.C.",
+   "away": "Brighton & Hove Albion F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Sunderland A.F.C.",
+   "away": "Burnley F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Sunderland A.F.C.",
+   "away": "Chelsea F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Sunderland A.F.C.",
+   "away": "Crystal Palace F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Sunderland A.F.C.",
+   "away": "Everton F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Sunderland A.F.C.",
+   "away": "Fulham F.C.",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Sunderland A.F.C.",
+   "away": "Leeds United F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Sunderland A.F.C.",
+   "away": "Liverpool F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Sunderland A.F.C.",
+   "away": "Manchester City F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Sunderland A.F.C.",
+   "away": "Manchester United F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Sunderland A.F.C.",
+   "away": "Newcastle United F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Sunderland A.F.C.",
+   "away": "Nottingham Forest F.C.",
+   "ft": [
+    0,
+    5
+   ]
+  },
+  {
+   "home": "Sunderland A.F.C.",
+   "away": "Tottenham Hotspur F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Sunderland A.F.C.",
+   "away": "West Ham United F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Sunderland A.F.C.",
+   "away": "Wolverhampton Wanderers F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Tottenham Hotspur F.C.",
+   "away": "Arsenal F.C.",
+   "ft": [
+    1,
+    4
+   ]
+  },
+  {
+   "home": "Tottenham Hotspur F.C.",
+   "away": "Aston Villa F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Tottenham Hotspur F.C.",
+   "away": "AFC Bournemouth",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Tottenham Hotspur F.C.",
+   "away": "Brentford F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Tottenham Hotspur F.C.",
+   "away": "Brighton & Hove Albion F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Tottenham Hotspur F.C.",
+   "away": "Burnley F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "Tottenham Hotspur F.C.",
+   "away": "Chelsea F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Tottenham Hotspur F.C.",
+   "away": "Crystal Palace F.C.",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Tottenham Hotspur F.C.",
+   "away": "Everton F.C.",
+   "ft": [
+    1,
+    0
+   ]
+  },
+  {
+   "home": "Tottenham Hotspur F.C.",
+   "away": "Fulham F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Tottenham Hotspur F.C.",
+   "away": "Leeds United F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Tottenham Hotspur F.C.",
+   "away": "Liverpool F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Tottenham Hotspur F.C.",
+   "away": "Manchester City F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Tottenham Hotspur F.C.",
+   "away": "Manchester United F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Tottenham Hotspur F.C.",
+   "away": "Newcastle United F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Tottenham Hotspur F.C.",
+   "away": "Nottingham Forest F.C.",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "Tottenham Hotspur F.C.",
+   "away": "Sunderland A.F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Tottenham Hotspur F.C.",
+   "away": "West Ham United F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "Tottenham Hotspur F.C.",
+   "away": "Wolverhampton Wanderers F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "West Ham United F.C.",
+   "away": "Arsenal F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "West Ham United F.C.",
+   "away": "Aston Villa F.C.",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "West Ham United F.C.",
+   "away": "AFC Bournemouth",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "West Ham United F.C.",
+   "away": "Brentford F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "West Ham United F.C.",
+   "away": "Brighton & Hove Albion F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "West Ham United F.C.",
+   "away": "Burnley F.C.",
+   "ft": [
+    3,
+    2
+   ]
+  },
+  {
+   "home": "West Ham United F.C.",
+   "away": "Chelsea F.C.",
+   "ft": [
+    1,
+    5
+   ]
+  },
+  {
+   "home": "West Ham United F.C.",
+   "away": "Crystal Palace F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "West Ham United F.C.",
+   "away": "Everton F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "West Ham United F.C.",
+   "away": "Fulham F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "West Ham United F.C.",
+   "away": "Leeds United F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  },
+  {
+   "home": "West Ham United F.C.",
+   "away": "Liverpool F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "West Ham United F.C.",
+   "away": "Manchester City F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "West Ham United F.C.",
+   "away": "Manchester United F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "West Ham United F.C.",
+   "away": "Newcastle United F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "West Ham United F.C.",
+   "away": "Nottingham Forest F.C.",
+   "ft": [
+    1,
+    2
+   ]
+  },
+  {
+   "home": "West Ham United F.C.",
+   "away": "Sunderland A.F.C.",
+   "ft": [
+    3,
+    1
+   ]
+  },
+  {
+   "home": "West Ham United F.C.",
+   "away": "Tottenham Hotspur F.C.",
+   "ft": [
+    0,
+    3
+   ]
+  },
+  {
+   "home": "West Ham United F.C.",
+   "away": "Wolverhampton Wanderers F.C.",
+   "ft": [
+    4,
+    0
+   ]
+  },
+  {
+   "home": "Wolverhampton Wanderers F.C.",
+   "away": "Arsenal F.C.",
+   "ft": [
+    2,
+    2
+   ]
+  },
+  {
+   "home": "Wolverhampton Wanderers F.C.",
+   "away": "Aston Villa F.C.",
+   "ft": [
+    2,
+    0
+   ]
+  },
+  {
+   "home": "Wolverhampton Wanderers F.C.",
+   "away": "AFC Bournemouth",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Wolverhampton Wanderers F.C.",
+   "away": "Brentford F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Wolverhampton Wanderers F.C.",
+   "away": "Brighton & Hove Albion F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Wolverhampton Wanderers F.C.",
+   "away": "Burnley F.C.",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "Wolverhampton Wanderers F.C.",
+   "away": "Chelsea F.C.",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Wolverhampton Wanderers F.C.",
+   "away": "Crystal Palace F.C.",
+   "ft": [
+    0,
+    2
+   ]
+  },
+  {
+   "home": "Wolverhampton Wanderers F.C.",
+   "away": "Everton F.C.",
+   "ft": [
+    2,
+    3
+   ]
+  },
+  {
+   "home": "Wolverhampton Wanderers F.C.",
+   "away": "Fulham F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Wolverhampton Wanderers F.C.",
+   "away": "Leeds United F.C.",
+   "ft": [
+    1,
+    3
+   ]
+  },
+  {
+   "home": "Wolverhampton Wanderers F.C.",
+   "away": "Liverpool F.C.",
+   "ft": [
+    2,
+    1
+   ]
+  },
+  {
+   "home": "Wolverhampton Wanderers F.C.",
+   "away": "Manchester City F.C.",
+   "ft": [
+    0,
+    4
+   ]
+  },
+  {
+   "home": "Wolverhampton Wanderers F.C.",
+   "away": "Manchester United F.C.",
+   "ft": [
+    1,
+    4
+   ]
+  },
+  {
+   "home": "Wolverhampton Wanderers F.C.",
+   "away": "Newcastle United F.C.",
+   "ft": [
+    0,
+    0
+   ]
+  },
+  {
+   "home": "Wolverhampton Wanderers F.C.",
+   "away": "Nottingham Forest F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Wolverhampton Wanderers F.C.",
+   "away": "Sunderland A.F.C.",
+   "ft": [
+    1,
+    1
+   ]
+  },
+  {
+   "home": "Wolverhampton Wanderers F.C.",
+   "away": "Tottenham Hotspur F.C.",
+   "ft": [
+    0,
+    1
+   ]
+  },
+  {
+   "home": "Wolverhampton Wanderers F.C.",
+   "away": "West Ham United F.C.",
+   "ft": [
+    3,
+    0
+   ]
+  }
+ ]
+}
