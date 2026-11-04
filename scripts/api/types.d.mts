@@ -3,7 +3,7 @@ export interface League { id: string; openfootball: string; name: string; countr
 export interface Score { ft: [number, number]; ht: [number, number] | null }
 export interface Match {
   id: string; round: string | null; stage: "league" | "playoffs"; date: string; time: string | null; home: string; away: string;
-  status: "finished" | "scheduled"; score: Score | null; source: string; correctionSource?: string;
+  status: "finished" | "scheduled"; score: Score | null; source: string; correctionSource?: string; sourceUrl?: string;
 }
 export interface Season { name: string; teams: Record<string, string>; matches: Match[] }
 export interface Adjustment { team: string; points: number; why: string; source: string }

@@ -18,7 +18,8 @@ League ids: `it-1` Serie A, `en-1` Premier League, `es-1` LaLiga, `de-1` Bundesl
 Liga, `en-2` Championship. Seasons look like `2026-27`.
 
 A match: `status` is `finished` (with `score.ft`, and `score.ht` when known) or `scheduled` (`score` null). `stage` is `league` or `playoffs`;
-play-off games never count in a table. `source` is `openfootball`, or `correction` with `correctionSource` naming the official record.
+play-off games never count in a table. `source` is `openfootball`, `correction` with `correctionSource` naming the official record, or `wikipedia` with `sourceUrl` naming the
+revision its score came from.
 A match id is `<league>:<date>:<home>-<away>`. Team ids are our own (`inter`, `napoli`, `manchester-united`): one id per club whatever a
 source calls it (`scripts/api/teams.mjs`, `data/api/aliases.json`).
 
@@ -34,6 +35,14 @@ change as the data it describes.
 - **Results and fixtures:** [openfootball/football.json](https://github.com/openfootball/football.json), public domain (CC0), free for any
   use including an app. It is kept by volunteers and runs behind: on 2026-10-31 the 2026-27 results stopped at 2026-09-20.
   `meta.json` says so per league (`lastResult`), so a page can say "results up to 20 Sep" rather than present a stale table as current.
+- **Recent results:** English Wikipedia's season pages (CC BY-SA 4.0), whose results grids volunteers fill in within hours
+  (`scripts/api/fetch-wikipedia.mjs` saves the grid and its revision to `data/wikipedia/`; `scripts/api/wikipedia.mjs` reads it). A
+  grid score fills a league game openfootball has not scored yet, and only a game dated before the build day, because editors update the
+  grid while games are on. It never replaces a score openfootball has: where the two differ, `meta.json` lists it under the league
+  season's `wikipedia.disagreements`, with the revision used and how many games it filled. A club the grid names that we cannot map stops
+  the build until it gets an alias. On 31 October 2026 this filled 254 games (results up to 25-30 October instead of 20 September); 139 of
+  them could be paired with SportScore's results and all 139 agreed. The reader reproduces all 3,016 official 2025-26 scores from the
+  grids (`tests/api-wikipedia.test.ts`). Pages that use this data credit Wikipedia under CC BY-SA.
 - **Tables are computed, never copied**, with each league's own tie-break rules (`data/api/leagues.json`) and any points a league took
   away (`data/api/adjustments.json`, each with its reason and source).
 - **Checked against the official record** (`tests/api.test.ts`): for 2025-26, all 3,016 league scores equal the official results, and all
@@ -44,7 +53,8 @@ change as the data it describes.
 
 ## Not here yet
 
-- Fresher results: a second source (football-data.org) once its terms for apps are confirmed.
+- Same-day and live results: SportScore's free API (attribution required, measured against ESPN on 31 October) or football-data.org once
+  its terms for apps are confirmed.
 - A schedule: a job that rebuilds every 30 minutes on match days. Netlify's free build minutes are too few for that, so it will publish
   from a separate place.
 - Live minute-by-minute scores (licensed by the leagues), club crests and league logos (trademarks).
