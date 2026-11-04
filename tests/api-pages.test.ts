@@ -263,3 +263,76 @@ describe("club pages", () => {
     expect(page(site(), `leagues/it-1/${next.home}/index.html`)).not.toContain("<h2>Next game</h2>");
   });
 });
+
+// Search and answer engines: absolute canonical links, a sitemap of every page, and schema.org data for the games and clubs.
+describe("search engines", () => {
+  const SITE = "https://football-scores-salah.netlify.app";
+  const lastDayUnscored = () => {
+    const input = tmp(), out = tmp();
+    const season = JSON.parse(readFileSync("tests/fixtures/openfootball/2025-26/it.1.json", "utf8"));
+    const lastDay = season.matches.at(-1).date;
+    for (const m of season.matches) if (m.date === lastDay) delete m.score;
+    mkdirSync(join(input, "2025-26"), { recursive: true });
+    writeFileSync(join(input, "2025-26", "it.1.json"), JSON.stringify(season));
+    build({ input, wikipedia: tmp(), out, seasons: ["2025-26"], now: `${lastDay}T08:00:00Z` });
+    pages({ api: join(out, "api/v1"), out });
+    return out;
+  };
+  const ld = (html: string) => [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => JSON.parse(m[1]));
+
+  it("gives every page an absolute canonical link and og:url", () => {
+    const out = site();
+    for (const path of ["leagues/index.html", "leagues/it-1/index.html", "leagues/it-1/napoli/index.html"]) {
+      const url = `${SITE}/${path.replace(/index\.html$/, "")}`;
+      const html = page(out, path);
+      expect(html, path).toContain(`<link rel="canonical" href="${url}">`);
+      expect(html, path).toContain(`<meta property="og:url" content="${url}">`);
+    }
+  });
+
+  it("writes a sitemap with the app, the league index, every league and every club, and a robots.txt that points to it", () => {
+    const out = site();
+    const xml = page(out, "sitemap.xml");
+    expect(xml.startsWith('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')).toBe(true);
+    const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+    for (const u of [`${SITE}/`, `${SITE}/standings`, `${SITE}/results`, `${SITE}/leagues/`, `${SITE}/leagues/it-1/`, `${SITE}/leagues/en-2/`, `${SITE}/leagues/it-1/napoli/`]) expect(locs).toContain(u);
+    const clubs = readdirSync(join(out, "leagues/it-1")).filter((f) => !f.includes("."));
+    for (const c of clubs) expect(locs).toContain(`${SITE}/leagues/it-1/${c}/`);
+    expect(new Set(locs).size).toBe(locs.length);
+    expect(xml).toMatch(/<lastmod>\d{4}-\d{2}-\d{2}<\/lastmod>/);
+    expect(page(out, "robots.txt")).toBe(`User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`);
+  });
+
+  it("describes each game still to play as a schema.org SportsEvent with its kick-off in the league's own time zone", () => {
+    const out = lastDayUnscored();
+    const html = page(out, "leagues/it-1/index.html");
+    const { matches } = JSON.parse(readFileSync(join(out, "api/v1/it-1/2025-26/matches.json"), "utf8"));
+    const { teams } = JSON.parse(readFileSync(join(out, "api/v1/it-1/2025-26/teams.json"), "utf8"));
+    const open = matches.filter((m: any) => !m.score);
+    const events = ld(html).flatMap((d) => d["@graph"] ?? [d]).filter((d) => d["@type"] === "SportsEvent");
+    expect(events.length).toBe(open.length);
+    const first = open[0];
+    const e = events.find((x) => x.homeTeam.name === teams[first.home] && x.awayTeam.name === teams[first.away]);
+    expect(e).toBeTruthy();
+    expect(e.name).toBe(`${teams[first.home]} v ${teams[first.away]}`);
+    // late May in Italy is summer time, two hours ahead of UTC
+    expect(e.startDate).toBe(first.time ? `${first.date}T${first.time}:00+02:00` : first.date);
+    expect(e.eventStatus).toBe("https://schema.org/EventScheduled");
+    expect(e.homeTeam["@type"]).toBe("SportsTeam");
+    expect(e.superEvent.name).toBe("Serie A 2025-26");
+  });
+
+  it("describes each club page as a schema.org SportsTeam in its league", () => {
+    const html = page(site(), "leagues/it-1/napoli/index.html");
+    const team = ld(html).find((d) => d["@type"] === "SportsTeam");
+    expect(team.name).toBe("Napoli");
+    expect(team.url).toBe(`${SITE}/leagues/it-1/napoli/`);
+    expect(team.memberOf).toEqual({ "@type": "SportsOrganization", name: "Serie A" });
+  });
+
+  it("keeps the structured data safe: no raw < inside it, so a name can never close the script", () => {
+    const out = lastDayUnscored();
+    const html = page(out, "leagues/it-1/index.html");
+    for (const m of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) expect(m[1]).not.toContain("<");
+  });
+});
