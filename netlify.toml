@@ -1,8 +1,10 @@
 # Netlify build. Set FOOTBALL_DATA_TOKEN in the site's environment variables (a football-data.org API token).
 # Without it the build still works and publishes the committed snapshot in data/raw.
 [build]
-  # fetch (needs the token, keeps the snapshot if it fails) -> Goose via the committed wasm (empty environment) -> Vite
-  command = "node scripts/fetch-data.mjs && npm run data && VITE_DATA=generated npm run build"
+  # fetch (needs the token, keeps the snapshot if it fails) -> Goose via the committed wasm (empty environment)
+  # -> the football API and the league pages (openfootball + Wikipedia; a failed fetch keeps the saved copy, a failed build
+  #    writes nothing, and neither stops the site build) -> Vite, which copies public/api and public/leagues into dist
+  command = "node scripts/fetch-data.mjs && npm run data && (npm run api || echo 'api build skipped') && VITE_DATA=generated npm run build"
   publish = "dist"
 
 [build.environment]
