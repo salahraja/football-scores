@@ -38,6 +38,8 @@ export function validate(season, teams) {
 export function build({ input = "data/openfootball", wikipedia = join(ROOT, "data/wikipedia"), out = "public", seasons = ["2025-26", "2026-27"], now = new Date().toISOString(), mutate } = {}) {
   const files = new Map();
   const meta = { version: 1, generatedAt: now, sources: [OPENFOOTBALL], leagues: {} };
+  // a game more than three days before the build with no result: its source has stalled (see api:check)
+  const lateBefore = new Date(Date.parse(now) - 3 * 86_400_000).toISOString().slice(0, 10);
   const competitions = [];
   const problems = [];
   let usedWikipedia = false;
@@ -73,7 +75,8 @@ export function build({ input = "data/openfootball", wikipedia = join(ROOT, "dat
       meta.leagues[league.id] ??= {};
       meta.leagues[league.id][season] = { finished: finished.length, scheduled: parsed.matches.length - finished.length,
         lastResult: finished.reduce((d, m) => (m.date > d ? m.date : d), "") || null,
-        corrections: parsed.matches.filter((m) => m.source === "correction").length, ...(wiki ? { wikipedia: wiki } : {}) };
+        corrections: parsed.matches.filter((m) => m.source === "correction").length,
+        overdue: parsed.matches.filter((m) => m.status === "scheduled" && m.date < lateBefore).length, ...(wiki ? { wikipedia: wiki } : {}) };
       have.push(season);
     }
     if (have.length) competitions.push({ id: league.id, name: league.name, country: league.country, seasons: have, current: have.at(-1) });

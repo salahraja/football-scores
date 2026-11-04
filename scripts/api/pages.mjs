@@ -217,7 +217,8 @@ function leaguePage(league, competition, api, before, after, zonesFor) {
   const used = [...new Set(matches.map((m) => (m.source === "correction" ? "openfootball" : m.source)))].filter((s) => SOURCES[s]);
   // live scores from SportScore only where it covers the league and the page has games still to play
   const live = league.sportscore && (week.length || next.length) ? league.sportscore : null;
-  const upTo = meta.lastResult ? `Results up to ${day(meta.lastResult)}` : "No results yet";
+  const late = meta.overdue ? ` ${meta.overdue === 1 ? "1 result" : `${meta.overdue} results`} from more than three days ago ${meta.overdue === 1 ? "is" : "are"} not in yet.` : "";
+  const upTo = (meta.lastResult ? `Results up to ${day(meta.lastResult)}` : "No results yet") + (late ? `.${late.slice(0, -1)}` : "");
   const rows = table.map((r) => { const z = zoneAt(r.position); return `<tr class="row"${z ? ` data-zone="${z.kind}"` : ""}><td class="pos">${r.position}${z ? `<span class="sr-only">, ${esc(names[z.kind])}</span>` : ""}</td><th scope="row" class="left"><a href="/leagues/${league.id}/${esc(r.team)}/">${esc(teams[r.team])}</a></th><td>${r.played}</td>`
     + `<td class="wdl">${r.won}</td><td class="wdl">${r.drawn}</td><td class="wdl">${r.lost}</td><td>${r.gd > 0 ? "+" : ""}${r.gd}</td><td class="pts">${r.points}</td></tr>`; }).join("\n");
   const range = (z) => (z.from === z.to ? nth(z.from) : `${nth(z.from)}–${nth(z.to)}`);
