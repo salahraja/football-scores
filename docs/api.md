@@ -33,11 +33,23 @@ change as the data it describes.
 ## Pages
 
 `npm run api:build` also writes plain HTML pages from the API it just built (`scripts/api/pages.mjs`): `/leagues/` and
-`/leagues/<league>/` with the table, the latest results, games waiting for a result, and the next fixtures. No JavaScript (in our test on a
-throttled phone a page like this showed in 376 ms against 912 ms for the Vue app), one stylesheet (`/leagues/site.css`), light and dark.
+`/leagues/<league>/` in the site's Stadio look (the facelift: a slate poster with the league in brick-red Barlow Condensed over the
+game of the moment, then glass boxes for this week, the table, the latest results and the next fixtures). No framework (in our test on a
+throttled phone a plain page showed in 376 ms against 912 ms for the Vue app), one stylesheet (`/leagues/site.css`) and the two fonts
+(OFL) served from `/leagues/fonts/`, light and dark.
 Each page says how far its results go, gives kick-off times in the league's own time zone (`clock` in `data/api/leagues.json`), and
-credits only the sources it used. An unscored game dated on the build day or earlier is listed as waiting for its result, never as a
-fixture to come.
+credits only the sources it used. "This week" comes first: every unscored game up to three days ahead (a game from before the build day
+with no score is waiting for its result, never "next").
+
+**Live scores** (`/leagues/live.js`, the only script): on a page with games still to play, in a league SportScore covers (`sportscore` in
+`data/api/leagues.json`; not Primeira Liga yet), the browser asks SportScore's free API once a minute for that league's games today and
+writes each score and state ("Live · 2nd half", "Full time") into the row with the same two teams, within three days of today because a
+schedule can be a day out (openfootball had LaLiga's 31 October games on 1 November); the poster moves to a game that is live; it stops
+when they have all finished.
+SportScore's terms ask for a visible link, so those pages say "Live scores powered by SportScore". The script names clubs with the same
+function and aliases as `teams.mjs` (copied in at build time). On 31 October 2026 goals showed on SportScore a median 0.2 min after ESPN
+and final whistles 1.2 min after (each ±1 min). The site's CSP allows `connect-src https://sportscore.com` for this. Without the script the
+page is still complete.
 
 ## Where it comes from, and how we know it is right
 

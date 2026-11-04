@@ -1,0 +1,223 @@
+// @vitest-environment jsdom
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { build } from "../scripts/api/build.mjs";
+import { liveScript, pages } from "../scripts/api/pages.mjs";
+import { teamId } from "../scripts/api/teams.mjs";
+
+// Live scores on the league pages: a small script asks SportScore's free API (CORS open, cached 60 s; its terms ask for a visible
+// "Powered by SportScore" link) once a minute for today's games of that league and writes the score into the matching row. Measured on
+// 31 October 2026: goals showed there a median 0.2 min after ESPN. The page is complete without it.
+const dirs: string[] = [];
+const tmp = () => { const d = mkdtempSync(join(tmpdir(), "golboard-live-")); dirs.push(d); return d; };
+afterEach(() => { while (dirs.length) rmSync(dirs.pop()!, { recursive: true, force: true }); vi.useRealTimers(); });
+
+function siteWithGamesToPlay() {
+  // 2025-26 with the last matchday unscored, built that morning: those games are today's
+  const input = tmp(), out = tmp();
+  const season = JSON.parse(readFileSync("tests/fixtures/openfootball/2025-26/it.1.json", "utf8"));
+  const lastDay = season.matches.at(-1).date;
+  for (const m of season.matches) if (m.date === lastDay) delete m.score;
+  mkdirSync(join(input, "2025-26"), { recursive: true });
+  writeFileSync(join(input, "2025-26", "it.1.json"), JSON.stringify(season));
+  writeFileSync(join(input, "2025-26", "pt.1.json"), readFileSync("tests/fixtures/openfootball/2025-26/pt.1.json"));
+  build({ input, wikipedia: tmp(), out, seasons: ["2025-26"], now: `${lastDay}T09:00:00Z` });
+  pages({ api: join(out, "api/v1"), out });
+  return { out, lastDay };
+}
+
+describe("the live script names clubs the way the API does", () => {
+  it("for every club in the fixtures and for SportScore's own spellings", () => {
+    const win = { document: { querySelectorAll: () => [] } } as never;
+    const live = new Function("window", "document", `${liveScript()}; return window.golboardLive;`)(win, (win as { document: unknown }).document);
+    const names = new Set<string>();
+    for (const code of ["it.1", "en.1", "es.1", "de.1", "fr.1", "nl.1", "pt.1", "en.2"]) {
+      for (const m of JSON.parse(readFileSync(`tests/fixtures/openfootball/2025-26/${code}.json`, "utf8")).matches) names.add(m.team1);
+    }
+    expect(live.teamId("Brighton Hove Albion")).toBe(teamId("Brighton & Hove Albion"));  // SportScore drops the "&"
+    expect(teamId("Brighton Hove Albion")).toBe(teamId("Brighton and Hove Albion"));
+    for (const n of ["Inter Milan", "AC Milan", "AS Roma", "Borussia Monchengladbach", "Real Betis", "Paris Saint-Germain", "Brighton & Hove Albion"]) names.add(n);
+    for (const n of names) expect(live.teamId(n), n).toBe(teamId(n));
+  });
+});
+
+describe("pages with games to play", () => {
+  it("load the script, mark today's rows, and credit SportScore; a league SportScore does not cover gets neither", () => {
+    const { out, lastDay } = siteWithGamesToPlay();
+    const html = readFileSync(join(out, "leagues/it-1/index.html"), "utf8");
+    expect(html).toContain('<script src="/leagues/live.js" defer></script>');
+    expect(html).toContain('data-sportscore="italian-serie-a"');
+    expect(html).toMatch(new RegExp(`<li data-date="${lastDay}" data-home="[a-z-]+" data-away="[a-z-]+">`));
+    expect(html).toContain('Live scores <a href="https://sportscore.com/">powered by SportScore</a>');
+    const pt = readFileSync(join(out, "leagues/pt-1/index.html"), "utf8");
+    expect(pt).not.toContain("data-sportscore");  // it loads the script for its arrows, but asks SportScore nothing
+    expect(pt).not.toContain("SportScore");
+  });
+});
+
+describe("in the browser", () => {
+  const row = (home: string, away: string, date: string) =>
+    `<li data-date="${date}" data-home="${home}" data-away="${away}"><span class="home">H</span><span class="mid">20:45</span><span class="away">A</span><span class="when">Matchday 38</span></li>`;
+  const reply = (matches: unknown[]) => ({ ok: true, json: async () => ({ matches }) });
+
+  it("writes live and final scores into the rows, says the state, and stops once every game has finished", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-05-24T19:30:00Z"));
+    document.body.dataset.sportscore = "italian-serie-a";
+    document.body.innerHTML = `<ul class="games" aria-live="polite">${row("milan", "inter", "2026-05-24")}${row("roma", "napoli", "2026-05-24")}${row("lazio", "torino", "2026-05-31")}</ul>`;
+    const asked: string[] = [];
+    let call = 0;
+    const fetchFn = vi.fn(async (url: string) => {
+      asked.push(url);
+      call += 1;
+      return reply(call === 1
+        ? [{ home: "AC Milan", away: "Inter Milan", home_score: "1", away_score: "0", status: "live", status_text: "2nd half" },
+          { home: "AS Roma", away: "SSC Napoli", home_score: "2", away_score: "2", status: "finished", status_text: "Finished" }]
+        : [{ home: "AC Milan", away: "Inter Milan", home_score: "1", away_score: "1", status: "finished", status_text: "Finished" },
+          { home: "AS Roma", away: "SSC Napoli", home_score: "2", away_score: "2", status: "finished", status_text: "Finished" }]);
+    });
+    (window as unknown as { fetch: unknown }).fetch = fetchFn;
+    new Function(liveScript())();
+    await vi.advanceTimersByTimeAsync(10);
+    const rows = [...document.querySelectorAll("li")];
+    expect(rows[0].querySelector(".mid")!.textContent).toBe("1–0");
+    expect(rows[0].querySelector(".state")!.textContent).toBe("Live · 2nd half");
+    expect(rows[1].querySelector(".mid")!.textContent).toBe("2–2");
+    expect(rows[1].querySelector(".state")!.textContent).toBe("Full time");
+    expect(rows[2].querySelector(".mid")!.textContent).toBe("20:45");  // another day: untouched
+    expect(asked[0]).toBe("https://sportscore.com/api/v1/fixtures/?sport=football&date=2026-05-24&competition=italian-serie-a");
+
+    await vi.advanceTimersByTimeAsync(60_000);
+    expect(rows[0].querySelector(".mid")!.textContent).toBe("1–1");
+    expect(rows[0].querySelector(".state")!.textContent).toBe("Full time");
+    await vi.advanceTimersByTimeAsync(180_000);
+    expect(fetchFn).toHaveBeenCalledTimes(2);  // every game finished: no more calls
+  });
+
+  it("scores a game the schedule has a day or two off, by its two teams (openfootball had LaLiga's 31 October games on 1 November)", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-10-31T18:00:00Z"));
+    document.body.dataset.sportscore = "spanish-la-liga";
+    document.body.innerHTML = `<ul class="games">${row("real-betis", "malaga", "2026-11-01")}</ul>`;
+    (window as unknown as { fetch: unknown }).fetch = vi.fn(async () =>
+      reply([{ home: "Real Betis", away: "Malaga", home_score: "1", away_score: "0", status: "live", status_text: "1st half" }]));
+    new Function(liveScript())();
+    await vi.advanceTimersByTimeAsync(10);
+    expect(document.querySelector(".mid")!.textContent).toBe("1–0");
+  });
+
+  it("moves the poster to a game that is live when its own game is not", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-10-31T18:00:00Z"));
+    document.body.dataset.sportscore = "italian-serie-a";
+    const poster = `<div class="feature" data-date="2026-10-31" data-home="bologna" data-away="monza"><span class="home">Bologna</span><span class="mid">15:00</span><span class="away">Monza</span><span class="when">Matchday 10</span></div>`;
+    document.body.innerHTML = `${poster}<ul class="games">${row("bologna", "monza", "2026-10-31")}${row("udinese", "roma", "2026-10-31")}</ul>`;
+    document.querySelectorAll("li")[1].querySelector(".home")!.textContent = "Udinese";
+    document.querySelectorAll("li")[1].querySelector(".away")!.textContent = "Roma";
+    (window as unknown as { fetch: unknown }).fetch = vi.fn(async () => reply([
+      { home: "Bologna", away: "Monza", home_score: "2", away_score: "1", status: "finished", status_text: "Finished" },
+      { home: "Udinese", away: "AS Roma", home_score: "0", away_score: "4", status: "live", status_text: "2nd half" }]));
+    new Function(liveScript())();
+    await vi.advanceTimersByTimeAsync(10);
+    const feature = document.querySelector(".feature") as HTMLElement;
+    expect(feature.dataset.home).toBe("udinese");
+    expect(feature.querySelector(".home")!.textContent).toBe("Udinese");
+    expect(feature.querySelector(".mid")!.textContent).toBe("0–4");
+    expect(feature.querySelector(".state")!.textContent).toBe("Live · 2nd half");
+  });
+
+  it("gives the poster the events of the game it now shows, goals and red cards only, never the old game's", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-10-31T18:40:00Z"));
+    document.body.dataset.sportscore = "english-premier-league";
+    const poster = `<div class="feature" data-date="2026-10-10" data-home="chelsea" data-away="manchester-united"><span class="home">Chelsea</span><span class="mid">12:30</span><span class="away">Manchester United</span><span class="when">Matchday 9</span></div>`;
+    document.body.innerHTML = `${poster}<ul class="games">${row("chelsea", "manchester-united", "2026-10-31")}${row("tottenham-hotspur", "crystal-palace", "2026-10-31")}</ul>`;
+    (window as unknown as { fetch: unknown }).fetch = vi.fn(async (url: string) => {
+      if (url.includes("/fixtures/")) return reply([
+        { home: "Chelsea", away: "Manchester United", home_score: "2", away_score: "0", status: "finished", status_text: "Finished", url: "/football/match/chelsea-vs-manchester-united/abc/" },
+        { home: "Tottenham Hotspur", away: "Crystal Palace", home_score: "1", away_score: "0", status: "live", status_text: "2nd half", url: "/football/match/tottenham-hotspur-vs-crystal-palace/xyz/" }]);
+      return { ok: true, json: async () => ({ match: url.includes("tottenham")
+        ? { live_minute: "49", incidents: [{ time: 13, type: "Red card", side: "away", player: "Mateta", is_card: true },
+            { time: 15, type: "Yellow card", side: "home", player: "Gray", is_card: true }, { time: 25, type: "Goal", side: "home", player: "Gray", is_goal: true }] }
+        : { incidents: [{ time: 30, type: "Goal", side: "home", player: "Palmer", is_goal: true }] } }) };
+    });
+    new Function(liveScript())();
+    await vi.advanceTimersByTimeAsync(10);
+    const feature = document.querySelector(".feature") as HTMLElement;
+    expect(feature.dataset.home).toBe("tottenham-hotspur");
+    expect(feature.textContent).not.toContain("Palmer");
+    expect([...feature.querySelectorAll(".events li")].map((e) => e.textContent)).toEqual(["13' Red Mateta", "25' Goal Gray"]);
+    expect(feature.querySelector(".state")!.textContent).toBe("Live · 49'");
+  });
+
+  it("shows the minute and the goals and cards from the match detail, asking once for a finished game", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-10-31T18:40:00Z"));
+    document.body.dataset.sportscore = "english-premier-league";
+    document.body.innerHTML = `<ul class="games">${row("tottenham-hotspur", "crystal-palace", "2026-10-31")}${row("chelsea", "manchester-united", "2026-10-31")}</ul>`;
+    const asked: string[] = [];
+    (window as unknown as { fetch: unknown }).fetch = vi.fn(async (url: string) => {
+      asked.push(url);
+      if (url.includes("/fixtures/")) return reply([
+        { home: "Tottenham Hotspur", away: "Crystal Palace", home_score: "1", away_score: "0", status: "live", status_text: "2nd half",
+          url: "/football/match/tottenham-hotspur-vs-crystal-palace/1l4rjnh9p05jm7v/" },
+        { home: "Chelsea", away: "Manchester United", home_score: "2", away_score: "0", status: "finished", status_text: "Finished",
+          url: "/football/match/chelsea-vs-manchester-united/abc123/" }]);
+      const live = url.includes("tottenham");
+      return { ok: true, json: async () => ({ match: live
+        ? { live_minute: "49", incidents: [
+            { time: 13, type: "Red card", side: "away", player: "Jean-Philippe Mateta", is_card: true },
+            { time: 15, type: "Yellow card", side: "home", player: "Archie Gray", is_card: true },
+            { time: 25, type: "Goal", side: "home", player: "Archie Gray", is_goal: true },
+            { time: 45, type: "Substitution", side: "home", player: "", is_sub: true }] }
+        : { incidents: [{ time: 30, type: "Goal", side: "home", player: "Cole Palmer", is_goal: true }] } }) };
+    });
+    new Function(liveScript())();
+    await vi.advanceTimersByTimeAsync(10);
+    const [spurs, chelsea] = [...document.querySelectorAll(".games > li")];
+    expect(spurs.querySelector(".state")!.textContent).toBe("Live · 49'");
+    expect([...spurs.querySelectorAll(".events li")].map((e) => e.textContent)).toEqual(["13' Red Jean-Philippe Mateta", "15' Yellow Archie Gray", "25' Goal Archie Gray"]);
+    expect(spurs.querySelector(".events li.ev-away")!.textContent).toContain("Mateta");
+    expect(asked).toContain("https://sportscore.com/api/v1/match/?sport=football&slug=tottenham-hotspur-vs-crystal-palace-1l4rjnh9p05jm7v");
+    expect(chelsea.querySelector(".events")!.textContent).toContain("Cole Palmer");
+    await vi.advanceTimersByTimeAsync(60_000);
+    expect(asked.filter((u) => u.includes("chelsea")).length).toBe(1);  // a finished game's detail is asked for once
+    expect(asked.filter((u) => u.includes("tottenham")).length).toBe(2);  // a live one every minute
+  });
+
+  it("steps the poster through the page's games with its arrows, and then leaves it where the person put it", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-10-31T18:40:00Z"));
+    delete document.body.dataset.sportscore;
+    const poster = `<div class="feature" data-date="2026-10-31" data-home="milan" data-away="inter"><button class="arrow prev" type="button" data-step="-1" aria-label="Previous game" hidden></button><span class="home">Milan</span><span class="mid">20:45</span><span class="away">Inter</span><button class="arrow next" type="button" data-step="1" aria-label="Next game" hidden></button><span class="when">Matchday 10</span></div>`;
+    const done = (h: string, a: string, sc: string) => `<li><span class="home">${h}</span><span class="mid">${sc}</span><span class="away">${a}</span><span class="when">Matchday 9</span></li>`;
+    document.body.innerHTML = `${poster}<section id="week"><ul class="games">${row("milan", "inter", "2026-10-31").replace(">H<", ">Milan<").replace(">A<", ">Inter<")}</ul></section><ul class="games">${done("Roma", "Cagliari", "4–2")}${done("Torino", "Como", "1–3")}</ul>`;
+    new Function(liveScript())();
+    const next = document.querySelector(".feature .next") as HTMLButtonElement;
+    expect(next.hidden).toBe(false);
+    next.click();
+    const feature = document.querySelector(".feature") as HTMLElement;
+    expect([".home", ".mid", ".away"].map((k) => feature.querySelector(k)!.textContent)).toEqual(["Roma", "4–2", "Cagliari"]);
+    next.click(); next.click();  // goes round
+    expect(feature.querySelector(".home")!.textContent).toBe("Milan");
+    (document.querySelector(".feature .prev") as HTMLButtonElement).click();
+    expect(feature.querySelector(".home")!.textContent).toBe("Torino");
+    expect(feature.dataset.pinned).toBe("1");
+    expect(feature.style.getPropertyValue("--w")).toBe("6");  // re-fitted to the longest word now shown: "Torino"
+
+  });
+
+  it("does nothing on a day with no games on the page", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-05-20T19:30:00Z"));
+    document.body.dataset.sportscore = "italian-serie-a";
+    document.body.innerHTML = `<ul class="games">${row("milan", "inter", "2026-05-24")}</ul>`;
+    const fetchFn = vi.fn();
+    (window as unknown as { fetch: unknown }).fetch = fetchFn;
+    new Function(liveScript())();
+    await vi.advanceTimersByTimeAsync(120_000);
+    expect(fetchFn).not.toHaveBeenCalled();
+  });
+});

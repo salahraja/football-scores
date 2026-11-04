@@ -10,7 +10,7 @@ import { fetchPages } from "../scripts/api/fetch-wikipedia.mjs";
 import { parseSeason } from "../scripts/api/openfootball.mjs";
 import { teamId } from "../scripts/api/teams.mjs";
 import type { Match } from "../scripts/api/types.d.mts";
-import { applyResults, parseResults } from "../scripts/api/wikipedia.mjs";
+import { applyResults, parseNames, parseResults } from "../scripts/api/wikipedia.mjs";
 
 // Wikipedia's season pages have every played league game in a results grid that volunteers fill in within hours (the 2026-27 pages were
 // edited a day before this was written; openfootball had stopped six weeks earlier). We read the grid, fill in games openfootball has
@@ -49,6 +49,26 @@ describe("reading Wikipedia's results grid", () => {
       { home: "Alpha FC", away: "1. FC Köln", ft: [4, 1] },
       { home: "1. FC Köln", away: "Alpha FC", ft: [1, 1] },
     ]);
+  });
+});
+
+describe("club names", () => {
+  it("takes the short name fans use from the grid's links, with the club's article title to find it", () => {
+    const es = parseNames(fixture("es.1").wikitext);
+    expect(es.find((n: { name: string }) => n.name === "FC Barcelona")).toEqual({ name: "FC Barcelona", short: "Barcelona" });
+    expect(es.find((n: { name: string }) => n.name === "Atlético Madrid")).toEqual({ name: "Atlético Madrid", short: "Atlético Madrid" });  // {{nobr|..}} around it
+    expect(parseNames("|name_ESP=[[RCD Espanyol|Espanyol]]\n|name_INT=[[Inter Milan]]")).toEqual([
+      { name: "RCD Espanyol", short: "Espanyol" }, { name: "Inter Milan", short: "Inter Milan" }]);
+  });
+
+  it("are the grid's short names in the API's teams", () => {
+    const wiki = tmp(), out = tmp();
+    mkdirSync(join(wiki, "2025-26"), { recursive: true });
+    writeFileSync(join(wiki, "2025-26", "it-1.json"), JSON.stringify(fixture("it.1")));
+    build({ input: "tests/fixtures/openfootball", wikipedia: wiki, out, seasons: ["2025-26"], now: "2026-10-31T17:00:00Z" });
+    const teams = JSON.parse(readFileSync(join(out, "api/v1/it-1/2025-26/teams.json"), "utf8")).teams;
+    expect(teams.atalanta).toBe("Atalanta");
+    expect(teams.inter).toBe("Inter Milan");
   });
 });
 
