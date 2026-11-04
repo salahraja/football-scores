@@ -1,0 +1,39 @@
+{
+  "_about": "What each table position leads to, per league season, for the zone legend on the league pages. A season's table decides the NEXT season's places: the 2026-27 tables fill the 2027-28 European competitions. `from` and `to` are inclusive positions. Places by league position only: a domestic cup winner, a title holder or a European Performance Spot can move them, which each league's note says. Checked 2026-11-04; re-check every summer and when the European Performance Spots are known (end of the season).",
+  "sources": {
+    "europe": "https://en.wikipedia.org/wiki/2027%E2%80%9328_UEFA_Champions_League (2026 association coefficients: 1 England, 2 Italy, 3 Spain, 4 Germany, 5 France, 6 Portugal, 7 Netherlands; edited 2 Nov 2026) with the Europa League and Conference League access lists from 2024-25",
+    "nl": "KNVB: reglement play-off Europees ticket 2026/27 (4th to 7th) and promotie- en degradatieregeling 2026/27 (16th play-off, 17th and 18th down)"
+  },
+  "kinds": {
+    "cl": "Champions League",
+    "clq": "Champions League qualifying",
+    "el": "Europa League",
+    "elq": "Europa League qualifying",
+    "eclq": "Conference League qualifying",
+    "ecl_po": "Play-offs for a Conference League place",
+    "promo": "Promotion",
+    "promo_po": "Promotion play-offs",
+    "rel_po": "Relegation play-off",
+    "rel": "Relegation"
+  },
+  "seasons": {
+    "2026-27": {
+      "en-1": { "zones": [{ "kind": "cl", "from": 1, "to": 4 }, { "kind": "el", "from": 5, "to": 5 }, { "kind": "rel", "from": 18, "to": 20 }],
+        "note": "The FA Cup winner also goes to the Europa League and the League Cup winner to the Conference League. A fifth Champions League place goes to England if it ends the season in the top two of UEFA's country ranking." },
+      "it-1": { "zones": [{ "kind": "cl", "from": 1, "to": 4 }, { "kind": "el", "from": 5, "to": 5 }, { "kind": "eclq", "from": 6, "to": 6 }, { "kind": "rel", "from": 18, "to": 20 }],
+        "note": "The Coppa Italia winner also goes to the Europa League. A fifth Champions League place goes to Italy if it ends the season in the top two of UEFA's country ranking." },
+      "es-1": { "zones": [{ "kind": "cl", "from": 1, "to": 4 }, { "kind": "el", "from": 5, "to": 5 }, { "kind": "eclq", "from": 6, "to": 6 }, { "kind": "rel", "from": 18, "to": 20 }],
+        "note": "The Copa del Rey winner also goes to the Europa League. A fifth Champions League place goes to Spain if it ends the season in the top two of UEFA's country ranking." },
+      "de-1": { "zones": [{ "kind": "cl", "from": 1, "to": 4 }, { "kind": "el", "from": 5, "to": 5 }, { "kind": "eclq", "from": 6, "to": 6 }, { "kind": "rel_po", "from": 16, "to": 16 }, { "kind": "rel", "from": 17, "to": 18 }],
+        "note": "The DFB-Pokal winner also goes to the Europa League. A fifth Champions League place goes to Germany if it ends the season in the top two of UEFA's country ranking." },
+      "fr-1": { "zones": [{ "kind": "cl", "from": 1, "to": 3 }, { "kind": "clq", "from": 4, "to": 4 }, { "kind": "el", "from": 5, "to": 5 }, { "kind": "eclq", "from": 6, "to": 6 }, { "kind": "rel_po", "from": 16, "to": 16 }, { "kind": "rel", "from": 17, "to": 18 }],
+        "note": "The Coupe de France winner also goes to the Europa League." },
+      "pt-1": { "zones": [{ "kind": "cl", "from": 1, "to": 2 }, { "kind": "clq", "from": 3, "to": 3 }, { "kind": "elq", "from": 4, "to": 4 }, { "kind": "eclq", "from": 5, "to": 5 }, { "kind": "rel_po", "from": 16, "to": 16 }, { "kind": "rel", "from": 17, "to": 18 }],
+        "note": "The Taça de Portugal winner goes to the Europa League." },
+      "nl-1": { "zones": [{ "kind": "cl", "from": 1, "to": 1 }, { "kind": "clq", "from": 2, "to": 2 }, { "kind": "elq", "from": 3, "to": 3 }, { "kind": "ecl_po", "from": 4, "to": 7 }, { "kind": "rel_po", "from": 16, "to": 16 }, { "kind": "rel", "from": 17, "to": 18 }],
+        "note": "The KNVB Cup winner goes to the Europa League. Fourth to seventh play off for one Conference League qualifying place." },
+      "en-2": { "zones": [{ "kind": "promo", "from": 1, "to": 2 }, { "kind": "promo_po", "from": 3, "to": 6 }, { "kind": "rel", "from": 22, "to": 24 }],
+        "note": "The top two go up to the Premier League; third to sixth play off for the third place." }
+    }
+  }
+}
