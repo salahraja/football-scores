@@ -373,3 +373,17 @@ describe("stale results", () => {
     expect(check(stalled(1).meta)).toEqual([]);
   });
 });
+
+describe("postponed games", () => {
+  it("lists only real match ids, each with why and a source", () => {
+    const data = JSON.parse(readFileSync("data/api/postponed.json", "utf8"));
+    for (const [season, leagues] of Object.entries<any>(data)) {
+      if (season.startsWith("_")) continue;
+      for (const [league, list] of Object.entries<any>(leagues)) for (const p of list) {
+        expect(p.match.startsWith(`${league}:`), p.match).toBe(true);
+        expect(p.why.length, p.match).toBeGreaterThan(10);
+        expect(p.source, p.match).toMatch(/^https:\/\//);
+      }
+    }
+  });
+});

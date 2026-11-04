@@ -22,3 +22,6 @@ export const zoneNames = () => read("data/api/zones.json").kinds;
 
 /** The site's public address, for canonical links, the sitemap and structured data (SITE_URL overrides it). */
 export const SITE = (process.env.SITE_URL ?? "https://football-scores-salah.netlify.app").replace(/\/$/, "");
+
+/** Match ids put off or suspended in one league season (data/api/postponed.json): not counted as late results. */
+export const loadPostponed = (season, leagueId) => new Set((read("data/api/postponed.json")[season]?.[leagueId] ?? []).map((p) => p.match));
