@@ -1,12 +1,54 @@
+@font-face { font-family: "Barlow Condensed"; font-weight: 800; font-display: swap; src: url("/fonts/barlow-condensed-800-latin.woff2") format("woff2"); }
+@font-face { font-family: "Instrument Sans"; font-weight: 400 700; font-display: swap; src: url("/fonts/instrument-sans-latin.woff2") format("woff2"); }
 *, *::before, *::after { box-sizing: border-box; }
-html { color-scheme: light dark; }
+html { color-scheme: light dark; overflow-x: clip; background: var(--bg); }
+.board { position: relative; }
+.board__grid { position: relative; isolation: isolate; }
+.board__grid::before { content: ""; position: absolute; inset: -80px 0 -40px; z-index: -1; pointer-events: none; filter: blur(30px);
+  background: radial-gradient(30% 40% at 22% 28%, rgb(111 126 152 / 85%), transparent 72%), radial-gradient(26% 34% at 84% 62%, rgb(179 38 30 / 70%), transparent 72%),
+    radial-gradient(30% 30% at 75% 15%, rgb(169 179 195 / 80%), transparent 72%); }
 body {
   margin: 0;
   font-family: var(--font-sans);
   color: var(--fg);
   background: var(--bg);
-  overflow-x: hidden;
+  min-height: 100vh;
+  overflow-x: clip;
 }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+
+/* ---- glass (Salah, 2026-10-30, after the clay): Apple's regular Liquid Glass, after the apple-liquid-glass skill's tokens. A tinted
+   translucent body with saturate + blur, an uneven rim (brightest upper-left, faint on the sides, brighter lower-right) that reads as a
+   thick bevel catching light, and a soft shadow. The boxes carry text, so they use the thick, near-opaque tint (Apple keeps glass for
+   controls; this keeps the table readable). Fallbacks: no backdrop-filter, Reduce Transparency. ---- */
+.glass {
+  position: relative; isolation: isolate; padding: var(--space-4); color: var(--fg);
+  background: var(--glass-fill); border-radius: 32px;
+  -webkit-backdrop-filter: saturate(180%) blur(28px); backdrop-filter: saturate(180%) blur(28px);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 70%), 0 18px 40px -16px rgb(27 28 32 / 35%), 0 2px 6px rgb(27 28 32 / 8%);
+}
+.glass::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none; z-index: 1;
+  background: linear-gradient(135deg, rgb(255 255 255 / 90%), rgb(255 255 255 / 16%) 35%, rgb(255 255 255 / 10%) 65%, rgb(255 255 255 / 55%));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+.glass.accent { --glass-fill: var(--glass-red); color: var(--on-accent); }
+.glass.dark { --glass-fill: var(--glass-dark); color: #fff; }
+.glass.dark::before { background: linear-gradient(135deg, rgb(255 255 255 / 45%), rgb(255 255 255 / 6%) 35%, rgb(255 255 255 / 4%) 65%, rgb(255 255 255 / 25%)); }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass { background: var(--glass-solid); } .glass.accent { background: var(--accent); } .glass.dark { background: #1b1c20; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .glass { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--glass-solid); }
+  .glass.accent { background: var(--accent); } .glass.dark { background: #1b1c20; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .glass { transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1); }
+  .glass:hover { transform: translateY(-2px); }
+}
+.dent { background: rgb(255 255 255 / 80%); color: #1b1c20; border-radius: 12px; box-shadow: 0 1px 2px rgb(27 28 32 / 12%); }
+
 img { max-width: 100%; height: auto; }
 a { color: inherit; }
 h1 { margin: 0 0 var(--space-2); }
@@ -16,32 +58,22 @@ code { font-family: var(--font-mono); font-weight: 700; }
   clip: rect(0 0 0 0); white-space: nowrap;
 }
 
-.page { max-width: var(--max-width); margin: 0 auto; padding: var(--space-3); }
+.page { max-width: var(--max-width); margin: 0 auto; padding: var(--space-3) clamp(var(--space-3), 4vw, var(--space-5)); }
 .note { color: var(--fg-muted); margin: 0 0 var(--space-3); font-size: 0.875rem; }
 
 /* navbar */
 .navbar {
-  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
-  gap: var(--space-3); max-width: var(--max-width); margin: 0 auto; padding: var(--space-3);
-  font-family: var(--font-mono); font-size: 0.875rem; color: var(--accent);
+  position: sticky; top: 12px; z-index: 10;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+  gap: var(--space-3); width: fit-content; max-width: min(var(--max-width), calc(100% - 20px)); margin: 12px auto 0; padding: 8px 10px;
+  font-size: 0.875rem; color: var(--fg); border-radius: 999px;
+  background: var(--glass-fill); -webkit-backdrop-filter: saturate(180%) blur(28px); backdrop-filter: saturate(180%) blur(28px);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 75%), 0 10px 30px -12px rgb(27 28 32 / 35%);
 }
-.links { display: flex; gap: var(--space-4); font-family: var(--font-sans); font-weight: 600; }
-.links a { text-decoration: none; padding: var(--space-1) 0; }
-.links a.router-link-exact-active { border-bottom: 2px solid currentColor; }
-.by { display: flex; align-items: center; gap: var(--space-2); color: var(--fg); font-weight: 700; text-decoration: none; }
-@media (prefers-color-scheme: dark) { .by img { filter: invert(1); } }
-
-/* home */
-.home { display: flex; flex-direction: column; align-items: center; gap: var(--space-4); text-align: center; }
-.greeting { color: var(--accent); font-family: var(--font-mono); margin: 0; }
-.welcome { font-size: 1.125rem; font-weight: 600; margin: 0; max-width: 40rem; }
-.logo { width: min(100%, 510px); }
-.cta { display: flex; gap: var(--space-3); flex-wrap: wrap; justify-content: center; }
-.cta a {
-  padding: var(--space-3) var(--space-4); border: 1px solid var(--border); border-radius: var(--radius);
-  background: var(--bg-card); text-decoration: none; font-weight: 600; box-shadow: var(--shadow);
-}
-.cta a:hover { border-color: var(--accent); }
+@media (prefers-reduced-transparency: reduce) { .navbar { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--glass-solid); } }
+.links { display: flex; gap: var(--space-2); font-weight: 800; flex-wrap: wrap; }
+.links a { color: var(--fg); text-decoration: none; padding: 8px 16px; border-radius: 16px 20px 14px 22px; }
+.links a.router-link-exact-active { background: var(--fg); color: var(--bg); }
 
 /* standings */
 .standings {
@@ -52,18 +84,57 @@ code { font-family: var(--font-mono); font-weight: 700; }
 .standings thead th { color: var(--fg-muted); }
 .standings .left { text-align: left; }
 .standings .pts { font-weight: 700; }
-.standings tr > :first-child { border-radius: var(--radius) 0 0 var(--radius); }
-.standings tr > :last-child { border-radius: 0 var(--radius) var(--radius) 0; }
+.standings tr > :first-child { border-radius: 18px 0 0 18px; }
+.standings tr > :last-child { border-radius: 0 18px 18px 0; }
 
 /* results */
 .round { margin: var(--space-4) 0 var(--space-2); font-size: 1.125rem; color: var(--fg-muted); }
 .cards { display: grid; gap: var(--space-3); grid-template-columns: 1fr; }
 @media (min-width: 768px) { .cards { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 1024px) { .cards { grid-template-columns: repeat(3, 1fr); } }
-.card { background: var(--bg-card); border-radius: var(--radius); box-shadow: var(--shadow); padding: var(--space-3); }
+.card { background: var(--bg-card); border-radius: 30px 40px 28px 44px / 38px 30px 42px 32px; box-shadow: 0 14px 30px -20px rgb(27 28 32 / 45%); padding: var(--space-4); }
 .status { margin: 0; text-align: center; color: var(--fg-muted); text-transform: capitalize; }
 .teams { display: flex; justify-content: space-between; align-items: center; margin: var(--space-3) 0; gap: var(--space-2); }
 .side { min-width: 0; }
 .score { font-size: 2.25rem; font-weight: 700; display: block; }
 .side h3 { margin: 0; font-size: 1.125rem; font-weight: 500; overflow-wrap: anywhere; }
 .vs { font-size: 1.5rem; font-weight: 700; }
+
+/* ---- the homepage: a poster, then the board ---- */
+.poster {
+  margin-inline: calc(50% - 50vw); margin-top: calc(-1 * var(--space-3)); padding: var(--space-4) var(--space-3) var(--space-5);
+  background: linear-gradient(180deg, var(--slate), var(--slate-2) 60%, var(--bg)); text-align: center;
+}
+.poster__title { font: 800 clamp(5rem, 24vw, 21rem)/0.82 var(--font-display); color: var(--accent); text-transform: uppercase; margin: 0; white-space: nowrap; letter-spacing: -0.01em; }
+.poster__result { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: clamp(8px, 2vw, 22px); max-width: var(--max-width); margin: var(--space-2) auto 0; }
+.poster__team { font: 800 clamp(2.2rem, 8vw, 6.4rem)/0.9 var(--font-display); text-transform: uppercase; color: var(--fg); min-width: 0; }
+.poster__team.home { text-align: right; } .poster__team.away { text-align: left; }
+/* Narrow phones (360px and under): a club's name no longer fits beside the score, so the result stacks, as on a scoreboard:
+   home club, score, away club, all centred. Names never break mid-word. */
+@media (max-width: 360px) {
+  .poster__result { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .poster__team.home, .poster__team.away { text-align: center; }
+  .poster__score { text-align: center; }
+}
+.poster__score { font: 800 clamp(3.4rem, 13vw, 11rem)/0.85 var(--font-display); color: var(--accent); }
+.poster__meta { margin: var(--space-2) 0 0; color: var(--fg); opacity: 0.75; }
+.board__grid { display: grid; gap: var(--space-5); grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: start; margin-top: var(--space-5); }
+.board__side { display: grid; gap: var(--space-5); align-content: start; }
+.board h2 { font: 800 1.9rem/1 var(--font-display); text-transform: uppercase; margin: 0 0 var(--space-3); }
+.mini { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; text-align: right; }
+.mini th { color: inherit; opacity: 0.65; font-size: 0.85rem; font-weight: 600; padding: 6px; border-bottom: 1px solid var(--border); }
+.mini td { padding: 9px 6px; border-bottom: 1px solid var(--border); }
+.mini .left { text-align: left; } .mini .pts { font-weight: 700; } .mini td.pos { font: 800 1.15rem var(--font-display); opacity: 0.6; text-align: left; }
+.mini tr.mine td { background: #1b1c20; color: #fff; } .mini tr.mine td.pos { color: var(--accent); opacity: 1; }
+.mini tr.mine td:first-child { border-radius: 16px 0 0 18px; } .mini tr.mine td:last-child { border-radius: 0 18px 15px 0; }
+.match { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: var(--space-2); padding: 9px 0; border-bottom: 1px solid var(--border); }
+.match:last-of-type { border-bottom: 0; }
+.match__h { text-align: right; } .match__s { font: 800 1.5rem/1 var(--font-display); padding: 4px 12px; }
+.more { display: inline-block; margin-top: var(--space-3); font-weight: 600; color: inherit; }
+.slot { margin: 0; border: 1.5px dashed currentColor; border-radius: 22px 30px 20px 28px; padding: var(--space-3); opacity: 0.85; }
+@media (max-width: 860px) { .board__grid { grid-template-columns: minmax(0, 1fr); } }
+/* a phone: the glass nav stays one row */
+@media (max-width: 560px) {
+  .navbar { flex-wrap: nowrap; gap: 6px; }
+  .links { flex-wrap: nowrap; gap: 2px; } .links a { padding: 8px 10px; white-space: nowrap; }
+}
