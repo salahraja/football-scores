@@ -2,6 +2,7 @@
 //   node scripts/api/build.mjs [--input data/openfootball] [--out public] [--seasons 2025-26,2026-27]
 // writes <out>/api/v1/competitions.json, <out>/api/v1/<league>/<season>/{matches,table,teams}.json and <out>/api/v1/meta.json.
 // Every season is checked before anything is written; one failure and nothing is written, so the last good API stays up.
+import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -9,6 +10,7 @@ import { leagues, loadAdjustments, loadCorrections } from "./config.mjs";
 import { applyCorrections, parseSeason } from "./openfootball.mjs";
 import { computeTable } from "./table.mjs";
 
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const OPENFOOTBALL = { name: "openfootball", url: "https://github.com/openfootball/football.json", licence: "CC0-1.0" };
 const goal = (n) => Number.isInteger(n) && n >= 0 && n < 50;
 
@@ -62,20 +64,25 @@ export function build({ input = "data/openfootball", out = "public", seasons = [
   }
   if (problems.length) throw new Error(`validation failed, nothing written:\n${problems.slice(0, 20).join("\n")}`);
   files.set("api/v1/competitions.json", { competitions });
-  files.set("api/v1/meta.json", meta);
+  // The contract travels with the data, so a reader can check what it got against the shapes it was promised (tests/api-schema.test.ts).
+  files.set("api/v1/schema.json", JSON.parse(readFileSync(join(ROOT, "data/api/schema.json"), "utf8")));
+  // Every file's bytes and their sha256 in meta.json: a reader that finds a mismatch has a half-published or stale copy.
+  const bytes = new Map([...files].map(([path, body]) => [path, JSON.stringify(body)]));
+  meta.files = Object.fromEntries([...bytes].map(([path, text]) => [path, createHash("sha256").update(text).digest("hex")]));
+  bytes.set("api/v1/meta.json", JSON.stringify(meta));
   // Write beside the old API, then swap, so a reader never sees half of one build and half of another.
   const fresh = join(out, "api.next"), live = join(out, "api"), old = join(out, "api.old");
   rmSync(fresh, { recursive: true, force: true });
-  for (const [path, body] of files) {
+  for (const [path, text] of bytes) {
     const target = join(fresh, path.replace(/^api\//, ""));
     mkdirSync(dirname(target), { recursive: true });
-    writeFileSync(target, JSON.stringify(body));
+    writeFileSync(target, text);
   }
   rmSync(old, { recursive: true, force: true });
   if (existsSync(live)) renameSync(live, old);
   renameSync(fresh, live);
   rmSync(old, { recursive: true, force: true });
-  return { files: files.size, competitions: competitions.length };
+  return { files: bytes.size, competitions: competitions.length };
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {

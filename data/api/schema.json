@@ -1,0 +1,184 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://golboard.app/api/v1/schema.json",
+  "title": "golboard API, version 1",
+  "description": "The shape of every file under api/v1/. One file per type in $defs. Web pages and the iPhone app read these shapes; docs/api.md says what the fields mean.",
+  "$defs": {
+    "leagueId": { "type": "string", "pattern": "^[a-z]{2}-[0-9]$" },
+    "season": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}$" },
+    "teamId": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+    "date": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" },
+    "goals": { "type": "integer", "minimum": 0, "maximum": 49 },
+    "pair": { "type": "array", "prefixItems": [{ "$ref": "#/$defs/goals" }, { "$ref": "#/$defs/goals" }], "items": false, "minItems": 2 },
+    "count": { "type": "integer", "minimum": 0 },
+
+    "competitions": {
+      "type": "object",
+      "required": ["competitions"],
+      "additionalProperties": false,
+      "properties": {
+        "competitions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "name", "country", "seasons", "current"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "$ref": "#/$defs/leagueId" },
+              "name": { "type": "string", "minLength": 1 },
+              "country": { "type": "string", "minLength": 1 },
+              "seasons": { "type": "array", "items": { "$ref": "#/$defs/season" }, "minItems": 1 },
+              "current": { "$ref": "#/$defs/season" }
+            }
+          }
+        }
+      }
+    },
+
+    "match": {
+      "type": "object",
+      "required": ["id", "round", "stage", "date", "time", "home", "away", "status", "score", "source"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "round": { "type": ["string", "null"] },
+        "stage": { "enum": ["league", "playoffs"] },
+        "date": { "$ref": "#/$defs/date" },
+        "time": { "oneOf": [{ "type": "string", "pattern": "^[0-9]{2}:[0-9]{2}$" }, { "type": "null" }] },
+        "home": { "$ref": "#/$defs/teamId" },
+        "away": { "$ref": "#/$defs/teamId" },
+        "status": { "enum": ["finished", "scheduled"] },
+        "score": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "required": ["ft", "ht"],
+              "additionalProperties": false,
+              "properties": { "ft": { "$ref": "#/$defs/pair" }, "ht": { "oneOf": [{ "$ref": "#/$defs/pair" }, { "type": "null" }] } }
+            }
+          ]
+        },
+        "source": { "enum": ["openfootball", "correction"] },
+        "correctionSource": { "type": "string", "pattern": "^https://" }
+      },
+      "allOf": [
+        { "if": { "properties": { "status": { "const": "finished" } } }, "then": { "properties": { "score": { "type": "object" } } } },
+        { "if": { "properties": { "status": { "const": "scheduled" } } }, "then": { "properties": { "score": { "type": "null" } } } },
+        { "if": { "properties": { "source": { "const": "correction" } } }, "then": { "required": ["correctionSource"] } }
+      ]
+    },
+
+    "matches": {
+      "type": "object",
+      "required": ["competition", "season", "matches"],
+      "additionalProperties": false,
+      "properties": {
+        "competition": { "$ref": "#/$defs/leagueId" },
+        "season": { "$ref": "#/$defs/season" },
+        "matches": { "type": "array", "items": { "$ref": "#/$defs/match" } }
+      }
+    },
+
+    "table": {
+      "type": "object",
+      "required": ["competition", "season", "table", "adjustments"],
+      "additionalProperties": false,
+      "properties": {
+        "competition": { "$ref": "#/$defs/leagueId" },
+        "season": { "$ref": "#/$defs/season" },
+        "table": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["position", "team", "played", "won", "drawn", "lost", "gf", "ga", "gd", "points", "adjustment"],
+            "additionalProperties": false,
+            "properties": {
+              "position": { "type": "integer", "minimum": 1 },
+              "team": { "$ref": "#/$defs/teamId" },
+              "played": { "$ref": "#/$defs/count" },
+              "won": { "$ref": "#/$defs/count" },
+              "drawn": { "$ref": "#/$defs/count" },
+              "lost": { "$ref": "#/$defs/count" },
+              "gf": { "$ref": "#/$defs/count" },
+              "ga": { "$ref": "#/$defs/count" },
+              "gd": { "type": "integer" },
+              "points": { "type": "integer" },
+              "adjustment": { "type": "integer", "maximum": 0 }
+            }
+          }
+        },
+        "adjustments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["team", "points", "why", "source"],
+            "additionalProperties": false,
+            "properties": {
+              "team": { "$ref": "#/$defs/teamId" },
+              "points": { "type": "integer", "maximum": -1 },
+              "why": { "type": "string", "minLength": 1 },
+              "source": { "type": "string", "pattern": "^https://" }
+            }
+          }
+        }
+      }
+    },
+
+    "teams": {
+      "type": "object",
+      "required": ["competition", "season", "teams"],
+      "additionalProperties": false,
+      "properties": {
+        "competition": { "$ref": "#/$defs/leagueId" },
+        "season": { "$ref": "#/$defs/season" },
+        "teams": { "type": "object", "propertyNames": { "$ref": "#/$defs/teamId" }, "additionalProperties": { "type": "string", "minLength": 1 } }
+      }
+    },
+
+    "meta": {
+      "type": "object",
+      "required": ["version", "generatedAt", "sources", "leagues", "files"],
+      "additionalProperties": false,
+      "properties": {
+        "version": { "const": 1 },
+        "generatedAt": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T" },
+        "sources": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["name", "url", "licence"],
+            "additionalProperties": false,
+            "properties": { "name": { "type": "string" }, "url": { "type": "string", "pattern": "^https://" }, "licence": { "type": "string" } }
+          }
+        },
+        "leagues": {
+          "type": "object",
+          "propertyNames": { "$ref": "#/$defs/leagueId" },
+          "additionalProperties": {
+            "type": "object",
+            "propertyNames": { "$ref": "#/$defs/season" },
+            "additionalProperties": {
+              "type": "object",
+              "required": ["finished", "scheduled", "lastResult", "corrections"],
+              "additionalProperties": false,
+              "properties": {
+                "finished": { "$ref": "#/$defs/count" },
+                "scheduled": { "$ref": "#/$defs/count" },
+                "lastResult": { "oneOf": [{ "$ref": "#/$defs/date" }, { "type": "null" }] },
+                "corrections": { "$ref": "#/$defs/count" }
+              }
+            }
+          }
+        },
+        "files": {
+          "description": "Every other file of this build, by path, with the sha256 of its bytes.",
+          "type": "object",
+          "propertyNames": { "type": "string", "pattern": "^api/v1/" },
+          "additionalProperties": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+        }
+      }
+    }
+  }
+}
