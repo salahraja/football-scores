@@ -243,7 +243,7 @@ tr[class*="zone--"] > .pos { box-shadow: inset 3px 0 0 var(--zone, transparent);
   .poster .pick { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 2px 14px; }
   .poster__score { font-size: min(19vw, 34svh); }
   .poster__team { font-size: min(calc(19vw / (var(--word, 7) * 0.5)), 6.4vw); }
-  .poster__result { column-gap: clamp(16px, 2.4vw, 34px); }
+  .poster__result { column-gap: clamp(16px, 2.4vw, 34px); max-width: 92vw; }
 }
 @media (max-width: 360px) {
   .poster__result { grid-template-columns: minmax(0, 1fr) auto auto minmax(0, 1fr); grid-template-areas: ". prev next ." "home mid mid away" "meta meta meta meta"; }
