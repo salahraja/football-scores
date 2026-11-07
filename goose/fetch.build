@@ -1,0 +1,4 @@
+// goose/fetch.goose: its C (net.c) and the system libcurl it calls.
+c_sources = ["net.c"];
+c_libs = ["curl"];
+output = "fetch";

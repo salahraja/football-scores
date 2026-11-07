@@ -39,7 +39,7 @@ Known behaviour difference: TS sorts names with `localeCompare` (ICU); Goose com
 1. Build-time generator: run the Goose CLI during `vite build` to precompute static JSON (for example a season table from results). Works today. The app is a static site, so this fits, but only if there is real data to precompute.
 2. C ABI behind a Node addon or Python: works (see demo), but the browser cannot use it, and a native addon needs per-platform builds.
 3. WASM in the browser: missing in Goose. Nothing to wire.
-The data fetch and web layer (fetching scores, Vue, router, tests) stay TypeScript. Goose has no HTTP and no DOM.
+The web layer (Vue, router, tests) stays TypeScript: Goose has no DOM. Since 2026-11-07 the Serie A fetch is Goose too (`goose/fetch.goose`): Goose has no HTTP of its own, so a small C file (`goose/net.c`) makes the HTTPS call through the system libcurl and Goose calls it with `extern fn`. A Rust UI and a Rust network layer were tried and measured the same day and not adopted (the Rust UI was 2.5x slower to show the poster on a throttled phone, 269 KB against 93 KB).
 
 ## Risks
 - Created 2026-08-30; about eight weeks old. One main author; bus factor 1. The compiler is large C++ (about 30k lines, and the author says Goose is new).
