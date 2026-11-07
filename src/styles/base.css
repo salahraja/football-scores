@@ -213,3 +213,10 @@ tr[class*="zone--"] > .pos { box-shadow: inset 3px 0 0 var(--zone, transparent);
   .poster__line.wide { display: none; }
   .poster__word { display: block; font-size: min(calc((100vw - 116px) / (var(--chars, 5) * 0.46)), 22svh); line-height: 0.86; white-space: nowrap; }
 }
+/* a swipe or an arrow slides the new league or game in from the side it came from */
+.poster { touch-action: pan-y; }
+@media (prefers-reduced-motion: no-preference) {
+  .from-right { animation: slide-right 220ms ease-out; } .from-left { animation: slide-left 220ms ease-out; }
+  @keyframes slide-right { from { transform: translateX(36px); opacity: 0; } }
+  @keyframes slide-left { from { transform: translateX(-36px); opacity: 0; } }
+}
