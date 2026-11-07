@@ -196,20 +196,20 @@ tr[class*="zone--"] > .pos { box-shadow: inset 3px 0 0 var(--zone, transparent);
 
 /* The red name fills the first screen, as in the Stadio poster and the Dribbble shot it came from: one huge line between two red arrows. */
 .poster__title { max-width: 100%; line-height: 0.84; flex: 1 1 auto; min-width: 0; }
-.poster__line { display: block; font-size: min(calc((100vw - 170px) / (var(--len, 7) * 0.46)), 46svh); white-space: nowrap; }
+.poster__line { display: block; font-size: min(calc((100vw - 250px) / (var(--len, 7) * 0.46)), 46svh); white-space: nowrap; }
 .poster__word { display: none; }
 .poster__result { width: 100%; box-sizing: border-box; }
 .poster__titlebar { gap: 4px; width: 100%; }
 /* red arrows, drawn, with no pill behind them; the tap area stays 44px */
 .arrow { background: none; color: var(--accent); border-radius: 0; }
-.arrow svg { width: 32px; height: 32px; stroke-width: 3; }
-.poster__titlebar .arrow svg { width: 40px; height: 40px; }
-@media (min-width: 900px) { .arrow { width: 64px; height: 64px; } .arrow svg { width: 46px; height: 46px; } .poster__titlebar .arrow { width: 72px; height: 72px; } .poster__titlebar .arrow svg { width: 60px; height: 60px; } }
+.arrow svg { width: 42px; height: 42px; stroke-width: 4.4; stroke-linecap: butt; stroke-linejoin: miter; }
+.poster__titlebar .arrow svg { width: 52px; height: 52px; }
+@media (min-width: 900px) { .arrow { width: 84px; height: 84px; } .arrow svg { width: 72px; height: 72px; } .poster__titlebar .arrow { width: 104px; height: 104px; } .poster__titlebar .arrow svg { width: 96px; height: 96px; } }
 @media (max-width: 760px) {
   .poster { gap: var(--space-2); }
   .poster__titlebar { gap: 0; }
-  .poster__titlebar .arrow { width: 36px; } .poster__titlebar .arrow svg { width: 30px; height: 30px; }
-  .poster__line { font-size: min(calc((100vw - 96px) / (var(--len, 7) * 0.46)), 34svh); }
+  .poster__titlebar .arrow { width: 46px; height: 60px; } .poster__titlebar .arrow svg { width: 44px; height: 44px; }
+  .poster__line { font-size: min(calc((100vw - 116px) / (var(--len, 7) * 0.46)), 34svh); }
   .poster__line.wide { display: none; }
-  .poster__word { display: block; font-size: min(calc((100vw - 96px) / (var(--chars, 5) * 0.46)), 22svh); line-height: 0.86; white-space: nowrap; }
+  .poster__word { display: block; font-size: min(calc((100vw - 116px) / (var(--chars, 5) * 0.46)), 22svh); line-height: 0.86; white-space: nowrap; }
 }
