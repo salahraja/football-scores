@@ -336,3 +336,54 @@ describe("search engines", () => {
     for (const m of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) expect(m[1]).not.toContain("<");
   });
 });
+
+// A source can stall (openfootball's last result was 20 September 2026 for six weeks). The API counts the games more than three days
+// past with no result, each league page says so in words, and `npm run api:check` fails, so a stall is seen, not silent.
+describe("stale results", () => {
+  const stalled = (daysAfter: number) => {
+    const input = tmp(), out = tmp();
+    const season = JSON.parse(readFileSync("tests/fixtures/openfootball/2025-26/it.1.json", "utf8"));
+    const lastDay: string = season.matches.at(-1).date;
+    const unscored = season.matches.filter((m: any) => m.date === lastDay).length;
+    for (const m of season.matches) if (m.date === lastDay) delete m.score;
+    mkdirSync(join(input, "2025-26"), { recursive: true });
+    writeFileSync(join(input, "2025-26", "it.1.json"), JSON.stringify(season));
+    const now = new Date(Date.parse(`${lastDay}T12:00:00Z`) + daysAfter * 86_400_000).toISOString();
+    build({ input, wikipedia: tmp(), out, seasons: ["2025-26"], now });
+    pages({ api: join(out, "api/v1"), out });
+    return { out, unscored, meta: JSON.parse(readFileSync(join(out, "api/v1/meta.json"), "utf8")) };
+  };
+
+  it("counts games more than three days past with no result, and none sooner", () => {
+    expect(stalled(4).meta.leagues["it-1"]["2025-26"].overdue).toBe(stalled(4).unscored);
+    expect(stalled(3).meta.leagues["it-1"]["2025-26"].overdue).toBe(0);
+    expect(stalled(1).meta.leagues["it-1"]["2025-26"].overdue).toBe(0);
+  });
+
+  it("says on the league page how many results are late", () => {
+    const { out, unscored } = stalled(5);
+    expect(page(out, "leagues/it-1/index.html")).toContain(`${unscored} results from more than three days ago are not in yet.`);
+    expect(page(stalled(1).out, "leagues/it-1/index.html")).not.toContain("are not in yet.");
+  });
+
+  it("api:check lists each league with late results, and passes when there are none", async () => {
+    const { check } = await import("../scripts/api/check-fresh.mjs");
+    const late = stalled(5).meta;
+    expect(check(late)).toEqual([`it-1 2025-26: ${stalled(5).unscored} results more than 3 days late (newest result ${late.leagues["it-1"]["2025-26"].lastResult})`]);
+    expect(check(stalled(1).meta)).toEqual([]);
+  });
+});
+
+describe("postponed games", () => {
+  it("lists only real match ids, each with why and a source", () => {
+    const data = JSON.parse(readFileSync("data/api/postponed.json", "utf8"));
+    for (const [season, leagues] of Object.entries<any>(data)) {
+      if (season.startsWith("_")) continue;
+      for (const [league, list] of Object.entries<any>(leagues)) for (const p of list) {
+        expect(p.match.startsWith(`${league}:`), p.match).toBe(true);
+        expect(p.why.length, p.match).toBeGreaterThan(10);
+        expect(p.source, p.match).toMatch(/^https:\/\//);
+      }
+    }
+  });
+});

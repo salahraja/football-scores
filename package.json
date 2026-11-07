@@ -24,7 +24,8 @@
     "test:python": "python3 -I -m unittest discover -s python",
     "api:fetch": "node scripts/api/fetch-openfootball.mjs && node scripts/api/fetch-wikipedia.mjs",
     "api:build": "node scripts/api/build.mjs && node scripts/api/pages.mjs",
-    "api": "npm run api:fetch && npm run api:build"
+    "api": "npm run api:fetch && npm run api:build",
+    "api:check": "node scripts/api/check-fresh.mjs"
   },
   "dependencies": {
     "vue": "^3.5.0",

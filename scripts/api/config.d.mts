@@ -5,3 +5,4 @@ export function loadCorrections(season: string, leagueId: string): Correction[];
 export function loadZones(season: string, leagueId: string): { zones: { kind: string; from: number; to: number }[]; note: string } | null;
 export function zoneNames(): Record<string, string>;
 export const SITE: string;
+export function loadPostponed(season: string, leagueId: string): Set<string>;

@@ -163,13 +163,14 @@
             "propertyNames": { "$ref": "#/$defs/season" },
             "additionalProperties": {
               "type": "object",
-              "required": ["finished", "scheduled", "lastResult", "corrections"],
+              "required": ["finished", "scheduled", "lastResult", "corrections", "overdue"],
               "additionalProperties": false,
               "properties": {
                 "finished": { "$ref": "#/$defs/count" },
                 "scheduled": { "$ref": "#/$defs/count" },
                 "lastResult": { "oneOf": [{ "$ref": "#/$defs/date" }, { "type": "null" }] },
                 "corrections": { "$ref": "#/$defs/count" },
+                "overdue": { "description": "Games more than three days before the build with no result: a stalled source. npm run api:check fails while a current season has one.", "$ref": "#/$defs/count" },
                 "wikipedia": {
                   "description": "The Wikipedia revision whose results grid scored games openfootball had not, how many, and any score the two disagree on (openfootball's is kept).",
                   "type": "object",

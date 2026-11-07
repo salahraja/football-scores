@@ -6,7 +6,7 @@ import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { leagues, loadAdjustments, loadCorrections } from "./config.mjs";
+import { leagues, loadAdjustments, loadCorrections, loadPostponed } from "./config.mjs";
 import { applyCorrections, parseSeason } from "./openfootball.mjs";
 import { computeTable } from "./table.mjs";
 import { teamId } from "./teams.mjs";
@@ -38,6 +38,8 @@ export function validate(season, teams) {
 export function build({ input = "data/openfootball", wikipedia = join(ROOT, "data/wikipedia"), out = "public", seasons = ["2025-26", "2026-27"], now = new Date().toISOString(), mutate } = {}) {
   const files = new Map();
   const meta = { version: 1, generatedAt: now, sources: [OPENFOOTBALL], leagues: {} };
+  // a game more than three days before the build with no result: its source has stalled (see api:check)
+  const lateBefore = new Date(Date.parse(now) - 3 * 86_400_000).toISOString().slice(0, 10);
   const competitions = [];
   const problems = [];
   let usedWikipedia = false;
@@ -65,6 +67,7 @@ export function build({ input = "data/openfootball", wikipedia = join(ROOT, "dat
       const adjustments = loadAdjustments(season, league.id);
       const table = computeTable(parsed.matches, league, adjustments);
       const finished = parsed.matches.filter((m) => m.status === "finished");
+      const postponed = loadPostponed(season, league.id);
       const base = `api/v1/${league.id}/${season}`;
       files.set(`${base}/matches.json`, { competition: league.id, season, matches: parsed.matches });
       files.set(`${base}/table.json`, { competition: league.id, season, table, adjustments });
@@ -73,7 +76,8 @@ export function build({ input = "data/openfootball", wikipedia = join(ROOT, "dat
       meta.leagues[league.id] ??= {};
       meta.leagues[league.id][season] = { finished: finished.length, scheduled: parsed.matches.length - finished.length,
         lastResult: finished.reduce((d, m) => (m.date > d ? m.date : d), "") || null,
-        corrections: parsed.matches.filter((m) => m.source === "correction").length, ...(wiki ? { wikipedia: wiki } : {}) };
+        corrections: parsed.matches.filter((m) => m.source === "correction").length,
+        overdue: parsed.matches.filter((m) => m.status === "scheduled" && m.date < lateBefore && !postponed.has(m.id)).length, ...(wiki ? { wikipedia: wiki } : {}) };
       have.push(season);
     }
     if (have.length) competitions.push({ id: league.id, name: league.name, country: league.country, seasons: have, current: have.at(-1) });
