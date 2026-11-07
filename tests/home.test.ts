@@ -37,3 +37,16 @@ describe("home", () => {
     expect(wrapper.get('[data-test="headlines"]').text()).toMatch(/to choose/i);
   });
 });
+
+// Salah, 2026-11-07: swiping through the games left the league's name sliding too. Only what changed moves.
+describe("the poster's arrows", () => {
+  it("move only the game when the game changes, and leave the league still", async () => {
+    const wrapper = home();
+    await wrapper.get('[data-test="game-next"]').trigger("click");
+    expect(wrapper.get(".poster__result").classes()).toContain("from-right");
+    expect(wrapper.get(".poster__titlebar").classes()).not.toContain("from-right");
+    await wrapper.get('[data-test="game-prev"]').trigger("click");
+    expect(wrapper.get(".poster__result").classes()).toContain("from-left");
+    expect(wrapper.get(".poster__titlebar").classes()).not.toContain("from-left");
+  });
+});
