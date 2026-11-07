@@ -90,7 +90,7 @@ function stepGame(by: number) {
 // A swipe on a phone or tablet does what the arrows do: on the score it changes the game, anywhere else on the poster the league. Mostly-sideways only, so scrolling
 // down the page stays a scroll.
 const SWIPE = 45;
-// Salah, 2026-11-07: the name goes tall into the space above it, and stays bold ("I like the bolder look vs skinnier look"): only a slight stretch, the rest is real size.
+// Salah, 2026-11-07: the name goes tall into the space above it, and stays bold ("I like the bolder look vs skinnier look"): a capped stretch, with a heavier outline to hold the weight.
 const titleEl = ref<HTMLElement | null>(null);
 function stretchTitle() {
   const el = titleEl.value;
@@ -98,8 +98,8 @@ function stretchTitle() {
   el.style.setProperty("--stretch", "1");
   el.style.marginTop = "0";
   const phone = window.innerWidth <= 760;
-  const room = window.innerHeight * (phone ? 0.34 : 0.44);
-  const stretch = Math.min(1.18, Math.max(1, room / Math.max(el.offsetHeight, 1)));
+  const room = window.innerHeight * (phone ? 0.38 : 0.46);
+  const stretch = Math.min(1.75, Math.max(1, room / Math.max(el.offsetHeight, 1)));
   el.style.setProperty("--stretch", String(stretch));
   el.style.marginTop = `${el.offsetHeight * (stretch - 1)}px`;
 }
@@ -186,11 +186,13 @@ onMounted(async () => {
         <button v-if="list.length" type="button" class="arrow" :aria-label="`Next league: ${neighbour(1)}`" data-test="league-next" @click="step(1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12h16M12 5l7 7-7 7" /></svg></button>
       </div>
       <div class="poster__result" data-swipe="game" :key="`${game.home}-${game.away}`" :class="slide">
-        <button v-if="games.length > 1" type="button" class="arrow prev" aria-label="Previous game" data-test="game-prev" @click="stepGame(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12H6M12 5l-7 7 7 7" /></svg></button>
         <span class="poster__team home" :style="{ '--word': longestWord(game.home) }">{{ game.home }}</span>
         <span class="poster__score">{{ game.score ? `${game.score[0]}–${game.score[1]}` : "v" }}</span>
         <span class="poster__team away" :style="{ '--word': longestWord(game.away) }">{{ game.away }}</span>
-        <button v-if="games.length > 1" type="button" class="arrow next" aria-label="Next game" data-test="game-next" @click="stepGame(1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12h16M12 5l7 7-7 7" /></svg></button>
+        <div v-if="games.length > 1" class="poster__gamenav">
+          <button type="button" class="arrow long" aria-label="Previous game" data-test="game-prev" @click="stepGame(-1)"><svg viewBox="0 0 48 24" aria-hidden="true"><path d="M47 12H6M12 5l-7 7 7 7" /></svg></button>
+          <button type="button" class="arrow long" aria-label="Next game" data-test="game-next" @click="stepGame(1)"><svg viewBox="0 0 48 24" aria-hidden="true"><path d="M1 12h41M36 5l7 7-7 7" /></svg></button>
+        </div>
         <p class="poster__meta" :class="{ onair: game.status === 'live' }" data-test="state">{{ meta }}</p>
       </div>
       <nav v-if="list.length" ref="pick" class="pick" aria-label="Choose a league" data-test="leagues">
