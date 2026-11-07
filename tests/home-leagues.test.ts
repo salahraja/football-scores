@@ -50,7 +50,7 @@ describe("the homepage's leagues", () => {
     expect(window.location.search).toBe("?league=en-1");
   });
 
-  it("walks the leagues with the arrows, and goes round at the ends", async () => {
+  it("walks the leagues with the arrows around the name, and goes round at the ends", async () => {
     stub();
     const w = home();
     await flushPromises();
@@ -63,6 +63,20 @@ describe("the homepage's leagues", () => {
     await w.get('[data-test="league-prev"]').trigger("click");
     await flushPromises();
     expect(w.get('[data-test="hero"]').text()).toContain("Premier League");
+  });
+
+  it("walks the round's games with the arrows around the result, and goes round", async () => {
+    stub();
+    const w = home();
+    await flushPromises();
+    const hero = () => w.get('[data-test="hero"]').text();
+    const start = hero();
+    await w.get('[data-test="game-next"]').trigger("click");
+    expect(hero()).not.toBe(start);
+    await w.get('[data-test="game-prev"]').trigger("click");
+    expect(hero()).toBe(start);
+    await w.get('[data-test="game-prev"]').trigger("click");
+    expect(hero()).not.toBe(start);
   });
 
   it("says what each place in the table leads to, in words", async () => {
