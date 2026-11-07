@@ -83,13 +83,42 @@ async function readToday(id: string) {
 let poll: ReturnType<typeof setInterval> | undefined;
 onUnmounted(() => clearInterval(poll));
 function stepGame(by: number) {
+  slide.value = by > 0 ? "from-right" : "from-left";
   shown.value += by;
+}
+// A swipe on a phone or tablet does what the arrows do: on the score it changes the game, anywhere else on the poster the league. Mostly-sideways only, so scrolling
+// down the page stays a scroll.
+const SWIPE = 45;
+const slide = ref("");
+let slideDone: ReturnType<typeof setTimeout> | undefined;
+watch(slide, (name) => {
+  clearTimeout(slideDone);
+  if (name) slideDone = setTimeout(() => (slide.value = ""), 260); // handed back, so the scroll's own drift runs again
+});
+let touch: { x: number; y: number; game: boolean } | null = null;
+function swipeStart(e: TouchEvent) {
+  const t = e.changedTouches[0];
+  touch = { x: t.clientX, y: t.clientY, game: !!(e.target as Element | null)?.closest?.('[data-swipe="game"]') };
+}
+function swipeEnd(e: TouchEvent) {
+  if (!touch) return;
+  const t = e.changedTouches[0];
+  const dx = t.clientX - touch.x;
+  const dy = t.clientY - touch.y;
+  const onGame = touch.game;
+  touch = null;
+  if ((e.target as Element | null)?.closest?.(".pick")) return; // the row of leagues scrolls sideways on its own
+  if (Math.abs(dx) < SWIPE || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+  const by = dx < 0 ? 1 : -1;
+  if (onGame && games.value.length > 1) stepGame(by);
+  else if (list.value.length) step(by);
 }
 function neighbour(by: number) {
   const at = list.value.findIndex((c) => c.id === chosen.value);
   return list.value[(at + by + list.value.length) % list.value.length].name;
 }
 function step(by: number) {
+  slide.value = by > 0 ? "from-right" : "from-left";
   const at = list.value.findIndex((c) => c.id === chosen.value);
   choose(list.value[(at + by + list.value.length) % list.value.length].id);
 }
@@ -124,8 +153,8 @@ onMounted(async () => {
 <template>
   <section class="board">
     <!-- The poster, as on the league pages: the league's name between its arrows, then a game between its arrows (Juventus's first when they played). -->
-    <section v-if="game" class="poster" data-test="hero" aria-label="Featured result">
-      <div class="poster__titlebar">
+    <section v-if="game" class="poster" data-test="hero" aria-label="Featured result" @touchstart.passive="swipeStart" @touchend.passive="swipeEnd">
+      <div class="poster__titlebar" :key="title" :class="slide">
         <button v-if="list.length" type="button" class="arrow" :aria-label="`Previous league: ${neighbour(-1)}`" data-test="league-prev" @click="step(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12H6M12 5l-7 7 7 7" /></svg></button>
         <h1 class="poster__title" :aria-label="title">
           <span class="poster__line" :class="{ wide: longName }" :style="{ '--len': title.length }">{{ title }}</span>
@@ -133,7 +162,7 @@ onMounted(async () => {
         </h1>
         <button v-if="list.length" type="button" class="arrow" :aria-label="`Next league: ${neighbour(1)}`" data-test="league-next" @click="step(1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12h16M12 5l7 7-7 7" /></svg></button>
       </div>
-      <div class="poster__result">
+      <div class="poster__result" data-swipe="game" :key="`${game.home}-${game.away}`" :class="slide">
         <button v-if="games.length > 1" type="button" class="arrow prev" aria-label="Previous game" data-test="game-prev" @click="stepGame(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12H6M12 5l-7 7 7 7" /></svg></button>
         <span class="poster__team home" :style="{ '--word': longestWord(game.home) }">{{ game.home }}</span>
         <span class="poster__score">{{ game.score ? `${game.score[0]}–${game.score[1]}` : "v" }}</span>

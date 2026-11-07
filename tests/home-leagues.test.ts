@@ -108,6 +108,36 @@ describe("the homepage's leagues", () => {
     expect(hero).toContain("SportScore");
   });
 
+  const swipe = async (el: { trigger: (t: string, o: object) => Promise<void> }, from: number[], to: number[]) => {
+    await el.trigger("touchstart", { changedTouches: [{ clientX: from[0], clientY: from[1] }] });
+    await el.trigger("touchend", { changedTouches: [{ clientX: to[0], clientY: to[1] }] });
+    await flushPromises();
+  };
+
+  it("swipes between leagues on the poster and between games on the score", async () => {
+    stub();
+    const w = home();
+    await flushPromises();
+    await swipe(w.get(".poster__titlebar"), [300, 200], [100, 205]);
+    expect(w.get('[data-test="hero"]').text()).toContain("Premier League");
+    await swipe(w.get(".poster__titlebar"), [100, 200], [300, 205]);
+    expect(w.get('[data-test="hero"]').text()).toContain("Serie A");
+    const before = w.get(".poster__result").text();
+    await swipe(w.get(".poster__result"), [300, 400], [100, 400]);
+    expect(w.get(".poster__result").text()).not.toBe(before);
+    expect(w.get('[data-test="hero"]').text()).toContain("Serie A");
+  });
+
+  it("leaves an up or down drag alone, and a short one", async () => {
+    stub();
+    const w = home();
+    await flushPromises();
+    const before = w.get('[data-test="hero"]').text();
+    await swipe(w.get(".poster__titlebar"), [200, 500], [150, 200]);
+    await swipe(w.get(".poster__titlebar"), [200, 200], [170, 200]);
+    expect(w.get('[data-test="hero"]').text()).toBe(before);
+  });
+
   it("says what each place in the table leads to, in words", async () => {
     stub();
     const w = home();
