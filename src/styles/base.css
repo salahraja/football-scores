@@ -105,9 +105,9 @@ code { font-family: var(--font-mono); font-weight: 700; }
   margin-inline: calc(50% - 50vw); margin-top: calc(-1 * var(--space-3)); padding: var(--space-4) var(--space-3) var(--space-5);
   background: linear-gradient(180deg, var(--slate), var(--slate-2) 60%, var(--bg)); text-align: center;
 }
-.poster__title { font: 800 clamp(5rem, 24vw, 21rem)/0.82 var(--font-display); color: var(--accent); text-transform: uppercase; margin: 0; white-space: nowrap; letter-spacing: -0.01em; }
+.poster__title { font: 800 min(clamp(5rem, 24vw, 21rem), calc(90vw / (var(--chars, 7) * 0.47)))/0.82 var(--font-display); color: var(--accent); text-transform: uppercase; margin: 0; white-space: nowrap; letter-spacing: -0.01em; }
 .poster__result { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: clamp(8px, 2vw, 22px); max-width: var(--max-width); margin: var(--space-2) auto 0; }
-.poster__team { font: 800 clamp(2.2rem, 8vw, 6.4rem)/0.9 var(--font-display); text-transform: uppercase; color: var(--fg); min-width: 0; }
+.poster__team { font: 800 min(clamp(2.2rem, 8vw, 6.4rem), calc(29vw / (var(--word, 7) * 0.47)))/0.9 var(--font-display); text-transform: uppercase; color: var(--fg); min-width: 0; }
 .poster__team.home { text-align: right; } .poster__team.away { text-align: left; }
 /* Narrow phones (360px and under): a club's name no longer fits beside the score, so the result stacks, as on a scoreboard:
    home club, score, away club, all centred. Names never break mid-word. */
@@ -141,3 +141,23 @@ code { font-family: var(--font-mono); font-weight: 700; }
 /* four links on a small phone: tighter, and still one row */
 @media (max-width: 430px) { .navbar { font-size: 0.8125rem; padding: 6px 6px; } .links a { padding: 8px 7px; } }
 @media (max-width: 360px) { .navbar { font-size: 0.75rem; } .links a { padding: 8px 5px; } }
+
+/* the league picker: a row that scrolls on a phone, in the same glass as the nav */
+.pick { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; padding: 4px 28px 14px 2px; -webkit-overflow-scrolling: touch; -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 32px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 32px), transparent); }
+.pick::-webkit-scrollbar { display: none; }
+.pick button { flex: none; min-height: 40px; padding: 8px 14px; border: 0; border-radius: 999px; font: inherit; font-size: 0.875rem; font-weight: 700; color: var(--fg); background: var(--glass-fill); cursor: pointer; }
+.pick button.on { background: var(--fg); color: var(--bg); }
+.again { padding: 0; border: 0; background: none; font: inherit; font-weight: 700; color: inherit; text-decoration: underline; cursor: pointer; }
+.club { color: inherit; text-decoration: none; }
+.club:hover { text-decoration: underline; }
+/* what each place leads to: a bar at the row's edge and, in the legend, the same bar with words */
+.zone--cl, .zone--clq { --zone: #1f5fa8; } .zone--el, .zone--elq { --zone: #c77a14; } .zone--eclq, .zone--ecl_po { --zone: #2f8f6b; } .zone--promo, .zone--promo_po { --zone: #6e5bb0; } .zone--rel, .zone--rel_po { --zone: #b3362b; }
+tr[class*="zone--"] > .pos { box-shadow: inset 3px 0 0 var(--zone, transparent); }
+.zones { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: var(--space-3) 0 0; padding: 0; list-style: none; font-size: 0.8125rem; color: var(--fg-muted); }
+.zones li { display: flex; align-items: center; gap: 6px; }
+.zones__key { width: 4px; height: 14px; border-radius: 2px; background: var(--zone, currentColor); }
+.zones__note { margin: 6px 0 0; font-size: 0.75rem; }
+.pickrow { display: flex; align-items: center; gap: 6px; }
+.pickrow .pick { flex: 1; min-width: 0; }
+.step { flex: none; display: grid; place-items: center; width: 44px; height: 44px; margin-bottom: 10px; padding: 0; border: 0; border-radius: 50%; color: var(--fg); background: var(--glass-fill); cursor: pointer; }
+.step svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
