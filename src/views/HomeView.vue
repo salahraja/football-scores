@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, ref, watch } from "vue";
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
 import { getDataNote, getResultRounds, getStandings } from "../data";
 import { competitions, league as loadLeague, zoneOf, type Competition, type League } from "../data/leagues";
+import { covered, today, type TodayGame } from "../data/live";
 
 // The homepage (Salah, 2026-10-30, the Stadio "Poster" with glass boxes): the league's name and the newest round's result set as a
 // poster (Juventus's when they played), then the table, the round's results, and places for top scorers and headlines that stay empty
@@ -54,17 +55,33 @@ function choose(id: string) {
 }
 // The poster's arrows, as on the league pages: one pair walks the leagues, one the round's games, and both go round at the ends.
 const title = computed(() => other.value?.name ?? "Serie A");
+const longName = computed(() => title.value.includes(" ") && title.value.length > 9); // two lines on a phone, so it stays as loud as Serie A
+// Salah, 2026-11-07: "live scores should always show first". Today's games lead whenever there are any, with those on now at the front; the last round fills in.
+const todays = ref<Record<string, TodayGame[]>>({});
+const nowGames = computed(() => todays.value[chosen.value] ?? []);
 const games = computed(() => {
-  if (other.value) return other.value.matches.map((m) => ({ home: m.home, away: m.away, score: m.score }));
-  return (newest.value?.events ?? []).map((e) => ({ home: e.homeTeam.name, away: e.awayTeam.name, score: [e.homeScore.current, e.awayScore.current] as [number, number] }));
+  if (nowGames.value.length) return nowGames.value.map((g) => ({ home: g.home, away: g.away, score: g.score, status: g.status, text: g.text }));
+  if (other.value) return other.value.matches.map((m) => ({ home: m.home, away: m.away, score: m.score as [number, number] | null, status: "finished", text: other.value!.round }));
+  return (newest.value?.events ?? []).map((e) => ({ home: e.homeTeam.name, away: e.awayTeam.name, score: [e.homeScore.current, e.awayScore.current] as [number, number] | null, status: "finished", text: `Matchday ${newest.value?.round} · ${note}` }));
 });
 const shown = ref(0); // how far the arrows have moved from the first game shown
-const first = computed(() => Math.max(0, games.value.findIndex((g) => g.home === FAVOURITE || g.away === FAVOURITE)));
+const first = computed(() => {
+  if (games.value[0]?.status === "live") return 0;
+  return Math.max(0, games.value.findIndex((g) => g.home === FAVOURITE || g.away === FAVOURITE));
+});
 const game = computed(() => {
   const all = games.value;
   return all.length ? all[(((first.value + shown.value) % all.length) + all.length) % all.length] : null;
 });
-const meta = computed(() => (other.value ? other.value.round : `Matchday ${newest.value?.round} · ${note}`));
+const meta = computed(() => game.value?.text ?? "");
+function liveIn(id: string) {
+  return (todays.value[id] ?? []).some((g) => g.status === "live");
+}
+async function readToday(id: string) {
+  todays.value = { ...todays.value, [id]: await today(id) };
+}
+let poll: ReturnType<typeof setInterval> | undefined;
+onUnmounted(() => clearInterval(poll));
 function stepGame(by: number) {
   shown.value += by;
 }
@@ -89,6 +106,15 @@ onMounted(async () => {
     list.value = await competitions();
     await open(HOME);
     if (chosen.value !== HOME) await open(chosen.value);
+    await Promise.all(list.value.map((c) => readToday(c.id)));
+    // nothing on in the first league and a game on elsewhere: open on the game that is on, unless the address asked for a league
+    if (!new URLSearchParams(window.location.search).get("league") && !liveIn(HOME)) {
+      const on = list.value.find((c) => liveIn(c.id));
+      if (on) choose(on.id);
+    }
+    poll = setInterval(() => {
+      if (covered(chosen.value) && nowGames.value.some((g) => g.status !== "finished")) readToday(chosen.value);
+    }, 60000);
   } catch {
     list.value = []; // the Serie A board stands on its own
   }
@@ -100,24 +126,29 @@ onMounted(async () => {
     <!-- The poster, as on the league pages: the league's name between its arrows, then a game between its arrows (Juventus's first when they played). -->
     <section v-if="game" class="poster" data-test="hero" aria-label="Featured result">
       <div class="poster__titlebar">
-        <button v-if="list.length" type="button" class="arrow" :aria-label="`Previous league: ${neighbour(-1)}`" data-test="league-prev" @click="step(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg></button>
-        <h1 class="poster__title" :style="{ '--chars': title.length }">{{ title }}</h1>
-        <button v-if="list.length" type="button" class="arrow" :aria-label="`Next league: ${neighbour(1)}`" data-test="league-next" @click="step(1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg></button>
+        <button v-if="list.length" type="button" class="arrow" :aria-label="`Previous league: ${neighbour(-1)}`" data-test="league-prev" @click="step(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12H4M11 5l-7 7 7 7" /></svg></button>
+        <h1 class="poster__title" :aria-label="title">
+          <span class="poster__line" :class="{ wide: longName }" :style="{ '--len': title.length }">{{ title }}</span>
+          <template v-if="longName"><span v-for="w in title.split(' ')" :key="w" class="poster__word" :style="{ '--chars': w.length }" aria-hidden="true">{{ w }}</span></template>
+        </h1>
+        <button v-if="list.length" type="button" class="arrow" :aria-label="`Next league: ${neighbour(1)}`" data-test="league-next" @click="step(1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h17M13 5l7 7-7 7" /></svg></button>
       </div>
       <div class="poster__result">
-        <button v-if="games.length > 1" type="button" class="arrow prev" aria-label="Previous game" data-test="game-prev" @click="stepGame(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg></button>
+        <button v-if="games.length > 1" type="button" class="arrow prev" aria-label="Previous game" data-test="game-prev" @click="stepGame(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12H4M11 5l-7 7 7 7" /></svg></button>
         <span class="poster__team home" :style="{ '--word': longestWord(game.home) }">{{ game.home }}</span>
-        <span class="poster__score">{{ game.score[0] }}–{{ game.score[1] }}</span>
+        <span class="poster__score">{{ game.score ? `${game.score[0]}–${game.score[1]}` : "v" }}</span>
         <span class="poster__team away" :style="{ '--word': longestWord(game.away) }">{{ game.away }}</span>
-        <button v-if="games.length > 1" type="button" class="arrow next" aria-label="Next game" data-test="game-next" @click="stepGame(1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg></button>
-        <p class="poster__meta">{{ meta }}</p>
+        <button v-if="games.length > 1" type="button" class="arrow next" aria-label="Next game" data-test="game-next" @click="stepGame(1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h17M13 5l7 7-7 7" /></svg></button>
+        <p class="poster__meta" :class="{ onair: game.status === 'live' }" data-test="state">{{ meta }}</p>
       </div>
+      <nav v-if="list.length" ref="pick" class="pick" aria-label="Choose a league" data-test="leagues">
+        <button v-for="c in list" :key="c.id" type="button" :aria-pressed="chosen === c.id" :class="{ on: chosen === c.id }" data-test="league" @click="choose(c.id)"><span v-if="liveIn(c.id)" class="ondot" aria-label="Live now"></span>{{ c.name }}</button>
+      </nav>
+      <p v-if="nowGames.length" class="poster__credit">Live scores powered by <a href="https://sportscore.com">SportScore</a></p>
     </section>
-    <nav v-if="list.length" ref="pick" class="pick" aria-label="Choose a league" data-test="leagues">
-      <button v-for="c in list" :key="c.id" type="button" :aria-pressed="chosen === c.id" :class="{ on: chosen === c.id }" data-test="league" @click="choose(c.id)">{{ c.name }}</button>
-    </nav>
     <p v-if="failed" class="note" role="status" data-test="league-failed">That league could not be read just now. <button type="button" class="again" @click="open(chosen)">Try again</button></p>
 
+    <div class="sheet">
     <div class="board__grid">
       <section class="glass" data-test="table" aria-labelledby="t-table">
         <h2 id="t-table">The table</h2>
@@ -148,7 +179,16 @@ onMounted(async () => {
 
       <div class="board__side">
         <section class="glass" data-test="round" aria-labelledby="t-round">
-          <template v-if="other">
+          <template v-if="nowGames.length">
+            <h2 id="t-round">Today</h2>
+            <div v-for="m in nowGames" :key="m.home" class="match" :class="{ onair: m.status === 'live' }">
+              <span class="match__h">{{ m.home }}</span>
+              <span class="dent match__s">{{ m.score ? `${m.score[0]}–${m.score[1]}` : m.text.replace("Today ", "") }}</span>
+              <span>{{ m.away }}</span>
+            </div>
+            <a class="more" :href="`/leagues/${chosen}/`">All results</a>
+          </template>
+          <template v-else-if="other">
             <h2 id="t-round">{{ other.round }}</h2>
             <div v-for="m in other.matches" :key="m.id" class="match">
               <span class="match__h">{{ m.home }}</span>
@@ -176,6 +216,7 @@ onMounted(async () => {
           <p class="slot">A news feed we are allowed to show, still to choose.</p>
         </section>
       </div>
+    </div>
     </div>
   </section>
 </template>
