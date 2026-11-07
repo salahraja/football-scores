@@ -55,7 +55,7 @@ function choose(id: string) {
 }
 // The poster's arrows, as on the league pages: one pair walks the leagues, one the round's games, and both go round at the ends.
 const title = computed(() => other.value?.name ?? "Serie A");
-const longName = computed(() => title.value.includes(" ") && title.value.length > 9); // two lines on a phone, so it stays as loud as Serie A
+const longName = computed(() => title.value.includes(" ")); // each word its own line on a phone: taller and bolder, never squeezed
 // Salah, 2026-11-07: "live scores should always show first". Today's games lead whenever there are any, with those on now at the front; the last round fills in.
 const todays = ref<Record<string, TodayGame[]>>({});
 const nowGames = computed(() => todays.value[chosen.value] ?? []);
@@ -90,7 +90,7 @@ function stepGame(by: number) {
 // A swipe on a phone or tablet does what the arrows do: on the score it changes the game, anywhere else on the poster the league. Mostly-sideways only, so scrolling
 // down the page stays a scroll.
 const SWIPE = 45;
-// Salah, 2026-11-07: the name goes tall into the space above it. It keeps its width and stretches upward to take about a third of the screen.
+// Salah, 2026-11-07: the name goes tall into the space above it, and stays bold ("I like the bolder look vs skinnier look"): only a slight stretch, the rest is real size.
 const titleEl = ref<HTMLElement | null>(null);
 function stretchTitle() {
   const el = titleEl.value;
@@ -98,8 +98,8 @@ function stretchTitle() {
   el.style.setProperty("--stretch", "1");
   el.style.marginTop = "0";
   const phone = window.innerWidth <= 760;
-  const room = window.innerHeight * (phone ? 0.27 : 0.44);
-  const stretch = Math.min(phone ? 2.2 : 1.7, Math.max(1, room / Math.max(el.offsetHeight, 1)));
+  const room = window.innerHeight * (phone ? 0.34 : 0.44);
+  const stretch = Math.min(1.18, Math.max(1, room / Math.max(el.offsetHeight, 1)));
   el.style.setProperty("--stretch", String(stretch));
   el.style.marginTop = `${el.offsetHeight * (stretch - 1)}px`;
 }
