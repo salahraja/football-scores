@@ -208,7 +208,7 @@ tr[class*="zone--"] > .pos { box-shadow: inset 3px 0 0 var(--zone, transparent);
 @media (max-width: 760px) {
   .poster { gap: var(--space-2); }
   .poster__titlebar { gap: 0; }
-  .poster__titlebar .arrow { width: 46px; height: 60px; } .poster__titlebar .arrow svg { width: 44px; height: 44px; }
+  .poster__titlebar .arrow { width: 52px; height: 60px; } .poster__titlebar .arrow svg { width: 44px; height: 44px; }
   .poster__line { font-size: min(calc((100vw - 116px) / (var(--len, 7) * 0.5)), 34svh); }
   .poster__line.wide { display: none; }
   .poster__word { display: block; font-size: min(calc((100vw - 112px) / (var(--chars, 5) * 0.5)), 21svh); line-height: 0.88; white-space: nowrap; }
@@ -242,7 +242,7 @@ tr[class*="zone--"] > .pos { box-shadow: inset 3px 0 0 var(--zone, transparent);
 @media (min-width: 761px) {
   .poster .pick { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 2px 14px; }
   .poster__score { font-size: min(19vw, 34svh); }
-  .poster__team { font-size: min(calc(25vw / (var(--word, 7) * 0.5)), 6.4vw); }
+  .poster__team { font-size: min(calc(19vw / (var(--word, 7) * 0.5)), 6.4vw); }
   .poster__result { column-gap: clamp(16px, 2.4vw, 34px); }
 }
 @media (max-width: 360px) {
