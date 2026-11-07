@@ -253,7 +253,7 @@ tr[class*="zone--"] > .pos { box-shadow: inset 3px 0 0 var(--zone, transparent);
 
 /* Last round of notes: the game arrows sit to the right above the score, with long tails; the score drops toward the leagues; the leagues take two columns. */
 .poster__result { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); grid-template-areas: "nav nav nav" "home mid away" "meta meta meta"; margin-top: auto; align-items: center; }
-.poster__gamenav { grid-area: nav; display: flex; justify-content: flex-end; gap: 10px; padding-right: 2vw; }
+.poster__gamenav { grid-area: nav; display: flex; justify-content: space-between; gap: 10px; padding-inline: 2vw; }
 .arrow.long { width: 78px; height: 44px; } .arrow.long svg { width: 78px; height: 39px; stroke-width: 3.6; }
 .poster__result .home { grid-area: home; text-align: right; } .poster__result .away { grid-area: away; text-align: left; } .poster__result .poster__score { grid-area: mid; }
 .poster__result .poster__meta { grid-area: meta; }
