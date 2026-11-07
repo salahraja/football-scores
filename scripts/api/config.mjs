@@ -13,3 +13,9 @@ export const loadAdjustments = (season, leagueId) => read("data/api/adjustments.
 
 /** [{ date, home, away, had, ft, source }]: scores a source had wrong or missing, for one league season. */
 export const loadCorrections = (season, leagueId) => read("data/api/corrections.json")[season]?.[leagueId] ?? [];
+
+/** What each table position leads to in one league season ({ zones: [{ kind, from, to }], note }), or null (data/api/zones.json). */
+export const loadZones = (season, leagueId) => read("data/api/zones.json").seasons[season]?.[leagueId] ?? null;
+
+/** The zone kinds' names ({ cl: "Champions League", ... }). */
+export const zoneNames = () => read("data/api/zones.json").kinds;

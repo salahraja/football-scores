@@ -6,7 +6,7 @@
 import { mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { leagues } from "./config.mjs";
+import { leagues, loadZones, zoneNames } from "./config.mjs";
 import { CLUB_WORDS, aliasMap, slug } from "./teams.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -14,6 +14,7 @@ const FONTS = ["barlow-condensed-800-latin.woff2", "instrument-sans-latin.woff2"
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const day = (iso) => new Date(`${iso}T12:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
 const short = (iso) => new Date(`${iso}T12:00:00Z`).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" });
+const nth = (n) => `${n}${n % 100 >= 11 && n % 100 <= 13 ? "th" : ["th", "st", "nd", "rd"][n % 10] ?? "th"}`;
 const SOURCES = {
   openfootball: '<a href="https://github.com/openfootball/football.json">openfootball</a> (public domain)',
   wikipedia: '<a href="https://en.wikipedia.org/">Wikipedia</a> (<a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>)',
@@ -98,6 +99,17 @@ h2 { font: 800 1.9rem/1 var(--display); text-transform: uppercase; margin: 0 0 0
 .standings td, .standings tbody th { padding: 9px 6px; border-bottom: 1px solid var(--line); font-weight: 400; }
 .standings .left { text-align: left; } .standings .pts { font-weight: 700; }
 .standings td.pos { font: 800 1.15rem var(--display); opacity: 0.6; text-align: left; }
+/* zones: a bar on the position (decorative: the legend and a hidden label say the same in words) */
+[data-zone="cl"] { --zone: #2563c9; } [data-zone="clq"] { --zone: #7aa2e3; } [data-zone="el"] { --zone: #d9771f; }
+[data-zone="elq"] { --zone: #eaa765; } [data-zone="eclq"] { --zone: #2e9a5f; } [data-zone="ecl_po"] { --zone: #7cc49b; }
+[data-zone="promo"] { --zone: #2e9a5f; } [data-zone="promo_po"] { --zone: #7cc49b; } [data-zone="rel_po"] { --zone: #e0a526; }
+[data-zone="rel"] { --zone: #c8372d; }
+.standings tr[data-zone] td.pos { opacity: 1; box-shadow: inset 4px 0 var(--zone); padding-left: 12px; }
+.zones { list-style: none; margin: 0.75rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.35rem 1rem; font-size: 0.8125rem; }
+.zones li { display: flex; align-items: center; gap: 0.4rem; }
+.zones + .note { margin-top: 0.6rem; }
+.zones li::before { content: ""; width: 4px; height: 1em; border-radius: 2px; background: var(--zone); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .games { list-style: none; margin: 0; padding: 0; }
 .games > li { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 0.5rem; align-items: center; padding: 10px 0;
   border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
@@ -161,8 +173,11 @@ function featured(week, latest, names, today) {
   return `<div class="feature"${marks(m)} style="--w: ${longest}">${arrow("prev", -1, "Previous game")}<span class="home">${esc(names[m.home])}</span><span class="mid">${esc(mid(m))}</span><span class="away">${esc(names[m.away])}</span>${arrow("next", 1, "Next game")}<span class="when">${esc(m.round ?? "")} · ${short(m.date)}</span></div>`;
 }
 
-function leaguePage(league, competition, api, before, after) {
+function leaguePage(league, competition, api, before, after, zonesFor) {
   const season = competition.current;
+  const zoning = zonesFor(season, league.id);
+  const names = zoneNames();
+  const zoneAt = (pos) => zoning?.zones.find((z) => pos >= z.from && pos <= z.to) ?? null;
   const read = (f) => JSON.parse(readFileSync(join(api, league.id, season, f), "utf8"));
   const { table } = read("table.json");
   const { matches } = read("matches.json");
@@ -185,8 +200,11 @@ function leaguePage(league, competition, api, before, after) {
   // live scores from SportScore only where it covers the league and the page has games still to play
   const live = league.sportscore && (week.length || next.length) ? league.sportscore : null;
   const upTo = meta.lastResult ? `Results up to ${day(meta.lastResult)}` : "No results yet";
-  const rows = table.map((r) => `<tr class="row"><td class="pos">${r.position}</td><th scope="row" class="left">${esc(teams[r.team])}</th><td>${r.played}</td>`
-    + `<td class="wdl">${r.won}</td><td class="wdl">${r.drawn}</td><td class="wdl">${r.lost}</td><td>${r.gd > 0 ? "+" : ""}${r.gd}</td><td class="pts">${r.points}</td></tr>`).join("\n");
+  const rows = table.map((r) => { const z = zoneAt(r.position); return `<tr class="row"${z ? ` data-zone="${z.kind}"` : ""}><td class="pos">${r.position}${z ? `<span class="sr-only">, ${esc(names[z.kind])}</span>` : ""}</td><th scope="row" class="left">${esc(teams[r.team])}</th><td>${r.played}</td>`
+    + `<td class="wdl">${r.won}</td><td class="wdl">${r.drawn}</td><td class="wdl">${r.lost}</td><td>${r.gd > 0 ? "+" : ""}${r.gd}</td><td class="pts">${r.points}</td></tr>`; }).join("\n");
+  const range = (z) => (z.from === z.to ? nth(z.from) : `${nth(z.from)}–${nth(z.to)}`);
+  const legend = zoning ? `<ul class="zones" aria-label="What the places lead to">${zoning.zones.map((z) => `<li data-zone="${z.kind}"><b>${esc(names[z.kind])}</b> ${range(z)}</li>`).join("")}</ul>
+<p class="note">${esc(zoning.note)}</p>` : "";
   const list = (games) => `<ul class="games" aria-live="polite">${games.map((m) => game(m, teams, today)).join("\n")}</ul>`;
   const go = (l, dir, word) => `<a class="arrow ${dir}" href="/leagues/${l.id}/" aria-label="${word} league: ${esc(l.name)}"><span aria-hidden="true">${dir === "prev" ? "‹" : "›"}</span></a>`;
   const body = `<header class="poster">
@@ -209,6 +227,7 @@ ${list(week)}
 ${rows}
 </tbody>
 </table></div>
+${legend}
 </section>
 <div class="side">
 <section class="glass">
@@ -348,14 +367,14 @@ export function liveScript() {
 }
 
 /** Write <out>/leagues/ from the API at <api>: index.html, site.css, live.js, fonts and <league>/index.html. All or nothing. */
-export function pages({ api = "public/api/v1", out = "public" } = {}) {
+export function pages({ api = "public/api/v1", out = "public", zones = loadZones } = {}) {
   const { competitions } = JSON.parse(readFileSync(join(api, "competitions.json"), "utf8"));
   const byId = new Map(competitions.map((c) => [c.id, c]));
   const files = new Map([["site.css", CSS], ["live.js", liveScript()]]);
   for (const font of FONTS) files.set(`fonts/${font}`, readFileSync(join(HERE, "assets", "fonts", font)));
   const served = leagues().filter((l) => byId.has(l.id));
   served.forEach((league, i) => files.set(`${league.id}/index.html`, leaguePage(league, byId.get(league.id), api,
-    served[(i - 1 + served.length) % served.length], served[(i + 1) % served.length])));
+    served[(i - 1 + served.length) % served.length], served[(i + 1) % served.length], zones)));
   files.set("index.html", shell({ title: "Leagues", path: "/leagues/", here: "all", description: "Tables, results and fixtures for eight European leagues.",
     body: `<header class="poster"><h1>golboard</h1><p class="note">Tables, results and fixtures, worked out from open data.</p></header>
 <main class="board" style="grid-template-columns: minmax(0, 1fr)">

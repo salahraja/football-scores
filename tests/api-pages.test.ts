@@ -135,3 +135,70 @@ describe("league pages", () => {
     expect(existsSync(join(out, "leagues/site.css"))).toBe(true);
   });
 });
+
+// What each table position leads to (data/api/zones.json). A season's table fills the next season's places, so 2026-27 holds the 2027-28
+// European places. The fixtures are 2025-26, so the page tests pass their own zones in.
+describe("table zones", () => {
+  const data = JSON.parse(readFileSync("data/api/zones.json", "utf8"));
+  const served = JSON.parse(readFileSync("data/api/leagues.json", "utf8")).leagues as { id: string; teams: number }[];
+
+  it("gives every league the current season's zones: inside the table, in order, never overlapping, each with a note", () => {
+    for (const league of served) {
+      const entry = data.seasons["2026-27"][league.id];
+      expect(entry, league.id).toBeTruthy();
+      expect(entry.note.length, league.id).toBeGreaterThan(10);
+      let last = 0;
+      for (const z of entry.zones) {
+        expect(data.kinds[z.kind], `${league.id} ${z.kind}`).toBeTruthy();
+        expect(z.from, league.id).toBeGreaterThan(last);
+        expect(z.to, league.id).toBeGreaterThanOrEqual(z.from);
+        expect(z.to, league.id).toBeLessThanOrEqual(league.teams);
+        last = z.to;
+      }
+    }
+  });
+
+  it("has the 2027-28 places of UEFA's 2026 country ranking (4 Champions League places to the top four, 3 and a qualifier to France)", () => {
+    const cl = (id: string) => data.seasons["2026-27"][id].zones.find((z: { kind: string }) => z.kind === "cl");
+    for (const id of ["en-1", "it-1", "es-1", "de-1"]) expect(cl(id).to, id).toBe(4);
+    expect(cl("fr-1").to).toBe(3);
+    expect(cl("pt-1").to).toBe(2);
+    expect(cl("nl-1").to).toBe(1);
+  });
+
+  const zoned = () => {
+    const out = tmp();
+    build({ input: "tests/fixtures/openfootball", wikipedia: tmp(), out, seasons: ["2025-26"], now: "2026-10-31T17:00:00Z" });
+    const zones = (season: string, id: string) => (season === "2025-26" && id === "it-1"
+      ? { zones: [{ kind: "cl", from: 1, to: 4 }, { kind: "el", from: 5, to: 5 }, { kind: "rel", from: 18, to: 20 }], note: "Cup winners can move these places." }
+      : null);
+    pages({ api: join(out, "api/v1"), out, zones });
+    return out;
+  };
+
+  it("marks each row in a zone, with the zone's name for screen readers, and leaves the rest alone", () => {
+    const html = page(zoned(), "leagues/it-1/index.html");
+    expect((html.match(/<tr class="row" data-zone="cl">/g) ?? []).length).toBe(4);
+    expect((html.match(/<tr class="row" data-zone="el">/g) ?? []).length).toBe(1);
+    expect((html.match(/<tr class="row" data-zone="rel">/g) ?? []).length).toBe(3);
+    expect((html.match(/<tr class="row">/g) ?? []).length).toBe(12);
+    expect(html).toContain('<td class="pos">1<span class="sr-only">, Champions League</span></td>');
+  });
+
+  it("shows a legend with each zone's positions and the league's note under the table", () => {
+    const html = page(zoned(), "leagues/it-1/index.html");
+    const legend = html.slice(html.indexOf('<ul class="zones"'), html.indexOf("</ul>", html.indexOf('<ul class="zones"')));
+    expect(legend).toContain('data-zone="cl"');
+    expect(legend).toContain("Champions League</b> 1st–4th");
+    expect(legend).toContain("Europa League</b> 5th");
+    expect(legend).toContain("Relegation</b> 18th–20th");
+    expect(html).toContain("Cup winners can move these places.");
+    expect(html.indexOf('<ul class="zones"')).toBeGreaterThan(html.indexOf("</table>"));
+  });
+
+  it("shows no legend and no marks for a season without zones", () => {
+    const html = page(zoned(), "leagues/en-1/index.html");
+    expect(html).not.toContain('<ul class="zones"');
+    expect(html).not.toContain("data-zone=");
+  });
+});
