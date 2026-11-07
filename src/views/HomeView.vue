@@ -78,7 +78,8 @@ function liveIn(id: string) {
   return (todays.value[id] ?? []).some((g) => g.status === "live");
 }
 async function readToday(id: string) {
-  todays.value = { ...todays.value, [id]: await today(id) };
+  const games = await today(id);
+  todays.value = { ...todays.value, [id]: games }; // spread after the wait: leagues arrive in any order, and none may overwrite another
 }
 let poll: ReturnType<typeof setInterval> | undefined;
 onUnmounted(() => clearInterval(poll));

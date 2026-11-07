@@ -138,6 +138,32 @@ describe("the homepage's leagues", () => {
     expect(w.get('[data-test="hero"]').text()).toBe(before);
   });
 
+  it("keeps today's games for every league, whichever answers first", async () => {
+    let release: () => void = () => {};
+    const late = new Promise<void>((r) => (release = r));
+    vi.stubGlobal("fetch", vi.fn(async (url: string) => {
+      if (url.includes("italian-serie-a")) {
+        await late; // Serie A answers last, and must not wipe the Premier League
+        return { ok: true, json: async () => ({ matches: [{ home: "Roma", away: "Lazio", home_score: "1", away_score: "1", status: "finished", time: "2026-11-07T12:00:00+00:00" }] }) };
+      }
+      if (url.includes("english-premier-league")) return { ok: true, json: async () => ({ matches: [{ home: "Leeds United", away: "Tottenham Hotspur", home_score: "1", away_score: "0", status: "finished", time: "2026-11-07T12:30:00+00:00" }] }) };
+      if (url.includes("sportscore.com")) return { ok: true, json: async () => ({ matches: [] }) };
+      const key = url.replace("/api/v1/", "");
+      return key in replies ? { ok: true, status: 200, json: async () => replies[key] } : { ok: false, status: 500 };
+    }));
+    const w = home();
+    await flushPromises();
+    await flushPromises();
+    release();
+    await flushPromises();
+    await flushPromises();
+    expect(w.get('[data-test="hero"]').text()).toContain("Roma");
+    await w.get('[data-test="league-next"]').trigger("click");
+    await flushPromises();
+    expect(w.get('[data-test="hero"]').text()).toContain("Leeds United");
+    expect(w.get('[data-test="state"]').text()).toBe("Full time");
+  });
+
   it("says what each place in the table leads to, in words", async () => {
     stub();
     const w = home();
