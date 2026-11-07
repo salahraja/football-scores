@@ -1,0 +1,25 @@
+---
+// Every app page: the head, the glass nav, and the page in <main>.
+import "../styles/tokens.css";
+import "../styles/base.css";
+import NavBar from "../components/NavBar.vue";
+
+interface Props { title: string; current: string; description?: string }
+const { title, current, description = "Serie A scores, results and league table" } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.ico" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <div id="app">
+      <NavBar current={current} />
+      <main class="page"><slot /></main>
+    </div>
+  </body>
+</html>

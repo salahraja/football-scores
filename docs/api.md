@@ -1,7 +1,7 @@
 # golboard API, version 1
 
 Our own football data: results, fixtures, tables and team ids for eight leagues, as a folder of static JSON. No server and no key, so any
-app or page can read it. Built by `npm run api` (download, then build) into `public/api/v1/`, which Vite copies to the site.
+app or page can read it. Built by `npm run api` (download, then build) into `public/api/v1/`, which Astro copies to the site.
 
 ## Files
 

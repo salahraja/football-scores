@@ -16,7 +16,9 @@ const newest = computed(() => getResultRounds()[0]);
 const note = getDataNote();
 
 const list = ref<Competition[]>([]);
-const chosen = ref(new URLSearchParams(window.location.search).get("league") ?? HOME);
+// Built as HTML with Serie A chosen; the league in the address, if any, is opened once the page runs (so the built HTML and the
+// first render in the browser agree).
+const chosen = ref(HOME);
 const loaded = ref<Record<string, League>>({});
 const failed = ref(false);
 const pick = ref<HTMLElement | null>(null);
@@ -156,6 +158,8 @@ watch(chosen, async (id) => {
   await open(id);
 });
 onMounted(async () => {
+  const asked = new URLSearchParams(window.location.search).get("league");
+  if (asked) chosen.value = asked;
   try {
     list.value = await competitions();
     await open(HOME);
@@ -230,7 +234,7 @@ onMounted(async () => {
         </ul>
         <p v-if="zoneNote" class="note zones__note">{{ zoneNote }}</p>
         <a v-if="other" class="more" :href="`/leagues/${other.id}/`">Full table</a>
-        <router-link v-else class="more" to="/standings">Full table</router-link>
+        <a v-else class="more" href="/standings">Full table</a>
       </section>
 
       <div class="board__side">
@@ -260,7 +264,7 @@ onMounted(async () => {
               <span class="dent match__s">{{ m.homeScore.current }}–{{ m.awayScore.current }}</span>
               <span>{{ m.awayTeam.name }}</span>
             </div>
-            <router-link class="more" to="/results">All results</router-link>
+            <a class="more" href="/results">All results</a>
           </template>
         </section>
         <section class="glass accent" data-test="scorers" aria-labelledby="t-scorers">

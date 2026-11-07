@@ -31,7 +31,7 @@ describe("home", () => {
 
   it("links to the full table and all results, and invents no scorers or headlines", () => {
     const wrapper = home();
-    const links = wrapper.findAllComponents(RouterLinkStub).map((l) => l.props("to"));
+    const links = wrapper.findAll("a").map((a) => a.attributes("href")); // plain links since the move to Astro (2026-11-07)
     expect(links).toEqual(expect.arrayContaining(["/standings", "/results"]));
     expect(wrapper.get('[data-test="scorers"]').text()).toMatch(/live build/i);
     expect(wrapper.get('[data-test="headlines"]').text()).toMatch(/to choose/i);

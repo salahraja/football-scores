@@ -73,7 +73,7 @@ code { font-family: var(--font-mono); font-weight: 700; }
 @media (prefers-reduced-transparency: reduce) { .navbar { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--glass-solid); } }
 .links { display: flex; gap: var(--space-2); font-weight: 800; flex-wrap: wrap; }
 .links a { color: var(--fg); text-decoration: none; padding: 8px 16px; border-radius: 16px 20px 14px 22px; }
-.links a.router-link-exact-active { background: var(--fg); color: var(--bg); }
+.links a[aria-current="page"] { background: var(--fg); color: var(--bg); }
 
 /* standings */
 .standings {

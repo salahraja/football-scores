@@ -1,7 +1,7 @@
 # Football Scores
 
 A small static site for Serie A: a home page, a league table and match results.
-Built with Vue 3, TypeScript, Vue Router and Vite, styled with plain CSS
+Built with Astro, Vue 3 and TypeScript, styled with plain CSS
 (design tokens as custom properties in `src/styles/tokens.css`, light and dark
 via `prefers-color-scheme`).
 
@@ -16,7 +16,7 @@ time** (there is no backend and no network call from the browser). `npm run buil
    writes nothing and keeps the committed snapshot, so a build never fails for lack of data. The token is never printed or written.
 2. `npm run data`: the Goose engine turns `data/raw` into `src/data/generated` (see Goose below). It runs with an empty environment,
    so it cannot see the token.
-3. `VITE_DATA=generated npm run build`: Vite bundles the generated JSON into the site.
+3. `VITE_DATA=generated npm run build`: Astro builds each page to HTML from the generated JSON, then `scripts/csp.mjs` writes `dist/_headers`.
 
 Early in a season, while there are zero finished matches, the fetch keeps the committed snapshot, so the previous season shows until
 the first match finishes. A FINISHED match with a null score (or any other unexpected shape) also makes the whole fetch keep the snapshot.
@@ -37,7 +37,7 @@ record in the tests. Format and sources: `docs/api.md`.
 
 ## Deploy on Netlify
 
-`netlify.toml` holds the build command, `dist` as the publish directory, a `/* -> /index.html` rewrite (the app uses history routing)
+`netlify.toml` holds the build command, `dist` as the publish directory, no rewrite (each page is its own built HTML file, and an unknown address gets `404.html`)
 and a few security headers. Create the site from the repository, then add one environment variable (Site configuration, Environment
 variables): **`FOOTBALL_DATA_TOKEN`** = your football-data.org API token. Without it the site builds from the committed snapshot.
 New data appears on each deploy (trigger a deploy, or a Netlify build hook on a schedule).
@@ -90,7 +90,7 @@ months old, one author, no package ecosystem. Nothing the app needs at run time 
 |---|---|---|
 | Table (points, tie-breaks, positions), results grouped by round with outcomes, name collation | Goose (`goose/footy.goose`) and TS (`src/data/build.ts`) | pure computation on JSON: the part Goose can do. Output is identical, byte for byte |
 | Fetching data | Goose (`goose/fetch.goose`, with `goose/net.c` over the system libcurl) where the Goose compiler is installed, else Node (`scripts/fetch-data.mjs`) | Same bytes from both (`tests/fetch-goose.test.ts`). Goose binds C with `extern fn`; the HTTPS call and the token stay in the C, so Goose code never holds the token. Netlify has no Goose compiler, so its build uses the Node fetch |
-| Vue app, router, views, tests, Vite | TS | Goose has no DOM and no JS interop |
+| Pages (Astro), the homepage's board (a Vue island), views, tests | TS | Goose has no DOM and no JS interop |
 | Calling Goose from the browser | `src/data/goose-wasm.ts` (60 lines) loading `goose/dist/goose-footy.wasm` | Goose has no WASM backend; this is a C to wasm64 workaround, see `docs/goose-spike.md`. Used by Node at build time (`scripts/run-wasm.mjs`, `DATA_ENGINE=wasm`); not loaded by the browser app |
 
 ### Build and run (clean environment)
@@ -111,7 +111,7 @@ npm run goose:build           # goose/cli.goose -> ~/.cache/football-scores-goos
 npm run data                  # data/raw/*.json -> src/data/generated/*.json with the best engine available (see below)
 DATA_VERIFY=1 npm run data    # same, then fail unless the output is byte-identical to the TS engine
 DATA_ENGINE=goose npm run data  # native Goose or fail;  DATA_ENGINE=wasm  # the committed wasm or fail;  DATA_ENGINE=ts  # TS only
-npm run build:data            # data, then a Vite build that reads the generated JSON (VITE_DATA=generated)
+npm run build:data            # data, then the Astro build that reads the generated JSON (VITE_DATA=generated)
 npm run build:live            # fetch from football-data.org first (needs FOOTBALL_DATA_TOKEN), then build:data
 npm run parity                # every fixture in tests/fixtures through Python, the Goose CLI and the wasm build vs TS
 npm test                      # vitest (engine tests skip an engine that is not built; the wasm is committed, so it always runs)
@@ -165,3 +165,14 @@ characters ICU expands (ß Æ æ Œ œ Ĳ ĳ ŉ ſ, the fractions ¼ ½ ¾ and �
 (decomposed accents). These sort after all table characters by code point. `tests/fixtures/outside-latin.standings.json` pins that behaviour
 across engines.
 
+## Pages and the security policy (Astro, since 2026-11-07)
+
+Each page is built to plain HTML by Astro (`src/pages/*.astro`, one layout in `src/layouts/Page.astro`). League Table and Match
+Results ship no script at all. The homepage's board is a Vue island (`client:load`): its first screen arrives as HTML and Vue takes
+it over when it loads. Measured on a throttled phone (median of 7), the poster shows at 0.44 s against 1.0 s for the old Vue app;
+the arrows work at the same moment (about 1 s) and the download is the same size.
+
+Astro wakes the island with a small inline script. The site's Content-Security-Policy refuses inline scripts, so after the build
+`scripts/csp.mjs` writes `dist/_headers` with the policy, allowing exactly the build's own inline scripts by their sha256
+(`tests/csp.test.ts`). The other security headers stay in `netlify.toml`. Changing the policy means changing `BASE` in
+`scripts/csp.mjs`, not `netlify.toml`.
