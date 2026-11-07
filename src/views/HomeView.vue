@@ -90,6 +90,29 @@ function stepGame(by: number) {
 // A swipe on a phone or tablet does what the arrows do: on the score it changes the game, anywhere else on the poster the league. Mostly-sideways only, so scrolling
 // down the page stays a scroll.
 const SWIPE = 45;
+// Salah, 2026-11-07: the name goes tall into the space above it. It keeps its width and stretches upward to take about a third of the screen.
+const titleEl = ref<HTMLElement | null>(null);
+function stretchTitle() {
+  const el = titleEl.value;
+  if (!el) return;
+  el.style.setProperty("--stretch", "1");
+  el.style.marginTop = "0";
+  const phone = window.innerWidth <= 760;
+  const room = window.innerHeight * (phone ? 0.27 : 0.44);
+  const stretch = Math.min(phone ? 2.2 : 1.7, Math.max(1, room / Math.max(el.offsetHeight, 1)));
+  el.style.setProperty("--stretch", String(stretch));
+  el.style.marginTop = `${el.offsetHeight * (stretch - 1)}px`;
+}
+watch([title, titleEl], async () => {
+  await nextTick();
+  stretchTitle();
+});
+onMounted(() => {
+  stretchTitle();
+  document.fonts?.ready?.then(stretchTitle);
+  window.addEventListener("resize", stretchTitle);
+});
+onUnmounted(() => window.removeEventListener("resize", stretchTitle));
 const slide = ref("");
 let slideDone: ReturnType<typeof setTimeout> | undefined;
 watch(slide, (name) => {
@@ -108,7 +131,6 @@ function swipeEnd(e: TouchEvent) {
   const dy = t.clientY - touch.y;
   const onGame = touch.game;
   touch = null;
-  if ((e.target as Element | null)?.closest?.(".pick")) return; // the row of leagues scrolls sideways on its own
   if (Math.abs(dx) < SWIPE || Math.abs(dx) < Math.abs(dy) * 1.5) return;
   const by = dx < 0 ? 1 : -1;
   if (onGame && games.value.length > 1) stepGame(by);
@@ -157,7 +179,7 @@ onMounted(async () => {
     <section v-if="game" class="poster" data-test="hero" aria-label="Featured result" @touchstart.passive="swipeStart" @touchend.passive="swipeEnd">
       <div class="poster__titlebar" :key="title" :class="slide">
         <button v-if="list.length" type="button" class="arrow" :aria-label="`Previous league: ${neighbour(-1)}`" data-test="league-prev" @click="step(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12H6M12 5l-7 7 7 7" /></svg></button>
-        <h1 class="poster__title" :aria-label="title">
+        <h1 ref="titleEl" class="poster__title" :aria-label="title">
           <span class="poster__line" :class="{ wide: longName }" :style="{ '--len': title.length }">{{ title }}</span>
           <template v-if="longName"><span v-for="w in title.split(' ')" :key="w" class="poster__word" :style="{ '--chars': w.length }" aria-hidden="true">{{ w }}</span></template>
         </h1>

@@ -220,3 +220,28 @@ tr[class*="zone--"] > .pos { box-shadow: inset 3px 0 0 var(--zone, transparent);
   @keyframes slide-right { from { transform: translateX(36px); opacity: 0; } }
   @keyframes slide-left { from { transform: translateX(-36px); opacity: 0; } }
 }
+
+/* The poster fills its screen (Salah, 2026-11-07): the name tall above, the score huge below, black clubs, and the leagues as a stacked red list with a red line under the one on show. */
+.poster { justify-content: flex-start; gap: clamp(6px, 1.4svh, 14px); padding-bottom: var(--space-2); }
+.poster__title { transform: scaleY(var(--stretch, 1)); transform-origin: bottom center; -webkit-text-stroke: 0.02em var(--accent); paint-order: stroke fill; }
+.poster__titlebar { align-items: flex-end; }
+.poster .pick { flex-direction: column; align-items: center; gap: 0; overflow: visible; padding: 0; margin-top: auto; -webkit-mask-image: none; mask-image: none; }
+.pick button, .pick button.on { min-height: clamp(26px, 4svh, 40px); padding: 0 10px; border-radius: 0; background: none; color: var(--accent); font: 800 clamp(1rem, 2.5svh, 1.5rem)/1.1 var(--font-display); letter-spacing: 0.02em; text-transform: uppercase; opacity: 0.72; }
+.pick button.on { opacity: 1; text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 3px; }
+.poster__team { color: var(--fg); }
+@media (max-width: 760px) {
+  .poster__titlebar .arrow { align-self: flex-end; margin-bottom: 4svh; }
+  .poster__result { grid-template-columns: 46px minmax(0, 1fr) minmax(0, 1fr) 46px; grid-template-areas: "home home away away" "prev mid mid next" "meta meta meta meta"; column-gap: 0; row-gap: 2px; align-items: center; }
+  .poster__result .home, .poster__result .away { text-align: center; font-size: min(calc(46vw / (var(--word, 7) * 0.47)), 8.5vw + 8px); line-height: 0.95; }
+  .poster__score, .poster__result .poster__score { text-align: center; justify-self: center; font-size: min(38vw, 19svh); line-height: 0.82; }
+  .poster__meta { margin: 0; font-size: 0.8125rem; }
+}
+@media (min-width: 761px) {
+  .poster .pick { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 2px 14px; }
+  .poster__score { font-size: min(19vw, 34svh); }
+  .poster__team { font-size: min(calc(31vw / (var(--word, 7) * 0.5)), 7.4vw); }
+  .poster__result { column-gap: clamp(16px, 2.4vw, 34px); }
+}
+@media (max-width: 360px) {
+  .poster__result { grid-template-columns: 46px minmax(0, 1fr) minmax(0, 1fr) 46px; grid-template-areas: "home home away away" "prev mid mid next" "meta meta meta meta"; }
+}
