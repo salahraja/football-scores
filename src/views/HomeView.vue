@@ -84,7 +84,7 @@ async function readToday(id: string) {
 let poll: ReturnType<typeof setInterval> | undefined;
 onUnmounted(() => clearInterval(poll));
 function stepGame(by: number) {
-  slide.value = by > 0 ? "from-right" : "from-left";
+  slide.value = { name: by > 0 ? "from-right" : "from-left", league: false };
   shown.value += by;
 }
 // A swipe on a phone or tablet does what the arrows do: on the score it changes the game, anywhere else on the poster the league. Mostly-sideways only, so scrolling
@@ -113,11 +113,13 @@ onMounted(() => {
   window.addEventListener("resize", stretchTitle);
 });
 onUnmounted(() => window.removeEventListener("resize", stretchTitle));
-const slide = ref("");
+// Which way the new league or game slides in, and whether the league moved too: a game alone leaves the league's name still
+// (Salah, 2026-11-07: "the league also refreshes even though I'm not swiping that").
+const slide = ref<{ name: string; league: boolean }>({ name: "", league: false });
 let slideDone: ReturnType<typeof setTimeout> | undefined;
-watch(slide, (name) => {
+watch(slide, ({ name }) => {
   clearTimeout(slideDone);
-  if (name) slideDone = setTimeout(() => (slide.value = ""), 260); // handed back, so the scroll's own drift runs again
+  if (name) slideDone = setTimeout(() => (slide.value = { name: "", league: false }), 260); // handed back, so the scroll's own drift runs again
 });
 let touch: { x: number; y: number; game: boolean } | null = null;
 function swipeStart(e: TouchEvent) {
@@ -141,7 +143,7 @@ function neighbour(by: number) {
   return list.value[(at + by + list.value.length) % list.value.length].name;
 }
 function step(by: number) {
-  slide.value = by > 0 ? "from-right" : "from-left";
+  slide.value = { name: by > 0 ? "from-right" : "from-left", league: true };
   const at = list.value.findIndex((c) => c.id === chosen.value);
   choose(list.value[(at + by + list.value.length) % list.value.length].id);
 }
@@ -177,7 +179,7 @@ onMounted(async () => {
   <section class="board">
     <!-- The poster, as on the league pages: the league's name between its arrows, then a game between its arrows (Juventus's first when they played). -->
     <section v-if="game" class="poster" data-test="hero" aria-label="Featured result" @touchstart.passive="swipeStart" @touchend.passive="swipeEnd">
-      <div class="poster__titlebar" :key="title" :class="slide">
+      <div class="poster__titlebar" :key="title" :class="slide.league ? slide.name : ''">
         <button v-if="list.length" type="button" class="arrow" :aria-label="`Previous league: ${neighbour(-1)}`" data-test="league-prev" @click="step(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12H6M12 5l-7 7 7 7" /></svg></button>
         <h1 ref="titleEl" class="poster__title" :aria-label="title">
           <span class="poster__line" :class="{ wide: longName }" :style="{ '--len': title.length }">{{ title }}</span>
@@ -185,7 +187,7 @@ onMounted(async () => {
         </h1>
         <button v-if="list.length" type="button" class="arrow" :aria-label="`Next league: ${neighbour(1)}`" data-test="league-next" @click="step(1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12h16M12 5l7 7-7 7" /></svg></button>
       </div>
-      <div class="poster__result" data-swipe="game" :key="`${game.home}-${game.away}`" :class="slide">
+      <div class="poster__result" data-swipe="game" :key="`${game.home}-${game.away}`" :class="slide.name">
         <span class="poster__team home" :style="{ '--word': longestWord(game.home) }">{{ game.home }}</span>
         <span class="poster__score">{{ game.score ? `${game.score[0]}–${game.score[1]}` : "v" }}</span>
         <span class="poster__team away" :style="{ '--word': longestWord(game.away) }">{{ game.away }}</span>
