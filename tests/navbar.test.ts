@@ -10,4 +10,9 @@ describe("navbar", () => {
     expect(nav.find("img").exists()).toBe(false);
     expect(nav.text()).not.toMatch(/\bBy\b/);
   });
+
+  it("links the league pages, which are built outside the app", () => {
+    const nav = mount(NavBar, { global: { stubs: { RouterLink: RouterLinkStub } } });
+    expect(nav.find('a[href="/leagues/"]').text()).toBe("Leagues");
+  });
 });

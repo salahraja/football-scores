@@ -138,3 +138,6 @@ code { font-family: var(--font-mono); font-weight: 700; }
   .navbar { flex-wrap: nowrap; gap: 6px; }
   .links { flex-wrap: nowrap; gap: 2px; } .links a { padding: 8px 10px; white-space: nowrap; }
 }
+/* four links on a small phone: tighter, and still one row */
+@media (max-width: 430px) { .navbar { font-size: 0.8125rem; padding: 6px 6px; } .links a { padding: 8px 7px; } }
+@media (max-width: 360px) { .navbar { font-size: 0.75rem; } .links a { padding: 8px 5px; } }
