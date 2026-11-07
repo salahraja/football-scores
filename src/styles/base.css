@@ -196,7 +196,7 @@ tr[class*="zone--"] > .pos { box-shadow: inset 3px 0 0 var(--zone, transparent);
 
 /* The red name fills the first screen, as in the Stadio poster and the Dribbble shot it came from: one huge line between two red arrows. */
 .poster__title { max-width: 100%; line-height: 0.84; flex: 1 1 auto; min-width: 0; }
-.poster__line { display: block; font-size: min(calc((100vw - 250px) / (var(--len, 7) * 0.46)), 46svh); white-space: nowrap; }
+.poster__line { display: block; font-size: min(calc((100vw - 270px) / (var(--len, 7) * 0.49)), 46svh); white-space: nowrap; }
 .poster__word { display: none; }
 .poster__result { width: 100%; box-sizing: border-box; }
 .poster__titlebar { gap: 4px; width: 100%; }
@@ -209,9 +209,9 @@ tr[class*="zone--"] > .pos { box-shadow: inset 3px 0 0 var(--zone, transparent);
   .poster { gap: var(--space-2); }
   .poster__titlebar { gap: 0; }
   .poster__titlebar .arrow { width: 46px; height: 60px; } .poster__titlebar .arrow svg { width: 44px; height: 44px; }
-  .poster__line { font-size: min(calc((100vw - 116px) / (var(--len, 7) * 0.46)), 34svh); }
+  .poster__line { font-size: min(calc((100vw - 116px) / (var(--len, 7) * 0.5)), 34svh); }
   .poster__line.wide { display: none; }
-  .poster__word { display: block; font-size: min(calc((100vw - 116px) / (var(--chars, 5) * 0.46)), 22svh); line-height: 0.86; white-space: nowrap; }
+  .poster__word { display: block; font-size: min(calc((100vw - 112px) / (var(--chars, 5) * 0.5)), 21svh); line-height: 0.88; white-space: nowrap; }
 }
 /* a swipe or an arrow slides the new league or game in from the side it came from */
 .poster { touch-action: pan-y; }
@@ -223,25 +223,30 @@ tr[class*="zone--"] > .pos { box-shadow: inset 3px 0 0 var(--zone, transparent);
 
 /* The poster fills its screen (Salah, 2026-11-07): the name tall above, the score huge below, black clubs, and the leagues as a stacked red list with a red line under the one on show. */
 .poster { justify-content: flex-start; gap: clamp(6px, 1.4svh, 14px); padding-bottom: var(--space-2); }
-.poster__title { transform: scaleY(var(--stretch, 1)); transform-origin: bottom center; -webkit-text-stroke: 0.02em var(--accent); paint-order: stroke fill; }
+.poster__title { transform: scaleY(var(--stretch, 1)); transform-origin: bottom center; -webkit-text-stroke: 0.024em var(--accent); letter-spacing: 0.012em; paint-order: stroke fill; }
 .poster__titlebar { align-items: flex-end; }
 .poster .pick { flex-direction: column; align-items: center; gap: 0; overflow: visible; padding: 0; margin-top: auto; -webkit-mask-image: none; mask-image: none; }
-.pick button, .pick button.on { min-height: clamp(26px, 4svh, 40px); padding: 0 10px; border-radius: 0; background: none; color: var(--accent); font: 800 clamp(1rem, 2.5svh, 1.5rem)/1.1 var(--font-display); letter-spacing: 0.02em; text-transform: uppercase; opacity: 0.72; }
-.pick button.on { opacity: 1; text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 3px; }
+.pick button, .pick button.on { min-height: clamp(26px, 4svh, 40px); padding: 0 10px; border-radius: 0; background: none; color: var(--fg); font: 800 clamp(1rem, 2.5svh, 1.5rem)/1.1 var(--font-display); letter-spacing: 0.02em; text-transform: uppercase; opacity: 0.8; }
+.pick button.on { opacity: 1; text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 4px; text-underline-offset: 4px; }
 .poster__team { color: var(--fg); }
 @media (max-width: 760px) {
   .poster__titlebar .arrow { align-self: flex-end; margin-bottom: 4svh; }
-  .poster__result { grid-template-columns: 46px minmax(0, 1fr) minmax(0, 1fr) 46px; grid-template-areas: "home home away away" "prev mid mid next" "meta meta meta meta"; column-gap: 0; row-gap: 2px; align-items: center; }
-  .poster__result .home, .poster__result .away { text-align: center; font-size: min(calc(46vw / (var(--word, 7) * 0.47)), 8.5vw + 8px); line-height: 0.95; }
-  .poster__score, .poster__result .poster__score { text-align: center; justify-self: center; font-size: min(38vw, 19svh); line-height: 0.82; }
+  /* the clubs sit beside the score, each sized to fit its side; the game arrows sit above the score */
+  .poster__result { grid-template-columns: minmax(0, 1fr) auto auto minmax(0, 1fr); grid-template-areas: ". prev next ." "home mid mid away" "meta meta meta meta"; column-gap: 6px; row-gap: 0; align-items: center; }
+  .poster__result .prev { justify-self: end; } .poster__result .next { justify-self: start; }
+  .poster__result .home { text-align: right; } .poster__result .away { text-align: left; }
+  .poster__result .home, .poster__result .away { font-size: min(calc(25vw / (var(--word, 7) * 0.46)), 6.6vw + 6px); line-height: 0.95; }
+  .poster__score, .poster__result .poster__score { text-align: center; justify-self: center; font-size: min(31vw, 17svh); line-height: 0.84; }
   .poster__meta { margin: 0; font-size: 0.8125rem; }
 }
 @media (min-width: 761px) {
   .poster .pick { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 2px 14px; }
   .poster__score { font-size: min(19vw, 34svh); }
-  .poster__team { font-size: min(calc(31vw / (var(--word, 7) * 0.5)), 7.4vw); }
+  .poster__team { font-size: min(calc(25vw / (var(--word, 7) * 0.5)), 6.4vw); }
   .poster__result { column-gap: clamp(16px, 2.4vw, 34px); }
 }
 @media (max-width: 360px) {
-  .poster__result { grid-template-columns: 46px minmax(0, 1fr) minmax(0, 1fr) 46px; grid-template-areas: "home home away away" "prev mid mid next" "meta meta meta meta"; }
+  .poster__result { grid-template-columns: minmax(0, 1fr) auto auto minmax(0, 1fr); grid-template-areas: ". prev next ." "home mid mid away" "meta meta meta meta"; }
+  .poster__team.home { text-align: right; } .poster__team.away { text-align: left; }
 }
+@media (max-width: 760px) { .poster__line.wide { display: none; } }
