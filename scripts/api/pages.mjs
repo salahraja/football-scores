@@ -6,7 +6,7 @@
 import { mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { leagues, loadZones, zoneNames } from "./config.mjs";
+import { SITE, leagues, loadZones, zoneNames } from "./config.mjs";
 import { CLUB_WORDS, aliasMap, slug } from "./teams.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -14,6 +14,18 @@ const FONTS = ["barlow-condensed-800-latin.woff2", "instrument-sans-latin.woff2"
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const day = (iso) => new Date(`${iso}T12:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
 const short = (iso) => new Date(`${iso}T12:00:00Z`).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" });
+// Each league's own clock, for kick-off times in structured data (the pages say "Italy time" and so on).
+const ZONE = { "it-1": "Europe/Rome", "en-1": "Europe/London", "en-2": "Europe/London", "es-1": "Europe/Madrid", "de-1": "Europe/Berlin",
+  "fr-1": "Europe/Paris", "nl-1": "Europe/Amsterdam", "pt-1": "Europe/Lisbon" };
+/** "2026-05-24T20:45:00+02:00" for a local kick-off in an IANA time zone; the date alone when there is no time. */
+const kickoff = (date, time, tz) => {
+  if (!time || !tz) return date;
+  const off = new Intl.DateTimeFormat("en-US", { timeZone: tz, timeZoneName: "longOffset" })
+    .formatToParts(new Date(`${date}T${time}:00Z`)).find((p) => p.type === "timeZoneName").value.replace("GMT", "");
+  return `${date}T${time}:00${off === "" ? "+00:00" : off}`;
+};
+/** A JSON-LD block. "<" is written as \u003c so a name can never close the script. */
+const jsonLd = (data) => `<script type="application/ld+json">${JSON.stringify(data).replace(/</g, "\\u003c")}</script>`;
 const nth = (n) => `${n}${n % 100 >= 11 && n % 100 <= 13 ? "th" : ["th", "st", "nd", "rd"][n % 10] ?? "th"}`;
 const SOURCES = {
   openfootball: '<a href="https://github.com/openfootball/football.json">openfootball</a> (public domain)',
@@ -137,7 +149,7 @@ footer { grid-column: 1 / -1; color: var(--muted); font-size: 0.8125rem; }
 @media (prefers-reduced-motion: no-preference) { .glass { transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1); } }
 `;
 
-function shell({ title, description, path, body, live = null, here = "", script = false }) {
+function shell({ title, description, path, body, live = null, here = "", script = false, ld = null }) {
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -148,10 +160,11 @@ function shell({ title, description, path, body, live = null, here = "", script 
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:type" content="website">
-<link rel="canonical" href="${esc(path)}">
+<meta property="og:url" content="${esc(SITE + path)}">
+<link rel="canonical" href="${esc(SITE + path)}">
 <link rel="preload" href="/leagues/fonts/barlow-condensed-800-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/leagues/site.css">
-${script ? '<script src="/leagues/live.js" defer></script>\n' : ""}</head>
+${script ? '<script src="/leagues/live.js" defer></script>\n' : ""}${ld ? `${jsonLd(ld)}\n` : ""}</head>
 <body${live ? ` data-sportscore="${esc(live)}"` : ""}>
 <nav class="nav" aria-label="Site"><a href="/leagues/"${here === "all" ? ' aria-current="page"' : ""}>Leagues</a>${here === "league" ? '<a href="#table">Table</a><a href="#week">This week</a>' : ""}</nav>
 ${body}
@@ -246,7 +259,13 @@ ${next.length ? list(next) : '<p class="note">None left this season.</p>'}
 </div>
 <footer>Results from ${used.map((s) => SOURCES[s]).join(" and ")}. Kick-off times are ${esc(league.clock)}.${live ? ' Live scores <a href="https://sportscore.com/">powered by SportScore</a>.' : ""}</footer>
 </main>`;
-  return shell({ title: `${league.name} table, results and fixtures`, path: `/leagues/${league.id}/`, body, live, here: "league", script: true,
+  const team = (id) => ({ "@type": "SportsTeam", name: teams[id] });
+  const events = [...week, ...next].map((m) => ({ "@type": "SportsEvent", name: `${teams[m.home]} v ${teams[m.away]}`,
+    startDate: kickoff(m.date, m.time, ZONE[league.id]), eventStatus: "https://schema.org/EventScheduled", sport: "Association football",
+    homeTeam: team(m.home), awayTeam: team(m.away), competitor: [team(m.home), team(m.away)],
+    superEvent: { "@type": "SportsEvent", name: `${league.name} ${season}` }, url: `${SITE}/leagues/${league.id}/` }));
+  const ld = events.length ? { "@context": "https://schema.org", "@graph": events } : null;
+  return shell({ title: `${league.name} table, results and fixtures`, path: `/leagues/${league.id}/`, body, live, here: "league", script: true, ld,
     description: `${league.name} ${season}: the table, the latest results and the next fixtures. ${upTo}.` });
 }
 
@@ -306,8 +325,10 @@ ${unplayed.length ? list(unplayed) : '<p class="note">None left this season.</p>
 </div>
 <footer><a href="/leagues/${league.id}/#table">The full ${esc(league.name)} table</a>.</footer>
 </main>`;
+    const ld = { "@context": "https://schema.org", "@type": "SportsTeam", name: club, sport: "Association football",
+      url: `${SITE}/leagues/${league.id}/${id}/`, memberOf: { "@type": "SportsOrganization", name: league.name } };
     pages.set(`${league.id}/${id}/index.html`, shell({ title: `${club}: ${league.name} results, fixtures and table place`, path: `/leagues/${league.id}/${id}/`,
-      body, description: `${club} in ${league.name} ${season}: ${nth(row.position)} on ${row.points} points, the last five results, the next game and every fixture.` }));
+      body, ld, description: `${club} in ${league.name} ${season}: ${nth(row.position)} on ${row.points} points, the last five results, the next game and every fixture.` }));
   }
   return pages;
 }
@@ -458,6 +479,12 @@ export function pages({ api = "public/api/v1", out = "public", zones = loadZones
   try { renameSync(live, old); } catch { /* first build */ }
   renameSync(fresh, live);
   rmSync(old, { recursive: true, force: true });
+  // the sitemap: the app's own pages, then every league and club page, all as of the API's build day
+  const lastmod = JSON.parse(readFileSync(join(api, "meta.json"), "utf8")).generatedAt.slice(0, 10);
+  const urls = ["/", "/standings", "/results", ...[...files.keys()].filter((p) => p.endsWith("index.html")).map((p) => `/leagues/${p.replace(/index\.html$/, "")}`)];
+  writeFileSync(join(out, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`
+    + urls.map((u) => `<url><loc>${esc(SITE + u)}</loc><lastmod>${lastmod}</lastmod></url>`).join("\n") + "\n</urlset>\n");
+  writeFileSync(join(out, "robots.txt"), `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`);
   return { pages: [...files.keys()].filter((p) => p.endsWith(".html")).length };
 }
 

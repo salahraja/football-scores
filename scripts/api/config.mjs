@@ -19,3 +19,6 @@ export const loadZones = (season, leagueId) => read("data/api/zones.json").seaso
 
 /** The zone kinds' names ({ cl: "Champions League", ... }). */
 export const zoneNames = () => read("data/api/zones.json").kinds;
+
+/** The site's public address, for canonical links, the sitemap and structured data (SITE_URL overrides it). */
+export const SITE = (process.env.SITE_URL ?? "https://football-scores-salah.netlify.app").replace(/\/$/, "");
