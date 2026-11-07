@@ -6,7 +6,8 @@ import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { leagues, loadAdjustments, loadCorrections, loadPostponed } from "./config.mjs";
+import { leagues, loadAdjustments, loadCorrections, loadPostponed, loadZones, zoneNames } from "./config.mjs";
+import { kickoff } from "./time.mjs";
 import { applyCorrections, parseSeason } from "./openfootball.mjs";
 import { computeTable } from "./table.mjs";
 import { teamId } from "./teams.mjs";
@@ -35,13 +36,15 @@ export function validate(season, teams) {
 }
 
 /** Build everything in memory, check it, then write it all at once. Throws (writing nothing) when any season fails validation. */
-export function build({ input = "data/openfootball", wikipedia = join(ROOT, "data/wikipedia"), out = "public", seasons = ["2025-26", "2026-27"], now = new Date().toISOString(), mutate } = {}) {
+export function build({ input = "data/openfootball", wikipedia = join(ROOT, "data/wikipedia"), out = "public", seasons = ["2025-26", "2026-27"], now = new Date().toISOString(), mutate, zones = loadZones } = {}) {
   const files = new Map();
   const meta = { version: 1, generatedAt: now, sources: [OPENFOOTBALL], leagues: {} };
   // a game more than three days before the build with no result: its source has stalled (see api:check)
   const lateBefore = new Date(Date.parse(now) - 3 * 86_400_000).toISOString().slice(0, 10);
   const competitions = [];
   const problems = [];
+  const current = new Map();  // league id -> its latest season's matches and team names, for today.json
+  const names = zoneNames();
   let usedWikipedia = false;
   for (const league of leagues()) {
     const have = [];
@@ -66,11 +69,15 @@ export function build({ input = "data/openfootball", wikipedia = join(ROOT, "dat
       problems.push(...validate(parsed, parsed.teams).map((p) => `${league.id} ${season}: ${p}`));
       const adjustments = loadAdjustments(season, league.id);
       const table = computeTable(parsed.matches, league, adjustments);
+      for (const m of parsed.matches) m.kickoff = kickoff(m.date, m.time, league.tz);
+      const zoning = zones(season, league.id);
+      current.set(league.id, { matches: parsed.matches, teams: parsed.teams });
       const finished = parsed.matches.filter((m) => m.status === "finished");
       const postponed = loadPostponed(season, league.id);
       const base = `api/v1/${league.id}/${season}`;
       files.set(`${base}/matches.json`, { competition: league.id, season, matches: parsed.matches });
-      files.set(`${base}/table.json`, { competition: league.id, season, table, adjustments });
+      files.set(`${base}/table.json`, { competition: league.id, season, table, adjustments,
+        zones: zoning ? { zones: zoning.zones.map((z) => ({ kind: z.kind, label: names[z.kind], from: z.from, to: z.to })), note: zoning.note } : null });
       files.set(`${base}/teams.json`, { competition: league.id, season, teams: parsed.teams });
       // How far the source has got: the app says "results up to <date>" rather than pretending a stale table is live.
       meta.leagues[league.id] ??= {};
@@ -85,6 +92,13 @@ export function build({ input = "data/openfootball", wikipedia = join(ROOT, "dat
   if (usedWikipedia) meta.sources.push(WIKIPEDIA);
   if (problems.length) throw new Error(`validation failed, nothing written:\n${problems.slice(0, 20).join("\n")}`);
   files.set("api/v1/competitions.json", { competitions });
+  // today.json: every league's games from yesterday to three days ahead, with names, so a widget reads one small file, not eight
+  const day0 = Date.parse(`${now.slice(0, 10)}T00:00:00Z`);
+  const from = new Date(day0 - 86_400_000).toISOString().slice(0, 10), to = new Date(day0 + 3 * 86_400_000).toISOString().slice(0, 10);
+  const around = [...current].flatMap(([league, { matches, teams }]) => matches.filter((m) => m.date >= from && m.date <= to)
+    .map((m) => ({ league, ...m, homeName: teams[m.home], awayName: teams[m.away] })));
+  around.sort((a, b) => ((a.kickoff ?? a.date) + a.id).localeCompare((b.kickoff ?? b.date) + b.id));
+  files.set("api/v1/today.json", { generatedAt: now, from, to, matches: around });
   // The contract travels with the data, so a reader can check what it got against the shapes it was promised (tests/api-schema.test.ts).
   files.set("api/v1/schema.json", JSON.parse(readFileSync(join(ROOT, "data/api/schema.json"), "utf8")));
   // Every file's bytes and their sha256 in meta.json: a reader that finds a mismatch has a half-published or stale copy.

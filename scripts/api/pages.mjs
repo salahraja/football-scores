@@ -8,22 +8,13 @@ import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { SITE, leagues, loadZones, zoneNames } from "./config.mjs";
 import { CLUB_WORDS, aliasMap, slug } from "./teams.mjs";
+import { kickoff } from "./time.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const FONTS = ["barlow-condensed-800-latin.woff2", "instrument-sans-latin.woff2"];  // both SIL Open Font License, from the facelift branch
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const day = (iso) => new Date(`${iso}T12:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
 const short = (iso) => new Date(`${iso}T12:00:00Z`).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" });
-// Each league's own clock, for kick-off times in structured data (the pages say "Italy time" and so on).
-const ZONE = { "it-1": "Europe/Rome", "en-1": "Europe/London", "en-2": "Europe/London", "es-1": "Europe/Madrid", "de-1": "Europe/Berlin",
-  "fr-1": "Europe/Paris", "nl-1": "Europe/Amsterdam", "pt-1": "Europe/Lisbon" };
-/** "2026-05-24T20:45:00+02:00" for a local kick-off in an IANA time zone; the date alone when there is no time. */
-const kickoff = (date, time, tz) => {
-  if (!time || !tz) return date;
-  const off = new Intl.DateTimeFormat("en-US", { timeZone: tz, timeZoneName: "longOffset" })
-    .formatToParts(new Date(`${date}T${time}:00Z`)).find((p) => p.type === "timeZoneName").value.replace("GMT", "");
-  return `${date}T${time}:00${off === "" ? "+00:00" : off}`;
-};
 /** A JSON-LD block. "<" is written as \u003c so a name can never close the script. */
 const jsonLd = (data) => `<script type="application/ld+json">${JSON.stringify(data).replace(/</g, "\\u003c")}</script>`;
 const nth = (n) => `${n}${n % 100 >= 11 && n % 100 <= 13 ? "th" : ["th", "st", "nd", "rd"][n % 10] ?? "th"}`;
@@ -262,7 +253,7 @@ ${next.length ? list(next) : '<p class="note">None left this season.</p>'}
 </main>`;
   const team = (id) => ({ "@type": "SportsTeam", name: teams[id] });
   const events = [...week, ...next].map((m) => ({ "@type": "SportsEvent", name: `${teams[m.home]} v ${teams[m.away]}`,
-    startDate: kickoff(m.date, m.time, ZONE[league.id]), eventStatus: "https://schema.org/EventScheduled", sport: "Association football",
+    startDate: kickoff(m.date, m.time, league.tz) ?? m.date, eventStatus: "https://schema.org/EventScheduled", sport: "Association football",
     homeTeam: team(m.home), awayTeam: team(m.away), competitor: [team(m.home), team(m.away)],
     superEvent: { "@type": "SportsEvent", name: `${league.name} ${season}` }, url: `${SITE}/leagues/${league.id}/` }));
   const ld = events.length ? { "@context": "https://schema.org", "@graph": events } : null;
