@@ -79,6 +79,35 @@ describe("the homepage's leagues", () => {
     expect(hero()).not.toBe(start);
   });
 
+  it("leads with the game that is on, and lists today's games", async () => {
+    stub();
+    const fetchLive = vi.fn(async (url: string) => {
+      if (url.includes("sportscore.com")) {
+        if (!url.includes("english-premier-league")) return { ok: true, json: async () => ({ matches: [] }) };
+        return { ok: true, json: async () => ({ matches: [
+          { home: "Leeds United", away: "Tottenham Hotspur", home_score: "1", away_score: "0", status: "finished", status_text: "Finished", time: "2026-11-07T12:30:00+00:00" },
+          { home: "Everton", away: "Fulham", home_score: "2", away_score: "2", status: "inprogress", status_text: "67'", time: "2026-11-07T15:00:00+00:00" },
+          { home: "Arsenal", away: "Chelsea", home_score: null, away_score: null, status: "upcoming", time: "2026-11-07T17:30:00+00:00" },
+        ] }) };
+      }
+      const key = url.replace("/api/v1/", "");
+      return key in replies ? { ok: true, status: 200, json: async () => replies[key] } : { ok: false, status: 500 };
+    });
+    vi.stubGlobal("fetch", fetchLive);
+    const w = home();
+    await flushPromises();
+    await flushPromises();
+    await flushPromises();
+    const hero = w.get('[data-test="hero"]').text();
+    expect(hero).toContain("Premier League");   // opened on the league with a game on
+    expect(hero).toContain("Everton");
+    expect(hero).toContain("2–2");
+    expect(w.get('[data-test="state"]').text()).toBe("Live · 67'");
+    expect(w.findAll('[data-test="round"] .match')).toHaveLength(3);
+    expect(w.get('[data-test="round"]').text()).toContain("Today");
+    expect(hero).toContain("SportScore");
+  });
+
   it("says what each place in the table leads to, in words", async () => {
     stub();
     const w = home();

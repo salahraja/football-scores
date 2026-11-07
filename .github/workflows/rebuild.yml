@@ -1,0 +1,16 @@
+# The site is static: results, tables and the API only change when it is rebuilt. This rebuilds it six times a day, so nothing waits for a code change.
+# NETLIFY_BUILD_HOOK is a repository secret. Six builds a day stay inside Netlify's free build minutes.
+name: Rebuild the site
+on:
+  schedule:
+    - cron: "5 */4 * * *"
+  workflow_dispatch:
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          if [ -z "$HOOK" ]; then echo "NETLIFY_BUILD_HOOK is not set"; exit 0; fi
+          curl -fsS -X POST -d '{}' "$HOOK" >/dev/null
+        env:
+          HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}
