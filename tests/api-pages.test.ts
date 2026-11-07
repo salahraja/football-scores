@@ -34,7 +34,7 @@ describe("league pages", () => {
     expect(html).toContain("<title>Serie A table, results and fixtures | golboard</title>");
     expect(html).toMatch(/<meta property="og:title" content="Serie A[^"]*"/);
     expect(html).toContain('<table class="standings">');
-    expect(html).toContain('<th scope="row" class="left">Internazionale Milano</th>');
+    expect(html).toMatch(/<th scope="row" class="left"><a href="\/leagues\/it-1\/[a-z0-9-]+\/">Internazionale Milano<\/a><\/th>/);
     expect(html.indexOf(">Internazionale Milano<")).toBeLessThan(html.indexOf(">Napoli<"));
     expect(html).toContain("Results up to 24 May 2026");
     expect((html.match(/<tr class="row">/g) ?? []).length).toBe(20);
@@ -200,5 +200,66 @@ describe("table zones", () => {
     const html = page(zoned(), "leagues/en-1/index.html");
     expect(html).not.toContain('<ul class="zones"');
     expect(html).not.toContain("data-zone=");
+  });
+});
+
+// One page per club (/leagues/<league>/<club>/): where it stands, its form, the next game, every result and fixture.
+describe("club pages", () => {
+  const api = (out: string, f: string) => JSON.parse(readFileSync(join(out, "api/v1/it-1/2025-26", f), "utf8"));
+
+  it("makes a page for every club in the table, and the table links to it", () => {
+    const out = site();
+    const { table } = api(out, "table.json");
+    for (const row of table) expect(existsSync(join(out, "leagues/it-1", row.team, "index.html")), row.team).toBe(true);
+    const league = page(out, "leagues/it-1/index.html");
+    expect(league).toContain(`<a href="/leagues/it-1/${table[0].team}/">`);
+    expect((league.match(/<th scope="row" class="left"><a href="\/leagues\/it-1\//g) ?? []).length).toBe(table.length);
+  });
+
+  it("says where the club stands, from the table, and names it in the title", () => {
+    const out = site();
+    const { table } = api(out, "table.json");
+    const { teams } = api(out, "teams.json");
+    const second = table[1];
+    const html = page(out, `leagues/it-1/${second.team}/index.html`);
+    expect(html).toContain(`<title>${teams[second.team]}: Serie A results, fixtures and table place | golboard</title>`);
+    expect(html).toContain(`<h1`);
+    expect(html).toContain('2nd in <a href="/leagues/it-1/">Serie A</a>');
+    expect(html).toContain(`${second.points} points`);
+    expect(html).toContain(`Won ${second.won}, drawn ${second.drawn}, lost ${second.lost}`);
+    expect(html).toContain('href="/leagues/it-1/"');
+  });
+
+  it("shows the last five league results as form, newest first, in words as well as letters", () => {
+    const out = site();
+    const { table } = api(out, "table.json");
+    const { matches } = api(out, "matches.json");
+    const team = table[0].team;
+    const played = matches.filter((m: any) => m.stage === "league" && m.score && (m.home === team || m.away === team))
+      .sort((a: any, b: any) => b.date.localeCompare(a.date)).slice(0, 5);
+    const letter = (m: any) => { const [h, a] = m.score.ft; const us = m.home === team ? h : a, them = m.home === team ? a : h;
+      return us > them ? "W" : us < them ? "L" : "D"; };
+    const html = page(out, `leagues/it-1/${team}/index.html`);
+    const form = html.slice(html.indexOf('<ol class="form"'), html.indexOf("</ol>", html.indexOf('<ol class="form"')));
+    expect((form.match(/<li class="f-[wdl]"/g) ?? []).length).toBe(5);
+    expect([...form.matchAll(/<li class="f-([wdl])"/g)].map((x) => x[1].toUpperCase())).toEqual(played.map(letter));
+    expect(form).toMatch(/<span class="sr-only">(Won|Drew|Lost) \d+–\d+ (at|v) /);
+  });
+
+  it("puts the next game first when there is one, and none when the season is over", () => {
+    const input = tmp(), out = tmp();
+    const season = JSON.parse(readFileSync("tests/fixtures/openfootball/2025-26/it.1.json", "utf8"));
+    const lastDay = season.matches.at(-1).date;
+    for (const m of season.matches) if (m.date === lastDay) delete m.score;
+    mkdirSync(join(input, "2025-26"), { recursive: true });
+    writeFileSync(join(input, "2025-26", "it.1.json"), JSON.stringify(season));
+    build({ input, wikipedia: tmp(), out, seasons: ["2025-26"], now: `${lastDay}T08:00:00Z` });
+    pages({ api: join(out, "api/v1"), out });
+    const { matches } = JSON.parse(readFileSync(join(out, "api/v1/it-1/2025-26/matches.json"), "utf8"));
+    const next = matches.find((m: any) => !m.score);
+    const html = page(out, `leagues/it-1/${next.home}/index.html`);
+    expect(html).toContain("<h2>Next game</h2>");
+    expect(html.indexOf("<h2>Next game</h2>")).toBeLessThan(html.indexOf("<h2>Form</h2>"));
+    expect(page(site(), `leagues/it-1/${next.home}/index.html`)).not.toContain("<h2>Next game</h2>");
   });
 });

@@ -109,6 +109,11 @@ h2 { font: 800 1.9rem/1 var(--display); text-transform: uppercase; margin: 0 0 0
 .zones li { display: flex; align-items: center; gap: 0.4rem; }
 .zones + .note { margin-top: 0.6rem; }
 .zones li::before { content: ""; width: 4px; height: 1em; border-radius: 2px; background: var(--zone); }
+.standings tbody th a { text-decoration: none; } .standings tbody th a:hover { text-decoration: underline; }
+.form { list-style: none; margin: 0; padding: 0; display: flex; gap: 6px; }
+.form li { width: 2.25rem; height: 2.25rem; border-radius: 10px; display: grid; place-items: center; font: 800 1.15rem/1 var(--display); color: #fff; }
+.form .f-w { background: #23804d; } .form .f-d { background: #6b7280; } .form .f-l { background: #b3261e; }
+.stand { font-size: 1.05rem; margin: 0 0 0.35rem; } .stand b { font-weight: 700; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .games { list-style: none; margin: 0; padding: 0; }
 .games > li { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 0.5rem; align-items: center; padding: 10px 0;
@@ -200,7 +205,7 @@ function leaguePage(league, competition, api, before, after, zonesFor) {
   // live scores from SportScore only where it covers the league and the page has games still to play
   const live = league.sportscore && (week.length || next.length) ? league.sportscore : null;
   const upTo = meta.lastResult ? `Results up to ${day(meta.lastResult)}` : "No results yet";
-  const rows = table.map((r) => { const z = zoneAt(r.position); return `<tr class="row"${z ? ` data-zone="${z.kind}"` : ""}><td class="pos">${r.position}${z ? `<span class="sr-only">, ${esc(names[z.kind])}</span>` : ""}</td><th scope="row" class="left">${esc(teams[r.team])}</th><td>${r.played}</td>`
+  const rows = table.map((r) => { const z = zoneAt(r.position); return `<tr class="row"${z ? ` data-zone="${z.kind}"` : ""}><td class="pos">${r.position}${z ? `<span class="sr-only">, ${esc(names[z.kind])}</span>` : ""}</td><th scope="row" class="left"><a href="/leagues/${league.id}/${esc(r.team)}/">${esc(teams[r.team])}</a></th><td>${r.played}</td>`
     + `<td class="wdl">${r.won}</td><td class="wdl">${r.drawn}</td><td class="wdl">${r.lost}</td><td>${r.gd > 0 ? "+" : ""}${r.gd}</td><td class="pts">${r.points}</td></tr>`; }).join("\n");
   const range = (z) => (z.from === z.to ? nth(z.from) : `${nth(z.from)}–${nth(z.to)}`);
   const legend = zoning ? `<ul class="zones" aria-label="What the places lead to">${zoning.zones.map((z) => `<li data-zone="${z.kind}"><b>${esc(names[z.kind])}</b> ${range(z)}</li>`).join("")}</ul>
@@ -243,6 +248,68 @@ ${next.length ? list(next) : '<p class="note">None left this season.</p>'}
 </main>`;
   return shell({ title: `${league.name} table, results and fixtures`, path: `/leagues/${league.id}/`, body, live, here: "league", script: true,
     description: `${league.name} ${season}: the table, the latest results and the next fixtures. ${upTo}.` });
+}
+
+/** One page per club: where it stands, its last five, the next game, then every result and fixture of its league season. */
+function clubPages(league, competition, api, zonesFor) {
+  const season = competition.current;
+  const read = (f) => JSON.parse(readFileSync(join(api, league.id, season, f), "utf8"));
+  const { table } = read("table.json");
+  const { matches } = read("matches.json");
+  const { teams } = read("teams.json");
+  const today = JSON.parse(readFileSync(join(api, "meta.json"), "utf8")).generatedAt.slice(0, 10);
+  const zoning = zonesFor(season, league.id);
+  const names = zoneNames();
+  const byKickoff = (a, b) => (a.date + (a.time ?? "")).localeCompare(b.date + (b.time ?? ""));
+  const pages = new Map();
+  for (const row of table) {
+    const id = row.team, club = teams[id];
+    const games = matches.filter((m) => m.stage === "league" && (m.home === id || m.away === id));
+    const played = games.filter((m) => m.score).sort((a, b) => byKickoff(b, a));
+    const unplayed = games.filter((m) => !m.score).sort(byKickoff);
+    const next = unplayed.find((m) => m.date >= today) ?? null;
+    const outcome = (m) => { const [h, a] = m.score.ft; const us = m.home === id ? h : a, them = m.home === id ? a : h;
+      return us > them ? "w" : us < them ? "l" : "d"; };
+    const said = { w: "Won", d: "Drew", l: "Lost" };
+    const form = played.slice(0, 5).map((m) => { const o = outcome(m), [h, a] = m.score.ft, home = m.home === id;
+      const other = teams[home ? m.away : m.home];
+      return `<li class="f-${o}" title="${esc(`${said[o]} ${home ? h : a}–${home ? a : h} ${home ? "v" : "at"} ${other}, ${short(m.date)}`)}"><span aria-hidden="true">${o.toUpperCase()}</span><span class="sr-only">${said[o]} ${home ? h : a}–${home ? a : h} ${home ? "v" : "at"} ${esc(other)}</span></li>`; }).join("");
+    const zone = zoning?.zones.find((z) => row.position >= z.from && row.position <= z.to);
+    const list = (gs) => `<ul class="games">${gs.map((m) => game(m, teams, today)).join("\n")}</ul>`;
+    const gd = `${row.gd > 0 ? "+" : ""}${row.gd}`;
+    const body = `<header class="poster">
+<h1 style="--n: ${Math.max(...club.split(/\s+/).map((w) => w.length))}">${esc(club)}</h1>
+<p class="stand"><b>${nth(row.position)} in <a href="/leagues/${league.id}/">${esc(league.name)}</a></b> · ${row.points} points${zone ? ` · ${esc(names[zone.kind])} place` : ""}</p>
+<p class="note">Won ${row.won}, drawn ${row.drawn}, lost ${row.lost} · goal difference ${gd} · ${esc(season)}</p>
+</header>
+<main class="board">
+<div class="side">
+${next ? `<section class="glass">
+<h2>Next game</h2>
+<p class="note">Kick-off ${esc(league.clock)}.</p>
+${list([next])}
+</section>
+` : ""}<section class="glass">
+<h2>Form</h2>
+${form ? `<ol class="form" aria-label="Last five league games, newest first">${form}</ol>` : '<p class="note">No games played yet.</p>'}
+</section>
+<section class="glass">
+<h2>Results</h2>
+${played.length ? list(played) : '<p class="note">None yet.</p>'}
+</section>
+</div>
+<div class="side">
+<section class="glass">
+<h2>Fixtures</h2>
+${unplayed.length ? list(unplayed) : '<p class="note">None left this season.</p>'}
+</section>
+</div>
+<footer><a href="/leagues/${league.id}/#table">The full ${esc(league.name)} table</a>.</footer>
+</main>`;
+    pages.set(`${league.id}/${id}/index.html`, shell({ title: `${club}: ${league.name} results, fixtures and table place`, path: `/leagues/${league.id}/${id}/`,
+      body, description: `${club} in ${league.name} ${season}: ${nth(row.position)} on ${row.points} points, the last five results, the next game and every fixture.` }));
+  }
+  return pages;
 }
 
 /** The browser script for live scores (/leagues/live.js). It names clubs with the same slug and aliases as teams.mjs (the function's own
@@ -375,6 +442,7 @@ export function pages({ api = "public/api/v1", out = "public", zones = loadZones
   const served = leagues().filter((l) => byId.has(l.id));
   served.forEach((league, i) => files.set(`${league.id}/index.html`, leaguePage(league, byId.get(league.id), api,
     served[(i - 1 + served.length) % served.length], served[(i + 1) % served.length], zones)));
+  for (const league of served) for (const [path, html] of clubPages(league, byId.get(league.id), api, zones)) files.set(path, html);
   files.set("index.html", shell({ title: "Leagues", path: "/leagues/", here: "all", description: "Tables, results and fixtures for eight European leagues.",
     body: `<header class="poster"><h1>golboard</h1><p class="note">Tables, results and fixtures, worked out from open data.</p></header>
 <main class="board" style="grid-template-columns: minmax(0, 1fr)">
