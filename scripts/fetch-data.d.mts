@@ -10,3 +10,5 @@ export function run(opts?: {
   sleep?: (ms: number) => Promise<void>;
   now?: () => Date;
 }): Promise<boolean>;
+/** "2026-27" from the standings reply's season dates, or undefined. */
+export function seasonLabel(body: unknown): string | undefined;

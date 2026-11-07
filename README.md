@@ -89,7 +89,7 @@ months old, one author, no package ecosystem. Nothing the app needs at run time 
 | Piece | Language | Why |
 |---|---|---|
 | Table (points, tie-breaks, positions), results grouped by round with outcomes, name collation | Goose (`goose/footy.goose`) and TS (`src/data/build.ts`) | pure computation on JSON: the part Goose can do. Output is identical, byte for byte |
-| Fetching data | Node (`scripts/fetch-data.mjs`) | Goose has no HTTP. The fetch writes `data/raw/*.json`; Goose never sees the token |
+| Fetching data | Goose (`goose/fetch.goose`, with `goose/net.c` over the system libcurl) where the Goose compiler is installed, else Node (`scripts/fetch-data.mjs`) | Same bytes from both (`tests/fetch-goose.test.ts`). Goose binds C with `extern fn`; the HTTPS call and the token stay in the C, so Goose code never holds the token. Netlify has no Goose compiler, so its build uses the Node fetch |
 | Vue app, router, views, tests, Vite | TS | Goose has no DOM and no JS interop |
 | Calling Goose from the browser | `src/data/goose-wasm.ts` (60 lines) loading `goose/dist/goose-footy.wasm` | Goose has no WASM backend; this is a C to wasm64 workaround, see `docs/goose-spike.md`. Used by Node at build time (`scripts/run-wasm.mjs`, `DATA_ENGINE=wasm`); not loaded by the browser app |
 
