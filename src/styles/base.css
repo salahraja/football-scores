@@ -103,7 +103,10 @@ code { font-family: var(--font-mono); font-weight: 700; }
 /* ---- the homepage: a poster, then the board ---- */
 .poster {
   margin-inline: calc(50% - 50vw); margin-top: calc(-1 * var(--space-3)); padding: var(--space-4) var(--space-3) var(--space-5);
-  background: linear-gradient(180deg, var(--slate), var(--slate-2) 60%, var(--bg)); text-align: center;
+  /* Salah, 2026-11-08: on an iPhone the poster looked cut off at the bottom. Safari paints its own strip behind the address bar in the
+     page colour (html's background), so the poster has to arrive at that colour before its edge, as Ranoo's pages fade into --page-bg:
+     the last 96px are the plain page colour, and the strip meets it with no seam. */
+  background: linear-gradient(180deg, var(--slate), var(--slate-2) 55%, var(--bg) calc(100% - 96px)); text-align: center;
 }
 .poster__title { font: 800 min(clamp(4rem, 24vw, 21rem), calc((100vw - 124px) / (var(--chars, 7) * 0.47)))/0.82 var(--font-display); color: var(--accent); text-transform: uppercase; margin: 0; white-space: nowrap; letter-spacing: -0.01em; }
 .poster__result { display: grid; grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1fr) auto; grid-template-areas: "prev home mid away next" ". meta meta meta ."; justify-items: stretch; align-items: center; gap: clamp(8px, 2vw, 22px); max-width: var(--max-width); margin: var(--space-2) auto 0; }
