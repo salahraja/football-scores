@@ -101,7 +101,9 @@ function stretchTitle() {
   el.style.marginTop = "0";
   const phone = window.innerWidth <= 760;
   const room = window.innerHeight * (phone ? 0.38 : 0.46);
-  const stretch = Math.min(1.75, Math.max(1, room / Math.max(el.offsetHeight, 1)));
+  // Salah, 2026-11-08: a one-word name (Bundesliga, Eredivisie) is held small by the width and left empty slate below it; it fills
+  // the same room as Serie A's two lines instead. The old cap of 1.75 is gone; 8 only guards against a zero-height measure.
+  const stretch = Math.min(8, Math.max(1, room / Math.max(el.offsetHeight, 1)));
   el.style.setProperty("--stretch", String(stretch));
   el.style.marginTop = `${el.offsetHeight * (stretch - 1)}px`;
 }
@@ -187,7 +189,7 @@ onMounted(async () => {
         <button v-if="list.length" type="button" class="arrow" :aria-label="`Previous league: ${neighbour(-1)}`" data-test="league-prev" @click="step(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12H6M12 5l-7 7 7 7" /></svg></button>
         <h1 ref="titleEl" class="poster__title" :aria-label="title">
           <span class="poster__line" :class="{ wide: longName }" :style="{ '--len': title.length }">{{ title }}</span>
-          <template v-if="longName"><span v-for="w in title.split(' ')" :key="w" class="poster__word" :style="{ '--chars': w.length }" aria-hidden="true">{{ w }}</span></template>
+          <template v-if="longName"><span v-for="w in title.split(' ')" :key="w" class="poster__word" :style="{ '--chars': longestWord(title) }" aria-hidden="true">{{ w }}</span></template>
         </h1>
         <button v-if="list.length" type="button" class="arrow" :aria-label="`Next league: ${neighbour(1)}`" data-test="league-next" @click="step(1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12h16M12 5l7 7-7 7" /></svg></button>
       </div>
