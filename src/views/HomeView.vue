@@ -3,6 +3,7 @@ import { computed, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
 import { getDataNote, getResultRounds, getStandings } from "../data";
 import { competitions, league as loadLeague, zoneOf, type Competition, type League } from "../data/leagues";
 import { covered, today, type TodayGame } from "../data/live";
+import { clubColour } from "../data/clubColours";
 
 // The homepage (Salah, 2026-10-30, the Stadio "Poster" with glass boxes): the league's name and the newest round's result set as a
 // poster (Juventus's when they played), then the table, the round's results, and places for top scorers and headlines that stay empty
@@ -76,6 +77,11 @@ const game = computed(() => {
   return all.length ? all[(((first.value + shown.value) % all.length) + all.length) % all.length] : null;
 });
 const meta = computed(() => game.value?.text ?? "");
+// the poster in the two clubs' colours (clubColours.ts); a club we have no colour for keeps the slate on its side
+const clubs = computed(() => {
+  const home = clubColour(game.value?.home), away = clubColour(game.value?.away);
+  return home || away ? { "--home-c": home ?? "var(--club-base)", "--away-c": away ?? "var(--club-base)" } : null;
+});
 function liveIn(id: string) {
   return (todays.value[id] ?? []).some((g) => g.status === "live");
 }
@@ -183,6 +189,7 @@ onMounted(async () => {
   <section class="board">
     <!-- The poster, as on the league pages: the league's name between its arrows, then a game between its arrows (Juventus's first when they played). -->
     <section v-if="game" class="poster" data-test="hero" aria-label="Featured result" @touchstart.passive="swipeStart" @touchend.passive="swipeEnd">
+      <div v-if="clubs" :key="`${game.home}-${game.away}`" class="poster__club" :style="clubs" aria-hidden="true"></div>
       <div class="poster__titlebar" :key="title" :class="slide.league ? slide.name : ''">
         <button v-if="list.length" type="button" class="arrow" :aria-label="`Previous league: ${neighbour(-1)}`" data-test="league-prev" @click="step(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12H6M12 5l-7 7 7 7" /></svg></button>
         <h1 ref="titleEl" class="poster__title" :aria-label="title">

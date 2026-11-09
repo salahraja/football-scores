@@ -281,3 +281,18 @@ tr[class*="zone--"] > .pos { box-shadow: inset 3px 0 0 var(--zone, transparent);
 @media (max-width: 760px) and (pointer: coarse) {
   .poster { position: relative; min-height: calc(100lvh + 120px); padding-bottom: calc(var(--space-2) + 120px); }
 }
+
+/* Club colours (2026-11-08): the poster runs from the home club's colour to the away club's, mixed into its own slate so the names
+   stay readable. Clubs without a colour keep the slate. The gradient is an empty layer of its own behind the poster: changing a style
+   on the poster itself made WebKit repaint its text with white bars and underlines when a game was swiped (seen in WebKit at phone
+   size, not seen on the plain poster), and so did animating registered colour properties. A new pair fades in instead. */
+.poster > .poster__club {
+  position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    linear-gradient(180deg, transparent 0 55%, color-mix(in srgb, var(--slate-2) 55%, var(--bg))),
+    linear-gradient(90deg, color-mix(in srgb, var(--home-c) var(--club-share), var(--club-base)), color-mix(in srgb, var(--away-c) var(--club-share), var(--club-base)));
+  animation: club-in 0.6s ease both;
+}
+.poster { isolation: isolate; }
+@keyframes club-in { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .poster > .poster__club { animation: none; } }
