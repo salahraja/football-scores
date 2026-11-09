@@ -25,6 +25,9 @@
   --font-sans: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --max-width: 72rem;
+  /* the poster in club colours: how much of each club's colour, mixed into what (src/data/clubColours.ts CLUB_SHARE; a test keeps them equal) */
+  --club-share: 32%;
+  --club-base: var(--slate-2);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -39,5 +42,7 @@
     --border: rgb(255 255 255 / 12%);
     --glass-fill: rgb(40 43 50 / 70%);
     --glass-solid: #23262c;
+    --club-share: 50%;
+    --club-base: var(--slate);
   }
 }
