@@ -34,7 +34,7 @@ describe("league pages", () => {
     expect(html).toContain("<title>Serie A table, results and fixtures | golboard</title>");
     expect(html).toMatch(/<meta property="og:title" content="Serie A[^"]*"/);
     expect(html).toContain('<table class="standings">');
-    expect(html).toMatch(/<th scope="row" class="left"><a href="\/leagues\/it-1\/[a-z0-9-]+\/">Internazionale Milano<\/a><\/th>/);
+    expect(html).toMatch(/<th scope="row" class="left"><button class="star"[^>]*>☆<\/button><a href="\/leagues\/it-1\/[a-z0-9-]+\/">Internazionale Milano<\/a><\/th>/);  // a star to follow it, then the link
     expect(html.indexOf(">Internazionale Milano<")).toBeLessThan(html.indexOf(">Napoli<"));
     expect(html).toContain("Results up to 24 May 2026");
     expect((html.match(/<tr class="row">/g) ?? []).length).toBe(20);
@@ -124,11 +124,11 @@ describe("league pages", () => {
     expect(html).not.toContain("wikipedia.org");
   });
 
-  it("has one small script, escapes names, and keeps each page small", () => {
+  it("has two small scripts, escapes names, and keeps each page small", () => {
     const out = site();
     for (const id of ["it-1", "en-2"]) {
       const html = page(out, `leagues/${id}/index.html`);
-      expect(html.match(/<script[^>]*>/gi)).toEqual(['<script src="/leagues/live.js" defer>']);  // the one script, for arrows and live scores
+      expect(html.match(/<script[^>]*>/gi)).toEqual(['<script src="/leagues/live.js" defer>', '<script src="/leagues/follow.js" defer>']);  // arrows and live scores; following clubs
       expect(html.length).toBeLessThan(40_000);
     }
     expect(page(out, "leagues/en-1/index.html")).toContain("Brighton &amp; Hove Albion");
@@ -213,7 +213,7 @@ describe("club pages", () => {
     for (const row of table) expect(existsSync(join(out, "leagues/it-1", row.team, "index.html")), row.team).toBe(true);
     const league = page(out, "leagues/it-1/index.html");
     expect(league).toContain(`<a href="/leagues/it-1/${table[0].team}/">`);
-    expect((league.match(/<th scope="row" class="left"><a href="\/leagues\/it-1\//g) ?? []).length).toBe(table.length);
+    expect((league.match(/<th scope="row" class="left"><button class="star"[^>]*>☆<\/button><a href="\/leagues\/it-1\//g) ?? []).length).toBe(table.length);
   });
 
   it("says where the club stands, from the table, and names it in the title", () => {
