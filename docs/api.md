@@ -64,6 +64,11 @@ headline, the summary or the feed's own tags. A short name that could mean two c
 story may be missed but is not filed under the wrong club; a one-word name needs a capital letter ("Nice" the club, not "nice"). Stories
 that only name a player are not tagged. The iPhone app has the same rules (`Golboard/Follow.swift`); the tests hold the same cases.
 
+The homepage carries both too (`src/views/HomeView.vue`): its Headlines box shows the six newest stories from `api/v1/news.json` with an All /
+Following switch, a star beside each club in its table follows the club, and the marked row and the poster's first game are a followed club's
+(Juventus, the old fixed favourite, only while nothing is followed). Serie A's rows come from football-data's own names ("Inter", "Como 1907"), so
+`src/data/clubid.ts` gives each the site's id (the rule of `teams.mjs`; a test holds the real feed's 20 names against the API's 20 ids).
+
 `pages.mjs` also writes `/news/` (every headline, with an All / Following switch) and `/following/` (pick clubs; their games from
 `api/v1/today.json`; their headlines), and puts a star beside each club in the league tables and a Follow button on each club page.
 `/leagues/follow.js`, served from the site itself so the CSP needs nothing new, keeps the followed clubs on the device

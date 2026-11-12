@@ -3,11 +3,15 @@ import { computed, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
 import { getDataNote, getResultRounds, getStandings } from "../data";
 import { competitions, league as loadLeague, zoneOf, type Competition, type League } from "../data/leagues";
 import { covered, today, type TodayGame } from "../data/live";
+import { teamId } from "../data/clubid";
+import { loadFollowing, loadScope, news, saveFollowing, saveScope, type Article, type Scope } from "../data/follow";
 
 // The homepage (Salah, 2026-10-30, the Stadio "Poster" with glass boxes): the league's name and the newest round's result set as a
 // poster (Juventus's when they played), then the table, the round's results, and places for top scorers and headlines that stay empty
 // until their data exists. Since 2026-11-07 any of the eight leagues (Salah: the home page should carry what the league pages have).
 // Serie A, shown first, keeps its fresher feed; the others come from the site's own API, and show only once they have arrived.
+// Since 2026-11-12 (Salah: "why is the main page not being updated"): the Headlines box shows the site's news file, and a star in a table follows a club.
+// The marked row and the poster's first game are a followed club's; Juventus is only what is marked while nothing is followed.
 const FAVOURITE = "Juventus";
 const HOME = "it-1";
 
@@ -26,6 +30,29 @@ const other = computed(() => (chosen.value === HOME ? null : loaded.value[chosen
 const zones = computed(() => loaded.value[chosen.value]?.zones ?? []);
 const zoneNote = computed(() => loaded.value[chosen.value]?.note ?? "");
 const clubIds = computed(() => Object.fromEntries((loaded.value[HOME]?.table ?? []).map((r) => [r.name, r.id])));
+// Serie A's own feed names clubs its own way ("Inter", "Como 1907"), so a row's id comes from the API's table when it has the name, else from the name.
+const idFor = (name: string) => clubIds.value[name] ?? teamId(name);
+
+const following = ref<string[]>([]);
+const scope = ref<Scope>("all");
+const articles = ref<Article[] | null>(null);
+const newsFailed = ref(false);
+const isMine = (id: string) => (following.value.length ? following.value.includes(id) : id === teamId(FAVOURITE));
+const on = (id: string) => following.value.includes(id);
+function toggleFollow(id: string) {
+  following.value = on(id) ? following.value.filter((x) => x !== id) : [...following.value, id];
+  saveFollowing(following.value);
+}
+function setScope(next: Scope) {
+  scope.value = next;
+  saveScope(next);
+}
+// Six stories: the newest, or the newest about a club you follow.
+const stories = computed(() => {
+  const all = articles.value ?? [];
+  return (scope.value === "following" ? all.filter((a) => a.clubs.some((c) => following.value.includes(c))) : all).slice(0, 6);
+});
+const when = (iso: string) => new Date(iso).toLocaleString([], { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" });
 
 function zoneClass(position: number) {
   const zone = zoneOf(zones.value, position);
@@ -69,7 +96,7 @@ const games = computed(() => {
 const shown = ref(0); // how far the arrows have moved from the first game shown
 const first = computed(() => {
   if (games.value[0]?.status === "live") return 0;
-  return Math.max(0, games.value.findIndex((g) => g.home === FAVOURITE || g.away === FAVOURITE));
+  return Math.max(0, games.value.findIndex((g) => isMine(teamId(g.home)) || isMine(teamId(g.away))));
 });
 const game = computed(() => {
   const all = games.value;
@@ -158,6 +185,15 @@ watch(chosen, async (id) => {
   await open(id);
 });
 onMounted(async () => {
+  following.value = loadFollowing();
+  scope.value = loadScope();
+  try {
+    articles.value = await news();
+  } catch {
+    newsFailed.value = true; // the table and the scores stand on their own
+  }
+});
+onMounted(async () => {
   const asked = new URLSearchParams(window.location.search).get("league");
   if (asked) chosen.value = asked;
   try {
@@ -216,14 +252,14 @@ onMounted(async () => {
           <thead><tr><th class="left">#</th><th class="left">Club</th><th>P</th><th>W</th><th>D</th><th>L</th><th>Pts</th></tr></thead>
           <tbody>
             <template v-if="other">
-              <tr v-for="row in other.table" :key="row.id" :class="zoneClass(row.position)">
-                <td class="pos">{{ row.position }}</td><td class="left"><a class="club" :href="`/leagues/${other.id}/${row.id}/`">{{ row.name }}</a></td><td>{{ row.played }}</td><td>{{ row.won }}</td>
+              <tr v-for="row in other.table" :key="row.id" :class="[{ mine: on(row.id) }, zoneClass(row.position)]">
+                <td class="pos">{{ row.position }}</td><td class="left"><button type="button" class="star" :data-club="row.id" :aria-pressed="on(row.id)" :aria-label="`${on(row.id) ? 'Unfollow' : 'Follow'} ${row.name}`" @click="toggleFollow(row.id)">{{ on(row.id) ? "★" : "☆" }}</button><a class="club" :href="`/leagues/${other.id}/${row.id}/`">{{ row.name }}</a></td><td>{{ row.played }}</td><td>{{ row.won }}</td>
                 <td>{{ row.drawn }}</td><td>{{ row.lost }}</td><td class="pts">{{ row.points }}</td>
               </tr>
             </template>
             <template v-else>
-            <tr v-for="row in table" :key="row.id" :class="[{ mine: row.team.name === FAVOURITE }, zoneClass(row.position)]">
-              <td class="pos">{{ row.position }}</td><td class="left"><a v-if="clubIds[row.team.name]" class="club" :href="`/leagues/it-1/${clubIds[row.team.name]}/`">{{ row.team.name }}</a><template v-else>{{ row.team.name }}</template></td><td>{{ row.matches }}</td><td>{{ row.wins }}</td>
+            <tr v-for="row in table" :key="row.id" :class="[{ mine: isMine(idFor(row.team.name)) }, zoneClass(row.position)]">
+              <td class="pos">{{ row.position }}</td><td class="left"><button type="button" class="star" :data-club="idFor(row.team.name)" :aria-pressed="on(idFor(row.team.name))" :aria-label="`${on(idFor(row.team.name)) ? 'Unfollow' : 'Follow'} ${row.team.name}`" @click="toggleFollow(idFor(row.team.name))">{{ on(idFor(row.team.name)) ? "★" : "☆" }}</button><a v-if="clubIds[row.team.name]" class="club" :href="`/leagues/it-1/${clubIds[row.team.name]}/`">{{ row.team.name }}</a><template v-else>{{ row.team.name }}</template></td><td>{{ row.matches }}</td><td>{{ row.wins }}</td>
               <td>{{ row.draws }}</td><td>{{ row.losses }}</td><td class="pts">{{ row.points }}</td>
             </tr>
                       </template>
@@ -273,7 +309,17 @@ onMounted(async () => {
         </section>
         <section class="glass dark" data-test="headlines" aria-labelledby="t-news">
           <h2 id="t-news">Headlines</h2>
-          <p class="slot">A news feed we are allowed to show, still to choose.</p>
+          <div class="scope" role="group" aria-label="Show">
+            <button type="button" data-test="news-all" :aria-pressed="scope === 'all'" @click="setScope('all')">All</button>
+            <button type="button" data-test="news-following" :aria-pressed="scope === 'following'" @click="setScope('following')">Following</button>
+          </div>
+          <p v-if="newsFailed" class="note">Headlines could not be read just now.</p>
+          <p v-else-if="!articles" class="note">Loading headlines…</p>
+          <p v-else-if="!stories.length" class="note">{{ scope === "following" ? (following.length ? "No headlines mention your clubs right now." : "Follow clubs with the star in a table and their stories show here.") : "No headlines yet." }}</p>
+          <ul v-else class="stories">
+            <li v-for="a in stories" :key="a.url"><a class="story" :href="a.url" rel="noopener"><span class="t">{{ a.title }}</span><span class="m">{{ a.source }} · {{ when(a.published) }}</span></a></li>
+          </ul>
+          <p class="headlines__links"><a class="more" href="/news/">All headlines</a><a class="more" href="/following/">Choose clubs</a></p>
         </section>
       </div>
     </div>
