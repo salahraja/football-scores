@@ -29,12 +29,13 @@ describe("home", () => {
     expect(home().findAll('[data-test="round"] .match')).toHaveLength(getResultRounds()[0].events.length);
   });
 
-  it("links to the full table and all results, and invents no scorers or headlines", () => {
+  it("links to the full table and all results, and invents no scorers or headlines before they have arrived", () => {
     const wrapper = home();
     const links = wrapper.findAll("a").map((a) => a.attributes("href")); // plain links since the move to Astro (2026-11-07)
     expect(links).toEqual(expect.arrayContaining(["/standings", "/results"]));
     expect(wrapper.get('[data-test="scorers"]').text()).toMatch(/live build/i);
-    expect(wrapper.get('[data-test="headlines"]').text()).toMatch(/to choose/i);
+    expect(wrapper.get('[data-test="headlines"]').text()).toMatch(/loading headlines/i);  // from the news file once the page runs, see home-news.test.ts
+    expect(wrapper.get('[data-test="headlines"]').text()).not.toMatch(/to choose/i);
   });
 });
 
