@@ -1,4 +1,4 @@
-// Plain HTML pages made from the published API: /leagues/ and /leagues/<league>/, in the site's Stadio look (Salah, 2026-10-30: a slate
+// Plain HTML pages made from the published API: /leagues/, /leagues/<league>/, /news/ and /following/, in the site's Stadio look (Salah, 2026-10-30: a slate
 // poster with the league in brick-red condensed capitals over the game of the moment, then glass boxes). No framework; the one script is
 // the optional live scores. Each page says how far its results go and credits the sources it used.
 //   node scripts/api/pages.mjs [--api public/api/v1] [--out public]
@@ -45,6 +45,9 @@ a:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
   box-shadow: inset 0 1px 0 var(--rim), 0 10px 30px -12px rgb(27 28 32 / 35%); }
 .nav a { padding: 8px 14px; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 0.875rem; white-space: nowrap; }
 .nav a[aria-current="page"] { background: var(--fg); color: var(--bg); }
+/* five links do not fit a phone: the in-page jumps give way to News and Following, and anything still too wide scrolls */
+.nav { overflow-x: auto; scrollbar-width: none; } .nav a { flex: none; }
+@media (max-width: 480px) { .nav .jump { display: none; } .nav a { padding: 8px 12px; } }
 .poster { margin-top: -60px; padding: 84px max(16px, env(safe-area-inset-right, 0px)) 2.5rem max(16px, env(safe-area-inset-left, 0px));
   background: linear-gradient(180deg, var(--slate), var(--slate-2) 60%, var(--bg)); text-align: center; }
 /* the league's name as big as its longest word allows between the arrows (Barlow Condensed capitals run about 0.52 em a letter) */
@@ -137,6 +140,21 @@ h2 { font: 800 1.9rem/1 var(--display); text-transform: uppercase; margin: 0 0 0
 .list span { color: var(--muted); }
 footer { grid-column: 1 / -1; color: var(--muted); font-size: 0.8125rem; }
 @media (max-width: 400px) { .standings .wdl { display: none; } }
+.star { border: 0; background: none; padding: 0 6px 0 0; font: inherit; font-size: 1rem; line-height: 1; color: var(--accent); cursor: pointer; }
+.follow { margin-top: 0.5rem; padding: 8px 16px; border: 0; border-radius: 999px; font: 700 0.875rem var(--sans); cursor: pointer; color: var(--fg); background: var(--glass);
+  box-shadow: inset 0 1px 0 var(--rim), 0 8px 20px -10px rgb(27 28 32 / 40%); }
+.follow[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+.scope { display: inline-flex; gap: 2px; padding: 4px; border-radius: 999px; background: var(--glass); margin-bottom: 0.75rem; }
+.scope button { border: 0; padding: 8px 16px; border-radius: 999px; font: 700 0.875rem var(--sans); background: none; color: var(--fg); cursor: pointer; }
+.scope button[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+.news { list-style: none; margin: 0; padding: 0; }
+.news li { border-bottom: 1px solid var(--line); } .news li:last-child { border-bottom: 0; } .news li[hidden] { display: none; }
+.story { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2px; padding: 12px 0; text-decoration: none; overflow-wrap: anywhere; }
+.story .t { font-weight: 700; } .story .s { color: var(--muted); font-size: 0.9375rem; } .story .m { color: var(--accent); font-size: 0.8125rem; font-weight: 700; }
+.story:hover .t { text-decoration: underline; }
+details { border-bottom: 1px solid var(--line); padding: 6px 0; } summary { cursor: pointer; font-weight: 700; padding: 6px 0; }
+.clubs { list-style: none; margin: 0; padding: 0 0 8px; display: grid; gap: 4px 16px; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); }
+.clubs label { display: flex; align-items: center; gap: 8px; padding: 4px 0; cursor: pointer; }
 @media (prefers-reduced-motion: no-preference) { .glass { transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1); } }
 `;
 
@@ -155,9 +173,9 @@ function shell({ title, description, path, body, live = null, here = "", script 
 <link rel="canonical" href="${esc(SITE + path)}">
 <link rel="preload" href="/leagues/fonts/barlow-condensed-800-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/leagues/site.css">
-${script ? '<script src="/leagues/live.js" defer></script>\n' : ""}${ld ? `${jsonLd(ld)}\n` : ""}</head>
+${script ? '<script src="/leagues/live.js" defer></script>\n' : ""}<script src="/leagues/follow.js" defer></script>\n${ld ? `${jsonLd(ld)}\n` : ""}</head>
 <body${live ? ` data-sportscore="${esc(live)}"` : ""}>
-<nav class="nav" aria-label="Site"><a href="/leagues/"${here === "all" ? ' aria-current="page"' : ""}>Leagues</a>${here === "league" ? '<a href="#table">Table</a><a href="#week">This week</a>' : ""}</nav>
+<nav class="nav" aria-label="Site"><a href="/leagues/"${here === "all" ? ' aria-current="page"' : ""}>Leagues</a>${here === "league" ? '<a class="jump" href="#table">Table</a><a class="jump" href="#week">This week</a>' : ""}<a href="/news/"${here === "news" ? ' aria-current="page"' : ""}>News</a><a href="/following/"${here === "following" ? ' aria-current="page"' : ""}>Following</a></nav>
 ${body}
 </body>
 </html>
@@ -210,7 +228,7 @@ function leaguePage(league, competition, api, before, after, zonesFor) {
   const live = league.sportscore && (week.length || next.length) ? league.sportscore : null;
   const late = meta.overdue ? ` ${meta.overdue === 1 ? "1 result" : `${meta.overdue} results`} from more than three days ago ${meta.overdue === 1 ? "is" : "are"} not in yet.` : "";
   const upTo = (meta.lastResult ? `Results up to ${day(meta.lastResult)}` : "No results yet") + (late ? `.${late.slice(0, -1)}` : "");
-  const rows = table.map((r) => { const z = zoneAt(r.position); return `<tr class="row"${z ? ` data-zone="${z.kind}"` : ""}><td class="pos">${r.position}${z ? `<span class="sr-only">, ${esc(names[z.kind])}</span>` : ""}</td><th scope="row" class="left"><a href="/leagues/${league.id}/${esc(r.team)}/">${esc(teams[r.team])}</a></th><td>${r.played}</td>`
+  const rows = table.map((r) => { const z = zoneAt(r.position); return `<tr class="row"${z ? ` data-zone="${z.kind}"` : ""}><td class="pos">${r.position}${z ? `<span class="sr-only">, ${esc(names[z.kind])}</span>` : ""}</td><th scope="row" class="left"><button class="star" type="button" data-club="${esc(r.team)}" data-name="${esc(teams[r.team])}" aria-pressed="false" aria-label="Follow ${esc(teams[r.team])}">☆</button><a href="/leagues/${league.id}/${esc(r.team)}/">${esc(teams[r.team])}</a></th><td>${r.played}</td>`
     + `<td class="wdl">${r.won}</td><td class="wdl">${r.drawn}</td><td class="wdl">${r.lost}</td><td>${r.gd > 0 ? "+" : ""}${r.gd}</td><td class="pts">${r.points}</td></tr>`; }).join("\n");
   const range = (z) => (z.from === z.to ? nth(z.from) : `${nth(z.from)}–${nth(z.to)}`);
   const legend = zoning ? `<ul class="zones" aria-label="What the places lead to">${zoning.zones.map((z) => `<li data-zone="${z.kind}"><b>${esc(names[z.kind])}</b> ${range(z)}</li>`).join("")}</ul>
@@ -292,6 +310,7 @@ function clubPages(league, competition, api, zonesFor) {
 <h1 style="--n: ${Math.max(...club.split(/\s+/).map((w) => w.length))}">${esc(club)}</h1>
 <p class="stand"><b>${nth(row.position)} in <a href="/leagues/${league.id}/">${esc(league.name)}</a></b> · ${row.points} points${zone ? ` · ${esc(names[zone.kind])} place` : ""}</p>
 <p class="note">Won ${row.won}, drawn ${row.drawn}, lost ${row.lost} · goal difference ${gd} · ${esc(season)}</p>
+<button class="follow" type="button" data-club="${esc(id)}" data-name="${esc(club)}" aria-pressed="false">Follow</button>
 </header>
 <main class="board">
 <div class="side">
@@ -446,11 +465,169 @@ export function liveScript() {
 `;
 }
 
+/** The browser script for following clubs (/leagues/follow.js). The clubs followed are kept on the device (localStorage "golboard.following", a
+ *  list of the API's club ids). Stars and Follow buttons toggle a club; a News list shows all or only the stories that mention a followed
+ *  club; the Following page lists the games of the followed clubs from /api/v1/today.json. Names from the data are written as text. */
+export function followScript() {
+  return `(function () {
+  if (window.__golboardFollow) window.__golboardFollow.stop();
+  var KEY = "golboard.following", SCOPE = "golboard.newsScope";
+  function read(key) { try { return window.localStorage.getItem(key); } catch (e) { return null; } }
+  function write(key, value) { try { window.localStorage.setItem(key, value); } catch (e) {} }
+  function load() {
+    try { var v = JSON.parse(read(KEY) || "[]"); return Array.isArray(v) ? v.filter(function (x) { return typeof x === "string"; }) : []; } catch (e) { return []; }
+  }
+  var following = load();
+  var scope = read(SCOPE) === "following" ? "following" : "all";
+  var todays = null;
+  function all(sel) { return Array.prototype.slice.call(document.querySelectorAll(sel)); }
+  function is(id) { return following.indexOf(id) >= 0; }
+  function set(id, on) {
+    var at = following.indexOf(id);
+    if (on && at < 0) following.push(id);
+    if (!on && at >= 0) following.splice(at, 1);
+    write(KEY, JSON.stringify(following));
+    refresh();
+  }
+  function theirs(li) { return (li.getAttribute("data-clubs") || "").split(" ").some(function (id) { return id && is(id); }); }
+  function marks() {
+    all("[data-club]").forEach(function (el) {
+      var on = is(el.getAttribute("data-club")), name = el.getAttribute("data-name") || "";
+      if (el.type === "checkbox") { el.checked = on; return; }
+      el.setAttribute("aria-pressed", String(on));
+      if (el.className.indexOf("star") >= 0) { el.textContent = on ? "\\u2605" : "\\u2606"; el.setAttribute("aria-label", (on ? "Unfollow " : "Follow ") + name); }
+      else el.textContent = on ? "Following" : "Follow";
+    });
+    var count = document.getElementById("following-count");
+    if (count) count.textContent = following.length ? "Following " + following.length + (following.length === 1 ? " club." : " clubs.") : "You are not following any clubs yet.";
+  }
+  function news() {
+    all("[data-scope]").forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-scope") === scope)); });
+    all("ul.news").forEach(function (list) {
+      var only = list.getAttribute("data-news") === "following" || scope === "following", shown = 0;
+      Array.prototype.forEach.call(list.children, function (li) { li.hidden = only && !theirs(li); if (!li.hidden) shown++; });
+      var none = document.getElementById("news-none");
+      if (none && list.getAttribute("data-news") === "toggle") {
+        none.hidden = !(scope === "following" && shown === 0);
+        none.textContent = following.length ? "No headlines mention your clubs right now. Stories are found by club name, so one that only names a player will not show here."
+          : "You are not following any clubs yet. Pick some on the Following page, or tap a star on a league table.";
+      }
+    });
+  }
+  function row(m) {
+    var li = document.createElement("li"), when = new Date(m.kickoff);
+    function cell(cls, text) { var s = document.createElement("span"); s.className = cls; s.textContent = text; li.appendChild(s); }
+    cell("home", m.homeName);
+    cell("mid", m.score && m.score.ft ? m.score.ft[0] + "\\u2013" + m.score.ft[1] : isNaN(when) ? "vs" : when.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
+    cell("away", m.awayName);
+    cell("when", isNaN(when) ? "" : when.toLocaleDateString([], { weekday: "short", day: "numeric", month: "short" }));
+    return li;
+  }
+  function games() {
+    var list = document.getElementById("following-games"), none = document.getElementById("games-none");
+    if (!list || !none) return;
+    function say(text) { list.textContent = ""; none.textContent = text; none.hidden = false; }
+    if (!following.length) return say("Pick some clubs above and their games show here.");
+    if (!todays) todays = window.fetch("/api/v1/today.json").then(function (r) { if (!r.ok) throw new Error("today.json " + r.status); return r.json(); });
+    var asked = todays;
+    asked.then(function (data) {
+      var mine = (data.matches || []).filter(function (m) { return is(m.home) || is(m.away); })
+        .sort(function (a, b) { return Date.parse(a.kickoff) - Date.parse(b.kickoff); });
+      if (!mine.length) return say("No games for your clubs in the days these scores cover.");
+      list.textContent = "";
+      mine.forEach(function (m) { list.appendChild(row(m)); });
+      none.hidden = true;
+    }).catch(function () { todays = null; say("The games could not be read just now."); });
+  }
+  function refresh() { marks(); news(); games(); }
+  function onClick(e) {
+    var target = e.target && e.target.closest ? e.target : null;
+    if (!target) return;
+    var club = target.closest("button[data-club]");
+    if (club) set(club.getAttribute("data-club"), !is(club.getAttribute("data-club")));
+    var pick = target.closest("button[data-scope]");
+    if (pick) { scope = pick.getAttribute("data-scope") === "following" ? "following" : "all"; write(SCOPE, scope); news(); }
+  }
+  function onChange(e) {
+    var box = e.target;
+    if (box && box.matches && box.matches('input[data-club]')) set(box.getAttribute("data-club"), box.checked);
+  }
+  document.addEventListener("click", onClick);
+  document.addEventListener("change", onChange);
+  window.__golboardFollow = { stop: function () { document.removeEventListener("click", onClick); document.removeEventListener("change", onChange); } };
+  refresh();
+})();
+`;
+}
+
+const when = (iso) => `${new Date(iso).toLocaleString("en-GB", { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "UTC" })} UTC`;
+const PUBLISHERS = '<a href="https://www.bbc.co.uk/sport/football">BBC Sport</a>, <a href="https://www.theguardian.com/football">The Guardian</a> and <a href="https://www.espn.com/soccer/">ESPN</a>';
+
+/** The headlines as <li>s, each marked with the clubs it mentions. A story is read on its publisher's own site. */
+function newsList(articles, mode) {
+  if (!articles.length) return '<p class="note">No headlines yet. They are gathered when the site is built.</p>';
+  return `<ul class="news" data-news="${mode}">
+${articles.map((a) => `<li data-clubs="${esc(a.clubs.join(" "))}">
+<a class="story" href="${esc(a.url)}" rel="noopener"><span class="t">${esc(a.title)}</span>${a.summary ? `<span class="s">${esc(a.summary)}</span>` : ""}<span class="m">${esc(a.source)} · ${when(a.published)}</span></a>
+</li>`).join("\n")}
+</ul>`;
+}
+
+function readNews(api) {
+  try { return JSON.parse(readFileSync(join(api, "news.json"), "utf8")); } catch { return { generatedAt: JSON.parse(readFileSync(join(api, "meta.json"), "utf8")).generatedAt, articles: [] }; }
+}
+
+/** /news/: every headline, with an All / Following switch (follow.js). */
+function newsPage(news) {
+  const body = `<header class="poster"><h1 style="--n: 4">News</h1><p class="note">Football headlines from ${PUBLISHERS}. Gathered ${esc(day(news.generatedAt.slice(0, 10)))}, ${esc(when(news.generatedAt).slice(-9))}.</p></header>
+<main class="board" style="grid-template-columns: minmax(0, 1fr)">
+<section class="glass">
+<div class="scope" role="group" aria-label="Show"><button type="button" data-scope="all" aria-pressed="true">All</button><button type="button" data-scope="following" aria-pressed="false">Following</button></div>
+<p class="note" id="news-none" hidden></p>
+${newsList(news.articles, "toggle")}
+</section>
+<footer>Headlines and short summaries come from ${PUBLISHERS}; each story is read on its own site. Clubs are found by name in the headline, so a story that only names a player is not marked.</footer>
+</main>`;
+  return shell({ title: "News", path: "/news/", here: "news", body, description: "Football headlines from BBC Sport, The Guardian and ESPN, with the clubs you follow first." });
+}
+
+/** /following/: pick clubs, then see their games and their headlines. Everything but the headlines is filled in by follow.js. */
+function followingPage(served, api, competitions, news) {
+  const groups = served.map((league) => {
+    const { teams } = JSON.parse(readFileSync(join(api, league.id, competitions.get(league.id).current, "teams.json"), "utf8"));
+    const clubs = Object.entries(teams).sort((a, b) => a[1].localeCompare(b[1]));
+    return `<details>
+<summary>${esc(league.name)}</summary>
+<ul class="clubs">${clubs.map(([id, name]) => `<li><label><input type="checkbox" data-club="${esc(id)}" data-name="${esc(name)}"> ${esc(name)}</label></li>`).join("\n")}</ul>
+</details>`;
+  });
+  const body = `<header class="poster"><h1 style="--n: 9">Following</h1><p class="note">Your clubs: their games and their headlines. Kept on this device only.</p></header>
+<main class="board" style="grid-template-columns: minmax(0, 1fr)">
+<section class="glass" id="choose">
+<h2>Your clubs</h2>
+<p class="note" id="following-count">You are not following any clubs yet.</p>
+${groups.join("\n")}
+<noscript><p class="note">Following needs JavaScript.</p></noscript>
+</section>
+<section class="glass" id="games">
+<h2>Games</h2>
+<p class="note" id="games-none">Pick some clubs above and their games show here.</p>
+<ul class="games" id="following-games" aria-live="polite"></ul>
+</section>
+<section class="glass" id="headlines">
+<h2>Headlines</h2>
+${newsList(news.articles, "following").replace(/<li /g, "<li hidden ")}
+<p class="note">Headlines from ${PUBLISHERS}.</p>
+</section>
+</main>`;
+  return shell({ title: "Following", path: "/following/", here: "following", body, description: "The clubs you follow: their games and their headlines." });
+}
+
 /** Write <out>/leagues/ from the API at <api>: index.html, site.css, live.js, fonts and <league>/index.html. All or nothing. */
 export function pages({ api = "public/api/v1", out = "public", zones = loadZones } = {}) {
   const { competitions } = JSON.parse(readFileSync(join(api, "competitions.json"), "utf8"));
   const byId = new Map(competitions.map((c) => [c.id, c]));
-  const files = new Map([["site.css", CSS], ["live.js", liveScript()]]);
+  const files = new Map([["site.css", CSS], ["live.js", liveScript()], ["follow.js", followScript()]]);
   for (const font of FONTS) files.set(`fonts/${font}`, readFileSync(join(HERE, "assets", "fonts", font)));
   const served = leagues().filter((l) => byId.has(l.id));
   served.forEach((league, i) => files.set(`${league.id}/index.html`, leaguePage(league, byId.get(league.id), api,
@@ -471,13 +648,20 @@ export function pages({ api = "public/api/v1", out = "public", zones = loadZones
   try { renameSync(live, old); } catch { /* first build */ }
   renameSync(fresh, live);
   rmSync(old, { recursive: true, force: true });
+  // News and Following sit at the site's root, beside /leagues/, and are written after it so a failed league build leaves them as they were
+  const news = readNews(api);
+  const extra = new Map([["news/index.html", newsPage(news)], ["following/index.html", followingPage(served, api, byId, news)]]);
+  for (const [path, html] of extra) {
+    mkdirSync(dirname(join(out, path)), { recursive: true });
+    writeFileSync(join(out, path), html);
+  }
   // the sitemap: the app's own pages, then every league and club page, all as of the API's build day
   const lastmod = JSON.parse(readFileSync(join(api, "meta.json"), "utf8")).generatedAt.slice(0, 10);
-  const urls = ["/", "/standings", "/results", ...[...files.keys()].filter((p) => p.endsWith("index.html")).map((p) => `/leagues/${p.replace(/index\.html$/, "")}`)];
+  const urls = ["/", "/standings", "/results", "/news/", "/following/", ...[...files.keys()].filter((p) => p.endsWith("index.html")).map((p) => `/leagues/${p.replace(/index\.html$/, "")}`)];
   writeFileSync(join(out, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`
     + urls.map((u) => `<url><loc>${esc(SITE + u)}</loc><lastmod>${lastmod}</lastmod></url>`).join("\n") + "\n</urlset>\n");
   writeFileSync(join(out, "robots.txt"), `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`);
-  return { pages: [...files.keys()].filter((p) => p.endsWith(".html")).length };
+  return { pages: [...files.keys()].filter((p) => p.endsWith(".html")).length + extra.size };
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {

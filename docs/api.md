@@ -12,7 +12,8 @@ app or page can read it. Built by `npm run api` (download, then build) into `pub
 | `api/v1/<league>/<season>/table.json` | `{ competition, season, table: [{ position, team, played, won, drawn, lost, gf, ga, gd, points, adjustment }], adjustments }` |
 | `api/v1/<league>/<season>/teams.json` | `{ competition, season, teams: { <team id>: <name> } }` |
 | `api/v1/meta.json` | version, when it was built, the sources and their licences, per league season: games finished and to play, the date of the last result, corrections applied; and `files`: every other file of the build with the sha256 of its bytes |
-| `api/v1/schema.json` | the contract: a JSON Schema (2020-12) with one `$defs` entry per file type (`competitions`, `matches`, `table`, `teams`, `meta`). Kept in `data/api/schema.json` |
+| `api/v1/news.json` | `{ generatedAt, articles: [{ title, summary, url, source, published, image, clubs }] }`: football headlines, newest first (at most 60), from BBC Sport, The Guardian and ESPN's own RSS feeds; `clubs` lists the team ids the story names. Written by `scripts/api/news.mjs`, after `build.mjs`, so it is not in `meta.json`'s file list |
+| `api/v1/schema.json` | the contract: a JSON Schema (2020-12) with one `$defs` entry per file type (`competitions`, `matches`, `table`, `teams`, `today`, `news`, `meta`). Kept in `data/api/schema.json` |
 
 League ids: `it-1` Serie A, `en-1` Premier League, `es-1` LaLiga, `de-1` Bundesliga, `fr-1` Ligue 1, `nl-1` Eredivisie, `pt-1` Primeira
 Liga, `en-2` Championship. Seasons look like `2026-27`.
@@ -50,6 +51,24 @@ SportScore's terms ask for a visible link, so those pages say "Live scores power
 function and aliases as `teams.mjs` (copied in at build time). On 31 October 2026 goals showed on SportScore a median 0.2 min after ESPN
 and final whistles 1.2 min after (each ±1 min). The site's CSP allows `connect-src https://sportscore.com` for this. Without the script the
 page is still complete.
+
+## News and Following
+
+`npm run api:fetch` also downloads the three football feeds into `data/news/` (a feed that fails keeps its saved copy), and `api:build`
+turns them into `api/v1/news.json` (`scripts/api/news.mjs`; it never fails the build). Only the headline, a short plain-text summary, the
+picture's address and the link are kept: a story is read on its publisher's site. The Guardian offers its feeds for personal,
+non-commercial use; BBC's and ESPN's current terms were not confirmed (the BBC page reachable was a 2011 copy).
+
+A story is tagged with a club when the club's name, or a well-known short name ("Man Utd", "Spurs"), appears as whole words in the
+headline, the summary or the feed's own tags. A short name that could mean two clubs ("United", "Manchester", "Madrid") is left out, so a
+story may be missed but is not filed under the wrong club; a one-word name needs a capital letter ("Nice" the club, not "nice"). Stories
+that only name a player are not tagged. The iPhone app has the same rules (`Golboard/Follow.swift`); the tests hold the same cases.
+
+`pages.mjs` also writes `/news/` (every headline, with an All / Following switch) and `/following/` (pick clubs; their games from
+`api/v1/today.json`; their headlines), and puts a star beside each club in the league tables and a Follow button on each club page.
+`/leagues/follow.js`, served from the site itself so the CSP needs nothing new, keeps the followed clubs on the device
+(`localStorage` key `golboard.following`, a list of team ids). The headlines are only as fresh as the last build, as is everything else
+on these pages.
 
 ## Where it comes from, and how we know it is right
 

@@ -14,6 +14,9 @@ const pages = [
       <a v-for="p in pages" :key="p.to" :href="p.to" :aria-current="current === p.to ? 'page' : undefined">{{ p.label }}</a>
       <!-- Built by npm run api: all eight leagues, each table and each club. -->
       <a href="/leagues/">Leagues</a>
+      <!-- Built by npm run api too: the headlines, and the clubs you follow (kept on the device). -->
+      <a href="/news/">News</a>
+      <a href="/following/">Following</a>
     </nav>
   </header>
 </template>

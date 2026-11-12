@@ -168,6 +168,32 @@
           "properties": { "league": { "$ref": "#/$defs/leagueId" }, "homeName": { "type": "string" }, "awayName": { "type": "string" } } } }
       }
     },
+    "news": {
+      "description": "Football headlines from the publishers' own feeds (BBC Sport, The Guardian, ESPN), newest first, each with the clubs it mentions. A story is read at its link; only the headline, a short summary and a picture address are kept.",
+      "type": "object",
+      "required": ["generatedAt", "articles"],
+      "additionalProperties": false,
+      "properties": {
+        "generatedAt": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T" },
+        "articles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["title", "url", "source", "published", "clubs"],
+            "additionalProperties": false,
+            "properties": {
+              "title": { "type": "string", "minLength": 1 },
+              "summary": { "type": ["string", "null"] },
+              "url": { "type": "string", "pattern": "^https?://" },
+              "source": { "type": "string" },
+              "published": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T" },
+              "image": { "type": ["string", "null"], "pattern": "^https://" },
+              "clubs": { "type": "array", "items": { "$ref": "#/$defs/teamId" }, "uniqueItems": true }
+            }
+          }
+        }
+      }
+    },
     "meta": {
       "type": "object",
       "required": ["version", "generatedAt", "sources", "leagues", "files"],

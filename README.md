@@ -34,6 +34,7 @@ Points are always `3 x wins + draws`, computed by the engines, so a points deduc
 `npm run api` downloads openfootball's public-domain results for eight leagues and builds a static JSON API in `public/api/v1/`
 (competitions, matches, tables, teams, meta). Tables are computed with each league's own rules and checked against the official 2025-26
 record in the tests. Format and sources: `docs/api.md`.
+It also gathers football headlines (`api/v1/news.json`) and builds `/news/` and `/following/`, where you pick clubs to follow; see "News and Following" in `docs/api.md`.
 
 ## Deploy on Netlify
 
