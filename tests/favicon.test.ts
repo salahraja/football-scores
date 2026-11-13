@@ -7,7 +7,7 @@ import { build } from "../scripts/api/build.mjs";
 import { pages } from "../scripts/api/pages.mjs";
 
 // Salah, 2026-11-12: "change the favicon ... create a logo much like how I created a football logo for Ranoo". The old icon was a black circle with a white
-// triangle. The new one is the Golboard crest family: a shield with a G and a red ball (public/favicon.svg, an .ico for old browsers, a home-screen icon).
+// triangle. The new one is the Golboard crest family: a shield with a track-shaped G and a red ball (public/favicon.svg, an .ico for old browsers, a home-screen icon).
 const dirs: string[] = [];
 const tmp = () => { const d = mkdtempSync(join(tmpdir(), "golboard-icon-")); dirs.push(d); return d; };
 afterAll(() => { while (dirs.length) rmSync(dirs.pop()!, { recursive: true, force: true }); });
@@ -36,8 +36,8 @@ describe("the icon files", () => {
     expect([png.readUInt32BE(16), png.readUInt32BE(20)]).toEqual([180, 180]);
   });
 
-  it("the full crest is kept as a logo, in the ink and the red-band versions", () => {
-    for (const name of ["brand/golboard-crest.svg", "brand/golboard-crest-red.svg"]) {
+  it("the full crest is kept as a logo: the main one, a red-band one and a one-big-G one", () => {
+    for (const name of ["brand/golboard-crest.svg", "brand/golboard-crest-red.svg", "brand/golboard-crest-one-g.svg"]) {
       const svg = file(name).toString("utf8");
       expect(svg).toContain("<title>Golboard crest</title>");
       expect(svg).not.toMatch(/<text|font-family/i);
