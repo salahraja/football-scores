@@ -13,6 +13,7 @@ app or page can read it. Built by `npm run api` (download, then build) into `pub
 | `api/v1/<league>/<season>/teams.json` | `{ competition, season, teams: { <team id>: <name> } }` |
 | `api/v1/meta.json` | version, when it was built, the sources and their licences, per league season: games finished and to play, the date of the last result, corrections applied; and `files`: every other file of the build with the sha256 of its bytes |
 | `api/v1/news.json` | `{ generatedAt, articles: [{ title, summary, url, source, published, image, clubs }] }`: football headlines, newest first (at most 60), from BBC Sport, The Guardian and ESPN's own RSS feeds; `clubs` lists the team ids the story names. Written by `scripts/api/news.mjs`, after `build.mjs`, so it is not in `meta.json`'s file list |
+| `api/v1/news/<club id>.json` | `{ generatedAt, articles }` in the same shape, at most 30 per club, newest first: the general headlines that name the club plus The Guardian's own feed for it (`data/api/guardian-feeds.json`). One file per club of every league, so a club the three general feeds never mention (Juventus had none on 2026-11-12) still has its stories. A club with no Guardian feed gets only the general ones |
 | `api/v1/schema.json` | the contract: a JSON Schema (2020-12) with one `$defs` entry per file type (`competitions`, `matches`, `table`, `teams`, `today`, `news`, `meta`). Kept in `data/api/schema.json` |
 
 League ids: `it-1` Serie A, `en-1` Premier League, `es-1` LaLiga, `de-1` Bundesliga, `fr-1` Ligue 1, `nl-1` Eredivisie, `pt-1` Primeira
@@ -59,13 +60,18 @@ turns them into `api/v1/news.json` (`scripts/api/news.mjs`; it never fails the b
 picture's address and the link are kept: a story is read on its publisher's site. The Guardian offers its feeds for personal,
 non-commercial use; BBC's and ESPN's current terms were not confirmed (the BBC page reachable was a 2011 copy).
 
+`api:fetch` also reads The Guardian's feed for each club that has one (`https://www.theguardian.com/football/<tag>/rss`, the tag per club in
+`data/api/guardian-feeds.json`: 122 of the 156 clubs; found by trying the club's name as a tag and keeping a feed only when its stories are about the
+club). The requests go three at a time with a pause between, because the Guardian rate-limits bursts; a club whose feed fails keeps its saved copy in
+`data/news/club/`. Those tags are the Guardian's own, so a roundup ("European football: ...") appears under every club it covers.
+
 A story is tagged with a club when the club's name, or a well-known short name ("Man Utd", "Spurs"), appears as whole words in the
 headline, the summary or the feed's own tags. A short name that could mean two clubs ("United", "Manchester", "Madrid") is left out, so a
 story may be missed but is not filed under the wrong club; a one-word name needs a capital letter ("Nice" the club, not "nice"). Stories
 that only name a player are not tagged. The iPhone app has the same rules (`Golboard/Follow.swift`); the tests hold the same cases.
 
 The homepage carries both too (`src/views/HomeView.vue`): its Headlines box shows the six newest stories from `api/v1/news.json` with an All /
-Following switch, a star beside each club in its table follows the club, and the marked row and the poster's first game are a followed club's
+Following switch (Following adds each followed club's own `news/<id>.json`), a star beside each club in its table follows the club, and the marked row and the poster's first game are a followed club's
 (Juventus, the old fixed favourite, only while nothing is followed). Serie A's rows come from football-data's own names ("Inter", "Como 1907"), so
 `src/data/clubid.ts` gives each the site's id (the rule of `teams.mjs`; a test holds the real feed's 20 names against the API's 20 ids).
 

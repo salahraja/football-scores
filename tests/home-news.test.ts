@@ -21,6 +21,9 @@ const replies: Record<string, unknown> = {
   "en-1/2026-27/matches.json": { matches: [game("a", "Matchday 9", "newcastle-united", "arsenal"), game("b", "Matchday 9", "chelsea", "tottenham-hotspur")] },
   "en-1/2026-27/teams.json": { teams: { arsenal: "Arsenal", chelsea: "Chelsea", "newcastle-united": "Newcastle United", "tottenham-hotspur": "Tottenham Hotspur" } },
   "news.json": NEWS,
+  // Juventus is named in no general story but one; the Guardian's own Juventus feed has more (Salah, 2026-11-12: "I followed Juve & its showing 0 headlines")
+  "news/juventus.json": { generatedAt: "2026-11-12T22:00:00Z", articles: [{ ...story(20, ["juventus"]), title: "Juve club story", published: "2026-11-12T21:00:00.000Z", url: "https://guardian.test/juve" },
+    { ...story(21, ["juventus"]), title: "Story 3 again", url: "https://news.test/3?from=guardian", published: story(3).published }] },
 };
 function stub(fail = "") {
   vi.stubGlobal("fetch", vi.fn(async (url: string) => {
@@ -80,6 +83,25 @@ describe("the homepage's Headlines box", () => {
     const w = home();
     await flushPromises();
     expect(titles(w)).toEqual(["Story 4"]);
+  });
+
+  it("Following also shows the followed club's own stories, newest first, with a story that is in both lists once", async () => {
+    stub();
+    memory.set("golboard.following", JSON.stringify(["juventus"]));
+    memory.set("golboard.newsScope", "following");
+    const w = home();
+    await flushPromises();
+    expect(titles(w)).toEqual(["Juve club story", "Story 3"]);
+    expect(globalThis.fetch).toHaveBeenCalledWith("/api/v1/news/juventus.json");
+  });
+
+  it("a club whose own file cannot be read does not hide the others' stories", async () => {
+    stub("news/juventus.json");
+    memory.set("golboard.following", JSON.stringify(["juventus", "chelsea"]));
+    memory.set("golboard.newsScope", "following");
+    const w = home();
+    await flushPromises();
+    expect(titles(w)).toEqual(["Story 3", "Story 4"]);
   });
 
   it("says what to do when no club is followed, or none has a story", async () => {

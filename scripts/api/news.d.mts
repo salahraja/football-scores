@@ -22,3 +22,11 @@ export function fetchFeeds(options?: {
   fetch?: (url: string, init: { headers: Record<string, string>; signal?: AbortSignal }) => Promise<Response>;
 }): Promise<{ saved: string[]; kept: string[] }>;
 export function buildNews(options?: { api?: string; raw?: string; now?: string }): { articles: number };
+export function guardianFeeds(): Record<string, string>;
+export function fetchClubFeeds(options?: {
+  raw?: string;
+  feeds?: Record<string, string>;
+  pool?: number;
+  gap?: number;
+  fetch?: (url: string, init: { headers: Record<string, string>; signal?: AbortSignal }) => Promise<Response>;
+}): Promise<{ saved: number; kept: number }>;

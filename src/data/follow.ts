@@ -33,3 +33,28 @@ export async function news(): Promise<Article[]> {
   if (!reply.ok) throw new Error(`news.json: ${reply.status}`);
   return ((await reply.json()) as { articles: Article[] }).articles;
 }
+
+/** One club's own stories (api/v1/news/<id>.json: the general headlines that name it plus the Guardian's feed for that club). A club with no file, or a
+ *  file that cannot be read, simply has none, so it never hides another club's stories. */
+export async function clubNews(id: string): Promise<Article[]> {
+  try {
+    const reply = await fetch(`/api/v1/news/${encodeURIComponent(id)}.json`);
+    return reply.ok ? ((await reply.json()) as { articles: Article[] }).articles : [];
+  } catch {
+    return [];
+  }
+}
+
+/** Newest first, one entry per story (the same link with or without tracking parameters is one story). */
+export function mergeStories(lists: Article[][]): Article[] {
+  const seen = new Set<string>();
+  return lists
+    .flat()
+    .map((a, i) => ({ a, i, t: Date.parse(a.published) || 0 }))
+    .sort((x, y) => y.t - x.t || x.i - y.i)
+    .map(({ a }) => a)
+    .filter((a) => {
+      const key = a.url.split("#")[0].split("?")[0];
+      return seen.has(key) ? false : (seen.add(key), true);
+    });
+}

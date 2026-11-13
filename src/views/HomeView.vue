@@ -4,7 +4,7 @@ import { getDataNote, getResultRounds, getStandings } from "../data";
 import { competitions, league as loadLeague, zoneOf, type Competition, type League } from "../data/leagues";
 import { covered, today, type TodayGame } from "../data/live";
 import { teamId } from "../data/clubid";
-import { loadFollowing, loadScope, news, saveFollowing, saveScope, type Article, type Scope } from "../data/follow";
+import { clubNews, loadFollowing, loadScope, mergeStories, news, saveFollowing, saveScope, type Article, type Scope } from "../data/follow";
 
 // The homepage (Salah, 2026-10-30, the Stadio "Poster" with glass boxes): the league's name and the newest round's result set as a
 // poster (Juventus's when they played), then the table, the round's results, and places for top scorers and headlines that stay empty
@@ -47,10 +47,23 @@ function setScope(next: Scope) {
   scope.value = next;
   saveScope(next);
 }
-// Six stories: the newest, or the newest about a club you follow.
+// Each followed club's own file (the general feeds may never mention a club, e.g. Juventus), read once and kept.
+const clubFiles = ref<Record<string, Article[]>>({});
+const asked = new Set<string>();
+async function loadClubs() {
+  for (const id of following.value) {
+    if (asked.has(id)) continue;
+    asked.add(id);
+    clubFiles.value = { ...clubFiles.value, [id]: await clubNews(id) };
+  }
+}
+watch(following, loadClubs, { deep: true });
+// Six stories: the newest, or the newest about a club you follow (the general headlines that name it plus its own file).
 const stories = computed(() => {
   const all = articles.value ?? [];
-  return (scope.value === "following" ? all.filter((a) => a.clubs.some((c) => following.value.includes(c))) : all).slice(0, 6);
+  if (scope.value !== "following") return all.slice(0, 6);
+  const mine = all.filter((a) => a.clubs.some((c) => following.value.includes(c)));
+  return mergeStories([mine, ...following.value.map((id) => clubFiles.value[id] ?? [])]).slice(0, 6);
 });
 const when = (iso: string) => new Date(iso).toLocaleString([], { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" });
 
@@ -187,6 +200,7 @@ watch(chosen, async (id) => {
 onMounted(async () => {
   following.value = loadFollowing();
   scope.value = loadScope();
+  loadClubs();
   try {
     articles.value = await news();
   } catch {

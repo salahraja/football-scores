@@ -501,18 +501,64 @@ export function followScript() {
     var count = document.getElementById("following-count");
     if (count) count.textContent = following.length ? "Following " + following.length + (following.length === 1 ? " club." : " clubs.") : "You are not following any clubs yet.";
   }
+  var generalFile = null, clubFiles = {}, ticket = 0;
+  function getJson(url) { return window.fetch(url).then(function (r) { if (!r.ok) throw new Error(url + " " + r.status); return r.json(); }); }
+  function general() {
+    if (!generalFile) generalFile = getJson("/api/v1/news.json").catch(function () { generalFile = null; return { articles: [] }; });
+    return generalFile;
+  }
+  /** One club's own stories. A club with no file (404) has none, and that is remembered; a network error is tried again next time. */
+  function clubNews(id) {
+    if (!clubFiles[id]) clubFiles[id] = window.fetch("/api/v1/news/" + encodeURIComponent(id) + ".json")
+      .then(function (r) { return r.ok ? r.json() : { articles: [] }; })
+      .catch(function () { delete clubFiles[id]; return { articles: [] }; });
+    return clubFiles[id];
+  }
+  function story(a) {
+    var li = document.createElement("li"), link = document.createElement("a");
+    li.setAttribute("data-clubs", (a.clubs || []).join(" "));
+    link.className = "story"; link.href = a.url; link.rel = "noopener";
+    function part(cls, text) { var s = document.createElement("span"); s.className = cls; s.textContent = text; link.appendChild(s); }
+    part("t", a.title);
+    if (a.summary) part("s", a.summary);
+    var at = new Date(a.published);
+    part("m", a.source + (isNaN(at) ? "" : " \\u00b7 " + at.toLocaleString([], { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })));
+    li.appendChild(link);
+    return li;
+  }
+  /** The followed clubs' stories: each club's own file plus the general headlines that name one, newest first, a story once. */
+  function mineNews() {
+    var list = document.getElementById("mine-news"), none = document.getElementById("news-none");
+    if (!list) return;
+    var toggle = document.querySelector('ul.news[data-news="toggle"]');
+    if (toggle) { toggle.hidden = scope === "following"; list.hidden = scope !== "following"; }
+    function say(text) { if (!none) return; none.textContent = text || ""; none.hidden = !text; }
+    if (toggle && scope !== "following") { say(""); return; }
+    var mine = ++ticket;
+    if (!following.length) {
+      list.textContent = "";
+      return say("You are not following any clubs yet. Pick some on the Following page, or tap a star on a league table.");
+    }
+    Promise.all([general()].concat(following.map(clubNews))).then(function (files) {
+      if (mine !== ticket) return;
+      var found = (files[0].articles || []).filter(function (a) { return (a.clubs || []).some(is); });
+      files.slice(1).forEach(function (f) { found = found.concat(f.articles || []); });
+      found = found.map(function (a, i) { return { a: a, i: i, t: Date.parse(a.published) || 0 }; })
+        .sort(function (x, y) { return y.t - x.t || x.i - y.i; }).map(function (x) { return x.a; });
+      var seen = {};
+      found = found.filter(function (a) {
+        if (typeof a.url !== "string" || !/^https?:\\/\\//.test(a.url)) return false;
+        var key = a.url.split("#")[0].split("?")[0];
+        return seen[key] ? false : (seen[key] = true);
+      });
+      list.textContent = "";
+      found.forEach(function (a) { list.appendChild(story(a)); });
+      say(found.length ? "" : "No headlines mention your clubs right now. Stories are found by club name, so one that only names a player will not show here.");
+    });
+  }
   function news() {
     all("[data-scope]").forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-scope") === scope)); });
-    all("ul.news").forEach(function (list) {
-      var only = list.getAttribute("data-news") === "following" || scope === "following", shown = 0;
-      Array.prototype.forEach.call(list.children, function (li) { li.hidden = only && !theirs(li); if (!li.hidden) shown++; });
-      var none = document.getElementById("news-none");
-      if (none && list.getAttribute("data-news") === "toggle") {
-        none.hidden = !(scope === "following" && shown === 0);
-        none.textContent = following.length ? "No headlines mention your clubs right now. Stories are found by club name, so one that only names a player will not show here."
-          : "You are not following any clubs yet. Pick some on the Following page, or tap a star on a league table.";
-      }
-    });
+    mineNews();
   }
   function row(m) {
     var li = document.createElement("li"), when = new Date(m.kickoff);
@@ -585,6 +631,7 @@ function newsPage(news) {
 <div class="scope" role="group" aria-label="Show"><button type="button" data-scope="all" aria-pressed="true">All</button><button type="button" data-scope="following" aria-pressed="false">Following</button></div>
 <p class="note" id="news-none" hidden></p>
 ${newsList(news.articles, "toggle")}
+<ul class="news" id="mine-news" hidden></ul>
 </section>
 <footer>Headlines and short summaries come from ${PUBLISHERS}; each story is read on its own site. Clubs are found by name in the headline, so a story that only names a player is not marked.</footer>
 </main>`;
@@ -592,7 +639,7 @@ ${newsList(news.articles, "toggle")}
 }
 
 /** /following/: pick clubs, then see their games and their headlines. Everything but the headlines is filled in by follow.js. */
-function followingPage(served, api, competitions, news) {
+function followingPage(served, api, competitions) {
   const groups = served.map((league) => {
     const { teams } = JSON.parse(readFileSync(join(api, league.id, competitions.get(league.id).current, "teams.json"), "utf8"));
     const clubs = Object.entries(teams).sort((a, b) => a[1].localeCompare(b[1]));
@@ -616,8 +663,9 @@ ${groups.join("\n")}
 </section>
 <section class="glass" id="headlines">
 <h2>Headlines</h2>
-${newsList(news.articles, "following").replace(/<li /g, "<li hidden ")}
-<p class="note">Headlines from ${PUBLISHERS}.</p>
+<p class="note" id="news-none" hidden></p>
+<ul class="news" id="mine-news"></ul>
+<p class="note">Headlines from ${PUBLISHERS}. Each club's own feed adds its latest stories.</p>
 </section>
 </main>`;
   return shell({ title: "Following", path: "/following/", here: "following", body, description: "The clubs you follow: their games and their headlines." });
@@ -650,7 +698,7 @@ export function pages({ api = "public/api/v1", out = "public", zones = loadZones
   rmSync(old, { recursive: true, force: true });
   // News and Following sit at the site's root, beside /leagues/, and are written after it so a failed league build leaves them as they were
   const news = readNews(api);
-  const extra = new Map([["news/index.html", newsPage(news)], ["following/index.html", followingPage(served, api, byId, news)]]);
+  const extra = new Map([["news/index.html", newsPage(news)], ["following/index.html", followingPage(served, api, byId)]]);
   for (const [path, html] of extra) {
     mkdirSync(dirname(join(out, path)), { recursive: true });
     writeFileSync(join(out, path), html);
