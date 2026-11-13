@@ -35,13 +35,21 @@ export function unescapeEntities(text) {
   return out.split("&amp;").join("&");
 }
 
-/** Plain text from a description that may carry HTML: tags dropped, entities decoded, "Continue reading..." removed, cut to 160 characters. */
-export function plain(html) {
+/** Plain text from a description that may carry HTML: tags dropped, entities decoded, "Continue reading..." removed, cut to `limit` (160) characters. */
+export function plain(html, limit = 160) {
   const text = unescapeEntities(html.replace(/<[^>]*>/g, " ")).replace("Continue reading...", "").replace(/\s+/g, " ").trim();
-  if (text.length <= 160) return text;
-  const cut = text.slice(0, 160);
+  if (text.length <= limit) return text;
+  const cut = text.slice(0, limit);
   const at = cut.lastIndexOf(" ");
   return `${at >= 0 ? cut.slice(0, at) : cut}…`;
+}
+
+/** A description as its bullets and paragraphs, each as plain text, in order (a description with no markup is one part). */
+export function descriptionParts(html) {
+  const found = [...html.matchAll(/<(li|p)\b[^>]*>([\s\S]*?)<\/\1>/gi)].map((m) => plain(m[2], Infinity)).filter(Boolean);
+  if (found.length) return found;
+  const whole = plain(html, Infinity);
+  return whole ? [whole] : [];
 }
 
 /** The text of an element: CDATA as it is, anything else with its XML entities decoded once. */
@@ -52,8 +60,9 @@ function text(block, name) {
   return (cdata ? cdata[1] : unescapeEntities(m[1])).trim();
 }
 
-/** The articles of an RSS 2.0 feed: [{ title, summary, url, source, published (ISO), image, tags }]. An item with no title, web link or date is skipped. */
-export function parseRss(xml, source) {
+/** The articles of an RSS 2.0 feed: [{ title, summary, url, source, published (ISO), image, tags }]. An item with no title, web link or date is skipped.
+ *  With `withParts`, each also carries `parts` (the description's bullets and paragraphs), for picking out what is said about one club; never published. */
+export function parseRss(xml, source, { withParts = false } = {}) {
   const out = [];
   for (const item of String(xml).matchAll(/<item\b[^>]*>([\s\S]*?)<\/item>/gi)) {
     const block = item[1];
@@ -73,7 +82,7 @@ export function parseRss(xml, source) {
     });
     const description = text(block, "description");
     const summary = description ? plain(description) : "";
-    out.push({ title, summary: summary || null, url, source, published: new Date(published).toISOString(), image, tags });
+    out.push({ title, summary: summary || null, url, source, published: new Date(published).toISOString(), image, tags, ...(withParts ? { parts: description ? descriptionParts(description) : [] } : {}) });
   }
   return out;
 }
@@ -90,11 +99,11 @@ const GENERIC = new Set(["fc", "afc", "cf", "ac", "as", "ss", "sc", "sv", "fsv",
 /** What the press calls a club besides its listed name. */
 const ALIASES = {
   "manchester-united": ["Man United", "Man Utd"], "manchester-city": ["Man City"], "tottenham-hotspur": ["Spurs"], "wolverhampton-wanderers": ["Wolves"],
-  "aston-villa": ["Villa"], "atletico-madrid": ["Atletico", "Atleti"], inter: ["Internazionale"], milan: ["Milan"], barcelona: ["Barca"],
+  "aston-villa": ["Villa"], "atletico-madrid": ["Atletico", "Atleti"], inter: ["Internazionale", "Inter"], milan: ["Milan"], barcelona: ["Barca"],
   "bayern-munich": ["Bayern"], "borussia-dortmund": ["Dortmund"], "borussia-monchengladbach": ["Gladbach"], "paris-saint-germain": ["PSG"], juventus: ["Juve"],
 };
 /** Phrases that hide a club's short name: "Milan" means AC Milan except inside "Inter Milan". */
-const APART = { milan: ["Inter Milan"] };
+const APART = { milan: ["Inter Milan"], inter: ["Inter Miami"] };
 
 const stem = (normalized) => normalized.split(" ").filter((w) => w && !GENERIC.has(w) && !/^\d+$/.test(w)).join(" ");
 const containsWords = (haystack, phrase) => ` ${haystack} `.includes(` ${phrase} `);
@@ -140,6 +149,18 @@ export function mentions(article, terms) {
     for (const s of startsOf(p, lower)) if (!hidden.has(s) && (p.length > 1 || /^[A-Z]/.test(cased[s]))) return true;
   }
   return false;
+}
+
+/** What a story says about one club: the bullets and the sentences of its description that name the club, joined with " · " and cut to `max`
+ *  characters at a word. Null when the text names the club nowhere (a roundup filed under the club by its tag, whose club part is not in the feed). */
+export function clubExcerpt(parts, terms, max = 240) {
+  const named = (sentence) => mentions({ title: sentence, summary: null, tags: [] }, terms);
+  const kept = parts.flatMap((part) => part.split(/(?<=[.!?])\s+(?=[A-Z"“‘'(])/).filter(named));
+  if (!kept.length) return null;
+  const text = kept.join(" · ");
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max), at = cut.lastIndexOf(" ");
+  return `${at >= 0 ? cut.slice(0, at) : cut}…`;
 }
 
 // ---- putting the feeds together
@@ -213,7 +234,7 @@ export function buildNews({ api = join(ROOT, "public/api/v1"), raw = join(ROOT, 
   let articles = [];
   try {
     const lists = FEEDS.map((feed) => {
-      try { return parseRss(readFileSync(join(raw, `${slugOf(feed.name)}.xml`), "utf8"), feed.name); } catch { return []; }
+      try { return parseRss(readFileSync(join(raw, `${slugOf(feed.name)}.xml`), "utf8"), feed.name, { withParts: true }); } catch { return []; }
     });
     const clubs = [];
     const { competitions } = JSON.parse(readFileSync(join(api, "competitions.json"), "utf8"));
@@ -224,13 +245,20 @@ export function buildNews({ api = join(ROOT, "public/api/v1"), raw = join(ROOT, 
     const terms = clubTerms(clubs);
     const tagged = (list) => list.map(({ tags, ...a }) => ({ ...a, clubs: clubs.filter((c) => mentions({ ...a, tags }, terms.get(c.id))).map((c) => c.id) }));
     const everything = tagged(merge(lists, Infinity));
-    articles = everything.slice(0, LIMIT);
+    const bare = ({ parts, ...a }) => a;
+    articles = everything.slice(0, LIMIT).map(bare);
+    // a club's copy of a story says only what the story says about that club; a headline that names the club keeps the summary it came with
+    const about = (a, c) => {
+      const excerpt = clubExcerpt(a.parts ?? [], terms.get(c.id));
+      if (excerpt) return { ...bare(a), summary: excerpt };
+      return mentions({ title: a.title, summary: null, tags: [] }, terms.get(c.id)) ? bare(a) : { ...bare(a), summary: null };
+    };
     // news/<club>.json: the club's own Guardian feed (all about it, whatever a headline says) and the general stories that name it
     const perClub = new Map();
     for (const c of clubs) {
       let own = [];
-      try { own = parseRss(readFileSync(join(raw, "club", `${c.id}.xml`), "utf8"), "The Guardian").map(({ tags, ...a }) => ({ ...a, clubs: [c.id] })); } catch { /* none saved */ }
-      perClub.set(c.id, merge([everything.filter((a) => a.clubs.includes(c.id)), own], CLUB_LIMIT));
+      try { own = parseRss(readFileSync(join(raw, "club", `${c.id}.xml`), "utf8"), "The Guardian", { withParts: true }).map(({ tags, ...a }) => ({ ...a, clubs: [c.id] })); } catch { /* none saved */ }
+      perClub.set(c.id, merge([everything.filter((a) => a.clubs.includes(c.id)).map((a) => about(a, c)), own.map((a) => about(a, c))], CLUB_LIMIT));
     }
     mkdirSync(join(api, "news"), { recursive: true });
     for (const [id, list] of perClub) write(join(api, "news", `${id}.json`), { generatedAt: now, articles: list });

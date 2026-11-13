@@ -5,7 +5,7 @@ import { join } from "node:path";
 import Ajv from "ajv/dist/2020";
 import { afterEach, describe, expect, it } from "vitest";
 import { build } from "../scripts/api/build.mjs";
-import { FEEDS, buildNews, clubTerms, fetchClubFeeds, fetchFeeds, guardianFeeds, mentions, merge, parseRss, plain } from "../scripts/api/news.mjs";
+import { FEEDS, buildNews, clubExcerpt, clubTerms, descriptionParts, fetchClubFeeds, fetchFeeds, guardianFeeds, mentions, merge, parseRss, plain } from "../scripts/api/news.mjs";
 
 // Football headlines from the publishers' own RSS feeds, tagged with the clubs they mention, published as api/v1/news.json. The samples are
 // trimmed from the real feeds fetched on 2026-11-12. The same matching rules and the same cases as the iPhone app's (Golboard/Follow.swift).
@@ -102,6 +102,13 @@ describe("which clubs a headline is about", () => {
     expect(hits("Inter Milan beat AC Milan")).toEqual(["inter", "milan"]);
     expect(hits("Amorim's Milan surge puts rivals on notice")).toEqual(["milan"]);
     expect(hits("Inter Milan win at home")).toEqual(["inter"]);
+  });
+
+  it("finds Inter by the name the Guardian uses, but not Inter Miami", () => {
+    expect(hits("Serie A: Inter sink Venezia, Milan lose at home to Bologna")).toEqual(["inter", "milan"]);
+    expect(hits("Messi's Inter Miami win again")).toEqual([]);
+    expect(hits("Inter Miami face Inter in a friendly")).toEqual(["inter"]);
+    expect(hits("International break begins")).toEqual([]);
   });
 
   it("needs a capital for a one-word name, so ordinary words are not hits", () => {
@@ -302,5 +309,78 @@ describe("fetching the clubs' feeds", () => {
       expect(tag, id).toMatch(/^[a-z0-9-]+$/);
     }
     expect(Object.keys(map).length).toBeGreaterThan(100);
+  });
+});
+
+// Salah, 2026-11-12: "if an article mentions Juve, extract that info so you see only that as a summary from the article". The Guardian files a roundup
+// under every club it covers, and its feed text (a few bullets and the first paragraphs) is all we read, so the club's summary is the part of that text
+// which names the club: here the one bullet about Juventus, not the whole roundup.
+describe("the part of a story that is about one club", () => {
+  const ROUNDUP = "&lt;ul&gt;&lt;li&gt;&lt;p&gt;Sunderland drop points in 1-1 draw but stay unbeaten&lt;/p&gt;&lt;/li&gt;&lt;li&gt;&lt;p&gt;VAR rules out Juventus winner in draw with Rennes&lt;/p&gt;&lt;/li&gt;&lt;/ul&gt;"
+    + "&lt;p&gt;&lt;strong&gt;Celtic&lt;/strong&gt; suffered more pain as &lt;strong&gt;Celta Vigo&lt;/strong&gt; came from behind to win 2-1 at Parkhead. After defeats by Ferencvaros and Rennes they lost again. The home crowd left early.&lt;/p&gt;"
+    + "&lt;p&gt;Elsewhere, &lt;strong&gt;Juventus&lt;/strong&gt; had a winner chalked off by VAR in the 88th minute. Spalletti said afterwards that the team deserved more. The decision stood.&lt;/p&gt;";
+  const terms = clubTerms([{ id: "juventus", name: "Juventus" }, { id: "napoli", name: "Napoli" }, { id: "inter", name: "Inter Milan" }, { id: "milan", name: "AC Milan" }]);
+  const xml = (description: string) => `<rss><channel><item><title>Europa League: Celtic lose</title><link>https://g.test/a</link><pubDate>Thu, 12 Nov 2026 18:30:00 GMT</pubDate><description>${description}</description></item></channel></rss>`;
+
+  it("reads a description as its bullets and paragraphs, as plain text, in order", () => {
+    const [a] = parseRss(xml(ROUNDUP), "The Guardian", { withParts: true });
+    expect(a.parts).toEqual([
+      "Sunderland drop points in 1-1 draw but stay unbeaten",
+      "VAR rules out Juventus winner in draw with Rennes",
+      "Celtic suffered more pain as Celta Vigo came from behind to win 2-1 at Parkhead. After defeats by Ferencvaros and Rennes they lost again. The home crowd left early.",
+      "Elsewhere, Juventus had a winner chalked off by VAR in the 88th minute. Spalletti said afterwards that the team deserved more. The decision stood.",
+    ]);
+    expect(parseRss(xml(ROUNDUP), "The Guardian")[0]).not.toHaveProperty("parts");   // only asked for, never published
+    expect(descriptionParts("A plain line with no markup.")).toEqual(["A plain line with no markup."]);
+  });
+
+  it("keeps only the bullets and the sentences that name the club", () => {
+    const [a] = parseRss(xml(ROUNDUP), "The Guardian", { withParts: true });
+    expect(clubExcerpt(a.parts!, terms.get("juventus")!)).toBe("VAR rules out Juventus winner in draw with Rennes · Elsewhere, Juventus had a winner chalked off by VAR in the 88th minute.");
+    expect(clubExcerpt(a.parts!, terms.get("napoli")!)).toBeNull();        // the roundup says nothing of Napoli, so nothing is invented
+  });
+
+  it("is cut at a word to 240 characters at most", () => {
+    const long = `Juventus ${"won ".repeat(100)}again`;
+    const out = clubExcerpt([long], terms.get("juventus")!)!;
+    expect(out.length).toBeLessThanOrEqual(241);
+    expect(out.endsWith("…")).toBe(true);
+  });
+
+  describe("in the club's own news file", () => {
+    const api = () => {
+      const out = tmp();
+      build({ input: "tests/fixtures/openfootball", wikipedia: tmp(), out, seasons: ["2025-26"], now: "2026-10-31T17:00:00Z" });
+      return join(out, "api/v1");
+    };
+    const raw = () => {
+      const dir = tmp();
+      mkdirSync(join(dir, "club"));
+      writeFileSync(join(dir, "club", "juventus.xml"), `<rss><channel>
+<item><title>Europa League: Celtic lose</title><link>https://g.test/roundup</link><pubDate>Thu, 12 Nov 2026 18:30:00 GMT</pubDate><description>${ROUNDUP}</description></item>
+<item><title>European football: Bayern win</title><link>https://g.test/nothing</link><pubDate>Thu, 12 Nov 2026 17:30:00 GMT</pubDate><description>&lt;p&gt;Bayern sailed to a 6-1 win.&lt;/p&gt;</description></item>
+<item><title>Juventus sign a striker</title><link>https://g.test/own</link><pubDate>Thu, 12 Nov 2026 16:30:00 GMT</pubDate><description>&lt;p&gt;The deal is done, with a fee agreed.&lt;/p&gt;</description></item></channel></rss>`);
+      writeFileSync(join(dir, "bbc-sport.xml"), `<rss><channel><item><title>Napoli and Juventus meet</title><link>https://b.test/g</link><pubDate>Thu, 12 Nov 2026 12:30:00 GMT</pubDate><description>Napoli host the league leaders in a game that could decide the title race this year.</description></item></channel></rss>`);
+      return dir;
+    };
+
+    it("gives the club only the lines about it; a headline that names the club keeps its own summary; a roundup with nothing about it has none", () => {
+      const dir = api();
+      buildNews({ api: dir, raw: raw(), now: "2026-11-13T10:00:00Z" });
+      const byTitle = Object.fromEntries(JSON.parse(readFileSync(join(dir, "news/juventus.json"), "utf8")).articles.map((a: { title: string; summary: string | null }) => [a.title, a.summary]));
+      expect(byTitle["Europa League: Celtic lose"]).toBe("VAR rules out Juventus winner in draw with Rennes · Elsewhere, Juventus had a winner chalked off by VAR in the 88th minute.");
+      expect(byTitle["European football: Bayern win"]).toBeNull();
+      expect(byTitle["Juventus sign a striker"]).toBe("The deal is done, with a fee agreed.");
+      expect(byTitle["Napoli and Juventus meet"]).toMatch(/^Napoli host the league leaders/);   // named in the headline
+    });
+
+    it("leaves the general news file as the publishers wrote it, and publishes no parts", () => {
+      const dir = api();
+      buildNews({ api: dir, raw: raw(), now: "2026-11-13T10:00:00Z" });
+      const general = JSON.parse(readFileSync(join(dir, "news.json"), "utf8")).articles;
+      expect(general[0].summary).toMatch(/^Napoli host the league leaders/);
+      expect(JSON.stringify(general)).not.toContain('"parts"');
+      expect(readFileSync(join(dir, "news/juventus.json"), "utf8")).not.toContain('"parts"');
+    });
   });
 });

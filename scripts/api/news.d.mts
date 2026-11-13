@@ -7,13 +7,16 @@ export interface Article {
   image: string | null;
   tags?: string[];
   clubs?: string[];
+  parts?: string[];
 }
 export interface Terms { phrases: string[]; without: string[] }
 export const FEEDS: { name: string; url: string }[];
 export function unescapeEntities(text: string): string;
-export function plain(html: string): string;
+export function plain(html: string, limit?: number): string;
+export function descriptionParts(html: string): string[];
+export function clubExcerpt(parts: string[], terms: Terms, max?: number): string | null;
 export function normalize(text: string): string;
-export function parseRss(xml: string, source: string): Article[];
+export function parseRss(xml: string, source: string, options?: { withParts?: boolean }): Article[];
 export function clubTerms(clubs: { id: string; name: string }[]): Map<string, Terms>;
 export function mentions(article: { title: string; summary?: string | null; tags?: string[] }, terms: Terms): boolean;
 export function merge(lists: Article[][], limit?: number): Article[];
