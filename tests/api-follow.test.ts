@@ -40,6 +40,7 @@ describe("the pages", () => {
     expect(html).toContain("A &amp; B");
     expect(html).toMatch(/<li data-clubs="">\s*<a class="story" href="https:\/\/a\.test\/r"/);
     expect(html).toContain('data-scope="following"');
+    expect(html).toMatch(/<ul class="news" id="mine-news" hidden>/);
     for (const source of ["BBC Sport", "The Guardian", "ESPN"]) expect(html).toContain(source);
     expect(html).toContain("13 Nov");  // when the headlines were gathered
   });
@@ -50,7 +51,7 @@ describe("the pages", () => {
     expect(html).toMatch(/<details[^>]*>\s*<summary>Serie A<\/summary>/);
     expect(html).toMatch(/<input type="checkbox" data-club="napoli" data-name="Napoli">/);
     expect(html).toContain('id="following-games"');
-    expect(html).toMatch(/<ul class="news" data-news="following">/);
+    expect(html).toMatch(/<ul class="news" id="mine-news">/);   // filled by follow.js from the followed clubs' own news files
     expect((html.match(/data-club="/g) ?? []).length).toBeGreaterThan(100);  // every club of every league
   });
 
@@ -107,11 +108,25 @@ const NEWS_PAGE = `
 <button class="follow" type="button" data-club="napoli" data-name="Napoli" aria-pressed="false">Follow</button>
 <div role="group"><button type="button" data-scope="all" aria-pressed="true">All</button><button type="button" data-scope="following" aria-pressed="false">Following</button></div>
 <p id="news-none" hidden>none</p>
-<ul class="news" data-news="toggle"><li data-clubs="napoli inter"><a>A</a></li><li data-clubs=""><a>B</a></li><li data-clubs="inter"><a>C</a></li></ul>`;
+<ul class="news" data-news="toggle"><li data-clubs="napoli inter"><a>A</a></li><li data-clubs=""><a>B</a></li><li data-clubs="inter"><a>C</a></li></ul>
+<ul class="news" id="mine-news" hidden></ul>`;
 const FOLLOWING_PAGE = `
 <input type="checkbox" data-club="napoli" data-name="Napoli"><input type="checkbox" data-club="inter" data-name="Inter">
 <p id="following-count"></p><p id="games-none" hidden></p><ul class="games" id="following-games"></ul>
-<ul class="news" data-news="following"><li data-clubs="napoli"><a>A</a></li><li data-clubs=""><a>B</a></li></ul>`;
+<p id="news-none" hidden></p><ul class="news" id="mine-news"></ul>`;
+const art = (title: string, url: string, at: string, clubs: string[] = [], source = "BBC Sport") => ({ title, summary: `About ${title}`, url, source, published: at, image: null, clubs });
+const GENERAL = { articles: [art("General inter", "https://g.test/1", "2026-11-12T10:00:00.000Z", ["inter"]), art("General none", "https://g.test/2", "2026-11-12T11:00:00.000Z"),
+  art("General napoli", "https://g.test/3?utm=x", "2026-11-12T09:00:00.000Z", ["napoli"])] };
+const CLUB: Record<string, unknown> = {
+  inter: { articles: [art("Club inter new", "https://c.test/new", "2026-11-12T12:00:00.000Z", ["inter"], "The Guardian"), art("General inter", "https://g.test/1?from=guardian", "2026-11-12T10:00:00.000Z", ["inter"], "The Guardian")] },
+  napoli: { articles: [art("<img src=x onerror=alert(1)>", "https://c.test/evil", "2026-11-12T08:00:00.000Z", ["napoli"], "The Guardian")] },
+};
+/** A fetch that answers the news file, each club's file (a club with none answers 404) and today's games. */
+const newsFetch = (extra: Record<string, unknown> = {}) => vi.fn(async (input: RequestInfo | URL) => {
+  const key = String(input).replace("/api/v1/", "");
+  const body = key === "news.json" ? GENERAL : key === "today.json" ? { matches: [] } : key.startsWith("news/") ? (CLUB[key.slice(5, -5)] ?? null) : extra[key] ?? null;
+  return body ? new Response(JSON.stringify(body)) : new Response("", { status: 404 });
+});
 const TODAY = { matches: [
   { league: "it-1", home: "napoli", away: "roma", homeName: "Napoli", awayName: "Roma", kickoff: "2026-11-12T19:45:00+00:00" },
   { league: "it-1", home: "juventus", away: "milan", homeName: "Juventus", awayName: "AC Milan", kickoff: "2026-11-12T17:00:00+00:00", score: { ft: [2, 1] } },
@@ -155,32 +170,54 @@ describe("follow.js", () => {
     expect(document.querySelector(".star")!.getAttribute("aria-pressed")).toBe("false");
   });
 
-  it("News: All shows everything, Following only the stories that mention a followed club, and says so when there are none", () => {
+  it("News: All shows the general list; Following shows the followed clubs' own stories with the general ones that name them, newest first, each once", async () => {
     storage.setItem("golboard.following", JSON.stringify(["inter"]));
     document.body.innerHTML = NEWS_PAGE;
+    window.fetch = newsFetch();
     run();
-    expect(visible(".news")).toEqual(["A", "B", "C"]);
+    expect(visible(".news[data-news]")).toEqual(["A", "B", "C"]);
     click(document.querySelector('[data-scope="following"]')!);
-    expect(visible(".news")).toEqual(["A", "C"]);
-    expect(document.querySelector('[data-scope="following"]')!.getAttribute("aria-pressed")).toBe("true");
+    await flush(); await flush();
+    expect((document.querySelector('.news[data-news]') as HTMLElement).hidden).toBe(true);
+    const titles = [...document.querySelectorAll("#mine-news .t")].map((t) => t.textContent);
+    expect(titles).toEqual(["Club inter new", "General inter"]);     // the Guardian's twin of "General inter" is the same story
+    expect(window.fetch).toHaveBeenCalledWith("/api/v1/news/inter.json");
     expect(storage.getItem("golboard.newsScope")).toBe("following");
-    storage.setItem("golboard.following", "[]");
-    document.body.innerHTML = NEWS_PAGE;
-    run();
-    expect(visible(".news")).toEqual([]);                       // the scope was remembered
-    expect((document.getElementById("news-none") as HTMLElement).hidden).toBe(false);
+    click(document.querySelector('[data-scope="all"]')!);
+    expect((document.querySelector('.news[data-news]') as HTMLElement).hidden).toBe(false);
+    expect((document.getElementById("mine-news") as HTMLElement).hidden).toBe(true);
   });
 
-  it("Following: ticking a club shows its headlines at once", () => {
-    document.body.innerHTML = FOLLOWING_PAGE;
-    window.fetch = vi.fn(async () => new Response(JSON.stringify({ matches: [] })));
+  it("News: says what to do when no club is followed, or none has a story, and remembers the scope", async () => {
+    storage.setItem("golboard.newsScope", "following");
+    document.body.innerHTML = NEWS_PAGE;
+    window.fetch = newsFetch();
     run();
-    expect(visible(".news")).toEqual([]);
+    await flush(); await flush();
+    expect(document.getElementById("news-none")!.textContent).toMatch(/not following any clubs/i);
+    storage.setItem("golboard.following", JSON.stringify(["lazio"]));    // a club with no file and no general story
+    document.body.innerHTML = NEWS_PAGE;
+    run();
+    await flush(); await flush();
+    expect((document.getElementById("news-none") as HTMLElement).hidden).toBe(false);
+    expect(document.getElementById("news-none")!.textContent).toMatch(/no headlines mention your clubs/i);
+  });
+
+  it("Following: shows the followed clubs' stories at once, and a club whose file is missing does not hide the others", async () => {
+    storage.setItem("golboard.following", JSON.stringify(["inter", "lazio"]));
+    document.body.innerHTML = FOLLOWING_PAGE;
+    window.fetch = newsFetch();
+    run();
+    await flush(); await flush();
+    expect([...document.querySelectorAll("#mine-news .t")].map((t) => t.textContent)).toEqual(["Club inter new", "General inter"]);
     const box = document.querySelector('input[data-club="napoli"]') as HTMLInputElement;
     box.checked = true;
     box.dispatchEvent(new Event("change", { bubbles: true }));
-    expect(visible(".news")).toEqual(["A"]);
-    expect(document.getElementById("following-count")!.textContent).toContain("1");
+    await flush(); await flush();
+    expect([...document.querySelectorAll("#mine-news .t")].map((t) => t.textContent)).toEqual(["Club inter new", "General inter", "General napoli", "<img src=x onerror=alert(1)>"]);
+    expect(document.querySelector("#mine-news img")).toBeNull();       // written as text
+    expect(document.querySelector("#mine-news a")!.getAttribute("href")).toBe("https://c.test/new");
+    expect(document.getElementById("following-count")!.textContent).toContain("3");
   });
 
   it("Following: lists the games of the followed clubs from today.json, and writes names as text, never as markup", async () => {

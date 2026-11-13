@@ -1,11 +1,11 @@
 // @vitest-environment node
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import Ajv from "ajv/dist/2020";
 import { afterEach, describe, expect, it } from "vitest";
 import { build } from "../scripts/api/build.mjs";
-import { FEEDS, buildNews, clubTerms, fetchFeeds, mentions, merge, parseRss, plain } from "../scripts/api/news.mjs";
+import { FEEDS, buildNews, clubTerms, fetchClubFeeds, fetchFeeds, guardianFeeds, mentions, merge, parseRss, plain } from "../scripts/api/news.mjs";
 
 // Football headlines from the publishers' own RSS feeds, tagged with the clubs they mention, published as api/v1/news.json. The samples are
 // trimmed from the real feeds fetched on 2026-11-12. The same matching rules and the same cases as the iPhone app's (Golboard/Follow.swift).
@@ -209,5 +209,98 @@ describe("fetching the feeds", () => {
     const done = await fetchFeeds({ raw: dir, fetch: reply("<html>captive portal") });
     expect(done.saved).toEqual([]);
     expect(existsSync(join(dir, "bbc-sport.xml"))).toBe(false);
+  });
+});
+
+// A club you follow needs its own stream: the three general feeds carry the big English stories (none of 60 on 12 November named Juventus). The Guardian
+// publishes a feed per club (theguardian.com/football/<tag>/rss); data/api/guardian-feeds.json says which tag is which club. Each club gets news/<id>.json.
+const GUARDIAN_NAPOLI = `<rss version="2.0"><channel><title>Napoli | The Guardian</title>
+<item><title>Napoli's midfield is the league's best</title><link>https://www.theguardian.com/football/2026/nov/12/napoli-midfield</link><description>&lt;p&gt;Analysis.&lt;/p&gt;</description><pubDate>Thu, 12 Nov 2026 20:00:00 GMT</pubDate></item>
+<item><title>Napoli sign a defender</title><link>https://a.test/n?from=guardian</link><pubDate>Fri, 13 Nov 2026 09:00:00 GMT</pubDate></item>
+<item><title>A story about nothing named</title><link>https://www.theguardian.com/football/2026/nov/11/untagged-by-name</link><pubDate>Wed, 11 Nov 2026 09:00:00 GMT</pubDate></item></channel></rss>`;
+
+describe("each club's own news file", () => {
+  const api = () => {
+    const out = tmp();
+    build({ input: "tests/fixtures/openfootball", wikipedia: tmp(), out, seasons: ["2025-26"], now: "2026-10-31T17:00:00Z" });
+    return join(out, "api/v1");
+  };
+  const GENERAL = `<rss><channel><item><title>Napoli sign a defender</title><link>https://a.test/n</link><pubDate>Fri, 13 Nov 2026 09:00:00 GMT</pubDate></item></channel></rss>`;
+  const raw = () => {
+    const dir = tmp();
+    writeFileSync(join(dir, "bbc-sport.xml"), GENERAL);
+    mkdirSync(join(dir, "club"));
+    writeFileSync(join(dir, "club", "napoli.xml"), GUARDIAN_NAPOLI);
+    return dir;
+  };
+  const read = (dir: string, id: string) => JSON.parse(readFileSync(join(dir, "news", `${id}.json`), "utf8"));
+
+  it("holds the club's Guardian stories (all about the club, whatever the headline says) and the general stories that name it, newest first, each once", () => {
+    const dir = api();
+    buildNews({ api: dir, raw: raw(), now: "2026-11-13T10:00:00Z" });
+    const napoli = read(dir, "napoli");
+    expect(napoli.articles.map((a: { title: string }) => a.title)).toEqual(["Napoli sign a defender", "Napoli's midfield is the league's best", "A story about nothing named"]);
+    expect(napoli.articles.every((a: { clubs: string[] }) => a.clubs.includes("napoli"))).toBe(true);   // the Guardian's tag says so
+    expect(napoli.articles[0].source).toBe("BBC Sport");                                                // the general copy, not the Guardian's twin
+  });
+
+  it("is written for every club, empty when nothing is known, and matches the schema", () => {
+    const dir = api();
+    buildNews({ api: dir, raw: raw(), now: "2026-11-13T10:00:00Z" });
+    expect(read(dir, "juventus")).toEqual({ generatedAt: "2026-11-13T10:00:00Z", articles: [] });
+    const schema = JSON.parse(readFileSync("data/api/schema.json", "utf8"));
+    const ajv = new Ajv({ allErrors: true, strict: true, strictRequired: false });
+    ajv.addSchema(schema);
+    for (const id of ["napoli", "juventus"]) expect(ajv.validate(`${schema.$id}#/$defs/news`, read(dir, id)), `${id} ${JSON.stringify(ajv.errors)}`).toBe(true);
+  });
+
+  it("a broken club feed gives that club the general stories only, and never fails the build", () => {
+    const dir = api(), r = raw();
+    writeFileSync(join(r, "club", "napoli.xml"), "<html>not a feed");
+    buildNews({ api: dir, raw: r, now: "2026-11-13T10:00:00Z" });
+    expect(read(dir, "napoli").articles.map((a: { title: string }) => a.title)).toEqual(["Napoli sign a defender"]);
+  });
+});
+
+describe("fetching the clubs' feeds", () => {
+  const feeds = { napoli: "napoli", juventus: "juventus", inter: "intermilan", milan: "acmilan", roma: "roma", lazio: "lazio" };
+
+  it("asks the Guardian for each club's tag feed, a few at a time, and keeps the saved copy of one that fails", async () => {
+    const dir = tmp();
+    mkdirSync(join(dir, "club"));
+    writeFileSync(join(dir, "club", "lazio.xml"), GUARDIAN_NAPOLI);
+    let inFlight = 0, most = 0;
+    const urls: string[] = [], agents: string[] = [];
+    const fetchStub = async (url: string, init: { headers: Record<string, string> }) => {
+      urls.push(url); agents.push(init.headers["User-Agent"]);
+      inFlight++; most = Math.max(most, inFlight);
+      await new Promise((r) => setTimeout(r, 5));
+      inFlight--;
+      return url.includes("/lazio/") ? new Response("down", { status: 503 }) : new Response(GUARDIAN_NAPOLI);
+    };
+    const done = await fetchClubFeeds({ raw: dir, fetch: fetchStub, feeds, pool: 3, gap: 0 });
+    expect(done).toEqual({ saved: 5, kept: 1 });
+    expect(urls).toContain("https://www.theguardian.com/football/intermilan/rss");
+    expect(most).toBeLessThanOrEqual(3);
+    expect(agents.every((a) => a === "golboard-news (personal football pages)")).toBe(true);
+    expect(readFileSync(join(dir, "club", "inter.xml"), "utf8")).toBe(GUARDIAN_NAPOLI);   // saved under our id, not the Guardian's tag
+    expect(readFileSync(join(dir, "club", "lazio.xml"), "utf8")).toBe(GUARDIAN_NAPOLI);   // the old copy stays
+  });
+
+  it("does not throw when the network is down", async () => {
+    const done = await fetchClubFeeds({ raw: tmp(), fetch: async () => { throw new Error("offline"); }, feeds, gap: 0 });
+    expect(done).toEqual({ saved: 0, kept: 6 });
+  });
+
+  it("knows which Guardian tag is which club (data/api/guardian-feeds.json), including the big names whose tag drops the hyphens", () => {
+    const map = guardianFeeds();
+    expect(map.juventus).toBe("juventus");
+    expect(map["manchester-city"]).toBe("manchestercity");
+    expect(map.milan).toBe("acmilan");
+    for (const [id, tag] of Object.entries(map)) {
+      expect(id, id).toMatch(/^[a-z0-9]+(-[a-z0-9]+)*$/);
+      expect(tag, id).toMatch(/^[a-z0-9-]+$/);
+    }
+    expect(Object.keys(map).length).toBeGreaterThan(100);
   });
 });

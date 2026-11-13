@@ -1,7 +1,7 @@
 // Football headlines from the publishers' own RSS feeds (BBC Sport, The Guardian, ESPN), tagged with the clubs they are about, published as
 // api/v1/news.json. Only the headline, a short plain-text summary, a picture address and the link are kept: a story is read on the
 // publisher's own site. (The Guardian offers its feeds for personal, non-commercial use; BBC's and ESPN's current terms were not confirmed.)
-//   node scripts/api/news.mjs fetch   download the feeds into data/news (a feed that fails keeps its saved copy)
+//   node scripts/api/news.mjs fetch   download the feeds into data/news, and the Guardian's feed for each club into data/news/club (a feed that fails keeps its saved copy)
 //   node scripts/api/news.mjs build   data/news -> <api>/news.json; never fails, so the pages after it are still built
 // The club matching is the iPhone app's (Golboard/Follow.swift), rule for rule; tests/api-news.test.ts holds the same cases.
 // Node only, no dependencies.
@@ -19,6 +19,7 @@ export const FEEDS = [
 ];
 const AGENT = "golboard-news (personal football pages)";
 const LIMIT = 60;
+const CLUB_LIMIT = 30;
 
 // ---- reading a feed
 
@@ -174,6 +175,39 @@ export async function fetchFeeds({ raw = join(ROOT, "data/news"), fetch = global
   return { saved: saved.sort((a, b) => order.indexOf(a) - order.indexOf(b)), kept: kept.sort((a, b) => order.indexOf(a) - order.indexOf(b)) };
 }
 
+/** Which Guardian tag feed is which club: { <club id>: <tag> } (data/api/guardian-feeds.json; the feed is theguardian.com/football/<tag>/rss). */
+export function guardianFeeds() {
+  return JSON.parse(readFileSync(join(ROOT, "data/api/guardian-feeds.json"), "utf8")).feeds;
+}
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/** Download the Guardian's feed for each club into <raw>/club/<club id>.xml, a few at a time with a short gap, so the Guardian is not hammered
+ *  (about 150 small requests a build). One that fails, or is not a feed, keeps its saved copy. */
+export async function fetchClubFeeds({ raw = join(ROOT, "data/news"), fetch = globalThis.fetch, feeds = guardianFeeds(), pool = 3, gap = 200 } = {}) {
+  const dir = join(raw, "club");
+  mkdirSync(dir, { recursive: true });
+  const queue = Object.entries(feeds);
+  let saved = 0, kept = 0;
+  const worker = async () => {
+    for (let next = queue.shift(); next; next = queue.shift()) {
+      const [id, tag] = next;
+      try {
+        const res = await fetch(`https://www.theguardian.com/football/${tag}/rss`, { headers: { "User-Agent": AGENT }, signal: AbortSignal.timeout(15_000) });
+        const body = res.ok ? await res.text() : "";
+        if (!parseRss(body, "The Guardian").length) throw new Error("no items");
+        writeFileSync(join(dir, `${id}.xml`), body);
+        saved++;
+      } catch {
+        kept++;
+      }
+      if (gap) await sleep(gap);
+    }
+  };
+  await Promise.all(Array.from({ length: pool }, worker));
+  return { saved, kept };
+}
+
 /** Write <api>/news.json from the saved feeds. Never throws: whatever goes wrong, the file holds the stories that could be read (or none). */
 export function buildNews({ api = join(ROOT, "public/api/v1"), raw = join(ROOT, "data/news"), now = new Date().toISOString() } = {}) {
   let articles = [];
@@ -188,15 +222,30 @@ export function buildNews({ api = join(ROOT, "public/api/v1"), raw = join(ROOT, 
       for (const [id, name] of Object.entries(teams)) clubs.push({ id, name });
     }
     const terms = clubTerms(clubs);
-    articles = merge(lists).map(({ tags, ...a }) => ({ ...a, clubs: clubs.filter((c) => mentions({ ...a, tags }, terms.get(c.id))).map((c) => c.id) }));
+    const tagged = (list) => list.map(({ tags, ...a }) => ({ ...a, clubs: clubs.filter((c) => mentions({ ...a, tags }, terms.get(c.id))).map((c) => c.id) }));
+    const everything = tagged(merge(lists, Infinity));
+    articles = everything.slice(0, LIMIT);
+    // news/<club>.json: the club's own Guardian feed (all about it, whatever a headline says) and the general stories that name it
+    const perClub = new Map();
+    for (const c of clubs) {
+      let own = [];
+      try { own = parseRss(readFileSync(join(raw, "club", `${c.id}.xml`), "utf8"), "The Guardian").map(({ tags, ...a }) => ({ ...a, clubs: [c.id] })); } catch { /* none saved */ }
+      perClub.set(c.id, merge([everything.filter((a) => a.clubs.includes(c.id)), own], CLUB_LIMIT));
+    }
+    mkdirSync(join(api, "news"), { recursive: true });
+    for (const [id, list] of perClub) write(join(api, "news", `${id}.json`), { generatedAt: now, articles: list });
   } catch (error) {
     console.warn(`news: ${error.message}; writing what could be read`);
   }
-  const file = join(api, "news.json");
   mkdirSync(api, { recursive: true });
-  writeFileSync(`${file}.tmp`, `${JSON.stringify({ generatedAt: now, articles }, null, 1)}\n`);
-  renameSync(`${file}.tmp`, file);
+  write(join(api, "news.json"), { generatedAt: now, articles });
   return { articles: articles.length };
+}
+
+/** A JSON file written whole or not at all. */
+function write(file, data) {
+  writeFileSync(`${file}.tmp`, `${JSON.stringify(data, null, 1)}\n`);
+  renameSync(`${file}.tmp`, file);
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
@@ -204,6 +253,8 @@ if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
   if (mode === "fetch") {
     const done = await fetchFeeds();
     console.log(`news: saved ${done.saved.join(", ") || "none"}${done.kept.length ? `; kept the saved copy of ${done.kept.join(", ")}` : ""}`);
+    const clubs = await fetchClubFeeds();
+    console.log(`news: ${clubs.saved} club feeds saved${clubs.kept ? `, ${clubs.kept} kept as they were` : ""}`);
   } else if (mode === "build") {
     console.log(`news: ${buildNews().articles} stories`);
   } else {
