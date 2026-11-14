@@ -1,17 +1,19 @@
 // golboard's API: a folder of static JSON built from saved source files (no server, and no key in any app).
 //   node scripts/api/build.mjs [--input data/openfootball] [--wikipedia data/wikipedia] [--out public] [--seasons 2025-26,2026-27]
-// writes <out>/api/v1/competitions.json, <out>/api/v1/<league>/<season>/{matches,table,teams}.json and <out>/api/v1/meta.json.
+// writes <out>/api/v1/competitions.json, <out>/api/v1/<league>/<season>/{matches,table,teams}.json and <out>/api/v1/meta.json;
+// and for each tournament with a saved <wikipedia>/<season>/<id>.json, <out>/api/v1/tournaments.json and <out>/api/v1/<id>/<season>/{matches,groups,teams}.json.
 // Every season is checked before anything is written; one failure and nothing is written, so the last good API stays up.
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { leagues, loadAdjustments, loadCorrections, loadPostponed, loadZones, zoneNames } from "./config.mjs";
+import { leagues, tournaments, loadAdjustments, loadCorrections, loadPostponed, loadZones, zoneNames } from "./config.mjs";
 import { kickoff } from "./time.mjs";
 import { applyCorrections, parseSeason } from "./openfootball.mjs";
 import { computeTable } from "./table.mjs";
 import { teamId } from "./teams.mjs";
 import { applyResults, parseNames, parseResults } from "./wikipedia.mjs";
+import { groupTables, nation, parseBoxes } from "./tournament.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const OPENFOOTBALL = { name: "openfootball", url: "https://github.com/openfootball/football.json", licence: "CC0-1.0" };
@@ -89,6 +91,40 @@ export function build({ input = "data/openfootball", wikipedia = join(ROOT, "dat
     }
     if (have.length) competitions.push({ id: league.id, name: league.name, country: league.country, seasons: have, current: have.at(-1) });
   }
+  // Tournaments (AFCON qualifying): separate from competitions.json, whose readers expect one league table per competition.
+  const served = [];
+  meta.tournaments = {};
+  for (const t of tournaments()) {
+    const path = join(wikipedia, t.season, `${t.id}.json`);
+    if (!existsSync(path)) continue;
+    const saved = JSON.parse(readFileSync(path, "utf8"));
+    const byGroup = {};
+    for (const g of t.groups) {
+      if (!saved.groups?.[g]) { problems.push(`${t.id} ${t.season}: no saved page for Group ${g}`); continue; }
+      byGroup[g] = parseBoxes(saved.groups[g].wikitext, g, now.slice(0, 10));
+    }
+    const matches = t.groups.flatMap((g) => byGroup[g] ?? []).sort((a, b) => (a.date + (a.kickoff ?? "") + a.id).localeCompare(b.date + (b.kickoff ?? "") + b.id));
+    const teams = {};
+    for (const m of matches) for (const id of [m.home, m.away]) teams[id] ??= null;
+    for (const code of Object.keys(JSON.parse(readFileSync(join(ROOT, "data/api/nations.json"), "utf8")).nations)) {
+      const n = nation(code);
+      if (n.id in teams) teams[n.id] = n.name;
+    }
+    problems.push(...validate({ matches }, teams).map((p) => `${t.id} ${t.season}: ${p}`));
+    const base = `api/v1/${t.id}/${t.season}`;
+    files.set(`${base}/matches.json`, { tournament: t.id, season: t.season, matches });
+    files.set(`${base}/groups.json`, { tournament: t.id, season: t.season, qualify: t.qualify, hosts: (t.hosts ?? []).map((c) => nation(c).id),
+      groups: groupTables(t, byGroup) });
+    files.set(`${base}/teams.json`, { tournament: t.id, season: t.season, teams });
+    const finished = matches.filter((m) => m.status === "finished");
+    meta.tournaments[t.id] = { [t.season]: { finished: finished.length, scheduled: matches.length - finished.length,
+      lastResult: finished.reduce((d, m) => (m.date > d ? m.date : d), "") || null,
+      overdue: matches.filter((m) => m.status === "scheduled" && m.date < lateBefore).length,
+      wikipedia: Object.fromEntries(t.groups.filter((g) => saved.groups?.[g]).map((g) => [g, saved.groups[g].revid])) } };
+    served.push({ id: t.id, name: t.name, full: t.full, region: t.region, season: t.season, finals: t.finals });
+    usedWikipedia = true;
+  }
+  files.set("api/v1/tournaments.json", { tournaments: served });
   if (usedWikipedia) meta.sources.push(WIKIPEDIA);
   if (problems.length) throw new Error(`validation failed, nothing written:\n${problems.slice(0, 20).join("\n")}`);
   files.set("api/v1/competitions.json", { competitions });

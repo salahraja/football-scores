@@ -1,0 +1,10 @@
+{
+  "_about": "The international tournaments golboard's API serves, beside the club leagues in leagues.json. Each is played in groups; its games come from the English Wikipedia group pages (\"<wikipedia> A\" to \"<wikipedia> L\"), whose match boxes give the date, the local kick-off with its UTC offset, and the score. qualify: how many from each group go through. hosts: nations already in the finals as hosts, by FIFA code; a host's group sends the host plus the best of the rest. tiebreak: as in leagues.json, plus h2h_away_gf (CAF regulations, Article 14). A head-to-head rule always counts only the games among the teams still level at that point, so a smaller set left level is split by its own games.",
+  "tournaments": [
+    { "id": "afcon", "name": "AFCON qualifying", "full": "Africa Cup of Nations qualifying", "region": "Africa", "season": "2026-27",
+      "finals": "Kenya, Tanzania and Uganda, from 19 June 2027",
+      "wikipedia": "2027 Africa Cup of Nations qualification Group", "groups": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"],
+      "qualify": 2, "hosts": ["KEN", "TAN", "UGA"],
+      "tiebreak": ["points", "h2h_points", "h2h_gd", "h2h_gf", "h2h_away_gf", "gd", "gf", "away_gf"] }
+  ]
+}

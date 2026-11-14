@@ -1,0 +1,12 @@
+{
+  "_about": "National teams by the FIFA code Wikipedia's {{fb|...}} templates use, and the name fans use. A code missing here stops the build, so it gets a name, not a gap.",
+  "nations": {
+    "ALG": "Algeria", "ANG": "Angola", "BDI": "Burundi", "BEN": "Benin", "BFA": "Burkina Faso", "BOT": "Botswana", "CGO": "Congo",
+    "CIV": "Ivory Coast", "CMR": "Cameroon", "COM": "Comoros", "CPV": "Cape Verde", "CTA": "Central African Republic", "DRC": "DR Congo",
+    "EGY": "Egypt", "EQG": "Equatorial Guinea", "ERI": "Eritrea", "ETH": "Ethiopia", "GAB": "Gabon", "GAM": "Gambia", "GHA": "Ghana",
+    "GNB": "Guinea-Bissau", "GUI": "Guinea", "KEN": "Kenya", "LBR": "Liberia", "LBY": "Libya", "LES": "Lesotho", "MAD": "Madagascar",
+    "MAR": "Morocco", "MLI": "Mali", "MOZ": "Mozambique", "MTN": "Mauritania", "MWI": "Malawi", "NAM": "Namibia", "NGA": "Nigeria",
+    "NIG": "Niger", "RSA": "South Africa", "RWA": "Rwanda", "SDN": "Sudan", "SEN": "Senegal", "SLE": "Sierra Leone", "SOM": "Somalia",
+    "SSD": "South Sudan", "TAN": "Tanzania", "TOG": "Togo", "TUN": "Tunisia", "UGA": "Uganda", "ZAM": "Zambia", "ZIM": "Zimbabwe"
+  }
+}

@@ -8,6 +8,9 @@ const read = (path) => JSON.parse(readFileSync(join(ROOT, path), "utf8"));
 
 export const leagues = () => read("data/api/leagues.json").leagues;
 
+/** The international tournaments, played in groups (data/api/tournaments.json). */
+export const tournaments = () => read("data/api/tournaments.json").tournaments;
+
 /** [{ team, points, why, source }] for one league season; empty when there were none. */
 export const loadAdjustments = (season, leagueId) => read("data/api/adjustments.json")[season]?.[leagueId] ?? [];
 

@@ -23,7 +23,7 @@ function tally(matches, teams, adjustments = []) {
 }
 
 const OVERALL = { points: (r) => r.points, gd: (r) => r.gd, gf: (r) => r.gf, wins: (r) => r.won, away_gf: (r) => r.awayGf };
-const HEAD_TO_HEAD = { h2h_points: "points", h2h_gd: "gd", h2h_gf: "gf" };
+const HEAD_TO_HEAD = { h2h_points: "points", h2h_gd: "gd", h2h_gf: "gf", h2h_away_gf: "awayGf" };  // h2h_away_gf: CAF, Article 14
 
 /** Split one group of tied teams by the rules left, in order; returns the teams in table order. */
 function order(group, rules, rows, matches) {
