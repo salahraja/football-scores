@@ -90,3 +90,25 @@ describe("the cup pages", () => {
     expect(document.body.textContent).not.toMatch(/Israel/);
   });
 });
+
+describe("today.json", () => {
+  function today(now: string) {
+    const out = mkdtempSync(join(tmpdir(), "golboard-today-")), wiki = mkdtempSync(join(tmpdir(), "golboard-today-wiki-"));
+    dirs.push(out, wiki);
+    mkdirSync(join(wiki, "2026-27"));
+    for (const t of tournaments()) copyFileSync(`${FIX}/${t.id}.json`, join(wiki, "2026-27", `${t.id}.json`));
+    build({ input: "tests/fixtures/openfootball", wikipedia: wiki, out, seasons: ["2025-26"], now });
+    return JSON.parse(readFileSync(join(out, "api/v1/today.json"), "utf8")).matches as { league: string; home: string; away: string; homeName: string }[];
+  }
+
+  it("has the cups' and internationals' games too, so a followed club's Champions League game is on the Following page", () => {
+    const nations = today("2026-11-14T03:00:00Z");
+    expect(nations.find((m) => m.home === "norway" && m.away === "wales")).toMatchObject({ league: "nations-league", homeName: "Norway" });
+    expect(nations.some((m) => m.league === "afcon")).toBe(true);
+    const cups = today("2026-11-23T03:00:00Z");
+    // the same id as in the club leagues: following Inter in the Serie A table follows them here
+    expect(cups.find((m) => m.league === "champions-league" && m.home === "inter")).toMatchObject({ away: "stuttgart" });
+    expect(cups.some((m) => m.league === "europa-league")).toBe(true);
+    expect(JSON.stringify(cups)).not.toMatch(/Israel|Hapoel/);
+  });
+});
