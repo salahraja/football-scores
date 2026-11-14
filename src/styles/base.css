@@ -236,8 +236,12 @@ tr[class*="zone--"] > .pos { box-shadow: inset 3px 0 0 var(--zone, transparent);
 
 /* The poster fills its screen (Salah, 2026-11-07): the name tall above, the score huge below, black clubs, and the leagues as a stacked red list with a red line under the one on show. */
 .poster { justify-content: flex-start; gap: clamp(6px, 1.4svh, 14px); padding-bottom: var(--space-2); }
-/* 2026-11-13 (Salah: "I want the design on 2-2 to be the one we follow"): the name is no longer stretched tall or given a heavier outline. It is the display face at its natural shape, like the score. */
-.poster__title { letter-spacing: normal; }
+/* The poster's lettering (Salah, 2026-11-13). "Our signature look is a large block": the name is the display face with a heavier outline and a
+   little more spacing, at its natural proportions (the tall stretch of 11-07 is gone: it made long names skinny). The score carries the same
+   outline and spacing, so the two match. The score alone is drawn taller into the empty poster above it: HomeView measures that gap and sets
+   --tall (1 to TALLEST) and the margin that gives the layout the extra height. */
+.poster__title, .poster__score, .poster__result .poster__score { -webkit-text-stroke: 0.038em var(--accent); letter-spacing: 0.024em; paint-order: stroke fill; }
+.poster__score, .poster__result .poster__score { transform: scaleY(var(--tall, 1)); transform-origin: bottom center; }
 .poster__titlebar { align-items: flex-end; }
 .poster .pick { flex-direction: column; align-items: center; gap: 0; overflow: visible; padding: 0; margin-top: auto; -webkit-mask-image: none; mask-image: none; }
 .pick button, .pick button.on { min-height: clamp(26px, 4svh, 40px); padding: 0 10px; border-radius: 0; background: none; color: var(--fg); font: 800 clamp(1rem, 2.5svh, 1.5rem)/1.1 var(--font-display); letter-spacing: 0.02em; text-transform: uppercase; opacity: 0.8; }
