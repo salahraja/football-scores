@@ -1,0 +1,20 @@
+{
+  "_about": "National teams by the FIFA code Wikipedia's {{fb|...}} templates use, and the name fans use. A code missing here stops the build, so it gets a name, not a gap.",
+  "nations": {
+    "ALB": "Albania", "ALG": "Algeria", "AND": "Andorra", "ANG": "Angola", "ARM": "Armenia", "AUT": "Austria", "AZE": "Azerbaijan",
+    "BDI": "Burundi", "BEL": "Belgium", "BEN": "Benin", "BFA": "Burkina Faso", "BIH": "Bosnia and Herzegovina", "BLR": "Belarus",
+    "BOT": "Botswana", "BUL": "Bulgaria", "CGO": "Congo", "CIV": "Ivory Coast", "CMR": "Cameroon", "COM": "Comoros", "CPV": "Cape Verde",
+    "CRO": "Croatia", "CTA": "Central African Republic", "CYP": "Cyprus", "CZE": "Czech Republic", "DEN": "Denmark", "DRC": "DR Congo",
+    "EGY": "Egypt", "ENG": "England", "EQG": "Equatorial Guinea", "ERI": "Eritrea", "ESP": "Spain", "EST": "Estonia", "ETH": "Ethiopia",
+    "FIN": "Finland", "FRA": "France", "FRO": "Faroe Islands", "GAB": "Gabon", "GAM": "Gambia", "GEO": "Georgia", "GER": "Germany",
+    "GHA": "Ghana", "GIB": "Gibraltar", "GNB": "Guinea-Bissau", "GRE": "Greece", "GUI": "Guinea", "HUN": "Hungary", "IRL": "Republic of Ireland",
+    "ISL": "Iceland", "ISR": "Israel", "ITA": "Italy", "KAZ": "Kazakhstan", "KEN": "Kenya", "KOS": "Kosovo", "LBR": "Liberia",
+    "LBY": "Libya", "LES": "Lesotho", "LIE": "Liechtenstein", "LTU": "Lithuania", "LUX": "Luxembourg", "LVA": "Latvia", "MAD": "Madagascar",
+    "MAR": "Morocco", "MDA": "Moldova", "MKD": "North Macedonia", "MLI": "Mali", "MLT": "Malta", "MNE": "Montenegro", "MOZ": "Mozambique",
+    "MTN": "Mauritania", "MWI": "Malawi", "NAM": "Namibia", "NED": "Netherlands", "NGA": "Nigeria", "NIG": "Niger", "NIR": "Northern Ireland",
+    "NOR": "Norway", "POL": "Poland", "POR": "Portugal", "ROU": "Romania", "RSA": "South Africa", "RWA": "Rwanda", "SCO": "Scotland",
+    "SDN": "Sudan", "SEN": "Senegal", "SLE": "Sierra Leone", "SMR": "San Marino", "SOM": "Somalia", "SRB": "Serbia", "SSD": "South Sudan",
+    "SUI": "Switzerland", "SVK": "Slovakia", "SVN": "Slovenia", "SWE": "Sweden", "TAN": "Tanzania", "TOG": "Togo", "TUN": "Tunisia",
+    "TUR": "Turkey", "UGA": "Uganda", "UKR": "Ukraine", "WAL": "Wales", "ZAM": "Zambia", "ZIM": "Zimbabwe"
+  }
+}

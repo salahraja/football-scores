@@ -1,4 +1,5 @@
-// Download each league season's results grid from English Wikipedia (CC BY-SA 4.0) into data/wikipedia/<season>/<league>.json for
+// Download each league season's results grid, and each tournament's group pages (fetchTournament), from English Wikipedia (CC BY-SA 4.0)
+// into data/wikipedia/<season>/<league or tournament>.json for
 // scripts/api/build.mjs, through the MediaWiki API with a User-Agent that names us, as Wikimedia asks.
 //   node scripts/api/fetch-wikipedia.mjs [--out data/wikipedia] [--seasons 2026-27]
 // Only the grid is kept (the Sports table / sports results module calls), with the revision it came from. Some pages keep the grid in a
@@ -7,7 +8,8 @@
 import { mkdirSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { leagues } from "./config.mjs";
+import { leagues, tournaments } from "./config.mjs";
+import { matchText } from "./tournament.mjs";
 
 const API = "https://en.wikipedia.org/w/api.php";
 const AGENT = "golboard/0.1 (https://github.com/salahraja/football-scores; salah@ranoo.org)";
@@ -70,9 +72,37 @@ export async function fetchPages({ out, seasons, ids = leagues().map((l) => l.id
   return report;
 }
 
+/** A tournament's pages (tournaments.json `pages`), their headings and match boxes only (tournament.mjs matchText), into
+ *  <out>/<season>/<id>.json. All pages or none: when any fails or has no boxes, the saved file is kept whole, so the tables never come
+ *  from two different days. */
+export async function fetchTournament({ out, tournament, fetchFn = fetch } = {}) {
+  const name = `${tournament.season}/${tournament.id}`;
+  const pages = {};
+  for (const { title } of tournament.pages) {
+    try {
+      const got = await page(title, fetchFn);
+      const wikitext = matchText(got.text);
+      if (!wikitext) return { saved: [], kept: [`${name} (${title}: no match boxes)`] };
+      pages[title] = { title: got.title, revid: got.revid, timestamp: got.timestamp, wikitext };
+    } catch (e) {
+      return { saved: [], kept: [`${name} (${title}: ${e?.reason ?? e?.name ?? "error"})`] };
+    }
+  }
+  const target = join(out, tournament.season, `${tournament.id}.json`);
+  mkdirSync(dirname(target), { recursive: true });
+  writeFileSync(`${target}.tmp`, JSON.stringify({ pages }));
+  renameSync(`${target}.tmp`, target);
+  return { saved: [name], kept: [] };
+}
+
 if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
   const arg = (name, fallback) => { const i = process.argv.indexOf(`--${name}`); return i > 0 ? process.argv[i + 1] : fallback; };
   const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
   const report = await fetchPages({ out: arg("out", join(root, "data/wikipedia")), seasons: arg("seasons", "2026-27").split(",") });
+  for (const tournament of tournaments()) {
+    const got = await fetchTournament({ out: arg("out", join(root, "data/wikipedia")), tournament });
+    report.saved.push(...got.saved);
+    report.kept.push(...got.kept);
+  }
   console.log(`wikipedia: saved ${report.saved.length}${report.kept.length ? `; kept the saved copy of ${report.kept.join(", ")}` : ""}`);
 }

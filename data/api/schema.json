@@ -194,9 +194,145 @@
         }
       }
     },
+    "tournamentId": { "type": "string", "pattern": "^[a-z]+(-[a-z]+)*$" },
+    "tournaments": {
+      "description": "The international tournaments, played in groups. Kept apart from competitions.json, which lists club leagues with one table each.",
+      "type": "object",
+      "required": ["tournaments"],
+      "additionalProperties": false,
+      "properties": {
+        "tournaments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "name", "full", "region", "teams", "season", "finals"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "$ref": "#/$defs/tournamentId" },
+              "name": { "type": "string", "minLength": 1 },
+              "full": { "type": "string", "minLength": 1 },
+              "region": { "type": "string", "minLength": 1 },
+              "teams": { "description": "Who plays: clubs or national teams.", "enum": ["clubs", "nations"] },
+              "season": { "$ref": "#/$defs/season" },
+              "finals": { "description": "Where and when the finals are played, in words.", "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "tournamentMatches": {
+      "type": "object",
+      "required": ["tournament", "season", "matches"],
+      "additionalProperties": false,
+      "properties": {
+        "tournament": { "$ref": "#/$defs/tournamentId" },
+        "season": { "$ref": "#/$defs/season" },
+        "matches": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "round", "stage", "group", "date", "time", "kickoff", "home", "away", "status", "score", "source"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "round": { "type": "string", "minLength": 1 },
+              "stage": { "const": "group" },
+              "group": { "description": "The group's id: A, A1, or league for a single league-phase table.", "type": "string", "pattern": "^[A-Za-z0-9]+$" },
+              "date": { "$ref": "#/$defs/date" },
+              "time": { "oneOf": [{ "type": "string", "pattern": "^[0-9]{2}:[0-9]{2}$" }, { "type": "null" }] },
+              "kickoff": {
+                "description": "The kick-off as an absolute time with the venue's UTC offset (from the match box), or null without a time.",
+                "oneOf": [{ "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:00[+-][0-9]{2}:[0-9]{2}$" }, { "type": "null" }]
+              },
+              "home": { "$ref": "#/$defs/teamId" },
+              "away": { "$ref": "#/$defs/teamId" },
+              "status": { "enum": ["finished", "scheduled"] },
+              "score": {
+                "oneOf": [
+                  { "type": "null" },
+                  { "type": "object", "required": ["ft", "ht"], "additionalProperties": false, "properties": { "ft": { "$ref": "#/$defs/pair" }, "ht": { "type": "null" } } }
+                ]
+              },
+              "source": { "const": "wikipedia" }
+            }
+          }
+        }
+      }
+    },
+    "groups": {
+      "type": "object",
+      "required": ["tournament", "season", "zones", "hosts", "groups"],
+      "additionalProperties": false,
+      "properties": {
+        "tournament": { "$ref": "#/$defs/tournamentId" },
+        "season": { "$ref": "#/$defs/season" },
+        "zones": {
+          "description": "What each place leads to, for every group (division null) or one division's groups (Nations League A, B...).",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["kind", "label", "from", "to", "division"],
+            "additionalProperties": false,
+            "properties": {
+              "kind": { "type": "string", "pattern": "^[a-z0-9_]+$" },
+              "label": { "type": "string", "minLength": 1 },
+              "from": { "type": "integer", "minimum": 1 },
+              "to": { "type": "integer", "minimum": 1 },
+              "division": { "oneOf": [{ "type": "string" }, { "type": "null" }] }
+            }
+          }
+        },
+        "hosts": { "description": "Nations already in the finals as hosts.", "type": "array", "items": { "$ref": "#/$defs/teamId" } },
+        "groups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["group", "name", "division", "table"],
+            "additionalProperties": false,
+            "properties": {
+              "group": { "type": "string", "pattern": "^[A-Za-z0-9]+$" },
+              "name": { "type": "string", "minLength": 1 },
+              "division": { "oneOf": [{ "type": "string" }, { "type": "null" }] },
+              "table": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["position", "team", "played", "won", "drawn", "lost", "gf", "ga", "gd", "points", "adjustment", "status"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "position": { "type": "integer", "minimum": 1 },
+                    "team": { "$ref": "#/$defs/teamId" },
+                    "played": { "$ref": "#/$defs/count" },
+                    "won": { "$ref": "#/$defs/count" },
+                    "drawn": { "$ref": "#/$defs/count" },
+                    "lost": { "$ref": "#/$defs/count" },
+                    "gf": { "$ref": "#/$defs/count" },
+                    "ga": { "$ref": "#/$defs/count" },
+                    "gd": { "type": "integer" },
+                    "points": { "type": "integer" },
+                    "adjustment": { "type": "integer" },
+                    "status": { "description": "The zone the place falls in (a kind from zones), host (in the finals already as a host), or null.", "oneOf": [{ "type": "string", "pattern": "^[a-z0-9_]+$" }, { "type": "null" }] }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "tournamentTeams": {
+      "type": "object",
+      "required": ["tournament", "season", "teams"],
+      "additionalProperties": false,
+      "properties": {
+        "tournament": { "$ref": "#/$defs/tournamentId" },
+        "season": { "$ref": "#/$defs/season" },
+        "teams": { "type": "object", "propertyNames": { "$ref": "#/$defs/teamId" }, "additionalProperties": { "type": "string", "minLength": 1 } }
+      }
+    },
     "meta": {
       "type": "object",
-      "required": ["version", "generatedAt", "sources", "leagues", "files"],
+      "required": ["version", "generatedAt", "sources", "leagues", "tournaments", "files"],
       "additionalProperties": false,
       "properties": {
         "version": { "const": 1 },
@@ -246,6 +382,26 @@
                     }
                   }
                 }
+              }
+            }
+          }
+        },
+        "tournaments": {
+          "type": "object",
+          "propertyNames": { "$ref": "#/$defs/tournamentId" },
+          "additionalProperties": {
+            "type": "object",
+            "propertyNames": { "$ref": "#/$defs/season" },
+            "additionalProperties": {
+              "type": "object",
+              "required": ["finished", "scheduled", "lastResult", "overdue", "wikipedia"],
+              "additionalProperties": false,
+              "properties": {
+                "finished": { "$ref": "#/$defs/count" },
+                "scheduled": { "$ref": "#/$defs/count" },
+                "lastResult": { "oneOf": [{ "$ref": "#/$defs/date" }, { "type": "null" }] },
+                "overdue": { "$ref": "#/$defs/count" },
+                "wikipedia": { "description": "Each Wikipedia page's revision, by title.", "type": "object", "additionalProperties": { "type": "integer", "minimum": 1 } }
               }
             }
           }

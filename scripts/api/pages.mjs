@@ -3,10 +3,10 @@
 // the optional live scores. Each page says how far its results go and credits the sources it used.
 //   node scripts/api/pages.mjs [--api public/api/v1] [--out public]
 // Node only, no dependencies.
-import { mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { SITE, leagues, loadZones, zoneNames } from "./config.mjs";
+import { SITE, leagues, loadZones, tournaments, zoneNames } from "./config.mjs";
 import { CLUB_WORDS, aliasMap, slug } from "./teams.mjs";
 import { kickoff } from "./time.mjs";
 
@@ -110,6 +110,15 @@ h2 { font: 800 1.9rem/1 var(--display); text-transform: uppercase; margin: 0 0 0
 [data-zone="elq"] { --zone: #eaa765; } [data-zone="eclq"] { --zone: #2e9a5f; } [data-zone="ecl_po"] { --zone: #7cc49b; }
 [data-zone="promo"] { --zone: #2e9a5f; } [data-zone="promo_po"] { --zone: #7cc49b; } [data-zone="rel_po"] { --zone: #e0a526; }
 [data-zone="rel"] { --zone: #c8372d; }
+[data-zone="qualify"] { --zone: #2e9a5f; } [data-zone="host"] { --zone: #7cc49b; }
+[data-zone="r16"] { --zone: #2563c9; } [data-zone="playoff"] { --zone: #7aa2e3; } [data-zone="qf"] { --zone: #2563c9; }
+.groups { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 24rem), 1fr)); }
+.groups h3 { margin: 0 0 0.25rem; }
+.groups .standings { table-layout: fixed; width: 100%; }
+.groups .standings th:first-child { width: 2.2rem; } .groups .standings thead th:not(:first-child):not(:nth-child(2)) { width: 2.6rem; }
+.groups .standings thead th:last-child { width: 2.9rem; }
+.titlebar.solo h1 { font-size: min(22vw, calc((100vw - 40px) / (var(--n, 8) * 0.52)), 17rem); }
+@media (min-width: 861px) { .board > .wide { grid-column: 1 / -1; order: 3; } .board:has(> .wide) > footer { order: 4; } }
 .standings tr[data-zone] td.pos { opacity: 1; box-shadow: inset 4px 0 var(--zone); padding-left: 12px; }
 .zones { list-style: none; margin: 0.75rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.35rem 1rem; font-size: 0.8125rem; }
 .zones li { display: flex; align-items: center; gap: 0.4rem; }
@@ -671,6 +680,76 @@ ${groups.join("\n")}
   return shell({ title: "Following", path: "/following/", here: "following", body, description: "The clubs you follow: their games and their headlines." });
 }
 
+/** A cup or international tournament: its table or every group's, then this week's games, the latest results and the next fixtures. */
+function tournamentPage(t, api) {
+  const config = tournaments().find((x) => x.id === t.id) ?? {};
+  const read = (f) => JSON.parse(readFileSync(join(api, t.id, t.season, f), "utf8"));
+  const { groups, zones, hosts } = read("groups.json");
+  const { matches } = read("matches.json");
+  const { teams } = read("teams.json");
+  const all = JSON.parse(readFileSync(join(api, "meta.json"), "utf8"));
+  const meta = all.tournaments[t.id][t.season];
+  const today = all.generatedAt.slice(0, 10);
+  const soon = new Date(Date.parse(`${today}T00:00:00Z`) + 3 * 86_400_000).toISOString().slice(0, 10);
+  const byKickoff = (a, b) => ((a.kickoff ? new Date(a.kickoff).toISOString() : a.date) + a.id).localeCompare((b.kickoff ? new Date(b.kickoff).toISOString() : b.date) + b.id);
+  const latest = matches.filter((m) => m.score).sort((a, b) => byKickoff(b, a)).slice(0, 12);
+  const unscored = matches.filter((m) => !m.score && m.date <= soon).sort(byKickoff);
+  const week = [...unscored.filter((m) => m.date >= today), ...unscored.filter((m) => m.date < today)];
+  const next = matches.filter((m) => !m.score && m.date > soon).sort(byKickoff).slice(0, 12);
+  const upTo = meta.lastResult ? `Results up to ${day(meta.lastResult)}` : "No results yet";
+  const label = (kind) => (kind === "host" ? "in the finals as hosts" : zones.find((z) => z.kind === kind)?.label ?? kind);
+  const single = groups.length === 1;
+  const table = ({ group, name, table: rows }) => `<div class="group">
+<h3 id="group-${esc(group.toLowerCase())}">${esc(name)}</h3>
+<div class="scroll"><table class="standings">
+<thead><tr><th scope="col" class="left"><span aria-hidden="true">#</span><span class="note" hidden>Position</span></th><th scope="col" class="left">${t.teams === "clubs" ? "Club" : "Nation"}</th><th scope="col"><abbr title="Played">P</abbr></th><th scope="col" class="wdl"><abbr title="Won">W</abbr></th><th scope="col" class="wdl"><abbr title="Drawn">D</abbr></th><th scope="col" class="wdl"><abbr title="Lost">L</abbr></th><th scope="col"><abbr title="Goal difference">GD</abbr></th><th scope="col"><abbr title="Points">Pts</abbr></th></tr></thead>
+<tbody>
+${rows.map((r) => `<tr class="row"${r.status ? ` data-zone="${esc(r.status)}"` : ""}><td class="pos">${r.position}${r.status ? `<span class="sr-only">, ${esc(label(r.status))}</span>` : ""}</td><th scope="row" class="left">${esc(teams[r.team])}</th><td>${r.played}</td><td class="wdl">${r.won}</td><td class="wdl">${r.drawn}</td><td class="wdl">${r.lost}</td><td>${r.gd > 0 ? "+" : ""}${r.gd}</td><td class="pts">${r.points}</td></tr>`).join("\n")}
+</tbody>
+</table></div>
+</div>`;
+  const hostNames = hosts.map((h) => teams[h]).filter(Boolean).sort();
+  const hostLine = hostNames.length ? `${hostNames.length > 1 ? `${hostNames.slice(0, -1).join(", ")} and ${hostNames.at(-1)} are` : `${hostNames[0]} is`} in the finals already as hosts; a host's group sends the host and the best of the rest.` : "";
+  const legend = [...new Map(zones.map((z) => [`${z.kind}|${z.label}`, z])).values()];
+  const clock = config.clock ? `Kick-offs are ${config.clock}.` : "Kick-offs are local time at each ground.";
+  const list = (games) => `<ul class="games">${games.map((m) => game(m, teams, today)).join("\n")}</ul>`;
+  const longest = Math.max(...t.name.split(/\s+/).map((w) => w.length));
+  const body = `<header class="poster">
+<div class="titlebar solo"><span aria-hidden="true"></span><h1 style="--n: ${longest}">${esc(t.name)}</h1><span aria-hidden="true"></span></div>
+${featured(week, latest, teams, today)}
+<p class="note">${esc(t.region)} · ${esc(t.season)} · ${upTo}${t.finals ? ` · ${esc(t.finals)}` : ""}</p>
+</header>
+<main class="board">
+${week.length ? `<section class="glass" id="week">
+<h2>This week</h2>
+<p class="note">Games played or due in the next few days. ${clock}</p>
+${list(week)}
+</section>` : ""}
+<section class="glass${single ? "" : " wide"}" id="table">
+<h2>${single ? "The table" : "The groups"}</h2>
+<p class="note">Worked out from the results.${config.note ? ` ${esc(config.note)}` : ""}</p>
+<div class="groups">
+${groups.map(table).join("\n")}
+</div>
+<ul class="zones" aria-label="What the places lead to">${legend.map((z) => `<li data-zone="${esc(z.kind)}"><b>${esc(z.label)}</b></li>`).join("")}${hostNames.length ? '<li data-zone="host"><b>Hosts</b></li>' : ""}</ul>
+${hostLine ? `<p class="note">${esc(hostLine)}</p>` : ""}
+</section>
+<div class="side">
+<section class="glass">
+<h2>Latest results</h2>
+${latest.length ? list(latest) : '<p class="note">None yet.</p>'}
+</section>
+<section class="glass">
+<h2>Next fixtures</h2>
+${next.length ? list(next) : '<p class="note">None left.</p>'}
+</section>
+</div>
+<footer>Results from ${SOURCES.wikipedia}. ${clock}</footer>
+</main>`;
+  return shell({ title: `${t.name} ${single ? "table" : "groups"}, results and fixtures`, path: `/leagues/${t.id}/`, body, here: "league",
+    description: `${t.full} ${t.season}: ${single ? "the table" : `all ${groups.length} group tables`}, the latest results and the next fixtures. ${upTo}.` });
+}
+
 /** Write <out>/leagues/ from the API at <api>: index.html, site.css, live.js, fonts and <league>/index.html. All or nothing. */
 export function pages({ api = "public/api/v1", out = "public", zones = loadZones } = {}) {
   const { competitions } = JSON.parse(readFileSync(join(api, "competitions.json"), "utf8"));
@@ -681,10 +760,17 @@ export function pages({ api = "public/api/v1", out = "public", zones = loadZones
   served.forEach((league, i) => files.set(`${league.id}/index.html`, leaguePage(league, byId.get(league.id), api,
     served[(i - 1 + served.length) % served.length], served[(i + 1) % served.length], zones)));
   for (const league of served) for (const [path, html] of clubPages(league, byId.get(league.id), api, zones)) files.set(path, html);
-  files.set("index.html", shell({ title: "Leagues", path: "/leagues/", here: "all", description: "Tables, results and fixtures for eight European leagues.",
+  const cups = existsSync(join(api, "tournaments.json")) ? JSON.parse(readFileSync(join(api, "tournaments.json"), "utf8")).tournaments : [];
+  for (const t of cups) files.set(`${t.id}/index.html`, tournamentPage(t, api));
+  files.set("index.html", shell({ title: "Leagues", path: "/leagues/", here: "all", description: `Tables, results and fixtures for eight European leagues${cups.length ? `, ${cups.map((t) => t.name).join(", ")}` : ""}.`,
     body: `<header class="poster"><h1>golboard</h1><p class="note">Tables, results and fixtures, worked out from open data.</p></header>
 <main class="board" style="grid-template-columns: minmax(0, 1fr)">
 <ul class="list">${served.map((l) => `<li><a class="glass" href="/leagues/${l.id}/"><b>${esc(l.name)}</b><span>${esc(l.country)}</span></a></li>`).join("\n")}</ul>
+${[["clubs", "European cups"], ["nations", "International"]].map(([kind, heading]) => {
+    const these = cups.filter((t) => t.teams === kind);
+    return these.length ? `<h2>${heading}</h2>
+<ul class="list">${these.map((t) => `<li><a class="glass" href="/leagues/${t.id}/"><b>${esc(t.name)}</b><span>${esc(t.region)}</span></a></li>`).join("\n")}</ul>` : "";
+  }).join("\n")}
 </main>` }));
   const fresh = join(out, "leagues.next"), live = join(out, "leagues"), old = join(out, "leagues.old");
   rmSync(fresh, { recursive: true, force: true });

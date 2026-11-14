@@ -1,0 +1,261 @@
+{{#invoke:Sports table|main
+<!--Table settings-->
+|baselink=2026–27 UEFA Champions League league phase
+|show_limit=5
+|class_rules=[[2026–27 UEFA Champions League league phase#Tiebreakers|League phase tiebreakers]]
+|source=UEFA<ref>{{cite web |url=https://www.uefa.com/uefachampionsleague/standings/ |title=League phase table |publisher=[[UEFA]] |access-date=4 November 2026}}</ref>
+
+<!--Automatically generate standings-->
+|auto_generate_standings=y
+|ranking_criteria=pts, gd, gf, agf, w, aw. opp_pts, opp_gd, opp_gf
+
+<!--Qualification column definitions-->
+|res_col_header=Q
+|result1=R16 |result2=R16 |result3=R16 |result4=R16 |result5=R16 |result6=R16 |result7=R16 |result8=R16
+|result9=POS |result10=POS |result11=POS |result12=POS |result13=POS |result14=POS |result15=POS |result16=POS
+|result17=POU |result18=POU |result19=POU |result20=POU |result21=POU |result22=POU |result23=POU |result24=POU
+|col_R16=green1 |text_R16=Advance to [[2026–27 UEFA Champions League knockout phase#Round of 16|round of 16]] (seeded)
+|col_POS=blue1 |text_POS=Advance to [[2026–27 UEFA Champions League knockout phase#Knockout phase play-offs|knockout phase play-offs]] (seeded)
+|col_POU=blue2 |text_POU={{nowrap|Advance to [[2026–27 UEFA Champions League knockout phase#Knockout phase play-offs|knockout phase play-offs]] (unseeded)}}
+
+<!--Settings for result tables-->
+|table_nowrap=yes
+|generate_links=yes
+|round_span_header=yes
+|link_headings=yes
+|round_type=matchday
+|matches_style=FBR_green
+|short_style=noflag
+|row_dividers=yes
+|teamwidth=200
+|score_width=40
+
+<!--Default order of teams when tied-->
+|default_order=<!--DO NOT CHANGE, THIS DOESN'T DETERMINE THE ACTUAL RANKING-->AEK, ARS, AVL, ATM, BAR, BAY, BOD, DOR, BRU, COM, FEN, FEY, GAL, INT, LASK, LEN, LIL, LIV, MCI, MUN, NAP, PSG, POR, PSV, RBL, BET, RMA, ROM, SAB, SHK, SLP, SLO, SPO, STU, VIK, VIL
+
+<!--Team definitions-->
+|name_ARS ={{fbaicon|ENG}} [[Arsenal F.C.|Arsenal]]
+|name_AVL ={{fbaicon|ENG}} [[Aston Villa F.C.|Aston Villa]]
+|name_AEK ={{fbaicon|GRE}} [[AEK Athens F.C.|AEK Athens]]
+|name_ATM ={{fbaicon|ESP}} [[Atlético Madrid]]
+|name_BAR ={{fbaicon|ESP}} [[FC Barcelona|Barcelona]]
+|name_BAY ={{fbaicon|GER}} [[FC Bayern Munich|Bayern Munich]]
+|name_BOD ={{fbaicon|NOR}} [[FK Bodø/Glimt|Bodø/Glimt]]
+|name_DOR ={{fbaicon|GER}} [[Borussia Dortmund]]
+|name_BRU ={{fbaicon|BEL}} [[Club Brugge KV|Club Brugge]]
+|name_COM ={{fbaicon|ITA}} [[Como 1907|Como]]
+|name_FEN ={{fbaicon|TUR}} [[Fenerbahçe S.K. (football)|Fenerbahçe]]
+|name_FEY ={{fbaicon|NED}} [[Feyenoord]]
+|name_GAL ={{fbaicon|TUR}} [[Galatasaray S.K. (football)|Galatasaray]]
+|name_INT ={{fbaicon|ITA}} [[Inter Milan]]
+|name_LASK={{fbaicon|AUT}} [[LASK]]
+|name_LEN ={{fbaicon|FRA}} [[RC Lens|Lens]]
+|name_LIL ={{fbaicon|FRA}} [[Lille OSC|Lille]]
+|name_LIV ={{fbaicon|ENG}} [[Liverpool F.C.|Liverpool]]
+|name_MCI ={{fbaicon|ENG}} [[Manchester City F.C.|Manchester City]]
+|name_MUN ={{fbaicon|ENG}} [[Manchester United F.C.|Manchester United]]
+|name_NAP ={{fbaicon|ITA}} [[SSC Napoli|Napoli]]
+|name_PSG ={{fbaicon|FRA}} [[Paris Saint-Germain FC|Paris Saint-Germain]]
+|name_POR ={{fbaicon|POR}} [[FC Porto|Porto]]
+|name_PSV ={{fbaicon|NED}} [[PSV Eindhoven]]
+|name_RBL ={{fbaicon|GER}} [[RB Leipzig]]
+|name_BET ={{fbaicon|ESP}} [[Real Betis]]
+|name_RMA ={{fbaicon|ESP}} [[Real Madrid CF|Real Madrid]]
+|name_ROM ={{fbaicon|ITA}} [[AS Roma|Roma]]
+|name_SAB ={{fbaicon|AZE}} [[Sabah FK (Azerbaijan)|Sabah]]
+|name_SHK ={{fbaicon|UKR}} [[FC Shakhtar Donetsk|Shakhtar Donetsk]]
+|name_SLP ={{fbaicon|CZE}} [[SK Slavia Prague|Slavia Prague]]
+|name_SLO ={{fbaicon|SVK}} [[ŠK Slovan Bratislava|Slovan Bratislava]]
+|name_SPO ={{fbaicon|POR}} [[Sporting CP]]
+|name_STU ={{fbaicon|GER}} [[VfB Stuttgart]]
+|name_VIK ={{fbaicon|NOR}} [[Viking FK|Viking]]
+|name_VIL ={{fbaicon|ESP}} [[Villarreal CF|Villarreal]]
+
+<!--Results by pot block-->
+|block_columns=2
+|block1_title=Results by Pot 1 team
+|block1=PSG, BAY, RMA, LIV, INT, MCI, ARS, BAR, ATM
+|block2_title=Results by Pot 2 team
+|block2=DOR, ROM, SPO, AVL, POR, MUN, BRU, BET, PSV
+|block3_title=Results by Pot 3 team
+|block3=FEY, LIL, BOD, NAP, RBL, VIL, FEN, SHK, GAL
+|block4_title=Results by Pot 4 team
+|block4=SLP, SLO, STU, AEK, LASK, COM, LEN, VIK, SAB
+
+<!--Fixtures by matchday-->
+|round1_matches=AEK_LASK, BRU_AVL, DOR_VIL, POR_MCI, LIL_BET, RMA_INT, BAR_FEY, STU_VIK, LIV_ATM, PSG_SLO, SPO_GAL, NAP_ARS, FEN_ROM, PSV_SHK, COM_RBL, BAY_BOD, MUN_SAB, SLP_LEN
+|round2_matches=LEN_SPO, SAB_SLP, ARS_LIL, ATM_MUN, INT_BRU, GAL_BAR, RBL_PSV, VIK_BAY, VIL_NAP, FEY_COM, LASK_LIV, ROM_RMA, AVL_FEN, SHK_AEK, BOD_DOR, MCI_PSG, BET_POR, SLO_STU
+|round3_matches=FEN_SLP, SAB_DOR, ROM_SLO, POR_PSV, LIV_VIL, MCI_AEK, PSG_BAR, NAP_BOD, STU_ATM, COM_MUN, LIL_GAL, AVL_VIK, BRU_LEN, BAY_ARS, INT_SHK, RMA_RBL, BET_FEY, SPO_LASK
+|round4_matches=SHK_SPO, GAL_STU, ATM_BAY, BAR_AVL, FEY_INT, BOD_LIL, LASK_SLO, MUN_ROM, VIL_PSG, AEK_RMA, FEN_LIV, DOR_BET, POR_NAP, PSV_BRU, RBL_MCI, LEN_COM, SLP_ARS, VIK_SAB
+|round5_matches=BOD_LASK, GAL_AVL, ARS_DOR, COM_AEK, FEY_POR, MCI_NAP, RBL_LEN, RMA_PSV, SLO_BET, SAB_BAR, SLP_VIL, ATM_VIK, BRU_LIV, INT_STU, SHK_FEN, LIL_BAY, PSG_ROM, SPO_MUN
+|round6_matches=VIK_FEY, VIL_SAB, AEK_GAL, ROM_SPO, AVL_PSG, BAR_MCI, BAY_SLP, MUN_RBL, NAP_BRU, BET_COM, SLO_SHK, ARS_RMA, DOR_INT, LASK_FEN, LIV_POR, PSV_ATM, LEN_BOD, STU_LIL
+|round7_matches=BOD_ATM, GAL_FEY, AEK_ROM, AVL_DOR, INT_LIV, POR_SLP, LIL_SLO, RMA_LASK, STU_BRU, FEN_VIL, SAB_NAP, COM_PSG, MUN_BAY, RBL_SHK, LEN_MCI, BET_ARS, SPO_BAR, VIK_PSV
+|round8_matches=ARS_SAB, ROM_LIL, ATM_FEN, DOR_AEK, BRU_BOD, BAY_BET, BAR_COM, SHK_RMA, FEY_RBL, LASK_POR, LIV_LEN, MCI_SPO, PSG_GAL, PSV_STU, SLP_AVL, NAP_VIK, VIL_MUN, SLO_INT
+
+<!--Update date-->
+|update=4 November 2026
+
+<!--Results: the scores determine the record and ranking of teams in the standings-->
+<!--Matchday 1-->
+|match_AEK_LASK=1–0
+|match_BRU_AVL=2–3
+|match_DOR_VIL=3–2
+|match_POR_MCI=0–2
+|match_LIL_BET=2–3
+|match_RMA_INT=2–1
+|match_BAR_FEY=5–1
+|match_STU_VIK=3–1
+|match_LIV_ATM=2–1
+|match_PSG_SLO=6–1
+|match_SPO_GAL=3–1
+|match_NAP_ARS=0–1
+|match_FEN_ROM=1–1
+|match_PSV_SHK=1–1
+|match_COM_RBL=4–1
+|match_BAY_BOD=5–0
+|match_MUN_SAB=4–0
+|match_SLP_LEN=2–3
+
+<!--Matchday 2-->
+|match_LEN_SPO=0–2
+|match_SAB_SLP=2–0
+|match_ARS_LIL=3–0
+|match_ATM_MUN=2–0
+|match_INT_BRU=3–4
+|match_GAL_BAR=1–4
+|match_RBL_PSV=1–0
+|match_VIK_BAY=3–3
+|match_VIL_NAP=3–1
+|match_FEY_COM=3–2
+|match_LASK_LIV=3–6
+|match_ROM_RMA=3–4
+|match_AVL_FEN=6–0
+|match_SHK_AEK=3–1
+|match_BOD_DOR=1–0
+|match_MCI_PSG=2–4
+|match_BET_POR=3–2
+|match_SLO_STU=0–3
+
+<!--Matchday 3-->
+|match_FEN_SLP=2–2
+|match_SAB_DOR=1–2
+|match_ROM_SLO=4–0
+|match_POR_PSV=0–1
+|match_LIV_VIL=4–3
+|match_MCI_AEK=5–1
+|match_PSG_BAR=4–2
+|match_NAP_BOD=4–3
+|match_STU_ATM=1–1
+|match_COM_MUN=4–1
+|match_LIL_GAL=2–4
+|match_AVL_VIK=3–1
+|match_BRU_LEN=3–0
+|match_BAY_ARS=2–2
+|match_INT_SHK=1–0
+|match_RMA_RBL=4–1
+|match_BET_FEY=1–0
+|match_SPO_LASK=2–3
+
+<!--Matchday 4-->
+|match_SHK_SPO=0–1
+|match_GAL_STU=2–0
+|match_ATM_BAY=0–2
+|match_BAR_AVL=3–0
+|match_FEY_INT=0–3
+|match_BOD_LIL=0–0
+|match_LASK_SLO=4–0
+|match_MUN_ROM=3–2
+|match_VIL_PSG=0–6
+|match_AEK_RMA=2–3
+|match_FEN_LIV=3–2
+|match_DOR_BET=2–1
+|match_POR_NAP=4–1
+|match_PSV_BRU=1–2
+|match_RBL_MCI=2–3
+|match_LEN_COM=1–9
+|match_SLP_ARS=1–2
+|match_VIK_SAB=4–1
+
+<!--Matchday 5-->
+|match_BOD_LASK={{small|24 Nov}}
+|match_GAL_AVL={{small|24 Nov}}
+|match_ARS_DOR={{small|24 Nov}}
+|match_COM_AEK={{small|24 Nov}}
+|match_FEY_POR={{small|24 Nov}}
+|match_MCI_NAP={{small|24 Nov}}
+|match_RBL_LEN={{small|24 Nov}}
+|match_RMA_PSV={{small|24 Nov}}
+|match_SLO_BET={{small|24 Nov}}
+|match_SAB_BAR={{small|25 Nov}}
+|match_SLP_VIL={{small|25 Nov}}
+|match_ATM_VIK={{small|25 Nov}}
+|match_BRU_LIV={{small|25 Nov}}
+|match_INT_STU={{small|25 Nov}}
+|match_SHK_FEN={{small|25 Nov}}
+|match_LIL_BAY={{small|25 Nov}}
+|match_PSG_ROM={{small|25 Nov}}
+|match_SPO_MUN={{small|25 Nov}}
+
+<!--Matchday 6-->
+|match_VIK_FEY={{small|8 Dec}}
+|match_VIL_SAB={{small|8 Dec}}
+|match_AEK_GAL={{small|8 Dec}}
+|match_ROM_SPO={{small|8 Dec}}
+|match_AVL_PSG={{small|8 Dec}}
+|match_BAR_MCI={{small|8 Dec}}
+|match_BAY_SLP={{small|8 Dec}}
+|match_MUN_RBL={{small|8 Dec}}
+|match_NAP_BRU={{small|8 Dec}}
+|match_BET_COM={{small|9 Dec}}
+|match_SLO_SHK={{small|9 Dec}}
+|match_ARS_RMA={{small|9 Dec}}
+|match_DOR_INT={{small|9 Dec}}
+|match_LASK_FEN={{small|9 Dec}}
+|match_LIV_POR={{small|9 Dec}}
+|match_PSV_ATM={{small|9 Dec}}
+|match_LEN_BOD={{small|9 Dec}}
+|match_STU_LIL={{small|9 Dec}}
+
+<!--Matchday 7-->
+|match_BOD_ATM={{small|19 Jan}}
+|match_GAL_FEY={{small|19 Jan}}
+|match_AEK_ROM={{small|19 Jan}}
+|match_AVL_DOR={{small|19 Jan}}
+|match_INT_LIV={{small|19 Jan}}
+|match_POR_SLP={{small|19 Jan}}
+|match_LIL_SLO={{small|19 Jan}}
+|match_RMA_LASK={{small|19 Jan}}
+|match_STU_BRU={{small|19 Jan}}
+|match_FEN_VIL={{small|20 Jan}}
+|match_SAB_NAP={{small|20 Jan}}
+|match_COM_PSG={{small|20 Jan}}
+|match_MUN_BAY={{small|20 Jan}}
+|match_RBL_SHK={{small|20 Jan}}
+|match_LEN_MCI={{small|20 Jan}}
+|match_BET_ARS={{small|20 Jan}}
+|match_SPO_BAR={{small|20 Jan}}
+|match_VIK_PSV={{small|20 Jan}}
+
+<!--Matchday 8-->
+|match_ARS_SAB={{small|27 Jan}}
+|match_ROM_LIL={{small|27 Jan}}
+|match_ATM_FEN={{small|27 Jan}}
+|match_DOR_AEK={{small|27 Jan}}
+|match_BRU_BOD={{small|27 Jan}}
+|match_BAY_BET={{small|27 Jan}}
+|match_BAR_COM={{small|27 Jan}}
+|match_SHK_RMA={{small|27 Jan}}
+|match_FEY_RBL={{small|27 Jan}}
+|match_LASK_POR={{small|27 Jan}}
+|match_LIV_LEN={{small|27 Jan}}
+|match_MCI_SPO={{small|27 Jan}}
+|match_PSG_GAL={{small|27 Jan}}
+|match_PSV_STU={{small|27 Jan}}
+|match_SLP_AVL={{small|27 Jan}}
+|match_NAP_VIK={{small|27 Jan}}
+|match_VIL_MUN={{small|27 Jan}}
+|match_SLO_INT={{small|27 Jan}}
+}}<noinclude>
+[[Category:UEFA Champions League templates]]
+[[Category:2026–27 association football standings in Europe templates]]
+</noinclude>

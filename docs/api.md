@@ -1,6 +1,6 @@
 # golboard API, version 1
 
-Our own football data: results, fixtures, tables and team ids for eight leagues, as a folder of static JSON. No server and no key, so any
+Our own football data: results, fixtures, tables and team ids for eight leagues, the three European cups, the Nations League and AFCON qualifying, as a folder of static JSON. No server and no key, so any
 app or page can read it. Built by `npm run api` (download, then build) into `public/api/v1/`, which Astro copies to the site.
 
 ## Files
@@ -14,10 +14,15 @@ app or page can read it. Built by `npm run api` (download, then build) into `pub
 | `api/v1/meta.json` | version, when it was built, the sources and their licences, per league season: games finished and to play, the date of the last result, corrections applied; and `files`: every other file of the build with the sha256 of its bytes |
 | `api/v1/news.json` | `{ generatedAt, articles: [{ title, summary, url, source, published, image, clubs }] }`: football headlines, newest first (at most 60), from BBC Sport, The Guardian and ESPN's own RSS feeds; `clubs` lists the team ids the story names. Written by `scripts/api/news.mjs`, after `build.mjs`, so it is not in `meta.json`'s file list |
 | `api/v1/news/<club id>.json` | `{ generatedAt, articles }` in the same shape, at most 30 per club, newest first: the general headlines that name the club plus The Guardian's own feed for it (`data/api/guardian-feeds.json`). One file per club of every league, so a club the three general feeds never mention (Juventus had none on 2026-11-12) still has its stories. A club with no Guardian feed gets only the general ones |
-| `api/v1/schema.json` | the contract: a JSON Schema (2020-12) with one `$defs` entry per file type (`competitions`, `matches`, `table`, `teams`, `today`, `news`, `meta`). Kept in `data/api/schema.json` |
+| `api/v1/tournaments.json` | `{ tournaments: [{ id, name, full, region, teams, season, finals }] }`: cups and international tournaments; `teams` is `clubs` or `nations`. Kept apart from `competitions.json`, whose readers expect one league table per competition |
+| `api/v1/<tournament>/<season>/matches.json` | `{ tournament, season, matches }`: like a league's, plus `group` (`A`, `A1`, or `league` for a single league-phase table), `stage` `group`, `round` (`Group A`, `League A, Group 1`, `Matchday 3`), and `kickoff` with a UTC offset |
+| `api/v1/<tournament>/<season>/groups.json` | `{ tournament, season, zones: [{ kind, label, from, to, division }], hosts, groups: [{ group, name, division, table }] }`: one computed table per group; each row adds `status`: the kind of zone its place falls in, `host` (in the finals already as a host), or null |
+| `api/v1/<tournament>/<season>/teams.json` | `{ tournament, season, teams: { <team id>: <name> } }` |
+| `api/v1/schema.json` | the contract: a JSON Schema (2020-12) with one `$defs` entry per file type (`competitions`, `matches`, `table`, `teams`, `tournaments`, `tournamentMatches`, `groups`, `tournamentTeams`, `today`, `news`, `meta`). Kept in `data/api/schema.json` |
 
 League ids: `it-1` Serie A, `en-1` Premier League, `es-1` LaLiga, `de-1` Bundesliga, `fr-1` Ligue 1, `nl-1` Eredivisie, `pt-1` Primeira
-Liga, `en-2` Championship. Seasons look like `2026-27`.
+Liga, `en-2` Championship. Tournament ids: `afcon` AFCON qualifying (48 nations, 12 groups of four, September 2026 to March 2027), `champions-league`,
+`europa-league` and `conference-league` (one league-phase table of 36 each), `nations-league` (14 groups in Leagues A to D). Seasons look like `2026-27`. Nation ids are the name as a slug (`morocco`, `dr-congo`), from the FIFA codes in `data/api/nations.json`.
 
 A match: `status` is `finished` (with `score.ft`, and `score.ht` when known) or `scheduled` (`score` null). `stage` is `league` or `playoffs`;
 play-off games never count in a table. `source` is `openfootball`, `correction` with `correctionSource` naming the official record, or `wikipedia` with `sourceUrl` naming the
@@ -94,6 +99,16 @@ on these pages.
   the build until it gets an alias. On 31 October 2026 this filled 254 games (results up to 25-30 October instead of 20 September); 139 of
   them could be paired with SportScore's results and all 139 agreed. The reader reproduces all 3,016 official 2025-26 scores from the
   grids (`tests/api-wikipedia.test.ts`). Pages that use this data credit Wikipedia under CC BY-SA.
+- **Tournaments:** English Wikipedia pages (CC BY-SA 4.0), one match box per game with the date, the kick-off (a local time with its
+  UTC offset, or Central European time for UEFA's) and the score (`scripts/api/tournament.mjs`; `data/api/tournaments.json` names the
+  pages and what each one's headings mean). A tournament's pages are saved together or not at all, so a table never mixes two days. A score on a game dated the build day or later is not used yet. Group
+  tables use CAF's rules: points, then head-to-head points, goal difference, goals and away goals, then overall goal difference and goals.
+  A host (Kenya, Tanzania, Uganda) is in the finals already; its group sends the host and the best of the rest. On 14 November 2026 our
+  Group A matched Wikipedia's own table, and later all twelve did; all 72 Champions League scores equal Wikipedia's separate results grid;
+  Nations League groups A4, B1, B2 and B4 match the order Wikipedia's editors typed (`tests/api-tournament.test.ts`). UEFA's league
+  phases use UEFA's in-season rules: points, goal difference, goals, away goals, wins, away wins.
+- **Teams never shown:** `data/api/tournaments.json` `hide` (Israel: the national team, and clubs by their flag). Their rows and games
+  are left out; every other team's record still counts its games against them, so places and zones stay true.
 - **Tables are computed, never copied**, with each league's own tie-break rules (`data/api/leagues.json`) and any points a league took
   away (`data/api/adjustments.json`, each with its reason and source).
 - **Checked against the official record** (`tests/api.test.ts`): for 2025-26, all 3,016 league scores equal the official results, and all
@@ -103,6 +118,9 @@ on these pages.
   and writes nothing if any check fails, so the last good API stays up. A download that fails keeps the saved copy.
 
 ## Not here yet
+
+- The AFCON finals (Kenya, Tanzania and Uganda, from 19 June 2027): groups, then a knockout bracket.
+- The cups and AFCON in the app's home league choices and in `today.json`; the cups' knockout rounds.
 
 - Same-day and live results: SportScore's free API (attribution required, measured against ESPN on 31 October) or football-data.org once
   its terms for apps are confirmed.
