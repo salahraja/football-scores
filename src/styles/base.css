@@ -105,7 +105,7 @@ code { font-family: var(--font-mono); font-weight: 700; }
   margin-inline: calc(50% - 50vw); margin-top: calc(-1 * var(--space-3)); padding: var(--space-4) var(--space-3) var(--space-5);
   background: linear-gradient(180deg, var(--slate), var(--slate-2) 60%, var(--bg)); text-align: center;
 }
-.poster__title { font: 800 min(clamp(4rem, 24vw, 21rem), calc((100vw - 124px) / (var(--chars, 7) * 0.47)))/0.82 var(--font-display); color: var(--accent); text-transform: uppercase; margin: 0; white-space: nowrap; letter-spacing: -0.01em; }
+.poster__title { font: 800 min(clamp(4rem, 24vw, 21rem), calc((100vw - 124px) / (var(--chars, 7) * 0.47)))/0.82 var(--font-display); color: var(--accent); text-transform: uppercase; margin: 0; white-space: nowrap; }
 .poster__result { display: grid; grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1fr) auto; grid-template-areas: "prev home mid away next" ". meta meta meta ."; justify-items: stretch; align-items: center; gap: clamp(8px, 2vw, 22px); max-width: var(--max-width); margin: var(--space-2) auto 0; }
 .poster__team { font: 800 min(clamp(2.2rem, 8vw, 6.4rem), calc(25vw / (var(--word, 7) * 0.47)))/0.9 var(--font-display); text-transform: uppercase; color: var(--fg); min-width: 0; }
 .poster__team.home { text-align: right; } .poster__team.away { text-align: left; }
@@ -236,7 +236,8 @@ tr[class*="zone--"] > .pos { box-shadow: inset 3px 0 0 var(--zone, transparent);
 
 /* The poster fills its screen (Salah, 2026-11-07): the name tall above, the score huge below, black clubs, and the leagues as a stacked red list with a red line under the one on show. */
 .poster { justify-content: flex-start; gap: clamp(6px, 1.4svh, 14px); padding-bottom: var(--space-2); }
-.poster__title { transform: scaleY(var(--stretch, 1)); transform-origin: bottom center; -webkit-text-stroke: 0.038em var(--accent); letter-spacing: 0.024em; paint-order: stroke fill; }
+/* 2026-11-13 (Salah: "I want the design on 2-2 to be the one we follow"): the name is no longer stretched tall or given a heavier outline. It is the display face at its natural shape, like the score. */
+.poster__title { letter-spacing: normal; }
 .poster__titlebar { align-items: flex-end; }
 .poster .pick { flex-direction: column; align-items: center; gap: 0; overflow: visible; padding: 0; margin-top: auto; -webkit-mask-image: none; mask-image: none; }
 .pick button, .pick button.on { min-height: clamp(26px, 4svh, 40px); padding: 0 10px; border-radius: 0; background: none; color: var(--fg); font: 800 clamp(1rem, 2.5svh, 1.5rem)/1.1 var(--font-display); letter-spacing: 0.02em; text-transform: uppercase; opacity: 0.8; }
