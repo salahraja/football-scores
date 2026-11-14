@@ -132,7 +132,7 @@ function stepGame(by: number) {
 // A swipe on a phone or tablet does what the arrows do: on the score it changes the game, anywhere else on the poster the league. Mostly-sideways only, so scrolling
 // down the page stays a scroll.
 const SWIPE = 45;
-// The poster's lettering (Salah, 2026-11-13): the league's name is a heavy block at its natural proportions, and the score is drawn
+// The poster's lettering (Salah, 2026-11-13): the league's name is the plain block at its natural shape, and the score is drawn
 // TALLER into the empty poster between the name and the result ("make the red score elongated so there's less empty space").
 // The score is stretched upward from its foot, and given a top margin of the height it gains, so the row grows up into the gap.
 const TALLEST = 1.5;
