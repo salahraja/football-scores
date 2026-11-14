@@ -137,12 +137,13 @@ const titleEl = ref<HTMLElement | null>(null);
 function stretchTitle() {
   const el = titleEl.value;
   if (!el) return;
-  el.style.setProperty("--stretch", "1");
+  const poster = (el.closest(".poster") as HTMLElement | null) ?? el; // set on the whole poster: the score is stretched by it too
+  poster.style.setProperty("--stretch", "1");
   el.style.marginTop = "0";
   const phone = window.innerWidth <= 760;
   const room = window.innerHeight * (phone ? 0.38 : 0.46);
   const stretch = Math.min(1.75, Math.max(1, room / Math.max(el.offsetHeight, 1)));
-  el.style.setProperty("--stretch", String(stretch));
+  poster.style.setProperty("--stretch", String(stretch));
   el.style.marginTop = `${el.offsetHeight * (stretch - 1)}px`;
 }
 watch([title, titleEl], async () => {

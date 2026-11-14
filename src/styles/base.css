@@ -116,7 +116,7 @@ code { font-family: var(--font-mono); font-weight: 700; }
   .poster__team.home, .poster__team.away { text-align: center; }
   .poster__score { text-align: center; }
 }
-.poster__score { font: 800 clamp(3.4rem, 13vw, 11rem)/0.85 var(--font-display); color: var(--accent); }
+.poster__score { --score: clamp(3.4rem, 13vw, 11rem); font: 800 var(--score)/0.85 var(--font-display); color: var(--accent); }
 .poster__meta { margin: var(--space-2) 0 0; color: var(--fg); opacity: 0.75; }
 .board__grid { display: grid; gap: var(--space-5); grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: start; margin-top: var(--space-5); }
 .board__side { display: grid; gap: var(--space-5); align-content: start; }
@@ -249,12 +249,12 @@ tr[class*="zone--"] > .pos { box-shadow: inset 3px 0 0 var(--zone, transparent);
   .poster__result .prev { justify-self: end; } .poster__result .next { justify-self: start; }
   .poster__result .home { text-align: right; } .poster__result .away { text-align: left; }
   .poster__result .home, .poster__result .away { font-size: min(calc(25vw / (var(--word, 7) * 0.46)), 6.6vw + 6px); line-height: 0.95; }
-  .poster__score, .poster__result .poster__score { text-align: center; justify-self: center; font-size: min(31vw, 17svh); line-height: 0.84; }
+  .poster__score, .poster__result .poster__score { text-align: center; justify-self: center; --score: min(31vw, 17svh); line-height: 0.84; }
   .poster__meta { margin: 0; font-size: 0.8125rem; }
 }
 @media (min-width: 761px) {
   .poster .pick { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 2px 14px; }
-  .poster__score { font-size: min(19vw, 34svh); }
+  .poster__score { --score: min(19vw, 34svh); }
   .poster__team { font-size: min(calc(19vw / (var(--word, 7) * 0.5)), 6.4vw); }
   .poster__result { column-gap: clamp(16px, 2.4vw, 34px); max-width: 92vw; }
 }
@@ -277,9 +277,20 @@ tr[class*="zone--"] > .pos { box-shadow: inset 3px 0 0 var(--zone, transparent);
   .poster__result { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); grid-template-areas: "nav nav nav" "home mid away" "meta meta meta"; }
   .arrow.long { width: 64px; } .arrow.long svg { width: 64px; height: 32px; }
 }
-@media (max-width: 760px) and (max-height: 700px) { .poster__score, .poster__result .poster__score { font-size: min(27vw, 15svh); } }
+@media (max-width: 760px) and (max-height: 700px) { .poster__score, .poster__result .poster__score { --score: min(27vw, 15svh); } }
 /* a tablet upright: long names stack too, or the name would sit small with the screen empty */
 @media (min-width: 761px) and (max-width: 1000px) {
   .poster__line.wide { display: none; }
   .poster__word { display: block; font-size: min(calc((100vw - 220px) / (var(--chars, 5) * 0.5)), 21svh); line-height: 0.88; white-space: nowrap; }
+}
+
+/* The score looks like the league's name (Salah, 2026-11-13: "those both need to consistently look the same"). The name is stretched tall by
+   --stretch (HomeView sets it on the poster, per league) with a heavier outline and wider spacing. The score takes the same three things. It
+   is drawn smaller by the same factor it is then stretched by, so it keeps the height the layout gave it and comes out narrower, like the name;
+   the margin gives back the height the smaller type gave up. Every size rule above sets --score, never font-size. */
+.poster__score, .poster__result .poster__score {
+  font-size: calc(var(--score) / var(--stretch, 1));
+  transform: scaleY(var(--stretch, 1)); transform-origin: bottom center;
+  margin-top: calc(var(--score) * 0.85 * (1 - 1 / var(--stretch, 1)));
+  -webkit-text-stroke: 0.038em var(--accent); letter-spacing: 0.024em; paint-order: stroke fill;
 }
