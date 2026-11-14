@@ -1,10 +1,325 @@
 {
-  "_about": "The international tournaments golboard's API serves, beside the club leagues in leagues.json. Each is played in groups; its games come from the English Wikipedia group pages (\"<wikipedia> A\" to \"<wikipedia> L\"), whose match boxes give the date, the local kick-off with its UTC offset, and the score. qualify: how many from each group go through. hosts: nations already in the finals as hosts, by FIFA code; a host's group sends the host plus the best of the rest. tiebreak: as in leagues.json, plus h2h_away_gf (CAF regulations, Article 14). A head-to-head rule always counts only the games among the teams still level at that point, so a smaller set left level is split by its own games.",
+  "_about": "The cups and international tournaments golboard's API serves, beside the club leagues in leagues.json. Their games come from English Wikipedia pages, one match box per game. pages: each page and what its boxes are: a fixed group (group, name), or groups read from the page's \"Group N\" headings within a division (groups: headings, division), with rounds from the headings when rounds is \"headings\" (Matchday 1...). teams: clubs or nations (nations by FIFA code, data/api/nations.json). tz and clock: the time zone the boxes give kick-offs in; without tz, each box gives its own UTC offset. zones: what each place leads to, for every group or only one division's. hosts: nations already in the finals as hosts; a host's group sends the host plus the best of the rest. tiebreak: as in leagues.json, plus h2h_away_gf and away_wins. A head-to-head rule counts only the games among the teams still level at that point. hide: teams never shown, by FIFA code: that nation, and clubs whose box carries that country's flag ({{fbaicon|ISR}}); their rows and games are left out, but every other team's record still counts its games against them (Salah, 2026-11-14).",
+  "hide": [
+    "ISR"
+  ],
   "tournaments": [
-    { "id": "afcon", "name": "AFCON qualifying", "full": "Africa Cup of Nations qualifying", "region": "Africa", "season": "2026-27",
+    {
+      "id": "afcon",
+      "name": "AFCON qualifying",
+      "full": "Africa Cup of Nations qualifying",
+      "region": "Africa",
+      "teams": "nations",
+      "season": "2026-27",
       "finals": "Kenya, Tanzania and Uganda, from 19 June 2027",
-      "wikipedia": "2027 Africa Cup of Nations qualification Group", "groups": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"],
-      "qualify": 2, "hosts": ["KEN", "TAN", "UGA"],
-      "tiebreak": ["points", "h2h_points", "h2h_gd", "h2h_gf", "h2h_away_gf", "gd", "gf", "away_gf"] }
+      "pages": [
+        {
+          "title": "2027 Africa Cup of Nations qualification Group A",
+          "group": "A",
+          "name": "Group A"
+        },
+        {
+          "title": "2027 Africa Cup of Nations qualification Group B",
+          "group": "B",
+          "name": "Group B"
+        },
+        {
+          "title": "2027 Africa Cup of Nations qualification Group C",
+          "group": "C",
+          "name": "Group C"
+        },
+        {
+          "title": "2027 Africa Cup of Nations qualification Group D",
+          "group": "D",
+          "name": "Group D"
+        },
+        {
+          "title": "2027 Africa Cup of Nations qualification Group E",
+          "group": "E",
+          "name": "Group E"
+        },
+        {
+          "title": "2027 Africa Cup of Nations qualification Group F",
+          "group": "F",
+          "name": "Group F"
+        },
+        {
+          "title": "2027 Africa Cup of Nations qualification Group G",
+          "group": "G",
+          "name": "Group G"
+        },
+        {
+          "title": "2027 Africa Cup of Nations qualification Group H",
+          "group": "H",
+          "name": "Group H"
+        },
+        {
+          "title": "2027 Africa Cup of Nations qualification Group I",
+          "group": "I",
+          "name": "Group I"
+        },
+        {
+          "title": "2027 Africa Cup of Nations qualification Group J",
+          "group": "J",
+          "name": "Group J"
+        },
+        {
+          "title": "2027 Africa Cup of Nations qualification Group K",
+          "group": "K",
+          "name": "Group K"
+        },
+        {
+          "title": "2027 Africa Cup of Nations qualification Group L",
+          "group": "L",
+          "name": "Group L"
+        }
+      ],
+      "zones": [
+        {
+          "kind": "qualify",
+          "label": "Top 2 in each group go to the finals",
+          "from": 1,
+          "to": 2
+        }
+      ],
+      "hosts": [
+        "KEN",
+        "TAN",
+        "UGA"
+      ],
+      "note": "CAF's tie-break rules: head-to-head first.",
+      "tiebreak": [
+        "points",
+        "h2h_points",
+        "h2h_gd",
+        "h2h_gf",
+        "h2h_away_gf",
+        "gd",
+        "gf",
+        "away_gf"
+      ]
+    },
+    {
+      "id": "champions-league",
+      "name": "Champions League",
+      "full": "UEFA Champions League",
+      "region": "Europe",
+      "teams": "clubs",
+      "season": "2026-27",
+      "finals": "Final in Madrid, 5 June 2027",
+      "clock": "Central European time",
+      "tz": "Europe/Paris",
+      "pages": [
+        {
+          "title": "2026–27 UEFA Champions League league phase",
+          "group": "league",
+          "name": "League phase",
+          "rounds": "headings"
+        }
+      ],
+      "zones": [
+        {
+          "kind": "r16",
+          "label": "Round of 16",
+          "from": 1,
+          "to": 8
+        },
+        {
+          "kind": "playoff",
+          "label": "Knockout play-offs",
+          "from": 9,
+          "to": 24
+        }
+      ],
+      "note": "36 clubs, 8 games each. While the league phase is on, teams level on points, goal difference, goals, away goals, wins and away wins share a place.",
+      "tiebreak": [
+        "points",
+        "gd",
+        "gf",
+        "away_gf",
+        "wins",
+        "away_wins"
+      ]
+    },
+    {
+      "id": "europa-league",
+      "name": "Europa League",
+      "full": "UEFA Europa League",
+      "region": "Europe",
+      "teams": "clubs",
+      "season": "2026-27",
+      "finals": "Final in Frankfurt, 26 May 2027",
+      "clock": "Central European time",
+      "tz": "Europe/Paris",
+      "pages": [
+        {
+          "title": "2026–27 UEFA Europa League league phase",
+          "group": "league",
+          "name": "League phase",
+          "rounds": "headings"
+        }
+      ],
+      "zones": [
+        {
+          "kind": "r16",
+          "label": "Round of 16",
+          "from": 1,
+          "to": 8
+        },
+        {
+          "kind": "playoff",
+          "label": "Knockout play-offs",
+          "from": 9,
+          "to": 24
+        }
+      ],
+      "note": "36 clubs, 8 games each. While the league phase is on, teams level on points, goal difference, goals, away goals, wins and away wins share a place.",
+      "tiebreak": [
+        "points",
+        "gd",
+        "gf",
+        "away_gf",
+        "wins",
+        "away_wins"
+      ]
+    },
+    {
+      "id": "conference-league",
+      "name": "Conference League",
+      "full": "UEFA Conference League",
+      "region": "Europe",
+      "teams": "clubs",
+      "season": "2026-27",
+      "finals": "Final in Istanbul, 2 June 2027",
+      "clock": "Central European time",
+      "tz": "Europe/Paris",
+      "pages": [
+        {
+          "title": "2026–27 UEFA Conference League league phase",
+          "group": "league",
+          "name": "League phase",
+          "rounds": "headings"
+        }
+      ],
+      "zones": [
+        {
+          "kind": "r16",
+          "label": "Round of 16",
+          "from": 1,
+          "to": 8
+        },
+        {
+          "kind": "playoff",
+          "label": "Knockout play-offs",
+          "from": 9,
+          "to": 24
+        }
+      ],
+      "note": "36 clubs, 6 games each. While the league phase is on, teams level on points, goal difference, goals, away goals, wins and away wins share a place.",
+      "tiebreak": [
+        "points",
+        "gd",
+        "gf",
+        "away_gf",
+        "wins",
+        "away_wins"
+      ]
+    },
+    {
+      "id": "nations-league",
+      "name": "Nations League",
+      "full": "UEFA Nations League",
+      "region": "Europe",
+      "teams": "nations",
+      "season": "2026-27",
+      "finals": "Nations League Finals, June 2027",
+      "clock": "Central European time",
+      "tz": "Europe/Paris",
+      "pages": [
+        {
+          "title": "2026–27 UEFA Nations League A",
+          "division": "A",
+          "groups": "headings"
+        },
+        {
+          "title": "2026–27 UEFA Nations League B",
+          "division": "B",
+          "groups": "headings"
+        },
+        {
+          "title": "2026–27 UEFA Nations League C",
+          "division": "C",
+          "groups": "headings"
+        },
+        {
+          "title": "2026–27 UEFA Nations League D",
+          "division": "D",
+          "groups": "headings"
+        }
+      ],
+      "zones": [
+        {
+          "kind": "qf",
+          "label": "League A: top 2 to the quarter-finals",
+          "from": 1,
+          "to": 2,
+          "division": "A"
+        },
+        {
+          "kind": "rel",
+          "label": "League A: relegated, or a relegation play-off",
+          "from": 4,
+          "to": 4,
+          "division": "A"
+        },
+        {
+          "kind": "promo",
+          "label": "Leagues B and C: promoted",
+          "from": 1,
+          "to": 1,
+          "division": "B"
+        },
+        {
+          "kind": "promo_po",
+          "label": "Leagues B and C: promotion play-off",
+          "from": 2,
+          "to": 2,
+          "division": "B"
+        },
+        {
+          "kind": "rel_po",
+          "label": "League B: relegation play-off",
+          "from": 4,
+          "to": 4,
+          "division": "B"
+        },
+        {
+          "kind": "promo",
+          "label": "Leagues B and C: promoted",
+          "from": 1,
+          "to": 1,
+          "division": "C"
+        },
+        {
+          "kind": "promo_po",
+          "label": "Leagues B and C: promotion play-off",
+          "from": 2,
+          "to": 2,
+          "division": "C"
+        }
+      ],
+      "note": "League A's third places also matter: the two worst go to a relegation play-off. All of League D moves up to League C for 2028-29.",
+      "tiebreak": [
+        "points",
+        "h2h_points",
+        "h2h_gd",
+        "h2h_gf",
+        "gd",
+        "gf",
+        "away_gf",
+        "wins",
+        "away_wins"
+      ]
+    }
   ]
 }

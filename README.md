@@ -31,7 +31,7 @@ Points are always `3 x wins + draws`, computed by the engines, so a points deduc
 
 ## Our own API (golboard)
 
-`npm run api` downloads openfootball's public-domain results for eight leagues (plus Wikipedia's AFCON qualifying groups) and builds a static JSON API in `public/api/v1/`
+`npm run api` downloads openfootball's public-domain results for eight leagues (plus Wikipedia's pages for the European cups, the Nations League and AFCON qualifying) and builds a static JSON API in `public/api/v1/`
 (competitions, matches, tables, teams, meta). Tables are computed with each league's own rules and checked against the official 2025-26
 record in the tests. Format and sources: `docs/api.md`.
 It also gathers football headlines (`api/v1/news.json`) and builds `/news/` and `/following/`, where you pick clubs to follow; see "News and Following" in `docs/api.md`.

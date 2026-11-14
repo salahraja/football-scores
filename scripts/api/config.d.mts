@@ -1,6 +1,7 @@
 import type { Adjustment, Correction, League, Tournament } from "./types.d.mts";
 export function leagues(): League[];
 export function tournaments(): Tournament[];
+export function hiddenCountries(): Set<string>;
 export function loadAdjustments(season: string, leagueId: string): Adjustment[];
 export function loadCorrections(season: string, leagueId: string): Correction[];
 export function loadZones(season: string, leagueId: string): { zones: { kind: string; from: number; to: number }[]; note: string } | null;

@@ -7,13 +7,13 @@ import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { leagues, tournaments, loadAdjustments, loadCorrections, loadPostponed, loadZones, zoneNames } from "./config.mjs";
+import { hiddenCountries, leagues, tournaments, loadAdjustments, loadCorrections, loadPostponed, loadZones, zoneNames } from "./config.mjs";
 import { kickoff } from "./time.mjs";
 import { applyCorrections, parseSeason } from "./openfootball.mjs";
 import { computeTable } from "./table.mjs";
 import { teamId } from "./teams.mjs";
 import { applyResults, parseNames, parseResults } from "./wikipedia.mjs";
-import { groupTables, nation, parseBoxes } from "./tournament.mjs";
+import { groupTables, nation, pageGames } from "./tournament.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const OPENFOOTBALL = { name: "openfootball", url: "https://github.com/openfootball/football.json", licence: "CC0-1.0" };
@@ -91,37 +91,42 @@ export function build({ input = "data/openfootball", wikipedia = join(ROOT, "dat
     }
     if (have.length) competitions.push({ id: league.id, name: league.name, country: league.country, seasons: have, current: have.at(-1) });
   }
-  // Tournaments (AFCON qualifying): separate from competitions.json, whose readers expect one league table per competition.
+  // Tournaments (cups and international): separate from competitions.json, whose readers expect one league table per competition.
   const served = [];
+  const hide = hiddenCountries();
   meta.tournaments = {};
   for (const t of tournaments()) {
     const path = join(wikipedia, t.season, `${t.id}.json`);
     if (!existsSync(path)) continue;
     const saved = JSON.parse(readFileSync(path, "utf8"));
-    const byGroup = {};
-    for (const g of t.groups) {
-      if (!saved.groups?.[g]) { problems.push(`${t.id} ${t.season}: no saved page for Group ${g}`); continue; }
-      byGroup[g] = parseBoxes(saved.groups[g].wikitext, g, now.slice(0, 10));
+    const games = [], names = {}, countries = {};
+    for (const page of t.pages) {
+      if (!saved.pages?.[page.title]) { problems.push(`${t.id} ${t.season}: no saved page "${page.title}"`); continue; }
+      const read = pageGames(saved.pages[page.title].wikitext, page, t, now.slice(0, 10));
+      games.push(...read.games);
+      Object.assign(names, read.names);
+      Object.assign(countries, read.countries);
     }
-    const matches = t.groups.flatMap((g) => byGroup[g] ?? []).sort((a, b) => (a.date + (a.kickoff ?? "") + a.id).localeCompare(b.date + (b.kickoff ?? "") + b.id));
-    const teams = {};
-    for (const m of matches) for (const id of [m.home, m.away]) teams[id] ??= null;
-    for (const code of Object.keys(JSON.parse(readFileSync(join(ROOT, "data/api/nations.json"), "utf8")).nations)) {
-      const n = nation(code);
-      if (n.id in teams) teams[n.id] = n.name;
-    }
+    // Hidden teams (tournaments.json `hide`): no row and no game of theirs, but the tables are worked out from every game first.
+    const hidden = new Set(Object.keys(countries).filter((id) => hide.has(countries[id])));
+    const shown = (m) => !hidden.has(m.home) && !hidden.has(m.away);
+    const tables = groupTables(t, games).map(({ group, name, division, table }) => ({ group, name, division, table: table.filter((r) => !hidden.has(r.team)) }));
+    const matches = games.filter(shown).map(({ name, division, ...m }) => m)
+      .sort((a, b) => ((a.kickoff ? new Date(a.kickoff).toISOString() : a.date) + a.id).localeCompare((b.kickoff ? new Date(b.kickoff).toISOString() : b.date) + b.id));
+    const teams = Object.fromEntries(Object.entries(names).filter(([id]) => !hidden.has(id)).sort((x, y) => x[0].localeCompare(y[0])));
     problems.push(...validate({ matches }, teams).map((p) => `${t.id} ${t.season}: ${p}`));
     const base = `api/v1/${t.id}/${t.season}`;
     files.set(`${base}/matches.json`, { tournament: t.id, season: t.season, matches });
-    files.set(`${base}/groups.json`, { tournament: t.id, season: t.season, qualify: t.qualify, hosts: (t.hosts ?? []).map((c) => nation(c).id),
-      groups: groupTables(t, byGroup) });
+    files.set(`${base}/groups.json`, { tournament: t.id, season: t.season,
+      zones: (t.zones ?? []).map((z) => ({ kind: z.kind, label: z.label, from: z.from, to: z.to, division: z.division ?? null })),
+      hosts: (t.hosts ?? []).map((c) => nation(c).id), groups: tables });
     files.set(`${base}/teams.json`, { tournament: t.id, season: t.season, teams });
     const finished = matches.filter((m) => m.status === "finished");
     meta.tournaments[t.id] = { [t.season]: { finished: finished.length, scheduled: matches.length - finished.length,
       lastResult: finished.reduce((d, m) => (m.date > d ? m.date : d), "") || null,
       overdue: matches.filter((m) => m.status === "scheduled" && m.date < lateBefore).length,
-      wikipedia: Object.fromEntries(t.groups.filter((g) => saved.groups?.[g]).map((g) => [g, saved.groups[g].revid])) } };
-    served.push({ id: t.id, name: t.name, full: t.full, region: t.region, season: t.season, finals: t.finals });
+      wikipedia: Object.fromEntries(t.pages.filter((p) => saved.pages?.[p.title]).map((p) => [p.title, saved.pages[p.title].revid])) } };
+    served.push({ id: t.id, name: t.name, full: t.full, region: t.region, teams: t.teams, season: t.season, finals: t.finals });
     usedWikipedia = true;
   }
   files.set("api/v1/tournaments.json", { tournaments: served });

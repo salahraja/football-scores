@@ -1,6 +1,7 @@
-import type { GroupMatch, Row, Tournament } from "./types.d.mts";
+import type { GroupMatch, Row, Tournament, TournamentPage } from "./types.d.mts";
 export function nation(code: string): { id: string; name: string };
-export function footballBoxes(text: string): string;
-export function parseBoxes(wikitext: string, group: string, today: string): GroupMatch[];
-export function groupTables(tournament: Pick<Tournament, "groups" | "qualify" | "hosts" | "tiebreak">, byGroup: Record<string, GroupMatch[]>):
-  { group: string; table: (Row & { status: "qualify" | "host" | null })[] }[];
+export function matchText(text: string): string;
+export function pageGames(wikitext: string, page: TournamentPage, tournament: Pick<Tournament, "id" | "tz">, today: string):
+  { games: GroupMatch[]; names: Record<string, string>; countries: Record<string, string | null> };
+export function groupTables(tournament: Pick<Tournament, "zones" | "hosts" | "tiebreak">, games: GroupMatch[]):
+  { group: string; name: string; division: string | null; table: (Row & { status: string | null })[] }[];

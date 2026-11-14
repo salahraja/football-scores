@@ -9,7 +9,7 @@ import { mkdirSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { leagues, tournaments } from "./config.mjs";
-import { footballBoxes } from "./tournament.mjs";
+import { matchText } from "./tournament.mjs";
 
 const API = "https://en.wikipedia.org/w/api.php";
 const AGENT = "golboard/0.1 (https://github.com/salahraja/football-scores; salah@ranoo.org)";
@@ -72,24 +72,25 @@ export async function fetchPages({ out, seasons, ids = leagues().map((l) => l.id
   return report;
 }
 
-/** A tournament's group pages ("<wikipedia> A" ...), their match boxes only, into <out>/<season>/<id>.json. All groups or none: when any
- *  page fails or has no boxes, the saved file is kept whole, so the groups never come from two different days. */
+/** A tournament's pages (tournaments.json `pages`), their headings and match boxes only (tournament.mjs matchText), into
+ *  <out>/<season>/<id>.json. All pages or none: when any fails or has no boxes, the saved file is kept whole, so the tables never come
+ *  from two different days. */
 export async function fetchTournament({ out, tournament, fetchFn = fetch } = {}) {
   const name = `${tournament.season}/${tournament.id}`;
-  const groups = {};
-  for (const g of tournament.groups) {
+  const pages = {};
+  for (const { title } of tournament.pages) {
     try {
-      const got = await page(`${tournament.wikipedia} ${g}`, fetchFn);
-      const wikitext = footballBoxes(got.text);
-      if (!wikitext) return { saved: [], kept: [`${name} (Group ${g}: no match boxes)`] };
-      groups[g] = { title: got.title, revid: got.revid, timestamp: got.timestamp, wikitext };
+      const got = await page(title, fetchFn);
+      const wikitext = matchText(got.text);
+      if (!wikitext) return { saved: [], kept: [`${name} (${title}: no match boxes)`] };
+      pages[title] = { title: got.title, revid: got.revid, timestamp: got.timestamp, wikitext };
     } catch (e) {
-      return { saved: [], kept: [`${name} (Group ${g}: ${e?.reason ?? e?.name ?? "error"})`] };
+      return { saved: [], kept: [`${name} (${title}: ${e?.reason ?? e?.name ?? "error"})`] };
     }
   }
   const target = join(out, tournament.season, `${tournament.id}.json`);
   mkdirSync(dirname(target), { recursive: true });
-  writeFileSync(`${target}.tmp`, JSON.stringify({ groups }));
+  writeFileSync(`${target}.tmp`, JSON.stringify({ pages }));
   renameSync(`${target}.tmp`, target);
   return { saved: [name], kept: [] };
 }
