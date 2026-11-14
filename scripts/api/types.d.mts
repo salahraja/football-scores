@@ -9,7 +9,7 @@ export interface Match {
 export interface TournamentPage { title: string; group?: string; name?: string; groups?: "headings"; division?: string; rounds?: "headings" }
 export interface Zone { kind: string; label: string; from: number; to: number; division?: string }
 export interface Tournament { id: string; name: string; full: string; region: string; teams: "clubs" | "nations"; season: string; finals: string;
-  clock?: string; tz?: string; note?: string; pages: TournamentPage[]; zones?: Zone[]; hosts?: string[]; tiebreak: string[] }
+  sportscore?: string; clock?: string; tz?: string; note?: string; pages: TournamentPage[]; zones?: Zone[]; hosts?: string[]; tiebreak: string[] }
 /** A tournament game from a match box: kickoff carries a UTC offset. name and division are the group's, for the build only. */
 export interface GroupMatch extends Match { stage: "group"; group: string; name: string; division: string | null; kickoff: string | null }
 export interface Season { name: string; teams: Record<string, string>; matches: Match[] }

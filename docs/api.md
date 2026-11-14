@@ -49,14 +49,15 @@ credits only the sources it used. "This week" comes first: every unscored game u
 with no score is waiting for its result, never "next").
 
 **Live scores** (`/leagues/live.js`, the only script): on a page with games still to play, in a league SportScore covers (`sportscore` in
-`data/api/leagues.json`; not Primeira Liga yet), the browser asks SportScore's free API once a minute for that league's games today and
+`data/api/leagues.json`; not Primeira Liga yet), and on the cup and international pages (`sportscore` in `data/api/tournaments.json`: all five,
+AFCON qualifying under SportScore's `caf-africa-cup-of-nations`), the browser asks SportScore's free API once a minute for that league's games today and
 writes each score and state ("Live · 2nd half", "Full time") into the row with the same two teams, within three days of today because a
 schedule can be a day out (openfootball had LaLiga's 31 October games on 1 November); the poster moves to a game that is live; it stops
 when they have all finished.
 SportScore's terms ask for a visible link, so those pages say "Live scores powered by SportScore". The script names clubs with the same
 function and aliases as `teams.mjs` (copied in at build time). On 31 October 2026 goals showed on SportScore a median 0.2 min after ESPN
 and final whistles 1.2 min after (each ±1 min). The site's CSP allows `connect-src https://sportscore.com` for this. Without the script the
-page is still complete.
+page is still complete. A hidden team (Israel) has no row, so a game of theirs that SportScore sends is never shown.
 
 ## News and Following
 

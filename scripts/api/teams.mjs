@@ -15,6 +15,8 @@ let aliases;
 
 export function slug(name) {
   const words = name
+    // letters NFD does not split into a plain letter and an accent ("Bodø", "Białystok", "Nordsjælland") are spelled out first
+    .replace(/[øØ]/g, "o").replace(/[łŁ]/g, "l").replace(/[æÆ]/g, "ae").replace(/[œŒ]/g, "oe").replace(/ß/g, "ss").replace(/[đĐðÐ]/g, "d").replace(/ı/g, "i").replace(/[þÞ]/g, "th")
     .normalize("NFD").replace(/[̀-ͯ]/g, "")
     .toLowerCase().replace(/&/g, " and ").replace(/[^a-z0-9]+/g, " ")
     // Single letters are initials of club words ("S.L. Benfica", "F.C. Porto", "A.C. Milan"), never the club's name.
