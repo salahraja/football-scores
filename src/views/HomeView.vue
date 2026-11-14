@@ -132,30 +132,9 @@ function stepGame(by: number) {
 // A swipe on a phone or tablet does what the arrows do: on the score it changes the game, anywhere else on the poster the league. Mostly-sideways only, so scrolling
 // down the page stays a scroll.
 const SWIPE = 45;
-// Salah, 2026-11-07: the name goes tall into the space above it, and stays bold ("I like the bolder look vs skinnier look"): a capped stretch, with a heavier outline to hold the weight.
+// The league's name is drawn at the typeface's natural shape, like the score (Salah, 2026-11-13: "I want the design on 2-2 to be the one we follow").
+// The tall stretch of 2026-11-07 is gone.
 const titleEl = ref<HTMLElement | null>(null);
-function stretchTitle() {
-  const el = titleEl.value;
-  if (!el) return;
-  const poster = (el.closest(".poster") as HTMLElement | null) ?? el; // set on the whole poster: the score is stretched by it too
-  poster.style.setProperty("--stretch", "1");
-  el.style.marginTop = "0";
-  const phone = window.innerWidth <= 760;
-  const room = window.innerHeight * (phone ? 0.38 : 0.46);
-  const stretch = Math.min(1.75, Math.max(1, room / Math.max(el.offsetHeight, 1)));
-  poster.style.setProperty("--stretch", String(stretch));
-  el.style.marginTop = `${el.offsetHeight * (stretch - 1)}px`;
-}
-watch([title, titleEl], async () => {
-  await nextTick();
-  stretchTitle();
-});
-onMounted(() => {
-  stretchTitle();
-  document.fonts?.ready?.then(stretchTitle);
-  window.addEventListener("resize", stretchTitle);
-});
-onUnmounted(() => window.removeEventListener("resize", stretchTitle));
 // Which way the new league or game slides in, and whether the league moved too: a game alone leaves the league's name still
 // (Salah, 2026-11-07: "the league also refreshes even though I'm not swiping that").
 const slide = ref<{ name: string; league: boolean }>({ name: "", league: false });
