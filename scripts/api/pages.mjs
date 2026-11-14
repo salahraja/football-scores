@@ -712,6 +712,8 @@ ${rows.map((r) => `<tr class="row"${r.status ? ` data-zone="${esc(r.status)}"` :
   const hostLine = hostNames.length ? `${hostNames.length > 1 ? `${hostNames.slice(0, -1).join(", ")} and ${hostNames.at(-1)} are` : `${hostNames[0]} is`} in the finals already as hosts; a host's group sends the host and the best of the rest.` : "";
   const legend = [...new Map(zones.map((z) => [`${z.kind}|${z.label}`, z])).values()];
   const clock = config.clock ? `Kick-offs are ${config.clock}.` : "Kick-offs are local time at each ground.";
+  // live scores from SportScore, as on the league pages, while the page has games still to play
+  const live = config.sportscore && (week.length || next.length) ? config.sportscore : null;
   const list = (games) => `<ul class="games">${games.map((m) => game(m, teams, today)).join("\n")}</ul>`;
   const longest = Math.max(...t.name.split(/\s+/).map((w) => w.length));
   const body = `<header class="poster">
@@ -722,7 +724,7 @@ ${featured(week, latest, teams, today)}
 <main class="board">
 ${week.length ? `<section class="glass" id="week">
 <h2>This week</h2>
-<p class="note">Games played or due in the next few days. ${clock}</p>
+<p class="note">${live ? "Scores update every minute while games are on." : "Games played or due in the next few days."} ${clock}</p>
 ${list(week)}
 </section>` : ""}
 <section class="glass${single ? "" : " wide"}" id="table">
@@ -744,9 +746,9 @@ ${latest.length ? list(latest) : '<p class="note">None yet.</p>'}
 ${next.length ? list(next) : '<p class="note">None left.</p>'}
 </section>
 </div>
-<footer>Results from ${SOURCES.wikipedia}. ${clock}</footer>
+<footer>Results from ${SOURCES.wikipedia}. ${clock}${live ? ' Live scores <a href="https://sportscore.com/">powered by SportScore</a>.' : ""}</footer>
 </main>`;
-  return shell({ title: `${t.name} ${single ? "table" : "groups"}, results and fixtures`, path: `/leagues/${t.id}/`, body, here: "league",
+  return shell({ title: `${t.name} ${single ? "table" : "groups"}, results and fixtures`, path: `/leagues/${t.id}/`, body, live, here: "league", script: true,
     description: `${t.full} ${t.season}: ${single ? "the table" : `all ${groups.length} group tables`}, the latest results and the next fixtures. ${upTo}.` });
 }
 

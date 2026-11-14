@@ -49,14 +49,15 @@ credits only the sources it used. "This week" comes first: every unscored game u
 with no score is waiting for its result, never "next").
 
 **Live scores** (`/leagues/live.js`, the only script): on a page with games still to play, in a league SportScore covers (`sportscore` in
-`data/api/leagues.json`; not Primeira Liga yet), the browser asks SportScore's free API once a minute for that league's games today and
+`data/api/leagues.json`; not Primeira Liga yet), and on the cup and international pages (`sportscore` in `data/api/tournaments.json`: all five,
+AFCON qualifying under SportScore's `caf-africa-cup-of-nations`), the browser asks SportScore's free API once a minute for that league's games today and
 writes each score and state ("Live · 2nd half", "Full time") into the row with the same two teams, within three days of today because a
 schedule can be a day out (openfootball had LaLiga's 31 October games on 1 November); the poster moves to a game that is live; it stops
 when they have all finished.
 SportScore's terms ask for a visible link, so those pages say "Live scores powered by SportScore". The script names clubs with the same
 function and aliases as `teams.mjs` (copied in at build time). On 31 October 2026 goals showed on SportScore a median 0.2 min after ESPN
 and final whistles 1.2 min after (each ±1 min). The site's CSP allows `connect-src https://sportscore.com` for this. Without the script the
-page is still complete.
+page is still complete. A hidden team (Israel) has no row, so a game of theirs that SportScore sends is never shown.
 
 ## News and Following
 
@@ -80,7 +81,7 @@ Following switch (Following adds each followed club's own `news/<id>.json`), a s
 (Juventus, the old fixed favourite, only while nothing is followed). Serie A's rows come from football-data's own names ("Inter", "Como 1907"), so
 `src/data/clubid.ts` gives each the site's id (the rule of `teams.mjs`; a test holds the real feed's 20 names against the API's 20 ids).
 
-`pages.mjs` also writes `/news/` (every headline, with an All / Following switch) and `/following/` (pick clubs; their games from
+`pages.mjs` also writes `/news/` (every headline, with an All / Following switch) and `/following/` (pick clubs; their league and European games from
 `api/v1/today.json`; their headlines), and puts a star beside each club in the league tables and a Follow button on each club page.
 `/leagues/follow.js`, served from the site itself so the CSP needs nothing new, keeps the followed clubs on the device
 (`localStorage` key `golboard.following`, a list of team ids). The headlines are only as fresh as the last build, as is everything else
@@ -120,7 +121,8 @@ on these pages.
 ## Not here yet
 
 - The AFCON finals (Kenya, Tanzania and Uganda, from 19 June 2027): groups, then a knockout bracket.
-- The cups and AFCON in the app's home league choices and in `today.json`; the cups' knockout rounds.
+- The cups and AFCON in the app's home league choices; the cups' knockout rounds. (`today.json` has their games since 14 November 2026,
+  under the tournament's id; the app skips an id it does not know.)
 
 - Same-day and live results: SportScore's free API (attribution required, measured against ESPN on 31 October) or football-data.org once
   its terms for apps are confirmed.

@@ -238,6 +238,9 @@ describe("the API and the pages", () => {
         expect(check("tournamentTeams", read(out, `api/v1/${t.id}/2026-27/teams.json`)), t.id).toEqual([]);
       }
       expect(check("meta", read(out, "api/v1/meta.json"))).toEqual([]);
+      const today = read(out, "api/v1/today.json");
+      expect(today.matches.some((m: { league: string }) => m.league === "nations-league")).toBe(true);  // built on 14 November
+      expect(check("today", today)).toEqual([]);
     } finally { done(); }
   });
 

@@ -121,6 +121,7 @@ export function build({ input = "data/openfootball", wikipedia = join(ROOT, "dat
       zones: (t.zones ?? []).map((z) => ({ kind: z.kind, label: z.label, from: z.from, to: z.to, division: z.division ?? null })),
       hosts: (t.hosts ?? []).map((c) => nation(c).id), groups: tables });
     files.set(`${base}/teams.json`, { tournament: t.id, season: t.season, teams });
+    current.set(t.id, { matches, teams });  // today.json carries the cups' and internationals' games too, under the tournament's id
     const finished = matches.filter((m) => m.status === "finished");
     meta.tournaments[t.id] = { [t.season]: { finished: finished.length, scheduled: matches.length - finished.length,
       lastResult: finished.reduce((d, m) => (m.date > d ? m.date : d), "") || null,
@@ -133,12 +134,14 @@ export function build({ input = "data/openfootball", wikipedia = join(ROOT, "dat
   if (usedWikipedia) meta.sources.push(WIKIPEDIA);
   if (problems.length) throw new Error(`validation failed, nothing written:\n${problems.slice(0, 20).join("\n")}`);
   files.set("api/v1/competitions.json", { competitions });
-  // today.json: every league's games from yesterday to three days ahead, with names, so a widget reads one small file, not eight
+  // today.json: every league's and tournament's games from yesterday to three days ahead, with names, so a widget reads one small file
   const day0 = Date.parse(`${now.slice(0, 10)}T00:00:00Z`);
   const from = new Date(day0 - 86_400_000).toISOString().slice(0, 10), to = new Date(day0 + 3 * 86_400_000).toISOString().slice(0, 10);
   const around = [...current].flatMap(([league, { matches, teams }]) => matches.filter((m) => m.date >= from && m.date <= to)
     .map((m) => ({ league, ...m, homeName: teams[m.home], awayName: teams[m.away] })));
-  around.sort((a, b) => ((a.kickoff ?? a.date) + a.id).localeCompare((b.kickoff ?? b.date) + b.id));
+  // by the moment of kick-off: a tournament's kickoff carries the ground's UTC offset, so the strings alone would not sort
+  const at = (m) => (m.kickoff ? new Date(m.kickoff).toISOString() : m.date);
+  around.sort((a, b) => (at(a) + a.id).localeCompare(at(b) + b.id));
   files.set("api/v1/today.json", { generatedAt: now, from, to, matches: around });
   // The contract travels with the data, so a reader can check what it got against the shapes it was promised (tests/api-schema.test.ts).
   files.set("api/v1/schema.json", JSON.parse(readFileSync(join(ROOT, "data/api/schema.json"), "utf8")));

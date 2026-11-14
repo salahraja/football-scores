@@ -156,7 +156,7 @@
     },
 
     "today": {
-      "description": "Every league's games from the day before the build to three days after, in kick-off order, with team names: one small file for a widget.",
+      "description": "Every league's and tournament's games from the day before the build to three days after, in kick-off order, with team names: one small file for a widget. league is the league's id or the tournament's (a club keeps one id in both, so a followed club's cup games are here too); a reader that does not know an id skips the game.",
       "type": "object",
       "required": ["generatedAt", "from", "to", "matches"],
       "additionalProperties": false,
@@ -165,7 +165,7 @@
         "from": { "$ref": "#/$defs/date" },
         "to": { "$ref": "#/$defs/date" },
         "matches": { "type": "array", "items": { "type": "object", "required": ["league", "homeName", "awayName"],
-          "properties": { "league": { "$ref": "#/$defs/leagueId" }, "homeName": { "type": "string" }, "awayName": { "type": "string" } } } }
+          "properties": { "league": { "anyOf": [{ "$ref": "#/$defs/leagueId" }, { "$ref": "#/$defs/tournamentId" }] }, "homeName": { "type": "string" }, "awayName": { "type": "string" } } } }
       }
     },
     "news": {
