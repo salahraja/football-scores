@@ -797,11 +797,11 @@ ${next.length ? list(next) : '<p class="note">None left.</p>'}
 
 /** A bracket pick'em page (/leagues/bracket/<id>/): the bracket as a JSON data block, drawn and kept by /leagues/pickem.js. */
 function bracketPage(bracket, format, names, codes = null) {
-  const data = { id: bracket.id, codes, groups: bracket.groups, rounds: bracket.rounds, format, names, hosts: bracket.hosts ?? [], now: bracket.now ?? null };
+  const data = { id: bracket.id, codes, groups: bracket.groups, rounds: bracket.rounds, format, names, hosts: bracket.hosts ?? [], now: bracket.now ?? null, kickoffs: bracket.kickoffs ?? {} };
   const qualify = bracket.kind === "qualify";
   const hostNames = (bracket.hosts ?? []).map((h) => names[h]);
   const how = qualify
-    ? `Pick who makes the finals: rank each group, tapping the teams in the order they will finish. The top two go${hostNames.length ? `; ${hostNames.length > 1 ? `${hostNames.slice(0, -1).join(", ")} and ${hostNames.at(-1)} are hosts, so a host's group sends the host and the best of the rest` : `${hostNames[0]} is host, so its group sends the host and the best of the rest`}` : ""}. No money, no odds, just bragging rights. Your picks stay on this device.`
+    ? `Pick who makes the finals: rank each group, tapping the teams in the order they will finish. The top two go${hostNames.length ? `; ${hostNames.length > 1 ? `${hostNames.slice(0, -1).join(", ")} and ${hostNames.at(-1)} are hosts, so a host's group sends the host and the best of the rest` : `${hostNames[0]} is host, so its group sends the host and the best of the rest`}` : ""}. No money, no odds, just bragging rights. A group locks when its next game kicks off after you pick. Your picks stay on this device.`
     : "Rank every group, pick the best third places, then a winner in every game to the final. No money, no odds, just bragging rights. Your picks stay on this device.";
   const longest = Math.max(...bracket.name.split(/\s+/).map((w) => w.length));
   const body = `<header class="poster">
@@ -834,7 +834,7 @@ function brackets(data, api) {
 }
 
 /** A qualifying bracket from its tournament's groups in the API (already without hidden teams): the groups, the hosts and who is in the
- *  top two today, and whether every game has been played. Left out when the API has no groups for it. */
+ *  top two today, whether every game has been played, and each group's kick-offs. Left out when the API has no groups for it. */
 function qualifying(b, format, api) {
   const season = tournaments().find((t) => t.id === b.tournament)?.season;
   const dir = join(api, b.tournament, season ?? "");
@@ -847,7 +847,11 @@ function qualifying(b, format, api) {
   const names = Object.fromEntries(Object.values(byGroup).flat().map((t) => [t, teams[t] ?? t]));
   const fifa = Object.fromEntries(Object.entries(nationNames()).map(([code, name]) => [name, code]));
   const codes = Object.fromEntries(Object.keys(names).map((t) => [t, fifa[names[t]] ?? names[t].slice(0, 3).toUpperCase()]));
-  return [{ codes, bracket: { ...b, groups: byGroup, hosts: hosts.filter((h) => names[h]), now: { groups: now, final } }, format, names }];
+  // Every group game's kick-off, so a group's picks can lock when its next game starts (a game with no time counts from midnight UTC).
+  const matches = existsSync(join(dir, "matches.json")) ? JSON.parse(readFileSync(join(dir, "matches.json"), "utf8")).matches : [];
+  const kickoffs = Object.fromEntries(groups.map((g) => [g.group, matches.filter((m) => m.stage === "group" && m.group === g.group)
+    .map((m) => new Date(m.kickoff ?? `${m.date}T00:00:00Z`).toISOString()).sort()]));
+  return [{ codes, bracket: { ...b, groups: byGroup, hosts: hosts.filter((h) => names[h]), now: { groups: now, final }, kickoffs }, format, names }];
 }
 
 /** Write <out>/leagues/ from the API at <api>: index.html, site.css, live.js, fonts and <league>/index.html. All or nothing. */

@@ -2,10 +2,10 @@
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { afterAll, beforeEach, describe, expect, it } from "vitest";
+import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { build } from "../scripts/api/build.mjs";
 import { pages } from "../scripts/api/pages.mjs";
-import { clean, finished, qualifiers, score } from "../scripts/api/pickem.mjs";
+import { clean, finished, locked, qualifiers, score } from "../scripts/api/pickem.mjs";
 
 // "Who makes AFCON 2027" (Salah, 2026-11-15): rank each qualifying group; the top two go to the finals, and a host's group sends the
 // host plus the best of the rest. While the groups are played, the page says how many of your picks are in the top two today.
@@ -37,6 +37,29 @@ describe("qualifying picks", () => {
   });
 });
 
+// "Lock" (Salah, 2026-11-15): a group's picks lock once one of its games kicks off after you picked them. The groups were half played
+// when the page opened, so a group you have not picked yet stays open; once picked, its next kick-off closes it.
+describe("locking picks", () => {
+  const K = { ...B, kickoffs: { A: ["2026-09-25T15:00:00Z", "2026-11-20T15:00:00Z", "2026-11-24T15:00:00Z"], D: [] } };
+  const at = (iso: string) => Date.parse(iso);
+  const picked = { groups: { A: ["morocco", "gabon"] }, at: { A: "2026-11-18T09:00:00Z" } };
+
+  it("keeps a group open until its next game after your pick kicks off, then names that kick-off", () => {
+    expect(locked(K, clean(K, picked), "A", at("2026-11-20T14:59:00Z"))).toBeNull();
+    expect(locked(K, clean(K, picked), "A", at("2026-11-20T15:00:00Z"))).toBe("2026-11-20T15:00:00Z");
+  });
+
+  it("leaves a group you have not picked open, and never locks a bracket with no kick-offs", () => {
+    expect(locked(K, clean(K, {}), "A", at("2026-11-30T00:00:00Z"))).toBeNull();
+    expect(locked(B, clean(B, picked), "A", at("2026-11-30T00:00:00Z"))).toBeNull();
+  });
+
+  it("keeps when each group was picked, and drops it for a group with no picks", () => {
+    const p = clean(K, { groups: { A: ["morocco"], D: [] }, at: { A: "2026-11-18T09:00:00Z", D: "2026-11-18T09:00:00Z" } });
+    expect(p.at).toEqual({ A: "2026-11-18T09:00:00Z" });
+  });
+});
+
 // ---- the page, from the tournament's groups in the API
 const dirs: string[] = [];
 const tmp = () => { const d = mkdtempSync(join(tmpdir(), "golboard-qual-")); dirs.push(d); return d; };
@@ -52,6 +75,8 @@ function site(played = 3) {
     { group: "D", name: "Group D", division: null, table: [row("south-africa", 1, played, "qualify"), row("guinea", 2, played, null), row("kenya", 3, played, "host"), row("eritrea", 4, played, null)] } ] }));
   writeFileSync(join(dir, "teams.json"), JSON.stringify({ tournament: "afcon", season: "2026-27", teams: { morocco: "Morocco", gabon: "Gabon", niger: "Niger", lesotho: "Lesotho",
     "south-africa": "South Africa", guinea: "Guinea", kenya: "Kenya", eritrea: "Eritrea" } }));
+  const game = (group: string, kickoff: string, home: string, away: string) => ({ id: `afcon:${kickoff}:${home}-${away}`, stage: "group", group, date: kickoff.slice(0, 10), kickoff, home, away, score: null });
+  writeFileSync(join(dir, "matches.json"), JSON.stringify({ matches: [game("A", "2026-11-20T15:00:00+00:00", "morocco", "gabon"), game("D", "2026-11-21T18:00:00+02:00", "kenya", "guinea")] }));
   pages({ api: join(out, "api/v1"), out });
   return out;
 }
@@ -65,6 +90,7 @@ describe("the qualifying page", () => {
     expect(html).toContain("<title>AFCON 2027 bracket | golboard</title>");
     expect(html).toMatch(/host/i);
     expect(html).toContain("<h2>Who makes the finals</h2>");
+    expect(html).toContain("A group locks when its next game kicks off after you pick.");
     const index = read(out, "leagues/index.html");
     expect(index.indexOf("/leagues/bracket/afcon-2027/")).toBeGreaterThan(0);
     expect(index.indexOf("/leagues/bracket/afcon-2027/")).toBeLessThan(index.indexOf("/leagues/bracket/afcon-2025/"));
@@ -89,6 +115,7 @@ const $ = (sel: string) => document.querySelector(sel);
 
 describe("pickem.js on the qualifying page", () => {
   beforeEach(() => { Object.defineProperty(window, "localStorage", { value: storage, configurable: true }); memory.clear(); });
+  afterEach(() => { vi.useRealTimers(); });
 
   it("shows the host as through already, not to be tapped, and has no knockout tabs", () => {
     load();
@@ -119,6 +146,27 @@ describe("pickem.js on the qualifying page", () => {
     click($('[data-group="A"] [data-team="gabon"]'));
     expect($(".foot .note")!.textContent).toBe("1 of 2 groups picked");
     expect($('[data-group="A"] [data-team="niger"]')!.textContent).toContain("Out");
+  });
+
+  it("locks a group once its next game kicks off after your picks, and Start over keeps it", () => {
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date("2026-11-18T09:00:00Z"));
+    load();
+    click($('[data-group="A"] [data-team="morocco"]'));
+    click($('[data-group="A"] [data-team="gabon"]'));
+    expect($('[data-group="A"] h3')!.textContent).not.toMatch(/Locked/);
+    vi.setSystemTime(new Date("2026-11-20T15:01:00Z"));
+    load();
+    expect($('[data-group="A"] h3')!.textContent).toMatch(/Locked/);
+    click($('[data-group="A"] [data-team="niger"]'));
+    expect($('[data-group="A"] [data-team="niger"]')!.textContent).toContain("Out");
+    expect($('[data-group="A"] [data-team="morocco"]')!.textContent).toContain("Through");
+    click($('[data-group="D"] [data-team="guinea"]'));   // D's game is later: still open
+    expect($('[data-group="D"] [data-team="guinea"]')!.textContent).toContain("Through");
+    click($("#start-over"));
+    click($("#start-over"));
+    expect($('[data-group="A"] [data-team="morocco"]')!.textContent).toContain("Through");
+    expect($('[data-group="D"] [data-team="guinea"]')!.textContent).not.toContain("Through");
   });
 
   it("says how you did once every game is played", () => {
