@@ -6,7 +6,8 @@
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { SITE, leagues, loadZones, tournaments, zoneNames } from "./config.mjs";
+import { SITE, hiddenCountries, leagues, loadZones, nationNames, pickemData, tournaments, zoneNames } from "./config.mjs";
+import { pickemScript } from "./pickem.mjs";
 import { CLUB_WORDS, aliasMap, slug } from "./teams.mjs";
 import { kickoff } from "./time.mjs";
 
@@ -170,10 +171,45 @@ footer { grid-column: 1 / -1; color: var(--muted); font-size: 0.8125rem; }
 details { border-bottom: 1px solid var(--line); padding: 6px 0; } summary { cursor: pointer; font-weight: 700; padding: 6px 0; }
 .clubs { list-style: none; margin: 0; padding: 0 0 8px; display: grid; gap: 4px 16px; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); }
 .clubs label { display: flex; align-items: center; gap: 8px; padding: 4px 0; cursor: pointer; }
+/* bracket pick'em: cards of buttons; a pick is pressed in like the form badges */
+.pickem .tabs { display: flex; gap: 4px; padding: 5px; border-radius: 999px; background: var(--line); box-shadow: inset 0 2px 4px rgb(0 0 0 / 12%); margin: 0.5rem 0 0.75rem; }
+.pickem .tabs button { flex: 1 1 0; min-width: 0; border: 0; padding: 8px 0; border-radius: 999px; background: none; color: var(--muted); cursor: pointer;
+  font: 800 clamp(0.8rem, 3.6vw, 1rem)/1.1 var(--display); text-transform: uppercase; }
+.pickem .tabs button[aria-pressed="true"] { background: var(--card); color: var(--fg); box-shadow: 0 1px 3px rgb(0 0 0 / 18%); }
+.pickem .tabs small { display: block; font: 600 0.625rem var(--sans); text-transform: none; color: var(--muted); }
+.pickem .bar { height: 8px; border-radius: 9px; background: var(--line); box-shadow: inset 0 1px 2px rgb(0 0 0 / 18%); margin-bottom: 1rem; overflow: hidden; }
+.pickem .bar i { display: block; height: 100%; border-radius: 9px; background: var(--accent); }
+@media (prefers-reduced-motion: no-preference) { .pickem .bar i { transition: width 240ms ease; } }
+.pickem .card { padding: 10px; margin-bottom: 12px; border-radius: 16px; background: var(--card); box-shadow: inset 0 1px 0 var(--rim), 0 1px 2px rgb(0 0 0 / 10%), 0 4px 12px rgb(0 0 0 / 6%); }
+.pickem .card h3 { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin: 0 4px 8px; font: 800 1.2rem var(--display); text-transform: uppercase; }
+.pickem .card h3 span { font: 500 0.75rem var(--sans); text-transform: none; color: var(--muted); text-align: right; }
+.pickem .pick { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 48px; padding: 8px 12px; border: 0; border-radius: 12px; text-align: left; cursor: pointer;
+  font: 15px var(--sans); color: var(--fg); background: var(--bg); box-shadow: 0 1px 2px rgb(0 0 0 / 12%), inset 0 1px 0 var(--rim); }
+.pickem .pick + .pick { margin-top: 6px; }
+.pickem .pick .code { flex: none; width: 2.6rem; font: 800 1.2rem/1 var(--display); }
+.pickem .pick .name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pickem .pick .st { flex: none; font: 800 0.75rem var(--display); text-transform: uppercase; letter-spacing: 0.04em; }
+.pickem .pick .rank { flex: none; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font: 800 1.05rem var(--display); border: 2px dashed var(--line); }
+.pickem .pick[data-rank] .rank, .pickem .pick.through .rank { border: 0; background: rgb(255 255 255 / 18%); }
+.pickem .pick.through { color: #fff; background: var(--slate); text-shadow: 0 -1px 0 rgb(0 0 0 / 35%);
+  box-shadow: inset 0 4px 7px rgb(0 0 0 / 45%), inset 0 1px 2px rgb(0 0 0 / 40%), inset 0 -2px 2px rgb(255 255 255 / 14%), 0 1px 0 rgb(255 255 255 / 90%); }
+.pickem .pick.third .rank { background: #e7d9a8; color: #5b4a12; }
+.pickem .pick.out { opacity: 0.45; }
+.pickem .pick.host { cursor: default; } .pickem .pick.host .rank { font-size: 0.75rem; }
+.pickem #score, .pickem #finalists p { margin: 0 0 12px; } .pickem #score { font-weight: 700; }
+.pickem .now { margin: 6px 4px 0; font-size: 0.75rem; color: var(--muted); }
+.pickem .pick.tbd { cursor: default; color: var(--muted); box-shadow: none; border: 2px dashed var(--line); }
+@media (prefers-color-scheme: dark) { .pickem .pick.through { box-shadow: inset 0 4px 7px rgb(0 0 0 / 65%), inset 0 1px 2px rgb(0 0 0 / 55%), inset 0 -2px 2px rgb(255 255 255 / 10%), 0 1px 0 rgb(255 255 255 / 10%); } }
+.pickem .pick:focus-visible, .pickem button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.pickem .foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 4px; }
+.pickem .cta { border: 0; padding: 12px 20px; border-radius: 999px; cursor: pointer; font: 800 1.05rem var(--display); text-transform: uppercase; color: #fff; background: var(--accent);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 25%), 0 2px 6px rgb(179 38 30 / 35%); }
+.pickem .quiet { display: block; margin: 1.25rem auto 0; border: 0; background: none; color: var(--muted); font: 600 0.875rem var(--sans); text-decoration: underline; cursor: pointer; padding: 10px; }
+.pickem #champion { margin: 0 0 12px; padding: 14px; border-radius: 16px; text-align: center; font: 800 1.4rem var(--display); text-transform: uppercase; background: var(--card); box-shadow: inset 0 1px 0 var(--rim), 0 4px 12px rgb(0 0 0 / 8%); }
 @media (prefers-reduced-motion: no-preference) { .glass { transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1); } }
 `;
 
-function shell({ title, description, path, body, live = null, here = "", script = false, ld = null }) {
+function shell({ title, description, path, body, live = null, here = "", script = false, ld = null, pickem = false }) {
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -188,7 +224,7 @@ function shell({ title, description, path, body, live = null, here = "", script 
 <link rel="canonical" href="${esc(SITE + path)}">
 <link rel="preload" href="/leagues/fonts/barlow-condensed-800-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/leagues/site.css">
-${script ? '<script src="/leagues/live.js" defer></script>\n' : ""}<script src="/leagues/follow.js" defer></script>\n${ld ? `${jsonLd(ld)}\n` : ""}</head>
+${script ? '<script src="/leagues/live.js" defer></script>\n' : ""}${pickem ? '<script src="/leagues/pickem.js" defer></script>\n' : ""}<script src="/leagues/follow.js" defer></script>\n${ld ? `${jsonLd(ld)}\n` : ""}</head>
 <body${live ? ` data-sportscore="${esc(live)}"` : ""}>
 <nav class="nav" aria-label="Site"><a href="/leagues/"${here === "all" ? ' aria-current="page"' : ""}>Leagues</a>${here === "league" ? '<a class="jump" href="#table">Table</a><a class="jump" href="#week">This week</a>' : ""}<a href="/news/"${here === "news" ? ' aria-current="page"' : ""}>News</a><a href="/following/"${here === "following" ? ' aria-current="page"' : ""}>Following</a></nav>
 ${body}
@@ -759,11 +795,66 @@ ${next.length ? list(next) : '<p class="note">None left.</p>'}
     description: `${t.full} ${t.season}: ${single ? "the table" : `all ${groups.length} group tables`}, the latest results and the next fixtures. ${upTo}.` });
 }
 
+/** A bracket pick'em page (/leagues/bracket/<id>/): the bracket as a JSON data block, drawn and kept by /leagues/pickem.js. */
+function bracketPage(bracket, format, names, codes = null) {
+  const data = { id: bracket.id, codes, groups: bracket.groups, rounds: bracket.rounds, format, names, hosts: bracket.hosts ?? [], now: bracket.now ?? null };
+  const qualify = bracket.kind === "qualify";
+  const hostNames = (bracket.hosts ?? []).map((h) => names[h]);
+  const how = qualify
+    ? `Pick who makes the finals: rank each group, tapping the teams in the order they will finish. The top two go${hostNames.length ? `; ${hostNames.length > 1 ? `${hostNames.slice(0, -1).join(", ")} and ${hostNames.at(-1)} are hosts, so a host's group sends the host and the best of the rest` : `${hostNames[0]} is host, so its group sends the host and the best of the rest`}` : ""}. No money, no odds, just bragging rights. Your picks stay on this device.`
+    : "Rank every group, pick the best third places, then a winner in every game to the final. No money, no odds, just bragging rights. Your picks stay on this device.";
+  const longest = Math.max(...bracket.name.split(/\s+/).map((w) => w.length));
+  const body = `<header class="poster">
+<div class="titlebar solo"><span aria-hidden="true"></span><h1 style="--n: ${longest}">${esc(bracket.name)}</h1><span aria-hidden="true"></span></div>
+<p class="note">${qualify ? "Who qualifies" : "Your bracket"} · ${esc(bracket.full)}</p>
+</header>
+<main class="board pickem" style="grid-template-columns: minmax(0, 32rem); justify-content: center">
+<section class="glass">
+<h2>${qualify ? "Who makes the finals" : "Your bracket"}</h2>
+<p class="note">${esc(how)}</p>
+${bracket.practice ? `<p class="note"><b>${esc(bracket.practice)}</b></p>` : ""}
+<div id="bracket"><noscript><p class="note">The bracket needs JavaScript to pick.</p></noscript></div>
+<script type="application/json" id="bracket-data">${JSON.stringify(data).replace(/</g, "\\u003c")}</script>
+</section>
+</main>`;
+  return shell({ title: `${bracket.name} bracket`, path: `/leagues/bracket/${bracket.id}/`, body, pickem: true,
+    description: `Pick the ${bracket.full}: rank every group, then a winner in every game to the final. No money, no odds.` });
+}
+
+/** The brackets, each with its format, hidden nations taken out of its groups and every team's name. */
+function brackets(data, api) {
+  const hidden = hiddenCountries();
+  const all = nationNames();
+  return data.brackets.flatMap((b) => {
+    if (b.kind === "qualify") return qualifying(b, data.formats[b.format], api);
+    const groups = Object.fromEntries(Object.entries(b.groups).map(([g, teams]) => [g, teams.filter((t) => !hidden.has(t))]));
+    const names = Object.fromEntries(Object.values(groups).flat().map((t) => [t, all[t] ?? t]));
+    return [{ bracket: { ...b, groups }, format: data.formats[b.format], names }];
+  });
+}
+
+/** A qualifying bracket from its tournament's groups in the API (already without hidden teams): the groups, the hosts and who is in the
+ *  top two today, and whether every game has been played. Left out when the API has no groups for it. */
+function qualifying(b, format, api) {
+  const season = tournaments().find((t) => t.id === b.tournament)?.season;
+  const dir = join(api, b.tournament, season ?? "");
+  if (!season || !existsSync(join(dir, "groups.json")) || !existsSync(join(dir, "teams.json"))) return [];
+  const { groups, hosts } = JSON.parse(readFileSync(join(dir, "groups.json"), "utf8"));
+  const { teams } = JSON.parse(readFileSync(join(dir, "teams.json"), "utf8"));
+  const byGroup = Object.fromEntries(groups.map((g) => [g.group, g.table.map((r) => r.team)]));
+  const now = Object.fromEntries(groups.map((g) => [g.group, g.table.filter((r) => r.status === "qualify" || r.status === "host").map((r) => r.team)]));
+  const final = groups.every((g) => g.table.every((r) => r.played >= (g.table.length - 1) * 2));
+  const names = Object.fromEntries(Object.values(byGroup).flat().map((t) => [t, teams[t] ?? t]));
+  const fifa = Object.fromEntries(Object.entries(nationNames()).map(([code, name]) => [name, code]));
+  const codes = Object.fromEntries(Object.keys(names).map((t) => [t, fifa[names[t]] ?? names[t].slice(0, 3).toUpperCase()]));
+  return [{ codes, bracket: { ...b, groups: byGroup, hosts: hosts.filter((h) => names[h]), now: { groups: now, final } }, format, names }];
+}
+
 /** Write <out>/leagues/ from the API at <api>: index.html, site.css, live.js, fonts and <league>/index.html. All or nothing. */
-export function pages({ api = "public/api/v1", out = "public", zones = loadZones } = {}) {
+export function pages({ api = "public/api/v1", out = "public", zones = loadZones, pickem = pickemData() } = {}) {
   const { competitions } = JSON.parse(readFileSync(join(api, "competitions.json"), "utf8"));
   const byId = new Map(competitions.map((c) => [c.id, c]));
-  const files = new Map([["site.css", CSS], ["live.js", liveScript()], ["follow.js", followScript()]]);
+  const files = new Map([["site.css", CSS], ["live.js", liveScript()], ["follow.js", followScript()], ["pickem.js", pickemScript()]]);
   for (const font of FONTS) files.set(`fonts/${font}`, readFileSync(join(HERE, "assets", "fonts", font)));
   const served = leagues().filter((l) => byId.has(l.id));
   served.forEach((league, i) => files.set(`${league.id}/index.html`, leaguePage(league, byId.get(league.id), api,
@@ -771,6 +862,8 @@ export function pages({ api = "public/api/v1", out = "public", zones = loadZones
   for (const league of served) for (const [path, html] of clubPages(league, byId.get(league.id), api, zones)) files.set(path, html);
   const cups = existsSync(join(api, "tournaments.json")) ? JSON.parse(readFileSync(join(api, "tournaments.json"), "utf8")).tournaments : [];
   for (const t of cups) files.set(`${t.id}/index.html`, tournamentPage(t, api));
+  const picks = brackets(pickem, api);
+  for (const { bracket, format, names, codes } of picks) files.set(`bracket/${bracket.id}/index.html`, bracketPage(bracket, format, names, codes));
   files.set("index.html", shell({ title: "Leagues", path: "/leagues/", here: "all", description: `Tables, results and fixtures for eight European leagues${cups.length ? `, ${cups.map((t) => t.name).join(", ")}` : ""}.`,
     body: `<header class="poster"><h1>golboard</h1><p class="note">Tables, results and fixtures, worked out from open data.</p></header>
 <main class="board" style="grid-template-columns: minmax(0, 1fr)">
@@ -780,6 +873,8 @@ ${[["clubs", "European cups"], ["nations", "International"]].map(([kind, heading
     return these.length ? `<h2>${heading}</h2>
 <ul class="list">${these.map((t) => `<li><a class="glass" href="/leagues/${t.id}/"><b>${esc(t.name)}</b><span>${esc(t.region)}</span></a></li>`).join("\n")}</ul>` : "";
   }).join("\n")}
+${picks.length ? `<h2>Brackets</h2>
+<ul class="list">${picks.map(({ bracket: b }) => `<li><a class="glass" href="/leagues/bracket/${b.id}/"><b>${esc(b.name)}</b><span>${b.kind === "qualify" ? "Pick who qualifies" : b.practice ? "Practice bracket" : "Pick every game"}</span></a></li>`).join("\n")}</ul>` : ""}
 </main>` }));
   const fresh = join(out, "leagues.next"), live = join(out, "leagues"), old = join(out, "leagues.old");
   rmSync(fresh, { recursive: true, force: true });

@@ -22,7 +22,7 @@ const page = (out: string, path: string) => readFileSync(join(out, path), "utf8"
 describe("league pages", () => {
   it("makes one page per league and an index that links them all", () => {
     const out = site();
-    expect(readdirSync(join(out, "leagues")).filter((f) => !f.includes(".") && f !== "fonts").sort())
+    expect(readdirSync(join(out, "leagues")).filter((f) => !f.includes(".") && f !== "fonts" && f !== "bracket").sort())
       .toEqual(["de-1", "en-1", "en-2", "es-1", "fr-1", "it-1", "nl-1", "pt-1"]);
     const index = page(out, "leagues/index.html");
     for (const id of ["it-1", "en-1", "pt-1"]) expect(index).toContain(`href="/leagues/${id}/"`);

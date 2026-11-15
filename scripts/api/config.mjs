@@ -31,3 +31,9 @@ export const SITE = (process.env.SITE_URL ?? "https://football-scores-salah.netl
 
 /** Match ids put off or suspended in one league season (data/api/postponed.json): not counted as late results. */
 export const loadPostponed = (season, leagueId) => new Set((read("data/api/postponed.json")[season]?.[leagueId] ?? []).map((p) => p.match));
+
+/** Bracket pick'em: the formats and the brackets (data/api/pickem.json). */
+export const pickemData = () => read("data/api/pickem.json");
+
+/** Nation names by FIFA code (data/api/nations.json). */
+export const nationNames = () => read("data/api/nations.json").nations;
