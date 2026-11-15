@@ -46,7 +46,8 @@ function htmlFiles(dir) {
 
 export function writeHeaders(dist) {
   const hashes = htmlFiles(dist).flatMap((f) => inlineScripts(readFileSync(f, "utf8")).map(hashOf));
-  writeFileSync(join(dist, "_headers"), `/*\n  Content-Security-Policy: ${policy(hashes)}\n`);
+  // the team calendars (scripts/api/calendar.mjs) are subscribed to by phones, which want the calendar type
+  writeFileSync(join(dist, "_headers"), `/*\n  Content-Security-Policy: ${policy(hashes)}\n/api/v1/calendar/*\n  Content-Type: text/calendar; charset=utf-8\n`);
   return new Set(hashes).size;
 }
 

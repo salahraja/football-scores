@@ -153,6 +153,8 @@ footer { grid-column: 1 / -1; color: var(--muted); font-size: 0.8125rem; }
 .follow { margin-top: 0.5rem; padding: 8px 16px; border: 0; border-radius: 999px; font: 700 0.875rem var(--sans); cursor: pointer; color: var(--fg); background: var(--glass);
   box-shadow: inset 0 1px 0 var(--rim), 0 8px 20px -10px rgb(27 28 32 / 40%); }
 .follow[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+.calendar { display: inline-block; margin: 0.5rem 0 0 0.5rem; padding: 8px 16px; line-height: normal; border-radius: 999px; font: 700 0.875rem var(--sans); color: var(--fg); text-decoration: none; background: var(--glass);
+  box-shadow: inset 0 1px 0 var(--rim), 0 8px 20px -10px rgb(27 28 32 / 40%); }
 .scope { display: inline-flex; gap: 2px; padding: 4px; border-radius: 999px; background: var(--glass); margin-bottom: 0.75rem; }
 .scope button { border: 0; padding: 8px 16px; border-radius: 999px; font: 700 0.875rem var(--sans); background: none; color: var(--fg); cursor: pointer; }
 .scope button[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
@@ -320,6 +322,7 @@ function clubPages(league, competition, api, zonesFor) {
 <p class="stand"><b>${nth(row.position)} in <a href="/leagues/${league.id}/">${esc(league.name)}</a></b> · ${row.points} points${zone ? ` · ${esc(names[zone.kind])} place` : ""}</p>
 <p class="note">Won ${row.won}, drawn ${row.drawn}, lost ${row.lost} · goal difference ${gd} · ${esc(season)}</p>
 <button class="follow" type="button" data-club="${esc(id)}" data-name="${esc(club)}" aria-pressed="false">Follow</button>
+<a class="calendar" href="${esc(SITE.replace(/^https?:/, "webcal:"))}/api/v1/calendar/${esc(id)}.ics">Add games to my calendar</a>
 </header>
 <main class="board">
 <div class="side">
