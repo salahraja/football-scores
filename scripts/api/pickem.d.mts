@@ -1,0 +1,11 @@
+export type Format = { advance: number; thirds: number; thirdsVs: string[]; table: Record<string, string[]> };
+export type Bracket = { id?: string; groups: Record<string, string[]>; rounds: { name: string; matches: { id: string; a: string; b: string }[] }[]; format: Format };
+export type Picks = { groups: Record<string, string[]>; thirds: string[]; ko: Record<string, string> };
+export type Side = { ref: string; label: string; team: string | null };
+export function thirdsFor(format: Format, letters: string[]): Record<string, string> | null;
+export function sideLabel(format: Format, ref: string): string;
+export function finished(bracket: Bracket, picks: Picks, g: string): boolean;
+export function resolve(bracket: Bracket, picks: Picks): { name: string; matches: { id: string; a: Side; b: Side; pick: string | null }[] }[];
+export function clean(bracket: Bracket, picks: Partial<Picks>): Picks;
+export function progress(bracket: Bracket, picks: Picks): { done: number; total: number };
+export function pickemScript(): string;
