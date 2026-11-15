@@ -112,7 +112,7 @@ describe("the bracket page", () => {
 
   it("never shows a hidden nation", () => {
     const withIsr = JSON.parse(JSON.stringify(DATA));
-    withIsr.brackets[0].groups.A = ["MAR", "ISR", "ZAM", "COM"];
+    withIsr.brackets.find((b: { id: string }) => b.id === "afcon-2025").groups.A = ["MAR", "ISR", "ZAM", "COM"];
     const html = read(site(withIsr), PAGE);
     expect(html).not.toContain("ISR");
     expect(html).not.toContain("Israel");

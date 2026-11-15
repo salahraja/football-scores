@@ -195,6 +195,9 @@ details { border-bottom: 1px solid var(--line); padding: 6px 0; } summary { curs
   box-shadow: inset 0 4px 7px rgb(0 0 0 / 45%), inset 0 1px 2px rgb(0 0 0 / 40%), inset 0 -2px 2px rgb(255 255 255 / 14%), 0 1px 0 rgb(255 255 255 / 90%); }
 .pickem .pick.third .rank { background: #e7d9a8; color: #5b4a12; }
 .pickem .pick.out { opacity: 0.45; }
+.pickem .pick.host { cursor: default; } .pickem .pick.host .rank { font-size: 0.75rem; }
+.pickem #score, .pickem #finalists p { margin: 0 0 12px; } .pickem #score { font-weight: 700; }
+.pickem .now { margin: 6px 4px 0; font-size: 0.75rem; color: var(--muted); }
 .pickem .pick.tbd { cursor: default; color: var(--muted); box-shadow: none; border: 2px dashed var(--line); }
 @media (prefers-color-scheme: dark) { .pickem .pick.through { box-shadow: inset 0 4px 7px rgb(0 0 0 / 65%), inset 0 1px 2px rgb(0 0 0 / 55%), inset 0 -2px 2px rgb(255 255 255 / 10%), 0 1px 0 rgb(255 255 255 / 10%); } }
 .pickem .pick:focus-visible, .pickem button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
@@ -793,17 +796,22 @@ ${next.length ? list(next) : '<p class="note">None left.</p>'}
 }
 
 /** A bracket pick'em page (/leagues/bracket/<id>/): the bracket as a JSON data block, drawn and kept by /leagues/pickem.js. */
-function bracketPage(bracket, format, names) {
-  const data = { id: bracket.id, groups: bracket.groups, rounds: bracket.rounds, format, names };
+function bracketPage(bracket, format, names, codes = null) {
+  const data = { id: bracket.id, codes, groups: bracket.groups, rounds: bracket.rounds, format, names, hosts: bracket.hosts ?? [], now: bracket.now ?? null };
+  const qualify = bracket.kind === "qualify";
+  const hostNames = (bracket.hosts ?? []).map((h) => names[h]);
+  const how = qualify
+    ? `Pick who makes the finals: rank each group, tapping the teams in the order they will finish. The top two go${hostNames.length ? `; ${hostNames.length > 1 ? `${hostNames.slice(0, -1).join(", ")} and ${hostNames.at(-1)} are hosts, so a host's group sends the host and the best of the rest` : `${hostNames[0]} is host, so its group sends the host and the best of the rest`}` : ""}. No money, no odds, just bragging rights. Your picks stay on this device.`
+    : "Rank every group, pick the best third places, then a winner in every game to the final. No money, no odds, just bragging rights. Your picks stay on this device.";
   const longest = Math.max(...bracket.name.split(/\s+/).map((w) => w.length));
   const body = `<header class="poster">
 <div class="titlebar solo"><span aria-hidden="true"></span><h1 style="--n: ${longest}">${esc(bracket.name)}</h1><span aria-hidden="true"></span></div>
-<p class="note">Your bracket · ${esc(bracket.full)}</p>
+<p class="note">${qualify ? "Who qualifies" : "Your bracket"} · ${esc(bracket.full)}</p>
 </header>
 <main class="board pickem" style="grid-template-columns: minmax(0, 32rem); justify-content: center">
 <section class="glass">
-<h2>Your bracket</h2>
-<p class="note">Rank every group, pick the best third places, then a winner in every game to the final. No money, no odds, just bragging rights. Your picks stay on this device.</p>
+<h2>${qualify ? "Who makes the finals" : "Your bracket"}</h2>
+<p class="note">${esc(how)}</p>
 ${bracket.practice ? `<p class="note"><b>${esc(bracket.practice)}</b></p>` : ""}
 <div id="bracket"><noscript><p class="note">The bracket needs JavaScript to pick.</p></noscript></div>
 <script type="application/json" id="bracket-data">${JSON.stringify(data).replace(/</g, "\\u003c")}</script>
@@ -814,14 +822,32 @@ ${bracket.practice ? `<p class="note"><b>${esc(bracket.practice)}</b></p>` : ""}
 }
 
 /** The brackets, each with its format, hidden nations taken out of its groups and every team's name. */
-function brackets(data) {
+function brackets(data, api) {
   const hidden = hiddenCountries();
   const all = nationNames();
-  return data.brackets.map((b) => {
+  return data.brackets.flatMap((b) => {
+    if (b.kind === "qualify") return qualifying(b, data.formats[b.format], api);
     const groups = Object.fromEntries(Object.entries(b.groups).map(([g, teams]) => [g, teams.filter((t) => !hidden.has(t))]));
     const names = Object.fromEntries(Object.values(groups).flat().map((t) => [t, all[t] ?? t]));
-    return { bracket: { ...b, groups }, format: data.formats[b.format], names };
+    return [{ bracket: { ...b, groups }, format: data.formats[b.format], names }];
   });
+}
+
+/** A qualifying bracket from its tournament's groups in the API (already without hidden teams): the groups, the hosts and who is in the
+ *  top two today, and whether every game has been played. Left out when the API has no groups for it. */
+function qualifying(b, format, api) {
+  const season = tournaments().find((t) => t.id === b.tournament)?.season;
+  const dir = join(api, b.tournament, season ?? "");
+  if (!season || !existsSync(join(dir, "groups.json")) || !existsSync(join(dir, "teams.json"))) return [];
+  const { groups, hosts } = JSON.parse(readFileSync(join(dir, "groups.json"), "utf8"));
+  const { teams } = JSON.parse(readFileSync(join(dir, "teams.json"), "utf8"));
+  const byGroup = Object.fromEntries(groups.map((g) => [g.group, g.table.map((r) => r.team)]));
+  const now = Object.fromEntries(groups.map((g) => [g.group, g.table.filter((r) => r.status === "qualify" || r.status === "host").map((r) => r.team)]));
+  const final = groups.every((g) => g.table.every((r) => r.played >= (g.table.length - 1) * 2));
+  const names = Object.fromEntries(Object.values(byGroup).flat().map((t) => [t, teams[t] ?? t]));
+  const fifa = Object.fromEntries(Object.entries(nationNames()).map(([code, name]) => [name, code]));
+  const codes = Object.fromEntries(Object.keys(names).map((t) => [t, fifa[names[t]] ?? names[t].slice(0, 3).toUpperCase()]));
+  return [{ codes, bracket: { ...b, groups: byGroup, hosts: hosts.filter((h) => names[h]), now: { groups: now, final } }, format, names }];
 }
 
 /** Write <out>/leagues/ from the API at <api>: index.html, site.css, live.js, fonts and <league>/index.html. All or nothing. */
@@ -836,8 +862,8 @@ export function pages({ api = "public/api/v1", out = "public", zones = loadZones
   for (const league of served) for (const [path, html] of clubPages(league, byId.get(league.id), api, zones)) files.set(path, html);
   const cups = existsSync(join(api, "tournaments.json")) ? JSON.parse(readFileSync(join(api, "tournaments.json"), "utf8")).tournaments : [];
   for (const t of cups) files.set(`${t.id}/index.html`, tournamentPage(t, api));
-  const picks = brackets(pickem);
-  for (const { bracket, format, names } of picks) files.set(`bracket/${bracket.id}/index.html`, bracketPage(bracket, format, names));
+  const picks = brackets(pickem, api);
+  for (const { bracket, format, names, codes } of picks) files.set(`bracket/${bracket.id}/index.html`, bracketPage(bracket, format, names, codes));
   files.set("index.html", shell({ title: "Leagues", path: "/leagues/", here: "all", description: `Tables, results and fixtures for eight European leagues${cups.length ? `, ${cups.map((t) => t.name).join(", ")}` : ""}.`,
     body: `<header class="poster"><h1>golboard</h1><p class="note">Tables, results and fixtures, worked out from open data.</p></header>
 <main class="board" style="grid-template-columns: minmax(0, 1fr)">
@@ -848,7 +874,7 @@ ${[["clubs", "European cups"], ["nations", "International"]].map(([kind, heading
 <ul class="list">${these.map((t) => `<li><a class="glass" href="/leagues/${t.id}/"><b>${esc(t.name)}</b><span>${esc(t.region)}</span></a></li>`).join("\n")}</ul>` : "";
   }).join("\n")}
 ${picks.length ? `<h2>Brackets</h2>
-<ul class="list">${picks.map(({ bracket: b }) => `<li><a class="glass" href="/leagues/bracket/${b.id}/"><b>${esc(b.name)}</b><span>${b.practice ? "Practice bracket" : "Pick every game"}</span></a></li>`).join("\n")}</ul>` : ""}
+<ul class="list">${picks.map(({ bracket: b }) => `<li><a class="glass" href="/leagues/bracket/${b.id}/"><b>${esc(b.name)}</b><span>${b.kind === "qualify" ? "Pick who qualifies" : b.practice ? "Practice bracket" : "Pick every game"}</span></a></li>`).join("\n")}</ul>` : ""}
 </main>` }));
   const fresh = join(out, "leagues.next"), live = join(out, "leagues"), old = join(out, "leagues.old");
   rmSync(fresh, { recursive: true, force: true });
