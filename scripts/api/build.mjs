@@ -7,11 +7,12 @@ import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { hiddenCountries, leagues, tournaments, loadAdjustments, loadCorrections, loadPostponed, loadZones, zoneNames } from "./config.mjs";
+import { SITE, hiddenCountries, leagues, tournaments, loadAdjustments, loadCorrections, loadPostponed, loadZones, zoneNames } from "./config.mjs";
 import { kickoff } from "./time.mjs";
 import { applyCorrections, parseSeason } from "./openfootball.mjs";
 import { computeTable } from "./table.mjs";
 import { teamId } from "./teams.mjs";
+import { teamCalendars } from "./calendar.mjs";
 import { applyResults, parseNames, parseResults } from "./wikipedia.mjs";
 import { groupTables, nation, pageGames } from "./tournament.mjs";
 
@@ -147,6 +148,9 @@ export function build({ input = "data/openfootball", wikipedia = join(ROOT, "dat
   files.set("api/v1/schema.json", JSON.parse(readFileSync(join(ROOT, "data/api/schema.json"), "utf8")));
   // Every file's bytes and their sha256 in meta.json: a reader that finds a mismatch has a half-published or stale copy.
   const bytes = new Map([...files].map(([path, body]) => [path, JSON.stringify(body)]));
+  // A calendar per team (calendar.mjs), from the same games as today.json: each league's latest season and each tournament.
+  const titles = Object.fromEntries([...competitions.map((c) => [c.id, c.name]), ...served.map((t) => [t.id, t.name])]);
+  for (const [path, text] of teamCalendars({ current, names: titles, now, site: SITE })) bytes.set(path, text);
   meta.files = Object.fromEntries([...bytes].map(([path, text]) => [path, createHash("sha256").update(text).digest("hex")]));
   bytes.set("api/v1/meta.json", JSON.stringify(meta));
   // Write beside the old API, then swap, so a reader never sees half of one build and half of another.
