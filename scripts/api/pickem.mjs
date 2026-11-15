@@ -32,10 +32,13 @@ export function ranked(bracket, g) {
   return bracket.groups[g].filter((t) => hosts.indexOf(t) < 0);
 }
 
-/** A group is finished when every team you rank in it has a place. */
+/** A group is finished when every team you rank in it has a place, or, when no third-placed team can go through, as soon as the
+ *  places that go through are picked (third and fourth change nothing then). */
 export function finished(bracket, picks, g) {
   const order = (picks.groups || {})[g] || [];
-  return order.length > 0 && order.length === ranked(bracket, g).length;
+  if (!order.length) return false;
+  if (!bracket.format.thirds) return order.length >= Math.min(ranked(bracket, g).length, places(bracket, g));
+  return order.length === ranked(bracket, g).length;
 }
 
 /** How many of a group's ranked teams go through: the format's number, less one for each host in the group. */
@@ -164,7 +167,7 @@ export function pickemScript() {
     var note = finished(B, picks, g) ? "Done" : order.length ? "Next: who finishes " + ["1st", "2nd", "3rd", "4th"][order.length] + (go < B.format.advance ? " of the rest" : "") + "?" : "Tap the teams in finishing order";
     var rows = order.concat(rest).map(function (t) {
       var at = order.indexOf(t), place = at + 1;
-      var state = at < 0 ? "" : place <= go ? "through" : place === go + 1 && B.format.thirds ? "third" : "out";
+      var state = at < 0 ? (finished(B, picks, g) ? "out" : "") : place <= go ? "through" : place === go + 1 && B.format.thirds ? "third" : "out";
       var word = { through: "Through", third: "Maybe", out: "Out" }[state] || "";
       return '<button type="button" class="pick ' + state + '" data-team="' + esc(t) + '"' + (at >= 0 ? ' data-rank="' + place + '"' : "") + ">"
         + '<span class="rank">' + (at >= 0 ? place : "") + '</span><span class="code">' + esc(code(t)) + "</span><span class=\\"name\\">" + esc(name(t)) + '</span><span class="st">' + word + "</span></button>";
@@ -211,7 +214,7 @@ export function pickemScript() {
     root.innerHTML = (B.rounds.length ? '<div class="tabs" role="group" aria-label="Rounds">' + tabs + "</div>" : "")
       + '<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="' + p.total + '" aria-valuenow="' + p.done + '"><i style="width: ' + Math.round((p.done / p.total) * 100) + '%"></i></div>'
       + champ + summary + finalists + body
-      + '<div class="foot"><span class="note">' + p.done + " of " + p.total + " picked</span>" + nextTab + "</div>"
+      + '<div class="foot"><span class="note">' + p.done + " of " + p.total + (B.rounds.length ? " picked" : " groups picked") + "</span>" + nextTab + "</div>"
       + '<button type="button" id="start-over" class="quiet">' + (armed ? "Tap again to clear every pick" : "Start over") + "</button>";
   }
   function set(next) { picks = clean(B, next); save(); render(); }

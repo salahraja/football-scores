@@ -14,10 +14,15 @@ const B = { groups: { A: ["morocco", "gabon", "niger", "lesotho"], D: ["south-af
 const NOW = { groups: { A: ["morocco", "gabon"], D: ["kenya", "south-africa"] }, final: false };
 
 describe("qualifying picks", () => {
-  it("leaves the host out of the ranking: a host group is done when the other three are ranked", () => {
+  it("leaves the host out of the ranking: a host group is done once the best of the rest is picked", () => {
     const p = clean(B, { groups: { D: ["guinea", "kenya", "south-africa", "eritrea"] } });
     expect(p.groups.D).toEqual(["guinea", "south-africa", "eritrea"]);
-    expect(finished(B, p, "D")).toBe(true);
+    expect(finished(B, clean(B, { groups: { D: ["guinea"] } }), "D")).toBe(true);
+  });
+
+  it("calls a group done once its top two are picked: third and fourth do not matter here", () => {
+    expect(finished(B, clean(B, { groups: { A: ["morocco"] } }), "A")).toBe(false);
+    expect(finished(B, clean(B, { groups: { A: ["morocco", "gabon"] } }), "A")).toBe(true);
   });
 
   it("sends the top two of a group, or the host and the best of the rest", () => {
@@ -106,6 +111,14 @@ describe("pickem.js on the qualifying page", () => {
     expect($('[data-group="D"] [data-team="south-africa"] .code')!.textContent).toBe("RSA");   // FIFA codes, from nations.json
     expect($("#score")!.textContent).toContain("1 of your 3");
     expect($("#score")!.textContent).toMatch(/today/);
+  });
+
+  it("counts groups, not teams, in its progress line, and marks the rest of a done group out", () => {
+    load();
+    click($('[data-group="A"] [data-team="morocco"]'));
+    click($('[data-group="A"] [data-team="gabon"]'));
+    expect($(".foot .note")!.textContent).toBe("1 of 2 groups picked");
+    expect($('[data-group="A"] [data-team="niger"]')!.textContent).toContain("Out");
   });
 
   it("says how you did once every game is played", () => {
