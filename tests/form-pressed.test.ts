@@ -7,7 +7,9 @@ const css = readFileSync("scripts/api/pages.mjs", "utf8");
 const rule = /\.form li \{([^}]*)\}/.exec(css)?.[1] ?? "";
 
 describe("the form badges look pressed in", () => {
-  it("cast their shadow inward from the top", () => expect(rule).toMatch(/box-shadow:[^;]*inset 0 2px/));
+  // Salah, same night: "Deeper and make the corners more rounded they look as if they have some straightness to them".
+  it("cast a deep shadow inward from the top", () => expect(rule).toMatch(/box-shadow:[^;]*inset 0 4px 7px/));
+  it("round their corners well past a plain rounded square", () => expect(Number(/border-radius: (\d+)px/.exec(rule)?.[1])).toBeGreaterThanOrEqual(14));
   it("catch light on the lip below", () => expect(rule).toMatch(/box-shadow:[^;]*0 1px 0 rgb\(255 255 255/));
   it("set the letter into the surface", () => expect(rule).toMatch(/text-shadow: 0 -1px 0 rgb\(0 0 0/));
 });
