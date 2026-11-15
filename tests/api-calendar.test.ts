@@ -5,7 +5,7 @@ import { teamCalendars } from "../scripts/api/calendar.mjs";
 // them in its own time. No scores in the titles: a calendar is for when, and spoiler-free matters to people who watch later.
 const game = (over: Record<string, unknown>) => ({ id: "it-1:2026-11-22:juventus-inter", round: "13", stage: "league", date: "2026-11-22",
   time: "20:45", kickoff: "2026-11-22T20:45:00+01:00", home: "juventus", away: "inter", status: "scheduled", score: null, source: "openfootball", ...over });
-const current = new Map([
+const current = new Map<string, { matches: Record<string, unknown>[]; teams: Record<string, string> }>([
   ["it-1", { matches: [game({}), game({ id: "it-1:2026-05-01:juventus-roma", date: "2026-05-01", away: "roma", status: "finished", score: { ft: [2, 1] } })],
     teams: { juventus: "Juventus", inter: "Inter", roma: "Roma" } }],
   ["uefa-champions-league", { matches: [game({ id: "ucl:1", date: "2026-11-25", time: null, kickoff: null, away: "psg" })],
