@@ -126,7 +126,11 @@ h2 { font: 800 1.9rem/1 var(--display); text-transform: uppercase; margin: 0 0 0
 .zones li::before { content: ""; width: 4px; height: 1em; border-radius: 2px; background: var(--zone); }
 .standings tbody th a { text-decoration: none; } .standings tbody th a:hover { text-decoration: underline; }
 .form { list-style: none; margin: 0; padding: 0; display: flex; gap: 6px; }
-.form li { width: 2.25rem; height: 2.25rem; border-radius: 10px; display: grid; place-items: center; font: 800 1.15rem/1 var(--display); color: #fff; }
+/* pressed into the card (Salah, 2026-11-14): shadow inside from the top, a light lip below, the letter set in */
+.form li { width: 2.25rem; height: 2.25rem; border-radius: 15px; display: grid; place-items: center; font: 800 1.15rem/1 var(--display); color: #fff;
+  padding-top: 3px; box-sizing: border-box; text-shadow: 0 -1px 0 rgb(0 0 0 / 35%);
+  box-shadow: inset 0 4px 7px rgb(0 0 0 / 55%), inset 0 1px 2px rgb(0 0 0 / 45%), inset 0 -2px 2px rgb(255 255 255 / 14%), 0 1px 0 rgb(255 255 255 / 90%); }
+@media (prefers-color-scheme: dark) { .form li { box-shadow: inset 0 4px 7px rgb(0 0 0 / 65%), inset 0 1px 2px rgb(0 0 0 / 55%), inset 0 -2px 2px rgb(255 255 255 / 10%), 0 1px 0 rgb(255 255 255 / 10%); } }
 .form .f-w { background: #23804d; } .form .f-d { background: #6b7280; } .form .f-l { background: #b3261e; }
 .stand { font-size: 1.05rem; margin: 0 0 0.35rem; } .stand b { font-weight: 700; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
