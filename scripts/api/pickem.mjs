@@ -3,7 +3,8 @@
 // The functions below are plain and self-contained: pickemScript() copies their source into /leagues/pickem.js, so the page and the
 // tests run the same code.
 // A bracket here is { groups: { A: [codes] }, rounds: [{ name, matches: [{ id, a, b }] }], format: { advance, thirds, thirdsVs, table } }.
-// Picks are { groups: { A: [codes in finishing order] }, thirds: [group letters], ko: { matchId: code } }.
+// Picks are { groups: { A: [codes in finishing order] }, at: { A: ISO time last changed }, thirds: [group letters], ko: { matchId: code } }.
+// A qualifying bracket also has kickoffs: { A: [ISO times] }; a group's picks lock when one of its games kicks off after they were made.
 
 /** For a set of groups whose thirds go through: which group's third meets each of thirdsVs ({ "3vs1A": "C", ... }), or null. */
 export function thirdsFor(format, letters) {
@@ -94,6 +95,17 @@ export function resolve(bracket, picks) {
   }) }));
 }
 
+/** The kick-off that locked a group's picks: the first of its games to start after you picked, up to now (ms). Null while open, for a
+ *  group you have not picked, and in a bracket with no kick-offs. */
+export function locked(bracket, picks, g, now) {
+  const when = ((picks && picks.at) || {})[g];
+  if (!when || !(((picks && picks.groups) || {})[g] || []).length) return null;
+  const from = Date.parse(when);
+  const hit = (((bracket.kickoffs || {})[g]) || []).filter((k) => Date.parse(k) > from && Date.parse(k) <= now)
+    .sort((a, b) => Date.parse(a) - Date.parse(b));
+  return hit.length ? hit[0] : null;
+}
+
 /** The picks with anything no longer possible taken out: unknown teams, thirds from unfinished groups (at most the format's number),
  *  and knockout picks whose team is not in that game any more, with everything that hung on them. */
 export function clean(bracket, picks) {
@@ -104,7 +116,9 @@ export function clean(bracket, picks) {
     const mine = ranked(bracket, g);
     groups[g] = order.filter((t) => mine.indexOf(t) >= 0 && !seen[t] && (seen[t] = true));
   });
-  const next = { groups, thirds: [], ko: {} };
+  const at = {};
+  Object.keys(groups).forEach((g) => { const t = ((picks && picks.at) || {})[g]; if (groups[g].length && t) at[g] = t; });
+  const next = { groups, at, thirds: [], ko: {} };
   const want = (picks && picks.thirds) || [];
   next.thirds = want.filter((g, i) => want.indexOf(g) === i && bracket.groups[g] && finished(bracket, next, g)).slice(0, bracket.format.thirds || 0);
   next.ko = (picks && picks.ko) || {};
@@ -142,9 +156,13 @@ export function pickemScript() {
   var resolve = ${resolve.toString()};
   var clean = ${clean.toString()};
   var progress = ${progress.toString()};
+  var locked = ${locked.toString()};
   function read() { try { return JSON.parse(window.localStorage.getItem(KEY) || "null"); } catch (e) { return null; } }
   function save() { try { window.localStorage.setItem(KEY, JSON.stringify(picks)); } catch (e) {} }
   var picks = clean(B, read() || {}), tab = 0, armed = false;
+  var stamp = function () { return new Date().toISOString(); };
+  Object.keys(picks.groups).forEach(function (g) { if (picks.groups[g].length && !picks.at[g]) picks.at[g] = stamp(); });   // saved before locking came in
+  var shut = function (g) { return locked(B, picks, g, Date.now()); };
   var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
   var name = function (t) { return B.names[t] || t; };
   var code = function (t) { return (B.codes && B.codes[t]) || t; };
@@ -164,12 +182,12 @@ export function pickemScript() {
         + '</span><span class="st">Host \u00b7 Through</span></div>';
     }).join("");
     var nowLine = B.now && B.now.groups[g] ? '<p class="now">' + (B.now.final ? "Went through: " : "Top two today: ") + B.now.groups[g].map(function (t) { return esc(name(t)); }).join(", ") + "</p>" : "";
-    var note = finished(B, picks, g) ? "Done" : order.length ? "Next: who finishes " + ["1st", "2nd", "3rd", "4th"][order.length] + (go < B.format.advance ? " of the rest" : "") + "?" : "Tap the teams in finishing order";
+    var note = shut(g) ? "Locked" : finished(B, picks, g) ? "Done" : order.length ? "Next: who finishes " + ["1st", "2nd", "3rd", "4th"][order.length] + (go < B.format.advance ? " of the rest" : "") + "?" : "Tap the teams in finishing order";
     var rows = order.concat(rest).map(function (t) {
       var at = order.indexOf(t), place = at + 1;
       var state = at < 0 ? (finished(B, picks, g) ? "out" : "") : place <= go ? "through" : place === go + 1 && B.format.thirds ? "third" : "out";
       var word = { through: "Through", third: "Maybe", out: "Out" }[state] || "";
-      return '<button type="button" class="pick ' + state + '" data-team="' + esc(t) + '"' + (at >= 0 ? ' data-rank="' + place + '"' : "") + ">"
+      return '<button type="button" class="pick ' + state + '" data-team="' + esc(t) + '"' + (shut(g) ? ' aria-disabled="true"' : "") + (at >= 0 ? ' data-rank="' + place + '"' : "") + ">"
         + '<span class="rank">' + (at >= 0 ? place : "") + '</span><span class="code">' + esc(code(t)) + "</span><span class=\\"name\\">" + esc(name(t)) + '</span><span class="st">' + word + "</span></button>";
     }).join("");
     return '<div class="card" data-group="' + esc(g) + '"><h3>Group ' + esc(g) + "<span>" + note + "</span></h3>" + hostRows + rows + nowLine + "</div>";
@@ -222,7 +240,12 @@ export function pickemScript() {
     var el = e.target.closest ? e.target.closest("button") : null;
     if (!el || !root.contains(el)) return;
     if (el.id === "start-over") {
-      if (armed) { armed = false; set({ groups: {}, thirds: [], ko: {} }); } else { armed = true; render(); }
+      if (armed) {   // a locked group's picks stay
+        armed = false;
+        var keep = { groups: {}, at: {}, thirds: [], ko: {} };
+        groups.forEach(function (g) { if (shut(g)) { keep.groups[g] = picks.groups[g]; keep.at[g] = picks.at[g]; } });
+        set(keep);
+      } else { armed = true; render(); }
       return;
     }
     armed = false;
@@ -234,6 +257,9 @@ export function pickemScript() {
       if (at >= 0) next.thirds.splice(at, 1); else if (next.thirds.length < B.format.thirds) next.thirds.push(g);
     } else if (card && card.hasAttribute("data-group")) {
       var grp = card.getAttribute("data-group"), t = el.getAttribute("data-team"), order = next.groups[grp] || [];
+      if (shut(grp)) return;
+      next.at = next.at || {};
+      next.at[grp] = stamp();
       var i = order.indexOf(t);
       if (i >= 0) order = order.slice(0, i);
       else {
@@ -248,6 +274,7 @@ export function pickemScript() {
     } else return;
     set(next);
   });
+  save();
   render();
 })();
 `;
