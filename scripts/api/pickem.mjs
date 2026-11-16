@@ -200,7 +200,9 @@ export function pickemScript() {
       return '<button type="button" class="pick ' + state + '" data-team="' + esc(t) + '"' + (over || shut(g) ? ' aria-disabled="true"' : "") + (at >= 0 ? ' data-rank="' + place + '"' : "") + ">"
         + '<span class="rank">' + (at >= 0 ? place : "") + '</span><span class="code">' + esc(code(t)) + "</span><span class=\\"name\\">" + esc(name(t)) + '</span><span class="st">' + word + "</span></button>";
     }).join("");
-    return '<div class="card" data-group="' + esc(g) + '"><h3>' + esc((B.labels && B.labels[g]) || "Group " + g) + "<span>" + note + "</span></h3>" + hostRows + rows + nowLine + "</div>";
+    var title = (B.labels && B.labels[g]) || "Group " + g, cut = title.indexOf(", ");   // "League B, Group 1": the league is a heading above
+    if (cut > 0) title = title.slice(cut + 2);
+    return '<div class="card" data-group="' + esc(g) + '"><h3>' + esc(title) + "<span>" + note + "</span></h3>" + hostRows + rows + nowLine + "</div>";
   }
   function thirdsCard() {
     if (!B.format.thirds) return "";
@@ -228,7 +230,12 @@ export function pickemScript() {
       return '<button type="button" data-tab="' + i + '" aria-pressed="' + (i === tab) + '">' + esc(t) + "<small>" + tabCount(i, rounds) + "</small></button>";
     }).join("");
     var body;
-    if (tab === 0) body = groups.map(groupCard).join("") + thirdsCard();
+    if (tab === 0) body = groups.map(function (g, i) {
+      var label = (B.labels && B.labels[g]) || "", cut = label.indexOf(", "), league = cut > 0 ? label.slice(0, cut) : "";
+      var prev = i ? (B.labels && B.labels[groups[i - 1]]) || "" : "";
+      var head = league && prev.slice(0, cut) !== league ? '<h3 class="league">' + esc(league) + "</h3>" : "";
+      return head + groupCard(g);
+    }).join("") + thirdsCard();
     else body = rounds[tab - 1].matches.map(function (m, i) { m.title = rounds[tab - 1].name + " \\u00b7 game " + (i + 1); return matchCard(m); }).join("");
     var fin = rounds.length ? rounds[rounds.length - 1].matches[0] : null;
     var champ = fin && fin.pick ? '<p id="champion">\\u2605 Your champion: ' + esc(name(fin.pick)) + "</p>" : "";

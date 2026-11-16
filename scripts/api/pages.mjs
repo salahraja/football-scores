@@ -199,6 +199,7 @@ details { border-bottom: 1px solid var(--line); padding: 6px 0; } summary { curs
 .pickem .pick.out { opacity: 0.45; }
 .pickem .pick.host { cursor: default; } .pickem .pick.host .rank { font-size: 0.75rem; }
 .pickem #score, .pickem #finalists p { margin: 0 0 12px; } .pickem #score { font-weight: 700; }
+.pickem .league { margin: 18px 4px 8px; font: 800 1.1rem var(--display); text-transform: uppercase; letter-spacing: 0.03em; color: var(--muted); }
 .pickem .now { margin: 6px 4px 0; font-size: 0.75rem; color: var(--muted); }
 .pickem .pick.tbd { cursor: default; color: var(--muted); box-shadow: none; border: 2px dashed var(--line); }
 @media (prefers-color-scheme: dark) { .pickem .pick.through { box-shadow: inset 0 4px 7px rgb(0 0 0 / 65%), inset 0 1px 2px rgb(0 0 0 / 55%), inset 0 -2px 2px rgb(255 255 255 / 10%), 0 1px 0 rgb(255 255 255 / 10%); } }

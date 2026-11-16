@@ -221,11 +221,13 @@ describe("the Nations League page", () => {
     expect(read(out, "leagues/index.html")).toContain("/leagues/bracket/nations-league-2027/");
   });
 
-  it("draws its groups in the browser, named by league, and a League D group is done after one pick", () => {
+  it("draws its groups in the browser, under a heading per league, and a League D group is done after one pick", () => {
     memory.clear();
     document.body.innerHTML = /<body[^>]*>([\s\S]*)<\/body>/.exec(read(out, NL))![1];
     (0, eval)(read(out, "leagues/pickem.js"));
-    expect(document.querySelector('[data-group="B1"] h3')!.textContent).toMatch(/League B, Group 1/);
+    // a heading per league, then short card titles, so a title fits one line on a phone
+    expect(document.querySelector('[data-group="B1"] h3')!.firstChild!.textContent).toBe("Group 1");
+    expect([...document.querySelectorAll(".league")].map((h) => h.textContent)).toEqual(["League A", "League B", "League D"]);
     const tap = (sel: string) => document.querySelector(sel)!.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     tap('[data-group="D1"] [data-team="andorra"]');
     expect(document.querySelector('[data-group="D1"] h3')!.textContent).toMatch(/Done/);
