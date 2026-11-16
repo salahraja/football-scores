@@ -193,6 +193,8 @@ details { border-bottom: 1px solid var(--line); padding: 6px 0; } summary { curs
 .pickem .pick[data-rank] .rank, .pickem .pick.through .rank { border: 0; background: rgb(255 255 255 / 18%); }
 .pickem .pick.through { color: #fff; background: var(--slate); text-shadow: 0 -1px 0 rgb(0 0 0 / 35%);
   box-shadow: inset 0 4px 7px rgb(0 0 0 / 45%), inset 0 1px 2px rgb(0 0 0 / 40%), inset 0 -2px 2px rgb(255 255 255 / 14%), 0 1px 0 rgb(255 255 255 / 90%); }
+@media (prefers-color-scheme: dark) { .pickem .pick.through { background: #1a1f28;
+  box-shadow: inset 0 4px 8px rgb(0 0 0 / 70%), inset 0 1px 2px rgb(0 0 0 / 60%), inset 0 -1px 1px rgb(255 255 255 / 8%), 0 1px 0 rgb(255 255 255 / 6%); } }
 .pickem .pick.third .rank { background: #e7d9a8; color: #5b4a12; }
 .pickem .pick.out { opacity: 0.45; }
 .pickem .pick.host { cursor: default; } .pickem .pick.host .rank { font-size: 0.75rem; }

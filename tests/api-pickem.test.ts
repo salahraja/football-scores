@@ -195,3 +195,15 @@ describe("pickem.js", () => {
     expect([saved().thirds, saved().ko]).toEqual([[], {}]);
   });
 });
+
+// "The depressed look when you click needs adjusting on dark mode" (Salah, 2026-11-15): on the dark card the picked row was lighter than
+// the card with a 90% white lip, so it read as raised. In dark it sits darker than the card, with a faint lip.
+describe("a picked row in dark mode", () => {
+  it("has its own dark rule: darker than the card, with no bright lip", async () => {
+    const css = (await import("node:fs")).readFileSync("scripts/api/pages.mjs", "utf8");
+    const dark = /@media \(prefers-color-scheme: dark\) \{ \.pickem \.pick\.through \{([^}]*)\}/.exec(css);
+    expect(dark).not.toBeNull();
+    expect(dark![1]).not.toMatch(/255 255 255 \/ (9|8|7|6|5|4|3|2)\d%/);
+    expect(dark![1]).toMatch(/background: #1[0-9a-f]{5}/);
+  });
+});
