@@ -405,6 +405,9 @@ describe("the site icon", () => {
     const svg = readFileSync("public/favicon.svg", "utf8");
     expect(svg).toContain("#1F2A30");
     expect(svg).toContain("#E07A5F");
+    // light and dark (Salah, 2026-11-15: "toggle logos based on light vs dark mode"): cream tile with ink strokes, or ink tile with cream
+    expect(svg).toMatch(/@media \(prefers-color-scheme: dark\) \{[^}]*\.bg \{ fill: #1F2A30; \}[^}]*\.ink \{ stroke: #F6EFE6; \}/);
+    expect(svg).not.toMatch(/(fill|stroke)="#(1F2A30|F6EFE6)"/);   // every ink and cream part follows the theme
     expect(existsSync("public/apple-touch-icon.png")).toBe(true);
   });
 });
