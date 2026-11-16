@@ -30,7 +30,7 @@ describe("navbar", () => {
 
   it("is drawn at the same size as the built pages' menu, so the bar does not jump between pages", () => {
     const app = readFileSync("src/styles/base.css", "utf8");
-    expect(app).toMatch(/\.links a \{[^}]*padding: 8px 14px;[^}]*border-radius: 999px;[^}]*font-weight: 700;[^}]*font-size: 0\.875rem;/);
+    expect(app).toMatch(/\.links a \{[^}]*padding: 8px 14px;[^}]*border-radius: 999px;[^}]*font-weight: 700;[^}]*font-size: 0\.875rem;[^}]*line-height: 1\.45;/);
     expect(app).toMatch(/@media \(max-width: 480px\) \{ \.links a \{ padding: 8px 12px; \} \}/);
     expect(app).not.toMatch(/\.navbar \{ font-size: 0\.8125rem/);
   });
