@@ -406,7 +406,9 @@ describe("the site icon", () => {
     const svg = readFileSync("public/favicon.svg", "utf8");
     expect(svg).toMatch(/\.bg\{fill:#F6EFE6\}\.fg\{fill:#1F2A30\}\.red\{fill:#B3261E\}/);
     expect(svg).toMatch(/@media \(prefers-color-scheme: dark\)\{\.bg\{fill:#1F2A30\}\.fg\{fill:#F6EFE6\}\.red\{fill:#C4302A\}\}/);
-    expect(svg).not.toContain("<text");   // drawn as shapes: a tab icon cannot load the web font
+    expect(svg).not.toContain("<text");
+    // "Make the dot bigger ONLY for the favicon & put it lower: g." (Salah, 2026-11-15): in the tab the ball is larger and sits low by the g's tail
+    expect(svg).toContain("translate(650 10) scale(1.900 -1.900)");   // drawn as shapes: a tab icon cannot load the web font
     expect(existsSync("public/apple-touch-icon.png")).toBe(true);
   });
 });
