@@ -35,6 +35,16 @@ describe("navbar", () => {
     expect(app).not.toMatch(/\.navbar \{ font-size: 0\.8125rem/);
   });
 
+  // "Yesss let's try the red" (Salah, 2026-11-15): the current page is pressed into the bar with its name in the signature red, on both bars.
+  it("presses the current page into the bar, its name in the signature red, light and dark, on both bars", () => {
+    const app = readFileSync("src/styles/base.css", "utf8");
+    const built = readFileSync("scripts/api/pages.mjs", "utf8");
+    for (const [css, sel] of [[app, "\\.links a\\[aria-current=\"page\"\\]"], [built, "\\.nav a\\[aria-current=\"page\"\\]"]] as const) {
+      expect(css).toMatch(new RegExp(`${sel} \\{[^}]*color: #b3261e;[^}]*box-shadow: inset 0 3px 6px`));
+      expect(css).toMatch(new RegExp(`@media \\(prefers-color-scheme: dark\\) \\{ ${sel} \\{[^}]*color: #e8574f;[^}]*box-shadow: inset 0 3px 7px`));
+    }
+  });
+
   it("is the same four links on every built page, whatever the page", () => {
     const out = mkdtempSync(join(tmpdir(), "golboard-nav-")); dirs.push(out);
     const wiki = mkdtempSync(join(tmpdir(), "golboard-nav-w-")); dirs.push(wiki);
