@@ -387,3 +387,24 @@ describe("postponed games", () => {
     }
   });
 });
+
+// "GB's favicon hasn't been updated" (Salah, 2026-11-15): every page shows the golboard GB monogram, the MAIN logo (BRIEF.md in
+// ~/brand/golboard-2026-11-13), not the 2023 icon. Small sizes use the plain coral dot; the home-screen icon keeps the football.
+describe("the site icon", () => {
+  it("is linked from every league page and the app layout, and the files are the GB monogram", () => {
+    const out = site();
+    for (const path of ["leagues/index.html", "leagues/it-1/index.html"]) {
+      const html = page(out, path);
+      expect(html).toContain('<link rel="icon" href="/favicon.svg" type="image/svg+xml">');
+      expect(html).toContain('<link rel="icon" href="/favicon.ico" sizes="48x48">');
+      expect(html).toContain('<link rel="apple-touch-icon" href="/apple-touch-icon.png">');
+    }
+    const layout = readFileSync("src/layouts/Page.astro", "utf8");
+    expect(layout).toContain('<link rel="icon" href="/favicon.svg" type="image/svg+xml" />');
+    expect(layout).toContain('<link rel="apple-touch-icon" href="/apple-touch-icon.png" />');
+    const svg = readFileSync("public/favicon.svg", "utf8");
+    expect(svg).toContain("#1F2A30");
+    expect(svg).toContain("#E07A5F");
+    expect(existsSync("public/apple-touch-icon.png")).toBe(true);
+  });
+});
