@@ -11,7 +11,7 @@ import { inlineScripts } from "../scripts/csp.mjs";
 // Bracket pick'em (Salah, 2026-11-15): rank every group, pick the best thirds, then pick a winner round by round to the final.
 // No money, no odds; the picks stay on the device. The first bracket is a practice one on the real AFCON 2025 draw.
 type Picks = { groups: Record<string, string[]>; thirds: string[]; ko: Record<string, string> };
-const DATA = JSON.parse(readFileSync("data/api/pickem.json", "utf8"));
+const DATA = JSON.parse(readFileSync("tests/fixtures/pickem-knockout.json", "utf8"));   // the 2025 practice bracket, off the site since 2026-11-15
 const SIX = DATA.formats["six-four"];
 const AFCON = DATA.brackets.find((b: { id: string }) => b.id === "afcon-2025");
 const ctx = { ...AFCON, format: SIX };
@@ -86,7 +86,7 @@ afterAll(() => { while (dirs.length) rmSync(dirs.pop()!, { recursive: true, forc
 function site(pickem?: unknown) {
   const out = tmp();
   build({ input: "tests/fixtures/openfootball", wikipedia: tmp(), out, seasons: ["2025-26"], now: "2026-10-31T17:00:00Z" });
-  pages({ api: join(out, "api/v1"), out, ...(pickem ? { pickem } : {}) });
+  pages({ api: join(out, "api/v1"), out, pickem: pickem ?? DATA });
   return out;
 }
 const read = (out: string, path: string) => readFileSync(join(out, path), "utf8");
@@ -205,5 +205,15 @@ describe("a picked row in dark mode", () => {
     expect(dark).not.toBeNull();
     expect(dark![1]).not.toMatch(/255 255 255 \/ (9|8|7|6|5|4|3|2)\d%/);
     expect(dark![1]).toMatch(/background: #1[0-9a-f]{5}/);
+  });
+});
+
+// "Remove AFCON 2025 and add UEFA Nations League" (Salah, 2026-11-15)
+describe("the published brackets", () => {
+  it("no longer list the AFCON 2025 practice bracket, and have the Nations League's League A", () => {
+    const live = JSON.parse(readFileSync("data/api/pickem.json", "utf8"));
+    const ids = live.brackets.map((b: { id: string }) => b.id);
+    expect(ids).not.toContain("afcon-2025");
+    expect(live.brackets.find((b: { id: string }) => b.id === "nations-league-2027")).toMatchObject({ kind: "qualify", tournament: "nations-league", division: "A" });
   });
 });

@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { build } from "../scripts/api/build.mjs";
 import { pages } from "../scripts/api/pages.mjs";
-import { clean, finished, locked, qualifiers, score } from "../scripts/api/pickem.mjs";
+import { clean, closed, finished, locked, progress, qualifiers, score } from "../scripts/api/pickem.mjs";
 
 // "Who makes AFCON 2027" (Salah, 2026-11-15): rank each qualifying group; the top two go to the finals, and a host's group sends the
 // host plus the best of the rest. While the groups are played, the page says how many of your picks are in the top two today.
@@ -60,21 +60,40 @@ describe("locking picks", () => {
   });
 });
 
+// A group whose every game is played is closed to new picks (Salah, 2026-11-15, adding the Nations League with two of League A's four
+// groups already over): a pick made after seeing the final table would be a free point. Picks made before it ended stay.
+describe("a finished group", () => {
+  const F = { ...B, done: { A: true } };
+  it("takes no new picks, keeps picks made before, and leaves the progress count", () => {
+    expect(closed(F, clean(F, {}), "A")).toBe(true);
+    expect(closed(F, clean(F, { groups: { A: ["morocco"] }, at: { A: "2026-11-01T00:00:00Z" } }), "A")).toBe(false);
+    expect(closed(F, clean(F, {}), "D")).toBe(false);
+    expect(progress(F, clean(F, {}))).toEqual({ done: 0, total: 1 });
+  });
+});
+
 // ---- the page, from the tournament's groups in the API
 const dirs: string[] = [];
 const tmp = () => { const d = mkdtempSync(join(tmpdir(), "golboard-qual-")); dirs.push(d); return d; };
 afterAll(() => { while (dirs.length) rmSync(dirs.pop()!, { recursive: true, force: true }); });
 const row = (team: string, position: number, played: number, status: string | null) => ({ position, team, played, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, gd: 0, points: 0, adjustment: 0, status });
-function site(played = 3) {
+function site(played = 3, playedA = played) {
   const out = tmp();
   build({ input: "tests/fixtures/openfootball", wikipedia: tmp(), out, seasons: ["2025-26"], now: "2026-10-31T17:00:00Z" });
   const dir = join(out, "api/v1/afcon/2026-27");
   mkdirSync(dir, { recursive: true });
   writeFileSync(join(dir, "groups.json"), JSON.stringify({ tournament: "afcon", season: "2026-27", hosts: ["kenya"], zones: [], groups: [
-    { group: "A", name: "Group A", division: null, table: [row("morocco", 1, played, "qualify"), row("gabon", 2, played, "qualify"), row("niger", 3, played, null), row("lesotho", 4, played, null)] },
+    { group: "A", name: "Group A", division: null, table: [row("morocco", 1, playedA, "qualify"), row("gabon", 2, playedA, "qualify"), row("niger", 3, playedA, null), row("lesotho", 4, playedA, null)] },
     { group: "D", name: "Group D", division: null, table: [row("south-africa", 1, played, "qualify"), row("guinea", 2, played, null), row("kenya", 3, played, "host"), row("eritrea", 4, played, null)] } ] }));
   writeFileSync(join(dir, "teams.json"), JSON.stringify({ tournament: "afcon", season: "2026-27", teams: { morocco: "Morocco", gabon: "Gabon", niger: "Niger", lesotho: "Lesotho",
     "south-africa": "South Africa", guinea: "Guinea", kenya: "Kenya", eritrea: "Eritrea" } }));
+  const nl = join(out, "api/v1/nations-league/2026-27");
+  mkdirSync(nl, { recursive: true });
+  writeFileSync(join(nl, "groups.json"), JSON.stringify({ tournament: "nations-league", season: "2026-27", hosts: [], zones: [], groups: [
+    { group: "A1", name: "League A, Group 1", division: "A", table: [row("france", 1, played, "qf"), row("belgium", 2, played, "qf"), row("italy", 3, played, null), row("turkey", 4, played, "rel")] },
+    { group: "B1", name: "League B, Group 1", division: "B", table: [row("switzerland", 1, played, "promo"), row("slovenia", 2, played, "promo_po"), row("scotland", 3, played, null), row("north-macedonia", 4, played, "rel_po")] } ] }));
+  writeFileSync(join(nl, "teams.json"), JSON.stringify({ tournament: "nations-league", season: "2026-27", teams: { france: "France", belgium: "Belgium", italy: "Italy", turkey: "Turkey",
+    switzerland: "Switzerland", slovenia: "Slovenia", scotland: "Scotland", "north-macedonia": "North Macedonia" } }));
   const game = (group: string, kickoff: string, home: string, away: string) => ({ id: `afcon:${kickoff}:${home}-${away}`, stage: "group", group, date: kickoff.slice(0, 10), kickoff, home, away, score: null });
   writeFileSync(join(dir, "matches.json"), JSON.stringify({ matches: [game("A", "2026-11-20T15:00:00+00:00", "morocco", "gabon"), game("D", "2026-11-21T18:00:00+02:00", "kenya", "guinea")] }));
   pages({ api: join(out, "api/v1"), out });
@@ -85,7 +104,7 @@ const out = site();
 const PAGE = "leagues/bracket/afcon-2027/index.html";
 
 describe("the qualifying page", () => {
-  it("is built from the live groups and linked from Leagues before the practice bracket", () => {
+  it("is built from the live groups and linked from Leagues", () => {
     const html = read(out, PAGE);
     expect(html).toContain("<title>AFCON 2027 bracket | golboard</title>");
     expect(html).toMatch(/host/i);
@@ -93,7 +112,7 @@ describe("the qualifying page", () => {
     expect(html).toContain("A group locks when its next game kicks off after you pick.");
     const index = read(out, "leagues/index.html");
     expect(index.indexOf("/leagues/bracket/afcon-2027/")).toBeGreaterThan(0);
-    expect(index.indexOf("/leagues/bracket/afcon-2027/")).toBeLessThan(index.indexOf("/leagues/bracket/afcon-2025/"));
+    expect(index).not.toContain("/leagues/bracket/afcon-2025/");
   });
 
   it("is left out when the tournament's groups are not in the API", () => {
@@ -169,11 +188,31 @@ describe("pickem.js on the qualifying page", () => {
     expect($('[data-group="D"] [data-team="guinea"]')!.textContent).not.toContain("Through");
   });
 
+  it("closes a finished group you never picked: no taps, marked Finished, out of the count", () => {
+    load(site(3, 6));
+    expect($('[data-group="A"] h3')!.textContent).toMatch(/Finished/);
+    click($('[data-group="A"] [data-team="niger"]'));
+    expect($('[data-group="A"] [data-team="niger"]')!.textContent).not.toContain("Through");
+    expect($(".foot .note")!.textContent).toBe("0 of 1 groups picked");
+  });
+
   it("says how you did once every game is played", () => {
     const done = site(6);
+    storage.setItem("golboard.pickem.afcon-2027", JSON.stringify({ groups: { A: ["morocco", "gabon"] }, at: { A: "2026-09-01T00:00:00Z" } }));   // picked before the games
     load(done);
-    click($('[data-group="A"] [data-team="morocco"]'));
-    click($('[data-group="A"] [data-team="gabon"]'));
     expect($("#score")!.textContent).toContain("You got 2 of 2 right");
+  });
+});
+
+// "Add UEFA Nations League" (Salah, 2026-11-15): League A's group winners and runners-up go to the quarter-finals; pick them.
+describe("the Nations League page", () => {
+  const NL = "leagues/bracket/nations-league-2027/index.html";
+  it("asks who makes the quarter-finals from League A only, with today's top two from its own zone", () => {
+    const html = read(out, NL);
+    expect(html).toContain("<h2>Who makes the quarter-finals</h2>");
+    const data = JSON.parse(/<script type="application\/json" id="bracket-data">([\s\S]*?)<\/script>/.exec(html)![1]);
+    expect(Object.keys(data.groups)).toEqual(["A1"]);
+    expect(data.now.groups.A1).toEqual(["france", "belgium"]);
+    expect(read(out, "leagues/index.html")).toContain("/leagues/bracket/nations-league-2027/");
   });
 });

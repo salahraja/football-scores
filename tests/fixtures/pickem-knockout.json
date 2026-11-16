@@ -1,0 +1,257 @@
+{
+  "_about": "Test fixture (2026-11-15): the AFCON 2025 practice bracket, taken off the site at Salah's word, kept to test the knockout pick'em (groups, best thirds, rounds).",
+  "formats": {
+    "six-four": {
+      "advance": 2,
+      "thirds": 4,
+      "thirdsVs": [
+        "1A",
+        "1B",
+        "1C",
+        "1D"
+      ],
+      "table": {
+        "ABCD": [
+          "C",
+          "D",
+          "A",
+          "B"
+        ],
+        "ABCE": [
+          "C",
+          "A",
+          "B",
+          "E"
+        ],
+        "ABCF": [
+          "C",
+          "A",
+          "B",
+          "F"
+        ],
+        "ABDE": [
+          "D",
+          "A",
+          "B",
+          "E"
+        ],
+        "ABDF": [
+          "D",
+          "A",
+          "B",
+          "F"
+        ],
+        "ABEF": [
+          "E",
+          "A",
+          "B",
+          "F"
+        ],
+        "ACDE": [
+          "C",
+          "D",
+          "A",
+          "E"
+        ],
+        "ACDF": [
+          "C",
+          "D",
+          "A",
+          "F"
+        ],
+        "ACEF": [
+          "C",
+          "A",
+          "F",
+          "E"
+        ],
+        "ADEF": [
+          "D",
+          "A",
+          "F",
+          "E"
+        ],
+        "BCDE": [
+          "C",
+          "D",
+          "B",
+          "E"
+        ],
+        "BCDF": [
+          "C",
+          "D",
+          "B",
+          "F"
+        ],
+        "BCEF": [
+          "E",
+          "C",
+          "B",
+          "F"
+        ],
+        "BDEF": [
+          "E",
+          "D",
+          "B",
+          "F"
+        ],
+        "CDEF": [
+          "C",
+          "D",
+          "F",
+          "E"
+        ]
+      }
+    },
+    "top-two": {
+      "advance": 2,
+      "thirds": 0,
+      "thirdsVs": [],
+      "table": {}
+    }
+  },
+  "brackets": [
+    {
+      "id": "afcon-2025",
+      "name": "AFCON 2025",
+      "full": "Africa Cup of Nations 2025",
+      "practice": "A practice bracket: the real draw of the 2025 finals in Morocco. Picks for 2027 open when its draw is made.",
+      "format": "six-four",
+      "groups": {
+        "A": [
+          "MAR",
+          "MLI",
+          "ZAM",
+          "COM"
+        ],
+        "B": [
+          "EGY",
+          "RSA",
+          "ANG",
+          "ZIM"
+        ],
+        "C": [
+          "NGA",
+          "TUN",
+          "UGA",
+          "TAN"
+        ],
+        "D": [
+          "SEN",
+          "DRC",
+          "BEN",
+          "BOT"
+        ],
+        "E": [
+          "ALG",
+          "BFA",
+          "EQG",
+          "SDN"
+        ],
+        "F": [
+          "CIV",
+          "CMR",
+          "GAB",
+          "MOZ"
+        ]
+      },
+      "rounds": [
+        {
+          "name": "Last 16",
+          "matches": [
+            {
+              "id": "R16-1",
+              "a": "1D",
+              "b": "3vs1D"
+            },
+            {
+              "id": "R16-2",
+              "a": "2A",
+              "b": "2C"
+            },
+            {
+              "id": "R16-3",
+              "a": "1A",
+              "b": "3vs1A"
+            },
+            {
+              "id": "R16-4",
+              "a": "2B",
+              "b": "2F"
+            },
+            {
+              "id": "R16-5",
+              "a": "1B",
+              "b": "3vs1B"
+            },
+            {
+              "id": "R16-6",
+              "a": "1C",
+              "b": "3vs1C"
+            },
+            {
+              "id": "R16-7",
+              "a": "1E",
+              "b": "2D"
+            },
+            {
+              "id": "R16-8",
+              "a": "1F",
+              "b": "2E"
+            }
+          ]
+        },
+        {
+          "name": "Quarters",
+          "matches": [
+            {
+              "id": "QF-1",
+              "a": "W:R16-1",
+              "b": "W:R16-2"
+            },
+            {
+              "id": "QF-2",
+              "a": "W:R16-3",
+              "b": "W:R16-4"
+            },
+            {
+              "id": "QF-3",
+              "a": "W:R16-7",
+              "b": "W:R16-6"
+            },
+            {
+              "id": "QF-4",
+              "a": "W:R16-5",
+              "b": "W:R16-8"
+            }
+          ]
+        },
+        {
+          "name": "Semis",
+          "matches": [
+            {
+              "id": "SF-1",
+              "a": "W:QF-1",
+              "b": "W:QF-4"
+            },
+            {
+              "id": "SF-2",
+              "a": "W:QF-3",
+              "b": "W:QF-2"
+            }
+          ]
+        },
+        {
+          "name": "Final",
+          "matches": [
+            {
+              "id": "F",
+              "a": "W:SF-1",
+              "b": "W:SF-2"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
