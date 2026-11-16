@@ -210,10 +210,11 @@ describe("a picked row in dark mode", () => {
 
 // "Remove AFCON 2025 and add UEFA Nations League" (Salah, 2026-11-15)
 describe("the published brackets", () => {
-  it("no longer list the AFCON 2025 practice bracket, and have the Nations League's League A", () => {
+  it("no longer list the AFCON 2025 practice bracket, and have the Nations League, every league", () => {
     const live = JSON.parse(readFileSync("data/api/pickem.json", "utf8"));
     const ids = live.brackets.map((b: { id: string }) => b.id);
     expect(ids).not.toContain("afcon-2025");
-    expect(live.brackets.find((b: { id: string }) => b.id === "nations-league-2027")).toMatchObject({ kind: "qualify", tournament: "nations-league", division: "A" });
+    expect(live.brackets.find((b: { id: string }) => b.id === "nations-league-2027")).toMatchObject({ kind: "qualify", tournament: "nations-league" });
+    expect(live.brackets.find((b: { id: string }) => b.id === "nations-league-2027").division).toBeUndefined();   // every league, not only A
   });
 });

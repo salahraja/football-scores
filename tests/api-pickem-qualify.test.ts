@@ -91,9 +91,10 @@ function site(played = 3, playedA = played) {
   mkdirSync(nl, { recursive: true });
   writeFileSync(join(nl, "groups.json"), JSON.stringify({ tournament: "nations-league", season: "2026-27", hosts: [], zones: [], groups: [
     { group: "A1", name: "League A, Group 1", division: "A", table: [row("france", 1, played, "qf"), row("belgium", 2, played, "qf"), row("italy", 3, played, null), row("turkey", 4, played, "rel")] },
-    { group: "B1", name: "League B, Group 1", division: "B", table: [row("switzerland", 1, played, "promo"), row("slovenia", 2, played, "promo_po"), row("scotland", 3, played, null), row("north-macedonia", 4, played, "rel_po")] } ] }));
+    { group: "B1", name: "League B, Group 1", division: "B", table: [row("switzerland", 1, played, "promo"), row("slovenia", 2, played, "promo_po"), row("scotland", 3, played, null), row("north-macedonia", 4, played, "rel_po")] },
+    { group: "D1", name: "League D, Group 1", division: "D", table: [row("malta", 1, played, null), row("andorra", 2, played, null), row("gibraltar", 3, played, null)] } ] }));
   writeFileSync(join(nl, "teams.json"), JSON.stringify({ tournament: "nations-league", season: "2026-27", teams: { france: "France", belgium: "Belgium", italy: "Italy", turkey: "Turkey",
-    switzerland: "Switzerland", slovenia: "Slovenia", scotland: "Scotland", "north-macedonia": "North Macedonia" } }));
+    switzerland: "Switzerland", slovenia: "Slovenia", scotland: "Scotland", "north-macedonia": "North Macedonia", malta: "Malta", andorra: "Andorra", gibraltar: "Gibraltar" } }));
   const game = (group: string, kickoff: string, home: string, away: string) => ({ id: `afcon:${kickoff}:${home}-${away}`, stage: "group", group, date: kickoff.slice(0, 10), kickoff, home, away, score: null });
   writeFileSync(join(dir, "matches.json"), JSON.stringify({ matches: [game("A", "2026-11-20T15:00:00+00:00", "morocco", "gabon"), game("D", "2026-11-21T18:00:00+02:00", "kenya", "guinea")] }));
   pages({ api: join(out, "api/v1"), out });
@@ -204,21 +205,30 @@ describe("pickem.js on the qualifying page", () => {
   });
 });
 
-// "Add UEFA Nations League" (Salah, 2026-11-15): League A's group winners and runners-up go to the quarter-finals; pick them.
+// "Add UEFA Nations League" (Salah, 2026-11-15), then "That's only League A": every league. A's top two make the quarter-finals; in B and
+// C the winner goes up and the runner-up gets a play-off; League D's groups have three teams and the winner goes up, so you pick one.
 describe("the Nations League page", () => {
   const NL = "leagues/bracket/nations-league-2027/index.html";
-  it("asks who makes the quarter-finals from League A only, with today's top two from its own zone", () => {
+  const data = () => JSON.parse(/<script type="application\/json" id="bracket-data">([\s\S]*?)<\/script>/.exec(read(out, NL))![1]);
+  it("has every league's groups, each with how many go up and today's places", () => {
     const html = read(out, NL);
-    expect(html).toContain("<h2>Who makes the quarter-finals</h2>");
-    const data = JSON.parse(/<script type="application\/json" id="bracket-data">([\s\S]*?)<\/script>/.exec(html)![1]);
-    expect(Object.keys(data.groups)).toEqual(["A1"]);
-    expect(data.now.groups.A1).toEqual(["france", "belgium"]);
+    expect(html).toContain("<h2>Who finishes on top</h2>");
+    const d = data();
+    expect(Object.keys(d.groups)).toEqual(["A1", "B1", "D1"]);
+    expect(d.advance).toEqual({ A1: 2, B1: 2, D1: 1 });
+    expect(d.now.groups).toEqual({ A1: ["france", "belgium"], B1: ["switzerland", "slovenia"], D1: ["malta"] });
+    expect(d.labels.B1).toBe("League B, Group 1");
     expect(read(out, "leagues/index.html")).toContain("/leagues/bracket/nations-league-2027/");
   });
 
-  it("draws its groups in the browser", () => {
+  it("draws its groups in the browser, named by league, and a League D group is done after one pick", () => {
+    memory.clear();
     document.body.innerHTML = /<body[^>]*>([\s\S]*)<\/body>/.exec(read(out, NL))![1];
     (0, eval)(read(out, "leagues/pickem.js"));
-    expect(document.querySelector('[data-group="A1"]')).not.toBeNull();
+    expect(document.querySelector('[data-group="B1"] h3')!.textContent).toMatch(/League B, Group 1/);
+    const tap = (sel: string) => document.querySelector(sel)!.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    tap('[data-group="D1"] [data-team="andorra"]');
+    expect(document.querySelector('[data-group="D1"] h3')!.textContent).toMatch(/Done/);
+    expect(document.querySelector('[data-group="D1"] [data-team="malta"]')!.textContent).toContain("Out");
   });
 });

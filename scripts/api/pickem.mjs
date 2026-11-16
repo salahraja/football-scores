@@ -44,7 +44,8 @@ export function finished(bracket, picks, g) {
 
 /** How many of a group's ranked teams go through: the format's number, less one for each host in the group. */
 export function places(bracket, g) {
-  return Math.max(0, bracket.format.advance - (bracket.groups[g].length - ranked(bracket, g).length));
+  const go = (bracket.advance && bracket.advance[g]) || bracket.format.advance;   // a group can send fewer (Nations League, League D: one)
+  return Math.max(0, go - (bracket.groups[g].length - ranked(bracket, g).length));
 }
 
 /** The teams your picks send through, group by group: the hosts, then the top of your order in each ranked group. */
@@ -189,9 +190,9 @@ export function pickemScript() {
       return '<div class="pick through host" data-host="' + esc(t) + '"><span class="rank">\u2605</span><span class="code">' + esc(code(t)) + '</span><span class="name">' + esc(name(t))
         + '</span><span class="st">Host \u00b7 Through</span></div>';
     }).join("");
-    var nowLine = B.now && B.now.groups[g] ? '<p class="now">' + (B.now.final || (B.done && B.done[g]) ? "Went through: " : "Top two today: ") + B.now.groups[g].map(function (t) { return esc(name(t)); }).join(", ") + "</p>" : "";
+    var nowLine = B.now && B.now.groups[g] ? '<p class="now">' + (B.now.final || (B.done && B.done[g]) ? "Went through: " : ({ 1: "Top today: ", 2: "Top two today: " }[places(B, g)] || "Top today: ")) + B.now.groups[g].map(function (t) { return esc(name(t)); }).join(", ") + "</p>" : "";
     var over = closed(B, picks, g);
-    var note = over ? "Finished" : shut(g) ? "Locked" : finished(B, picks, g) ? "Done" : order.length ? "Next: who finishes " + ["1st", "2nd", "3rd", "4th"][order.length] + (go < B.format.advance ? " of the rest" : "") + "?" : "Tap the teams in finishing order";
+    var note = over ? "Finished" : shut(g) ? "Locked" : finished(B, picks, g) ? "Done" : order.length ? "Next: who finishes " + ["1st", "2nd", "3rd", "4th"][order.length] + (go < B.format.advance && (B.hosts || []).length ? " of the rest" : "") + "?" : "Tap the teams in finishing order";
     var rows = order.concat(rest).map(function (t) {
       var at = order.indexOf(t), place = at + 1;
       var state = at < 0 ? (finished(B, picks, g) ? "out" : "") : place <= go ? "through" : place === go + 1 && B.format.thirds ? "third" : "out";
@@ -199,7 +200,7 @@ export function pickemScript() {
       return '<button type="button" class="pick ' + state + '" data-team="' + esc(t) + '"' + (over || shut(g) ? ' aria-disabled="true"' : "") + (at >= 0 ? ' data-rank="' + place + '"' : "") + ">"
         + '<span class="rank">' + (at >= 0 ? place : "") + '</span><span class="code">' + esc(code(t)) + "</span><span class=\\"name\\">" + esc(name(t)) + '</span><span class="st">' + word + "</span></button>";
     }).join("");
-    return '<div class="card" data-group="' + esc(g) + '"><h3>Group ' + esc(g) + "<span>" + note + "</span></h3>" + hostRows + rows + nowLine + "</div>";
+    return '<div class="card" data-group="' + esc(g) + '"><h3>' + esc((B.labels && B.labels[g]) || "Group " + g) + "<span>" + note + "</span></h3>" + hostRows + rows + nowLine + "</div>";
   }
   function thirdsCard() {
     if (!B.format.thirds) return "";
@@ -235,7 +236,7 @@ export function pickemScript() {
     var mine = qualifiers(B, picks), summary = "", finalists = "";
     if (B.now && mine.length) {
       var sc = score(B, picks, B.now);
-      summary = '<p id="score">' + (B.now.final ? "You got " + sc.right + " of " + sc.of + " right." : sc.right + " of your " + sc.of + " picks are in the top two today.") + "</p>";
+      summary = '<p id="score">' + (B.now.final ? "You got " + sc.right + " of " + sc.of + " right." : sc.right + " of your " + sc.of + " picks are in " + (groups.every(function (g) { return places(B, g) === 2; }) ? "the top two" : "their places") + " today.") + "</p>";
     }
     if (!B.rounds.length && groupsDone()) finalists = '<div class="card" id="finalists"><h3>Your ' + mine.length + "<span>in the finals</span></h3><p>" + mine.map(function (t) { return esc(name(t)); }).join(", ") + "</p></div>";
     root.innerHTML = (B.rounds.length ? '<div class="tabs" role="group" aria-label="Rounds">' + tabs + "</div>" : "")

@@ -124,14 +124,22 @@
       "id": "nations-league-2027",
       "kind": "qualify",
       "tournament": "nations-league",
-      "division": "A",
       "through": [
-        "qf"
+        "qf",
+        "promo",
+        "promo_po"
       ],
-      "goal": "the quarter-finals",
       "name": "Nations League",
-      "full": "UEFA Nations League 2026-27, League A",
-      "format": "top-two"
+      "full": "UEFA Nations League 2026-27",
+      "format": "top-two",
+      "advanceBy": {
+        "A": 2,
+        "B": 2,
+        "C": 2,
+        "D": 1
+      },
+      "heading": "Who finishes on top",
+      "how": "Pick the top of every group. In League A the top two make the quarter-finals; in Leagues B and C the winner goes up and the runner-up gets a play-off; in League D the winner goes up."
     }
   ]
 }
