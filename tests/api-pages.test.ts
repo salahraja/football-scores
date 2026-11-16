@@ -388,10 +388,9 @@ describe("postponed games", () => {
   });
 });
 
-// "GB's favicon hasn't been updated" (Salah, 2026-11-15): every page shows the golboard GB monogram, the MAIN logo (BRIEF.md in
-// ~/brand/golboard-2026-11-13), not the 2023 icon. Small sizes use the plain coral dot; the home-screen icon keeps the football.
+// "GB's favicon hasn't been updated" (Salah, 2026-11-15): every page shows the golboard mark, not the 2023 icon.
 describe("the site icon", () => {
-  it("is linked from every league page and the app layout, and the files are the GB monogram", () => {
+  it("is linked from every league page and the app layout, and the files are the golboard mark", () => {
     const out = site();
     for (const path of ["leagues/index.html", "leagues/it-1/index.html"]) {
       const html = page(out, path);
@@ -402,12 +401,12 @@ describe("the site icon", () => {
     const layout = readFileSync("src/layouts/Page.astro", "utf8");
     expect(layout).toContain('<link rel="icon" href="/favicon.svg" type="image/svg+xml" />');
     expect(layout).toContain('<link rel="apple-touch-icon" href="/apple-touch-icon.png" />');
+    // The redo (Salah, 2026-11-15): the GB monogram was hard to make out in a tab, so the mark is a bold g with a net ball beside it, in the
+    // signature red, light or dark with the browser: cream tile and ink g, or ink tile and cream g.
     const svg = readFileSync("public/favicon.svg", "utf8");
-    expect(svg).toContain("#1F2A30");
-    expect(svg).toContain("#E07A5F");
-    // light and dark (Salah, 2026-11-15: "toggle logos based on light vs dark mode"): cream tile with ink strokes, or ink tile with cream
-    expect(svg).toMatch(/@media \(prefers-color-scheme: dark\) \{[^}]*\.bg \{ fill: #1F2A30; \}[^}]*\.ink \{ stroke: #F6EFE6; \}/);
-    expect(svg).not.toMatch(/(fill|stroke)="#(1F2A30|F6EFE6)"/);   // every ink and cream part follows the theme
+    expect(svg).toMatch(/\.bg\{fill:#F6EFE6\}\.fg\{fill:#1F2A30\}\.red\{fill:#B3261E\}/);
+    expect(svg).toMatch(/@media \(prefers-color-scheme: dark\)\{\.bg\{fill:#1F2A30\}\.fg\{fill:#F6EFE6\}\.red\{fill:#C4302A\}\}/);
+    expect(svg).not.toContain("<text");   // drawn as shapes: a tab icon cannot load the web font
     expect(existsSync("public/apple-touch-icon.png")).toBe(true);
   });
 });
