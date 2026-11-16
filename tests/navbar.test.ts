@@ -28,6 +28,13 @@ describe("navbar", () => {
     expect(nav.findAll('[aria-current="page"]').map((a) => a.text())).toEqual(["Home"]);
   });
 
+  it("is drawn at the same size as the built pages' menu, so the bar does not jump between pages", () => {
+    const app = readFileSync("src/styles/base.css", "utf8");
+    expect(app).toMatch(/\.links a \{[^}]*padding: 8px 14px;[^}]*border-radius: 999px;[^}]*font-weight: 700;[^}]*font-size: 0\.875rem;/);
+    expect(app).toMatch(/@media \(max-width: 480px\) \{ \.links a \{ padding: 8px 12px; \} \}/);
+    expect(app).not.toMatch(/\.navbar \{ font-size: 0\.8125rem/);
+  });
+
   it("is the same four links on every built page, whatever the page", () => {
     const out = mkdtempSync(join(tmpdir(), "golboard-nav-")); dirs.push(out);
     const wiki = mkdtempSync(join(tmpdir(), "golboard-nav-w-")); dirs.push(wiki);
