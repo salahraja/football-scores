@@ -215,4 +215,10 @@ describe("the Nations League page", () => {
     expect(data.now.groups.A1).toEqual(["france", "belgium"]);
     expect(read(out, "leagues/index.html")).toContain("/leagues/bracket/nations-league-2027/");
   });
+
+  it("draws its groups in the browser", () => {
+    document.body.innerHTML = /<body[^>]*>([\s\S]*)<\/body>/.exec(read(out, NL))![1];
+    (0, eval)(read(out, "leagues/pickem.js"));
+    expect(document.querySelector('[data-group="A1"]')).not.toBeNull();
+  });
 });

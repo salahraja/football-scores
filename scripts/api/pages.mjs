@@ -802,7 +802,7 @@ ${next.length ? list(next) : '<p class="note">None left.</p>'}
 
 /** A bracket pick'em page (/leagues/bracket/<id>/): the bracket as a JSON data block, drawn and kept by /leagues/pickem.js. */
 function bracketPage(bracket, format, names, codes = null) {
-  const data = { id: bracket.id, codes, groups: bracket.groups, rounds: bracket.rounds, format, names, hosts: bracket.hosts ?? [], now: bracket.now ?? null, kickoffs: bracket.kickoffs ?? {}, done: bracket.done ?? {} };
+  const data = { id: bracket.id, codes, groups: bracket.groups, rounds: bracket.rounds ?? [], format, names, hosts: bracket.hosts ?? [], now: bracket.now ?? null, kickoffs: bracket.kickoffs ?? {}, done: bracket.done ?? {} };
   const qualify = bracket.kind === "qualify";
   const goal = bracket.goal ?? "the finals";
   const hostNames = (bracket.hosts ?? []).map((h) => names[h]);
