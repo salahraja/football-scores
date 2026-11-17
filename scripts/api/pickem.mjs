@@ -44,7 +44,8 @@ export function finished(bracket, picks, g) {
 
 /** How many of a group's ranked teams go through: the format's number, less one for each host in the group. */
 export function places(bracket, g) {
-  return Math.max(0, bracket.format.advance - (bracket.groups[g].length - ranked(bracket, g).length));
+  const go = (bracket.advance && bracket.advance[g]) || bracket.format.advance;   // a group can send fewer (Nations League, League D: one)
+  return Math.max(0, go - (bracket.groups[g].length - ranked(bracket, g).length));
 }
 
 /** The teams your picks send through, group by group: the hosts, then the top of your order in each ranked group. */
@@ -128,9 +129,15 @@ export function clean(bracket, picks) {
   return next;
 }
 
+/** A group whose games are all played (bracket.done) and that you never picked: closed, since a pick made after the final table
+ *  would be a free point. Picks made before it ended stay and count. */
+export function closed(bracket, picks, g) {
+  return !!(bracket.done && bracket.done[g]) && !(((picks && picks.groups) || {})[g] || []).length;
+}
+
 /** One step per group ranked, one for the thirds, one per game picked. */
 export function progress(bracket, picks) {
-  const groups = Object.keys(bracket.groups);
+  const groups = Object.keys(bracket.groups).filter((g) => !closed(bracket, picks, g));
   const games = bracket.rounds.reduce((n, r) => n + r.matches.length, 0);
   const hasThirds = bracket.format.thirds ? 1 : 0;
   const ranked = groups.filter((g) => finished(bracket, picks, g)).length;
@@ -155,6 +162,7 @@ export function pickemScript() {
   var score = ${score.toString()};
   var resolve = ${resolve.toString()};
   var clean = ${clean.toString()};
+  var closed = ${closed.toString()};
   var progress = ${progress.toString()};
   var locked = ${locked.toString()};
   function read() { try { return JSON.parse(window.localStorage.getItem(KEY) || "null"); } catch (e) { return null; } }
@@ -167,10 +175,11 @@ export function pickemScript() {
   var name = function (t) { return B.names[t] || t; };
   var code = function (t) { return (B.codes && B.codes[t]) || t; };
   var groups = Object.keys(B.groups);
+  var open = function () { return groups.filter(function (g) { return !closed(B, picks, g); }); };
   var TABS = ["Groups"].concat(B.rounds.map(function (r) { return r.name; }));
-  function groupsDone() { return groups.every(function (g) { return finished(B, picks, g); }); }
+  function groupsDone() { return open().every(function (g) { return finished(B, picks, g); }); }
   function tabCount(i, rounds) {
-    if (i === 0) return groups.filter(function (g) { return finished(B, picks, g); }).length + " of " + groups.length;
+    if (i === 0) return open().filter(function (g) { return finished(B, picks, g); }).length + " of " + open().length;
     var ms = rounds[i - 1].matches, n = ms.filter(function (m) { return m.pick; }).length;
     return n ? n + " of " + ms.length : "\\u2014";
   }
@@ -181,16 +190,19 @@ export function pickemScript() {
       return '<div class="pick through host" data-host="' + esc(t) + '"><span class="rank">\u2605</span><span class="code">' + esc(code(t)) + '</span><span class="name">' + esc(name(t))
         + '</span><span class="st">Host \u00b7 Through</span></div>';
     }).join("");
-    var nowLine = B.now && B.now.groups[g] ? '<p class="now">' + (B.now.final ? "Went through: " : "Top two today: ") + B.now.groups[g].map(function (t) { return esc(name(t)); }).join(", ") + "</p>" : "";
-    var note = shut(g) ? "Locked" : finished(B, picks, g) ? "Done" : order.length ? "Next: who finishes " + ["1st", "2nd", "3rd", "4th"][order.length] + (go < B.format.advance ? " of the rest" : "") + "?" : "Tap the teams in finishing order";
+    var nowLine = B.now && B.now.groups[g] ? '<p class="now">' + (B.now.final || (B.done && B.done[g]) ? "Went through: " : ({ 1: "Top today: ", 2: "Top two today: " }[places(B, g)] || "Top today: ")) + B.now.groups[g].map(function (t) { return esc(name(t)); }).join(", ") + "</p>" : "";
+    var over = closed(B, picks, g);
+    var note = over ? "Finished" : shut(g) ? "Locked" : finished(B, picks, g) ? "Done" : order.length ? "Next: who finishes " + ["1st", "2nd", "3rd", "4th"][order.length] + (go < B.format.advance && (B.hosts || []).length ? " of the rest" : "") + "?" : "Tap the teams in finishing order";
     var rows = order.concat(rest).map(function (t) {
       var at = order.indexOf(t), place = at + 1;
       var state = at < 0 ? (finished(B, picks, g) ? "out" : "") : place <= go ? "through" : place === go + 1 && B.format.thirds ? "third" : "out";
       var word = { through: "Through", third: "Maybe", out: "Out" }[state] || "";
-      return '<button type="button" class="pick ' + state + '" data-team="' + esc(t) + '"' + (shut(g) ? ' aria-disabled="true"' : "") + (at >= 0 ? ' data-rank="' + place + '"' : "") + ">"
+      return '<button type="button" class="pick ' + state + '" data-team="' + esc(t) + '"' + (over || shut(g) ? ' aria-disabled="true"' : "") + (at >= 0 ? ' data-rank="' + place + '"' : "") + ">"
         + '<span class="rank">' + (at >= 0 ? place : "") + '</span><span class="code">' + esc(code(t)) + "</span><span class=\\"name\\">" + esc(name(t)) + '</span><span class="st">' + word + "</span></button>";
     }).join("");
-    return '<div class="card" data-group="' + esc(g) + '"><h3>Group ' + esc(g) + "<span>" + note + "</span></h3>" + hostRows + rows + nowLine + "</div>";
+    var title = (B.labels && B.labels[g]) || "Group " + g, cut = title.indexOf(", ");   // "League B, Group 1": the league is a heading above
+    if (cut > 0) title = title.slice(cut + 2);
+    return '<div class="card" data-group="' + esc(g) + '"><h3>' + esc(title) + "<span>" + note + "</span></h3>" + hostRows + rows + nowLine + "</div>";
   }
   function thirdsCard() {
     if (!B.format.thirds) return "";
@@ -218,7 +230,12 @@ export function pickemScript() {
       return '<button type="button" data-tab="' + i + '" aria-pressed="' + (i === tab) + '">' + esc(t) + "<small>" + tabCount(i, rounds) + "</small></button>";
     }).join("");
     var body;
-    if (tab === 0) body = groups.map(groupCard).join("") + thirdsCard();
+    if (tab === 0) body = groups.map(function (g, i) {
+      var label = (B.labels && B.labels[g]) || "", cut = label.indexOf(", "), league = cut > 0 ? label.slice(0, cut) : "";
+      var prev = i ? (B.labels && B.labels[groups[i - 1]]) || "" : "";
+      var head = league && prev.slice(0, cut) !== league ? '<h3 class="league">' + esc(league) + "</h3>" : "";
+      return head + groupCard(g);
+    }).join("") + thirdsCard();
     else body = rounds[tab - 1].matches.map(function (m, i) { m.title = rounds[tab - 1].name + " \\u00b7 game " + (i + 1); return matchCard(m); }).join("");
     var fin = rounds.length ? rounds[rounds.length - 1].matches[0] : null;
     var champ = fin && fin.pick ? '<p id="champion">\\u2605 Your champion: ' + esc(name(fin.pick)) + "</p>" : "";
@@ -226,7 +243,7 @@ export function pickemScript() {
     var mine = qualifiers(B, picks), summary = "", finalists = "";
     if (B.now && mine.length) {
       var sc = score(B, picks, B.now);
-      summary = '<p id="score">' + (B.now.final ? "You got " + sc.right + " of " + sc.of + " right." : sc.right + " of your " + sc.of + " picks are in the top two today.") + "</p>";
+      summary = '<p id="score">' + (B.now.final ? "You got " + sc.right + " of " + sc.of + " right." : sc.right + " of your " + sc.of + " picks are in " + (groups.every(function (g) { return places(B, g) === 2; }) ? "the top two" : "their places") + " today.") + "</p>";
     }
     if (!B.rounds.length && groupsDone()) finalists = '<div class="card" id="finalists"><h3>Your ' + mine.length + "<span>in the finals</span></h3><p>" + mine.map(function (t) { return esc(name(t)); }).join(", ") + "</p></div>";
     root.innerHTML = (B.rounds.length ? '<div class="tabs" role="group" aria-label="Rounds">' + tabs + "</div>" : "")
@@ -257,7 +274,7 @@ export function pickemScript() {
       if (at >= 0) next.thirds.splice(at, 1); else if (next.thirds.length < B.format.thirds) next.thirds.push(g);
     } else if (card && card.hasAttribute("data-group")) {
       var grp = card.getAttribute("data-group"), t = el.getAttribute("data-team"), order = next.groups[grp] || [];
-      if (shut(grp)) return;
+      if (shut(grp) || closed(B, picks, grp)) return;
       next.at = next.at || {};
       next.at[grp] = stamp();
       var i = order.indexOf(t);

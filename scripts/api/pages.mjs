@@ -201,6 +201,7 @@ details { border-bottom: 1px solid var(--line); padding: 6px 0; } summary { curs
 .pickem .pick.out { opacity: 0.45; }
 .pickem .pick.host { cursor: default; } .pickem .pick.host .rank { font-size: 0.75rem; }
 .pickem #score, .pickem #finalists p { margin: 0 0 12px; } .pickem #score { font-weight: 700; }
+.pickem .league { margin: 18px 4px 8px; font: 800 1.1rem var(--display); text-transform: uppercase; letter-spacing: 0.03em; color: var(--muted); }
 .pickem .now { margin: 6px 4px 0; font-size: 0.75rem; color: var(--muted); }
 .pickem .pick.tbd { cursor: default; color: var(--muted); box-shadow: none; border: 2px dashed var(--line); }
 @media (prefers-color-scheme: dark) { .pickem .pick.through { box-shadow: inset 0 4px 7px rgb(0 0 0 / 65%), inset 0 1px 2px rgb(0 0 0 / 55%), inset 0 -2px 2px rgb(255 255 255 / 10%), 0 1px 0 rgb(255 255 255 / 10%); } }
@@ -804,11 +805,12 @@ ${next.length ? list(next) : '<p class="note">None left.</p>'}
 
 /** A bracket pick'em page (/leagues/bracket/<id>/): the bracket as a JSON data block, drawn and kept by /leagues/pickem.js. */
 function bracketPage(bracket, format, names, codes = null) {
-  const data = { id: bracket.id, codes, groups: bracket.groups, rounds: bracket.rounds, format, names, hosts: bracket.hosts ?? [], now: bracket.now ?? null, kickoffs: bracket.kickoffs ?? {} };
+  const data = { id: bracket.id, codes, groups: bracket.groups, rounds: bracket.rounds ?? [], format, names, hosts: bracket.hosts ?? [], now: bracket.now ?? null, kickoffs: bracket.kickoffs ?? {}, done: bracket.done ?? {}, advance: bracket.advance ?? {}, labels: bracket.labels ?? {} };
   const qualify = bracket.kind === "qualify";
+  const goal = bracket.goal ?? "the finals";
   const hostNames = (bracket.hosts ?? []).map((h) => names[h]);
   const how = qualify
-    ? `Pick who makes the finals: rank each group, tapping the teams in the order they will finish. The top two go${hostNames.length ? `; ${hostNames.length > 1 ? `${hostNames.slice(0, -1).join(", ")} and ${hostNames.at(-1)} are hosts, so a host's group sends the host and the best of the rest` : `${hostNames[0]} is host, so its group sends the host and the best of the rest`}` : ""}. No money, no odds, just bragging rights. A group locks when its next game kicks off after you pick. Your picks stay on this device.`
+    ? bracket.how ? `${bracket.how} Tap the teams in the order they will finish. No money, no odds, just bragging rights. A group locks when its next game kicks off after you pick. Your picks stay on this device.` : `Pick who makes ${goal}: rank each group, tapping the teams in the order they will finish. The top two go${hostNames.length ? `; ${hostNames.length > 1 ? `${hostNames.slice(0, -1).join(", ")} and ${hostNames.at(-1)} are hosts, so a host's group sends the host and the best of the rest` : `${hostNames[0]} is host, so its group sends the host and the best of the rest`}` : ""}. No money, no odds, just bragging rights. A group locks when its next game kicks off after you pick. Your picks stay on this device.`
     : "Rank every group, pick the best third places, then a winner in every game to the final. No money, no odds, just bragging rights. Your picks stay on this device.";
   const longest = Math.max(...bracket.name.split(/\s+/).map((w) => w.length));
   const body = `<header class="poster">
@@ -817,7 +819,7 @@ function bracketPage(bracket, format, names, codes = null) {
 </header>
 <main class="board pickem" style="grid-template-columns: minmax(0, 32rem); justify-content: center">
 <section class="glass">
-<h2>${qualify ? "Who makes the finals" : "Your bracket"}</h2>
+<h2>${qualify ? esc(bracket.heading ?? `Who makes ${goal}`) : "Your bracket"}</h2>
 <p class="note">${esc(how)}</p>
 ${bracket.practice ? `<p class="note"><b>${esc(bracket.practice)}</b></p>` : ""}
 <div id="bracket"><noscript><p class="note">The bracket needs JavaScript to pick.</p></noscript></div>
@@ -825,7 +827,7 @@ ${bracket.practice ? `<p class="note"><b>${esc(bracket.practice)}</b></p>` : ""}
 </section>
 </main>`;
   return shell({ title: `${bracket.name} bracket`, path: `/leagues/bracket/${bracket.id}/`, body, pickem: true,
-    description: `Pick the ${bracket.full}: rank every group, then a winner in every game to the final. No money, no odds.` });
+    description: qualify ? `${bracket.heading ?? `Pick who makes ${goal}`} in the ${bracket.full}: rank each group. No money, no odds.` : `Pick the ${bracket.full}: rank every group, then a winner in every game to the final. No money, no odds.` });
 }
 
 /** The brackets, each with its format, hidden nations taken out of its groups and every team's name. */
@@ -846,11 +848,24 @@ function qualifying(b, format, api) {
   const season = tournaments().find((t) => t.id === b.tournament)?.season;
   const dir = join(api, b.tournament, season ?? "");
   if (!season || !existsSync(join(dir, "groups.json")) || !existsSync(join(dir, "teams.json"))) return [];
-  const { groups, hosts } = JSON.parse(readFileSync(join(dir, "groups.json"), "utf8"));
+  const all = JSON.parse(readFileSync(join(dir, "groups.json"), "utf8"));
+  const hosts = all.hosts ?? [];
   const { teams } = JSON.parse(readFileSync(join(dir, "teams.json"), "utf8"));
+  // A bracket can take one division (the Nations League's League A) and name the table zone that goes through ("qf"; AFCON's is "qualify").
+  const groups = (all.groups ?? []).filter((g) => !b.division || g.division === b.division);
+  const through = new Set([...(b.through ?? ["qualify"]), "host"]);
   const byGroup = Object.fromEntries(groups.map((g) => [g.group, g.table.map((r) => r.team)]));
-  const now = Object.fromEntries(groups.map((g) => [g.group, g.table.filter((r) => r.status === "qualify" || r.status === "host").map((r) => r.team)]));
-  const final = groups.every((g) => g.table.every((r) => r.played >= (g.table.length - 1) * 2));
+  // How many go up from each group (b.advanceBy, by division: the Nations League's League D sends one), and the group's own name.
+  const advance = Object.fromEntries(groups.map((g) => [g.group, (b.advanceBy ?? {})[g.division] ?? format.advance]));
+  const labels = Object.fromEntries(groups.filter((g) => g.name).map((g) => [g.group, g.name]));
+  // Today's places: the rows in a zone that goes up, or, where a division has no such zone in the data (League D), the top by position.
+  const zoned = new Set((all.zones ?? []).filter((z) => through.has(z.kind)).map((z) => z.division ?? null));
+  const now = Object.fromEntries(groups.map((g) => [g.group, zoned.has(g.division ?? null) || !b.advanceBy
+    ? g.table.filter((r) => through.has(r.status)).map((r) => r.team)
+    : g.table.slice(0, advance[g.group]).map((r) => r.team)]));
+  const over = (g) => g.table.every((r) => r.played >= (g.table.length - 1) * 2);
+  const done = Object.fromEntries(groups.map((g) => [g.group, over(g)]));
+  const final = groups.every(over);
   const names = Object.fromEntries(Object.values(byGroup).flat().map((t) => [t, teams[t] ?? t]));
   const fifa = Object.fromEntries(Object.entries(nationNames()).map(([code, name]) => [name, code]));
   const codes = Object.fromEntries(Object.keys(names).map((t) => [t, fifa[names[t]] ?? names[t].slice(0, 3).toUpperCase()]));
@@ -858,7 +873,7 @@ function qualifying(b, format, api) {
   const matches = existsSync(join(dir, "matches.json")) ? JSON.parse(readFileSync(join(dir, "matches.json"), "utf8")).matches : [];
   const kickoffs = Object.fromEntries(groups.map((g) => [g.group, matches.filter((m) => m.stage === "group" && m.group === g.group)
     .map((m) => new Date(m.kickoff ?? `${m.date}T00:00:00Z`).toISOString()).sort()]));
-  return [{ codes, bracket: { ...b, groups: byGroup, hosts: hosts.filter((h) => names[h]), now: { groups: now, final }, kickoffs }, format, names }];
+  return [{ codes, bracket: { ...b, groups: byGroup, hosts: hosts.filter((h) => names[h]), now: { groups: now, final }, kickoffs, done, advance, labels }, format, names }];
 }
 
 /** Write <out>/leagues/ from the API at <api>: index.html, site.css, live.js, fonts and <league>/index.html. All or nothing. */
