@@ -1,0 +1,24 @@
+import { readFileSync } from "node:fs";
+import { describe, expect, it } from "vitest";
+
+// Salah, 2026-11-17, on his iPhone: a light bar sat above the page, Safari's own strip under the status bar. The app's pages run edge to
+// edge like the league pages (scripts/api/pages.mjs already does), so the slate poster reaches the top of the screen, and the menu and the
+// poster pad themselves by the status bar's height.
+const layout = readFileSync("src/layouts/Page.astro", "utf8");
+const css = readFileSync("src/styles/base.css", "utf8");
+const rule = (sel: string) => [...css.matchAll(new RegExp(`(^|\\n)${sel.replace(".", "\\.")} \\{([^}]*)\\}`, "g"))].map((m) => m[2]).join("\n");
+
+describe("the app's pages run under the status bar", () => {
+  it("asks for the whole screen", () => {
+    expect(layout).toMatch(/<meta name="viewport" content="[^"]*viewport-fit=cover/);
+  });
+  it("keeps the menu below the status bar", () => {
+    expect(rule(".navbar")).toMatch(/top:\s*calc\(12px \+ env\(safe-area-inset-top, 0px\)\)/);
+    expect(rule(".navbar")).toMatch(/margin:\s*calc\(12px \+ env\(safe-area-inset-top, 0px\)\) auto 0/);
+  });
+  it("lets the poster reach the top of the screen and keeps its content clear", () => {
+    const poster = rule(".poster");
+    expect(poster).toMatch(/margin-top:\s*calc\(-76px - env\(safe-area-inset-top, 0px\)\)/);
+    expect(poster).toMatch(/padding-top:\s*calc\(88px \+ env\(safe-area-inset-top, 0px\)\)/);
+  });
+});
