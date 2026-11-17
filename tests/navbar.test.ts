@@ -36,12 +36,13 @@ describe("navbar", () => {
   });
 
   // "Yesss let's try the red" (Salah, 2026-11-15): the current page is pressed into the bar with its name in the signature red, on both bars.
+  // Dark mode is the site's own dark red (#c4302a, the league headlines), not a lighter one (Salah, 2026-11-16: "match it to our site's red", picked over a red pill).
   it("presses the current page into the bar, its name in the signature red, light and dark, on both bars", () => {
     const app = readFileSync("src/styles/base.css", "utf8");
     const built = readFileSync("scripts/api/pages.mjs", "utf8");
     for (const [css, sel] of [[app, "\\.links a\\[aria-current=\"page\"\\]"], [built, "\\.nav a\\[aria-current=\"page\"\\]"]] as const) {
       expect(css).toMatch(new RegExp(`${sel} \\{[^}]*color: #b3261e;[^}]*box-shadow: inset 0 3px 6px`));
-      expect(css).toMatch(new RegExp(`@media \\(prefers-color-scheme: dark\\) \\{ ${sel} \\{[^}]*color: #e8574f;[^}]*box-shadow: inset 0 3px 7px`));
+      expect(css).toMatch(new RegExp(`@media \\(prefers-color-scheme: dark\\) \\{ ${sel} \\{[^}]*color: #c4302a;[^}]*box-shadow: inset 0 3px 7px`));
     }
   });
 
