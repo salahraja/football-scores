@@ -61,6 +61,12 @@ code { font-family: var(--font-mono); font-weight: 700; }
 .page { max-width: var(--max-width); margin: 0 auto; padding: var(--space-3) clamp(var(--space-3), 4vw, var(--space-5)); }
 .note { color: var(--fg-muted); margin: 0 0 var(--space-3); font-size: 0.875rem; }
 
+/* Safari 26 colours the strip under the status bar with the body's background (theme-color is ignored; WebKit bug 301756). A page that
+   opens with the slate poster gets a slate body, so the strip runs into the poster instead of standing out in off-white (Salah, 2026-11-17:
+   "It's not see through"). The sheet below the poster keeps its own --bg. */
+html:has(.poster), html:has(.poster) body { background-color: var(--slate); }
+html:has(.poster) body { background-image: linear-gradient(var(--slate) 0 50%, var(--bg) 50%); } /* the foot of the page stays off-white below the sheet */
+
 /* navbar */
 .navbar {
   position: sticky; top: calc(12px + env(safe-area-inset-top, 0px)); z-index: 10;
