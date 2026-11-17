@@ -1,0 +1,48 @@
+# The football API (api/v1) and the league pages, rebuilt every two hours and published to GitHub Pages.
+# Why Pages and not Netlify: a Netlify deploy per refresh would use up the free credit in days (about 20 deploys a month); Pages is free
+# for a public repo and serves the same static files with `Access-Control-Allow-Origin: *`, so the app and the site can both read it.
+# One-time setup (Salah): Settings > Pages > Source: GitHub Actions. Until then the deploy step fails and says so.
+# Address once live: https://salahraja.github.io/football-scores/api/v1/today.json
+name: Football API on Pages
+on:
+  schedule:
+    - cron: "11 */2 * * *"
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+      - run: npm ci
+      # openfootball and Wikipedia; a failed fetch keeps the committed copy, so a source outage never publishes an empty API
+      - run: npm run api
+      - name: Say which leagues are late (does not stop the publish)
+        run: node scripts/api/check-fresh.mjs || echo "::warning::some league results are more than three days late"
+      - run: |
+          mkdir -p _site
+          cp -R public/api _site/api
+          cp -R public/leagues _site/leagues
+          date -u +%Y-%m-%dT%H:%M:%SZ > _site/built.txt
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
