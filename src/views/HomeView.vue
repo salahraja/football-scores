@@ -6,6 +6,7 @@ import { covered, today, type TodayGame } from "../data/live";
 import { teamId } from "../data/clubid";
 import { clubNews, loadFollowing, loadScope, mergeStories, news, saveFollowing, saveScope, type Article, type Scope } from "../data/follow";
 import { clubColour } from "../data/clubColours";
+import { breakCups, cupGames, groupOf, loadDay, localDay, type Cup, type DayMatch, type Group } from "../data/internationals";
 
 // The homepage (Salah, 2026-10-30, the Stadio "Poster" with glass boxes): the league's name and the newest round's result set as a
 // poster (Juventus's when they played), then the table, the round's results, and places for top scorers and headlines that stay empty
@@ -28,6 +29,12 @@ const loaded = ref<Record<string, League>>({});
 const failed = ref(false);
 const pick = ref<HTMLElement | null>(null);
 const other = computed(() => (chosen.value === HOME ? null : loaded.value[chosen.value] ?? null));
+// In an international break (internationals.ts) the nations' tournaments lead the list; a cup has no league table, only its groups.
+const cups = ref<Cup[]>([]);
+const dayMatches = ref<DayMatch[]>([]);
+const cup = computed(() => cups.value.find((c) => c.id === chosen.value) ?? null);
+const cupDay = computed(() => (cup.value ? cupGames(dayMatches.value, cup.value.id, localDay()) : []));
+const group = ref<Group | null>(null);
 const zones = computed(() => loaded.value[chosen.value]?.zones ?? []);
 const zoneNote = computed(() => loaded.value[chosen.value]?.note ?? "");
 const clubIds = computed(() => Object.fromEntries((loaded.value[HOME]?.table ?? []).map((r) => [r.name, r.id])));
@@ -82,7 +89,7 @@ function places(z: { from: number; to: number }) {
 async function open(id: string) {
   failed.value = false;
   const c = list.value.find((x) => x.id === id);
-  if (!c || loaded.value[id]) return;
+  if (!c || loaded.value[id] || cups.value.some((x) => x.id === id)) return;
   try {
     loaded.value = { ...loaded.value, [id]: await loadLeague(c) };
   } catch {
@@ -97,7 +104,7 @@ function choose(id: string) {
   window.history.replaceState(window.history.state, "", url);
 }
 // The poster's arrows, as on the league pages: one pair walks the leagues, one the round's games, and both go round at the ends.
-const title = computed(() => other.value?.name ?? "Serie A");
+const title = computed(() => other.value?.name ?? cup.value?.name ?? "Serie A");
 // On a phone each part gets its own line: taller and bolder, never squeezed. A long one-word name is split where the word itself
 // joins two parts (Salah, 2026-11-08: one line stretched to fill the poster looked "way too elongated" beside the others).
 const BREAKS: Record<string, string[]> = { Bundesliga: ["Bundes", "liga"], Eredivisie: ["Ere", "divisie"], Championship: ["Champion", "ship"], LaLiga: ["La", "Liga"] };
@@ -108,6 +115,7 @@ const todays = ref<Record<string, TodayGame[]>>({});
 const nowGames = computed(() => todays.value[chosen.value] ?? []);
 const games = computed(() => {
   if (nowGames.value.length) return nowGames.value.map((g) => ({ home: g.home, away: g.away, score: g.score, status: g.status, text: g.text }));
+  if (cup.value) return cupDay.value.map((g) => ({ home: g.home, away: g.away, score: g.score, status: g.status, text: g.text }));
   if (other.value) return other.value.matches.map((m) => ({ home: m.home, away: m.away, score: m.score as [number, number] | null, status: "finished", text: other.value!.round }));
   return (newest.value?.events ?? []).map((e) => ({ home: e.homeTeam.name, away: e.awayTeam.name, score: [e.homeScore.current, e.awayScore.current] as [number, number] | null, status: "finished", text: `Matchday ${newest.value?.round} · ${note}` }));
 });
@@ -209,6 +217,13 @@ function step(by: number) {
 watch(other, () => {
   shown.value = 0;
 });
+watch(cup, () => {
+  shown.value = 0;
+});
+// a cup's table is the group of the game on the poster
+watch([cup, game], async ([c, g]) => {
+  group.value = c && g ? await groupOf(c, g.home) : null;
+});
 watch(chosen, async (id) => {
   await nextTick();
   pick.value?.querySelector(".on")?.scrollIntoView?.({ inline: "center", block: "nearest", behavior: "smooth" });
@@ -229,11 +244,20 @@ onMounted(async () => {
   if (asked) chosen.value = asked;
   try {
     list.value = await competitions();
+    const day = await loadDay();
+    const found = breakCups(day.matches, day.cups, list.value.map((c) => c.id), localDay());
+    if (found.length) {
+      cups.value = found;
+      dayMatches.value = day.matches;
+      list.value = [...found.map((c) => ({ id: c.id, name: c.name, current: c.season })), ...list.value];
+      if (!asked) choose(found[0].id);
+    }
     await open(HOME);
     if (chosen.value !== HOME) await open(chosen.value);
     await Promise.all(list.value.map((c) => readToday(c.id)));
     // nothing on in the first league and a game on elsewhere: open on the game that is on, unless the address asked for a league
-    if (!new URLSearchParams(window.location.search).get("league") && !liveIn(HOME)) {
+    // (`asked`, read before the break above wrote a cup into the address)
+    if (!asked && !liveIn(chosen.value)) {
       const on = list.value.find((c) => liveIn(c.id));
       if (on) choose(on.id);
     }
@@ -280,10 +304,17 @@ onMounted(async () => {
     <div class="board__grid">
       <section class="glass" data-test="table" aria-labelledby="t-table">
         <h2 id="t-table">The table</h2>
+        <p v-if="cup && group" class="note" data-test="group">{{ group.name }}</p>
         <table class="mini">
           <thead><tr><th class="left">#</th><th class="left">Club</th><th>P</th><th>W</th><th>D</th><th>L</th><th>Pts</th></tr></thead>
           <tbody>
-            <template v-if="other">
+            <template v-if="cup">
+              <tr v-for="row in group?.table ?? []" :key="row.team">
+                <td class="pos">{{ row.position }}</td><td class="left">{{ row.name }}</td><td>{{ row.played }}</td><td>{{ row.won }}</td>
+                <td>{{ row.drawn }}</td><td>{{ row.lost }}</td><td class="pts">{{ row.points }}</td>
+              </tr>
+            </template>
+            <template v-else-if="other">
               <tr v-for="row in other.table" :key="row.id" :class="[{ mine: on(row.id) }, zoneClass(row.position)]">
                 <td class="pos">{{ row.position }}</td><td class="left"><button type="button" class="star" :data-club="row.id" :aria-pressed="on(row.id)" :aria-label="`${on(row.id) ? 'Unfollow' : 'Follow'} ${row.name}`" @click="toggleFollow(row.id)">{{ on(row.id) ? "★" : "☆" }}</button><a class="club" :href="`/leagues/${other.id}/${row.id}/`">{{ row.name }}</a></td><td>{{ row.played }}</td><td>{{ row.won }}</td>
                 <td>{{ row.drawn }}</td><td>{{ row.lost }}</td><td class="pts">{{ row.points }}</td>
@@ -301,7 +332,8 @@ onMounted(async () => {
           <li v-for="z in zones" :key="z.kind" :class="`zone--${z.kind}`"><span class="zones__key"></span>{{ places(z) }} {{ z.label }}</li>
         </ul>
         <p v-if="zoneNote" class="note zones__note">{{ zoneNote }}</p>
-        <a v-if="other" class="more" :href="`/leagues/${other.id}/`">Full table</a>
+        <a v-if="cup" class="more" :href="`/leagues/${cup.id}/`">Full table</a>
+        <a v-else-if="other" class="more" :href="`/leagues/${other.id}/`">Full table</a>
         <a v-else class="more" href="/standings">Full table</a>
       </section>
 
@@ -315,6 +347,15 @@ onMounted(async () => {
               <span>{{ m.away }}</span>
             </div>
             <a class="more" :href="`/leagues/${chosen}/`">All results</a>
+          </template>
+          <template v-else-if="cup">
+            <h2 id="t-round">{{ cupDay[0]?.text.includes("Yesterday") ? "Yesterday" : "Today" }}</h2>
+            <div v-for="m in cupDay" :key="m.home" class="match" :class="{ onair: m.status === 'live' }">
+              <span class="match__h">{{ m.home }}</span>
+              <span class="dent match__s">{{ m.score ? `${m.score[0]}–${m.score[1]}` : m.text.split(" · ").pop()?.replace("Today ", "") }}</span>
+              <span>{{ m.away }}</span>
+            </div>
+            <a class="more" :href="`/leagues/${cup.id}/`">All results</a>
           </template>
           <template v-else-if="other">
             <h2 id="t-round">{{ other.round }}</h2>
