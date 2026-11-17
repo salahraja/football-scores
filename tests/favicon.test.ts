@@ -16,11 +16,11 @@ const file = (path: string) => readFileSync(join("public", path));
 describe("the icon files", () => {
   it("favicon.svg is a square-viewBox SVG that needs no font and no script", () => {
     const svg = file("favicon.svg").toString("utf8");
-    expect(svg).toMatch(/^<svg [^>]*xmlns='http:\/\/www\.w3\.org\/2000\/svg'/);
-    const [, , w, h] = /viewBox='(\S+) (\S+) (\S+) (\S+)'/.exec(svg)!.slice(1).map(Number);
+    expect(svg).toMatch(/^<svg [^>]*xmlns=["']http:\/\/www\.w3\.org\/2000\/svg["']/);
+    const [, , w, h] = /viewBox=["'](\S+) (\S+) (\S+) (\S+)["']/.exec(svg)!.slice(1).map(Number);
     expect(w).toBe(h);
     expect(svg).not.toMatch(/<text|<script|font-family|href=/i);
-    expect(svg).toContain("#b3261e");  // the site's red, in the ball
+    expect(svg.toLowerCase()).toContain("#b3261e");  // the site's red, in the ball
   });
 
   it("favicon.ico holds 16, 32 and 48 pixel pictures", () => {
@@ -46,7 +46,7 @@ describe("the icon files", () => {
 });
 
 describe("every page names the icons", () => {
-  const LINKS = [`<link rel="icon" type="image/svg+xml" href="/favicon.svg">`, `<link rel="icon" href="/favicon.ico" sizes="48x48">`, `<link rel="apple-touch-icon" href="/apple-touch-icon.png">`];
+  const LINKS = [`<link rel="icon" href="/favicon.svg" type="image/svg+xml">`, `<link rel="icon" href="/favicon.ico" sizes="48x48">`, `<link rel="apple-touch-icon" href="/apple-touch-icon.png">`];
 
   it("the Astro pages", () => {
     const layout = readFileSync("src/layouts/Page.astro", "utf8");
