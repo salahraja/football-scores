@@ -1,5 +1,5 @@
 export type Format = { advance: number; thirds: number; thirdsVs: string[]; table: Record<string, string[]> };
-export type Bracket = { id?: string; hosts?: string[]; kickoffs?: Record<string, string[]>; done?: Record<string, boolean>; advance?: Record<string, number>; labels?: Record<string, string>; groups: Record<string, string[]>; rounds: { name: string; matches: { id: string; a: string; b: string }[] }[]; format: Format };
+export type Bracket = { id?: string; hosts?: string[]; now?: { groups: Record<string, string[]>; final?: boolean } | null; kickoffs?: Record<string, string[]>; done?: Record<string, boolean>; advance?: Record<string, number>; labels?: Record<string, string>; groups: Record<string, string[]>; rounds: { name: string; matches: { id: string; a: string; b: string }[] }[]; format: Format };
 export type Picks = { groups: Record<string, string[]>; at?: Record<string, string>; thirds: string[]; ko: Record<string, string> };
 export type Side = { ref: string; label: string; team: string | null };
 export function thirdsFor(format: Format, letters: string[]): Record<string, string> | null;
@@ -13,5 +13,6 @@ export function resolve(bracket: Bracket, picks: Picks): { name: string; matches
 export function locked(bracket: Bracket, picks: Partial<Picks>, g: string, now: number): string | null;
 export function clean(bracket: Bracket, picks: Partial<Picks>): Picks;
 export function closed(bracket: Bracket, picks: Partial<Picks>, g: string): boolean;
+export function verdict(bracket: Bracket, picks: Partial<Picks>, g: string): { right: number; of: number; text: string; state: "right" | "part" | "wrong" } | null;
 export function progress(bracket: Bracket, picks: Picks): { done: number; total: number };
 export function pickemScript(): string;
