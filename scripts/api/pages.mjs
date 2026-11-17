@@ -45,10 +45,12 @@ a:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
   -webkit-backdrop-filter: saturate(180%) blur(28px); backdrop-filter: saturate(180%) blur(28px);
   box-shadow: inset 0 1px 0 var(--rim), 0 10px 30px -12px rgb(27 28 32 / 35%); }
 .nav a { padding: 8px 14px; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 0.875rem; white-space: nowrap; }
-.nav a[aria-current="page"] { background: var(--fg); color: var(--bg); }
-/* five links do not fit a phone: the in-page jumps give way to News and Following, and anything still too wide scrolls */
+/* the current page is pressed into the bar, its name in the signature red (Salah, 2026-11-15) */
+.nav a[aria-current="page"] { background: rgb(255 255 255 / 62%); color: #b3261e; box-shadow: inset 0 3px 6px rgb(0 0 0 / 28%), inset 0 1px 2px rgb(0 0 0 / 22%), inset 0 -1px 1px rgb(255 255 255 / 60%); }
+@media (prefers-color-scheme: dark) { .nav a[aria-current="page"] { background: rgb(0 0 0 / 35%); color: #e8574f; box-shadow: inset 0 3px 7px rgb(0 0 0 / 65%), inset 0 1px 2px rgb(0 0 0 / 55%), inset 0 -1px 1px rgb(255 255 255 / 8%); } }
+/* the same four links on every page (Home, Leagues, News, Following); anything too wide for a phone scrolls */
 .nav { overflow-x: auto; scrollbar-width: none; } .nav a { flex: none; }
-@media (max-width: 480px) { .nav .jump { display: none; } .nav a { padding: 8px 12px; } }
+@media (max-width: 480px) { .nav a { padding: 8px 12px; } }
 .poster { margin-top: -60px; padding: 84px max(16px, env(safe-area-inset-right, 0px)) 2.5rem max(16px, env(safe-area-inset-left, 0px));
   background: linear-gradient(180deg, var(--slate), var(--slate-2) 60%, var(--bg)); text-align: center; }
 /* the league's name as big as its longest word allows between the arrows (Barlow Condensed capitals run about 0.52 em a letter) */
@@ -231,7 +233,7 @@ function shell({ title, description, path, body, live = null, here = "", script 
 <link rel="stylesheet" href="/leagues/site.css">
 ${script ? '<script src="/leagues/live.js" defer></script>\n' : ""}${pickem ? '<script src="/leagues/pickem.js" defer></script>\n' : ""}<script src="/leagues/follow.js" defer></script>\n${ld ? `${jsonLd(ld)}\n` : ""}</head>
 <body${live ? ` data-sportscore="${esc(live)}"` : ""}>
-<nav class="nav" aria-label="Site"><a href="/leagues/"${here === "all" ? ' aria-current="page"' : ""}>Leagues</a>${here === "league" ? '<a class="jump" href="#table">Table</a><a class="jump" href="#week">This week</a>' : ""}<a href="/news/"${here === "news" ? ' aria-current="page"' : ""}>News</a><a href="/following/"${here === "following" ? ' aria-current="page"' : ""}>Following</a></nav>
+<nav class="nav" aria-label="Site"><a href="/">Home</a><a href="/leagues/"${here === "all" ? ' aria-current="page"' : ""}>Leagues</a><a href="/news/"${here === "news" ? ' aria-current="page"' : ""}>News</a><a href="/following/"${here === "following" ? ' aria-current="page"' : ""}>Following</a></nav>
 ${body}
 </body>
 </html>

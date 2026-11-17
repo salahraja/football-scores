@@ -77,11 +77,9 @@ describe("the pages", () => {
     expect(read(out, "leagues/follow.js")).toContain("golboard.following");
   });
 
-  it("keeps a long headline inside the page and the five nav links inside a phone", () => {
+  it("keeps a long headline inside the page", () => {
     const css = read(out, "leagues/site.css");
     expect(css).toMatch(/\.story \{[^}]*grid-template-columns: minmax\(0, 1fr\)/);       // a grid column is as wide as its longest text unless told it may shrink
-    expect(css).toMatch(/@media \(max-width: 480px\) \{ \.nav \.jump \{ display: none; \}/);
-    expect(read(out, "leagues/it-1/index.html")).toContain('<a class="jump" href="#table">Table</a>');
   });
 
   it("puts both pages in the sitemap", () => {
