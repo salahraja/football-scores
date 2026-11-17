@@ -135,6 +135,22 @@ export function closed(bracket, picks, g) {
   return !!(bracket.done && bracket.done[g]) && !(((picks && picks.groups) || {})[g] || []).length;
 }
 
+/** How your pick for a group did, once all its games are played (bracket.done): the teams you sent through against the teams that went
+ *  through (bracket.now), order aside. Null while it is still being played or if you never picked it (Salah, 2026-11-17: "When the group
+ *  stages are set, it should update to say you got it wrong"). */
+export function verdict(bracket, picks, g) {
+  const order = (((picks && picks.groups) || {})[g]) || [];
+  if (!(bracket.done && bracket.done[g]) || !order.length) return null;
+  const hosts = bracket.hosts || [];
+  const went = (((bracket.now || {}).groups || {})[g] || []).filter((t) => hosts.indexOf(t) < 0);
+  const mine = order.slice(0, places(bracket, g));
+  const of = went.length || mine.length;
+  const right = mine.filter((t) => went.indexOf(t) >= 0).length;
+  const state = right === of ? "right" : right === 0 ? "wrong" : "part";
+  const text = state === "right" ? "You got it right" : state === "wrong" ? "You got it wrong" : "You got " + right + " of " + of + " right";
+  return { right, of, text, state };
+}
+
 /** One step per group ranked, one for the thirds, one per game picked. */
 export function progress(bracket, picks) {
   const groups = Object.keys(bracket.groups).filter((g) => !closed(bracket, picks, g));
@@ -165,6 +181,7 @@ export function pickemScript() {
   var closed = ${closed.toString()};
   var progress = ${progress.toString()};
   var locked = ${locked.toString()};
+  var verdict = ${verdict.toString()};
   function read() { try { return JSON.parse(window.localStorage.getItem(KEY) || "null"); } catch (e) { return null; } }
   function save() { try { window.localStorage.setItem(KEY, JSON.stringify(picks)); } catch (e) {} }
   var picks = clean(B, read() || {}), tab = 0, armed = false;
@@ -191,8 +208,9 @@ export function pickemScript() {
         + '</span><span class="st">Host \u00b7 Through</span></div>';
     }).join("");
     var nowLine = B.now && B.now.groups[g] ? '<p class="now">' + (B.now.final || (B.done && B.done[g]) ? "Went through: " : ({ 1: "Top today: ", 2: "Top two today: " }[places(B, g)] || "Top today: ")) + B.now.groups[g].map(function (t) { return esc(name(t)); }).join(", ") + "</p>" : "";
-    var over = closed(B, picks, g);
-    var note = over ? "Finished" : shut(g) ? "Locked" : finished(B, picks, g) ? "Done" : order.length ? "Next: who finishes " + ["1st", "2nd", "3rd", "4th"][order.length] + (go < B.format.advance && (B.hosts || []).length ? " of the rest" : "") + "?" : "Tap the teams in finishing order";
+    var over = closed(B, picks, g), graded = verdict(B, picks, g);
+    if (graded) nowLine += '<p class="verdict ' + graded.state + '">' + graded.text + "</p>";
+    var note = over ? "Finished" : graded ? "Set" : shut(g) ? "Locked" : finished(B, picks, g) ? "Done" : order.length ? "Next: who finishes " + ["1st", "2nd", "3rd", "4th"][order.length] + (go < B.format.advance && (B.hosts || []).length ? " of the rest" : "") + "?" : "Tap the teams in finishing order";
     var rows = order.concat(rest).map(function (t) {
       var at = order.indexOf(t), place = at + 1;
       var state = at < 0 ? (finished(B, picks, g) ? "out" : "") : place <= go ? "through" : place === go + 1 && B.format.thirds ? "third" : "out";
