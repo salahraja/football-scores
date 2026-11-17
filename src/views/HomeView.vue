@@ -132,9 +132,36 @@ function stepGame(by: number) {
 // A swipe on a phone or tablet does what the arrows do: on the score it changes the game, anywhere else on the poster the league. Mostly-sideways only, so scrolling
 // down the page stays a scroll.
 const SWIPE = 45;
-// The league's name is drawn at the typeface's natural shape, like the score (Salah, 2026-11-13: "I want the design on 2-2 to be the one we follow").
-// The tall stretch of 2026-11-07 is gone.
+// The poster's lettering (Salah, 2026-11-13): the league's name is the plain block at its natural shape, and the score is drawn
+// TALLER into the empty poster between the name and the result ("make the red score elongated so there's less empty space").
+// The score is stretched upward from its foot, and given a top margin of the height it gains, so the row grows up into the gap.
+const TALLEST = 1.5;
 const titleEl = ref<HTMLElement | null>(null);
+const scoreEl = ref<HTMLElement | null>(null);
+function fillWithScore() {
+  const score = scoreEl.value, name = titleEl.value;
+  if (!score || !name) return;
+  score.style.setProperty("--tall", "1");
+  score.style.marginTop = "0";
+  const result = score.closest(".poster__result") as HTMLElement | null;
+  const bar = name.closest(".poster__titlebar") as HTMLElement | null;
+  if (!result || !bar) return;
+  const gap = result.getBoundingClientRect().top - bar.getBoundingClientRect().bottom; // the empty poster above the result
+  const h = Math.max(score.offsetHeight, 1);
+  const tall = Math.min(TALLEST, Math.max(1, 1 + (gap * 0.8) / h));
+  score.style.setProperty("--tall", String(tall));
+  score.style.marginTop = `${h * (tall - 1)}px`;
+}
+watch([title, game, titleEl, scoreEl], async () => {
+  await nextTick();
+  fillWithScore();
+});
+onMounted(() => {
+  fillWithScore();
+  document.fonts?.ready?.then(fillWithScore);
+  window.addEventListener("resize", fillWithScore);
+});
+onUnmounted(() => window.removeEventListener("resize", fillWithScore));
 // Which way the new league or game slides in, and whether the league moved too: a game alone leaves the league's name still
 // (Salah, 2026-11-07: "the league also refreshes even though I'm not swiping that").
 const slide = ref<{ name: string; league: boolean }>({ name: "", league: false });
@@ -223,7 +250,7 @@ onMounted(async () => {
       </div>
       <div class="poster__result" data-swipe="game" :key="`${game.home}-${game.away}`" :class="slide.name">
         <span class="poster__team home" :style="{ '--word': longestWord(game.home) }">{{ game.home }}</span>
-        <span class="poster__score">{{ game.score ? `${game.score[0]}–${game.score[1]}` : "v" }}</span>
+        <span ref="scoreEl" class="poster__score">{{ game.score ? `${game.score[0]}–${game.score[1]}` : "v" }}</span>
         <span class="poster__team away" :style="{ '--word': longestWord(game.away) }">{{ game.away }}</span>
         <div v-if="games.length > 1" class="poster__gamenav">
           <button type="button" class="arrow long" aria-label="Previous game" data-test="game-prev" @click="stepGame(-1)"><svg viewBox="0 0 48 24" aria-hidden="true"><path d="M47 12H6M12 5l-7 7 7 7" /></svg></button>
