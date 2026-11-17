@@ -98,7 +98,11 @@ function choose(id: string) {
 }
 // The poster's arrows, as on the league pages: one pair walks the leagues, one the round's games, and both go round at the ends.
 const title = computed(() => other.value?.name ?? "Serie A");
-const longName = computed(() => title.value.includes(" ")); // each word its own line on a phone: taller and bolder, never squeezed
+// On a phone each part gets its own line: taller and bolder, never squeezed. A long one-word name is split where the word itself
+// joins two parts (Salah, 2026-11-08: one line stretched to fill the poster looked "way too elongated" beside the others).
+const BREAKS: Record<string, string[]> = { Bundesliga: ["Bundes", "liga"], Eredivisie: ["Ere", "divisie"], Championship: ["Champion", "ship"], LaLiga: ["La", "Liga"] };
+const lines = computed(() => (title.value.includes(" ") ? title.value.split(" ") : BREAKS[title.value] ?? [title.value]));
+const longName = computed(() => lines.value.length > 1);
 // Salah, 2026-11-07: "live scores should always show first". Today's games lead whenever there are any, with those on now at the front; the last round fills in.
 const todays = ref<Record<string, TodayGame[]>>({});
 const nowGames = computed(() => todays.value[chosen.value] ?? []);
@@ -251,7 +255,7 @@ onMounted(async () => {
         <button v-if="list.length" type="button" class="arrow" :aria-label="`Previous league: ${neighbour(-1)}`" data-test="league-prev" @click="step(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12H6M12 5l-7 7 7 7" /></svg></button>
         <h1 ref="titleEl" class="poster__title" :aria-label="title">
           <span class="poster__line" :class="{ wide: longName }" :style="{ '--len': title.length }">{{ title }}</span>
-          <template v-if="longName"><span v-for="w in title.split(' ')" :key="w" class="poster__word" :style="{ '--chars': w.length }" aria-hidden="true">{{ w }}</span></template>
+          <template v-if="longName"><span v-for="w in lines" :key="w" class="poster__word" :style="{ '--chars': Math.max(...lines.map((x) => x.length)) }" aria-hidden="true">{{ w }}</span></template>
         </h1>
         <button v-if="list.length" type="button" class="arrow" :aria-label="`Next league: ${neighbour(1)}`" data-test="league-next" @click="step(1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12h16M12 5l7 7-7 7" /></svg></button>
       </div>
