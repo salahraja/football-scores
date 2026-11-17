@@ -67,10 +67,15 @@ code { font-family: var(--font-mono); font-weight: 700; }
   display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
   gap: 2px; width: fit-content; max-width: min(var(--max-width), calc(100% - 20px)); margin: calc(12px + env(safe-area-inset-top, 0px)) auto 0; padding: 6px;
   font-size: 0.875rem; color: var(--fg); border-radius: 999px;
+}
+/* The glass is a layer inside the menu, not the menu's own background: Safari fills the strip under the status bar with a sticky top
+   bar's background, and left a light band there (Salah, 2026-11-17: Etsy and eBay's strip is "there but it's transparent"). */
+.navbar::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none;
   background: var(--glass-fill); -webkit-backdrop-filter: saturate(180%) blur(28px); backdrop-filter: saturate(180%) blur(28px);
   box-shadow: inset 0 1px 0 rgb(255 255 255 / 75%), 0 10px 30px -12px rgb(27 28 32 / 35%);
 }
-@media (prefers-reduced-transparency: reduce) { .navbar { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--glass-solid); } }
+@media (prefers-reduced-transparency: reduce) { .navbar::before { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--glass-solid); } }
 /* the same size as the built pages' .nav (scripts/api/pages.mjs), so the bar does not jump between pages (Salah, 2026-11-15) */
 .links { display: flex; gap: 2px; flex-wrap: nowrap; }
 .links a { color: var(--fg); text-decoration: none; padding: 8px 14px; border-radius: 999px; font-weight: 700; font-size: 0.875rem; white-space: nowrap; line-height: 1.45; }

@@ -41,7 +41,8 @@ body { margin: 0; font: 16px/1.45 var(--sans); color: var(--fg); background: var
 a { color: inherit; }
 a:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
 .nav { position: sticky; top: calc(10px + env(safe-area-inset-top, 0px)); z-index: 10; display: flex; gap: 2px; width: fit-content;
-  max-width: calc(100% - 20px); margin: 12px auto 0; padding: 6px; border-radius: 999px; background: var(--glass);
+  max-width: calc(100% - 20px); margin: 12px auto 0; padding: 6px; border-radius: 999px; }
+.nav::before { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none; background: var(--glass);
   -webkit-backdrop-filter: saturate(180%) blur(28px); backdrop-filter: saturate(180%) blur(28px);
   box-shadow: inset 0 1px 0 var(--rim), 0 10px 30px -12px rgb(27 28 32 / 35%); }
 .nav a { padding: 8px 14px; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 0.875rem; white-space: nowrap; }
@@ -97,8 +98,8 @@ a:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
   mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
 @media (prefers-color-scheme: dark) { .glass::before { opacity: 0.35; } }
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .glass, .nav { background: var(--glass-solid); } }
-@media (prefers-reduced-transparency: reduce) { .glass, .nav { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--glass-solid); } }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .glass, .nav::before { background: var(--glass-solid); } }
+@media (prefers-reduced-transparency: reduce) { .glass, .nav::before { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--glass-solid); } }
 h2 { font: 800 1.9rem/1 var(--display); text-transform: uppercase; margin: 0 0 0.75rem; }
 .note { color: var(--muted); margin: 0 0 0.75rem; font-size: 0.875rem; }
 .scroll { overflow-x: auto; }
