@@ -3,7 +3,11 @@
 const COMPETITION: Record<string, string> = {
   "it-1": "italian-serie-a", "en-1": "english-premier-league", "es-1": "spanish-la-liga", "de-1": "bundesliga",
   "fr-1": "french-ligue-1", "nl-1": "netherlands-eredivisie", "en-2": "english-football-league-championship",
+  // the internationals the homepage opens on in a break (internationals.ts)
+  "nations-league": "uefa-nations-league", afcon: "caf-africa-cup-of-nations",
 };
+// No game of a hidden nation or its clubs is ever shown (data/api/tournaments.json `hide`; Salah: Israel is left out of golboard).
+const HIDDEN = /\bisrael/i;
 
 export interface TodayGame { home: string; away: string; score: [number, number] | null; status: "live" | "finished" | "upcoming"; text: string; time: string }
 interface Raw { home: string; away: string; home_score: string | number | null; away_score: string | number | null; status: string; status_text?: string; time: string }
@@ -34,7 +38,8 @@ export async function today(id: string, date = new Date().toISOString().slice(0,
   try {
     const reply = await fetch(`https://sportscore.com/api/v1/fixtures/?sport=football&date=${date}&competition=${COMPETITION[id]}`);
     if (!reply.ok) return [];
-    return ordered((((await reply.json()) as { matches?: Raw[] }).matches ?? []).map(game));
+    const all = ((await reply.json()) as { matches?: Raw[] }).matches ?? [];
+    return ordered(all.filter((m) => !HIDDEN.test(m.home) && !HIDDEN.test(m.away)).map(game));
   } catch {
     return [];
   }
