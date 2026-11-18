@@ -322,3 +322,17 @@ tr[class*="zone--"] > .pos { box-shadow: inset 3px 0 0 var(--zone, transparent);
 .poster { isolation: isolate; }
 @keyframes club-in { from { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .poster > .poster__club { animation: none; } }
+
+/* Hide scores (HomeView, data/hide.ts). Until the page has read which clubs are hidden, a device that hides any (Page.astro's
+   "hiding" mark) sees no score, state or headline, so the built page's result never flashes past. */
+html.hiding .board:not(.ready) :is(.poster__score, .poster__meta, .match__s, .stories) { visibility: hidden; }
+.reveal { border: 0; border-radius: 12px; padding: 7px 12px; min-width: 3.4rem; min-height: 2.75rem; font: 700 0.8125rem var(--font-sans); cursor: pointer;
+  color: var(--fg); background: var(--glass-fill); box-shadow: inset 0 1px 0 rgb(255 255 255 / 45%), 0 1px 2px rgb(27 28 32 / 14%); }
+.match__s.reveal { font: 700 0.8125rem var(--font-sans); justify-self: center; background: rgb(255 255 255 / 80%); color: #1b1c20; }
+.glass.dark .reveal { color: inherit; background: rgb(255 255 255 / 14%); box-shadow: none; }
+.stories .reveal.block { display: block; width: 100%; margin: 10px 0; padding: 10px 12px; text-align: left; line-height: 1.35; }
+.poster__result .poster__hidden { grid-area: mid; display: grid; justify-items: center; align-items: end; gap: var(--space-2); }
+.poster__hidden .poster__score { grid-area: auto; }
+.poster__unknown { opacity: 0.32; cursor: pointer; user-select: none; }
+.poster__show { border: 0; border-radius: 999px; padding: 10px 22px; min-height: 44px; font: 800 clamp(0.95rem, 3vw, 1.25rem)/1 var(--font-display);
+  letter-spacing: 0.04em; text-transform: uppercase; color: var(--on-accent); background: var(--accent); cursor: pointer; }

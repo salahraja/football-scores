@@ -4,7 +4,7 @@ const API = "/api/v1";
 
 export interface Zone { kind: string; label: string; from: number; to: number }
 export interface LeagueRow { position: number; name: string; id: string; played: number; won: number; drawn: number; lost: number; points: number }
-export interface LeagueMatch { id: string; home: string; away: string; score: [number, number] }
+export interface LeagueMatch { id: string; home: string; away: string; homeId: string; awayId: string; score: [number, number] }
 export interface League { id: string; name: string; zones: Zone[]; note: string; table: LeagueRow[]; round: string; matches: LeagueMatch[] }
 export interface Competition { id: string; name: string; current: string }
 
@@ -32,7 +32,7 @@ export async function league(c: Competition): Promise<League> {
     id: c.id, name: c.name, zones: t.zones?.zones ?? [], note: t.zones?.note ?? "",
     table: (t.table as unknown as (Omit<LeagueRow, "name" | "id"> & { team: string })[]).map((r) => ({ ...r, id: r.team, name: name(r.team) })),
     round,
-    matches: played.filter((x) => x.round === round).map((x) => ({ id: x.id, home: name(x.home), away: name(x.away), score: x.score!.ft })),
+    matches: played.filter((x) => x.round === round).map((x) => ({ id: x.id, home: name(x.home), away: name(x.away), homeId: x.home, awayId: x.away, score: x.score!.ft })),
   };
 }
 

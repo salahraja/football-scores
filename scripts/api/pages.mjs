@@ -161,6 +161,16 @@ footer { grid-column: 1 / -1; color: var(--muted); font-size: 0.8125rem; }
 .follow { margin-top: 0.5rem; padding: 8px 16px; border: 0; border-radius: 999px; font: 700 0.875rem var(--sans); cursor: pointer; color: var(--fg); background: var(--glass);
   box-shadow: inset 0 1px 0 var(--rim), 0 8px 20px -10px rgb(27 28 32 / 40%); }
 .follow[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+/* Hide scores (follow.js): a marked club's scores, states and goals give way to a Show button until it is tapped */
+.hide { margin: 0.5rem 0 0 0.5rem; padding: 8px 16px; border: 0; border-radius: 999px; font: 700 0.875rem var(--sans); cursor: pointer; color: var(--fg); background: var(--glass);
+  box-shadow: inset 0 1px 0 var(--rim), 0 8px 20px -10px rgb(27 28 32 / 40%); }
+.hide[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+.reveal { border: 0; border-radius: 12px; padding: 7px 12px; min-width: 3.4rem; min-height: 2.25rem; font: 700 0.8125rem var(--sans); cursor: pointer; color: var(--fg);
+  background: var(--glass); box-shadow: inset 0 1px 0 var(--rim), 0 1px 2px rgb(27 28 32 / 12%); }
+.masked > .mid, .masked > .state, .masked > .events, .masked > .story, [data-spoils].masked { display: none; }
+.feature > .reveal { grid-area: mid; justify-self: center; font-size: 1rem; padding: 14px 24px; border-radius: 999px; }
+.news li > .reveal { margin: 12px 0; text-align: left; }
+.reveal.block { display: block; margin: 0 0 0.5rem; }
 .calendar { display: inline-block; margin: 0.5rem 0 0 0.5rem; padding: 8px 16px; line-height: normal; border-radius: 999px; font: 700 0.875rem var(--sans); color: var(--fg); text-decoration: none; background: var(--glass);
   box-shadow: inset 0 1px 0 var(--rim), 0 8px 20px -10px rgb(27 28 32 / 40%); }
 .scope { display: inline-flex; gap: 2px; padding: 4px; border-radius: 999px; background: var(--glass); margin-bottom: 0.75rem; }
@@ -247,7 +257,8 @@ ${body}
 `;
 }
 
-const marks = (m) => (m.score ? "" : ` data-date="${m.date}" data-home="${esc(m.home)}" data-away="${esc(m.away)}"`);
+// A game with no score yet carries its day and teams apart (the live script pairs on them); a scored one carries the same three in data-game (hide.js).
+const marks = (m) => (m.score ? ` data-game="${esc(m.home)} ${esc(m.away)} ${m.date}"` : ` data-date="${m.date}" data-home="${esc(m.home)}" data-away="${esc(m.away)}"`);
 const mid = (m) => (m.score ? `${m.score.ft[0]}–${m.score.ft[1]}` : (m.time ?? "vs"));  // a lone dash looked like a score
 
 function game(m, names, today = null) {
@@ -373,9 +384,12 @@ function clubPages(league, competition, api, zonesFor) {
     const gd = `${row.gd > 0 ? "+" : ""}${row.gd}`;
     const body = `<header class="poster">
 <h1 style="--n: ${Math.max(...club.split(/\s+/).map((w) => w.length))}">${esc(club)}</h1>
+<div data-spoils="${esc(id)}" data-what="place and record">
 <p class="stand"><b>${nth(row.position)} in <a href="/leagues/${league.id}/">${esc(league.name)}</a></b> · ${row.points} points${zone ? ` · ${esc(names[zone.kind])} place` : ""}</p>
 <p class="note">Won ${row.won}, drawn ${row.drawn}, lost ${row.lost} · goal difference ${gd} · ${esc(season)}</p>
+</div>
 <button class="follow" type="button" data-club="${esc(id)}" data-name="${esc(club)}" aria-pressed="false">Follow</button>
+<button class="hide" type="button" data-hide="${esc(id)}" data-name="${esc(club)}" aria-pressed="false">Hide scores</button>
 <a class="calendar" href="${esc(SITE.replace(/^https?:/, "webcal:"))}/api/v1/calendar/${esc(id)}.ics">Add games to my calendar</a>
 </header>
 <main class="board">
@@ -387,7 +401,7 @@ ${list([next])}
 </section>
 ` : ""}<section class="glass">
 <h2>Form</h2>
-${form ? `<ol class="form" aria-label="Last five league games, newest first">${form}</ol>` : '<p class="note">No games played yet.</p>'}
+${form ? `<ol class="form" aria-label="Last five league games, newest first" data-spoils="${esc(id)}" data-what="form">${form}</ol>` : '<p class="note">No games played yet.</p>'}
 </section>
 <section class="glass">
 <h2>Results</h2>
@@ -434,7 +448,7 @@ export function liveScript() {
     var at = all.findIndex(function (li) { return text(li, ".home") === text(feature, ".home") && text(li, ".away") === text(feature, ".away"); });
     var li = all[(at + by + all.length) % all.length];
     [".home", ".mid", ".away", ".when"].forEach(function (k) { feature.querySelector(k).textContent = text(li, k); });
-    ["date", "home", "away", "state"].forEach(function (k) { if (li.dataset[k]) feature.dataset[k] = li.dataset[k]; else delete feature.dataset[k]; });
+    ["date", "home", "away", "state", "game"].forEach(function (k) { if (li.dataset[k]) feature.dataset[k] = li.dataset[k]; else delete feature.dataset[k]; });
     [".state", ".events"].forEach(function (k) {
       var mine = feature.querySelector(k), theirs = li.querySelector(k);
       if (mine) mine.remove();
@@ -500,6 +514,7 @@ export function liveScript() {
     var on = Array.prototype.find.call(document.querySelectorAll(".games [data-home]"), function (r) { return r.dataset.state === "live"; });
     if (!poster || !on || poster.dataset.state === "live" || poster.dataset.pinned) return;
     ["home", "away", "date", "state"].forEach(function (k) { poster.dataset[k] = on.dataset[k]; });
+    delete poster.dataset.game;
     [".home", ".mid", ".away", ".when"].forEach(function (k) { poster.querySelector(k).textContent = on.querySelector(k).textContent; });
     var ps = poster.querySelector(".state");
     if (!ps) { ps = document.createElement("span"); ps.className = "state"; poster.insertBefore(ps, poster.querySelector(".when")); }
@@ -527,6 +542,140 @@ export function liveScript() {
     });
   }
   poll();
+})();
+`;
+}
+
+/** The browser script for hiding scores (the second half of /leagues/follow.js). Salah, 2026-11-14: "spoiler-free mode (scores hidden until tapped, per team)".
+ *  The clubs marked are kept on the device (localStorage "golboard.hideScores", a list of the API's club ids), as Following is. Wherever a
+ *  marked club has a score, a live state or its goals on the page, they are covered and a Show button stands in; a tap shows that one
+ *  game everywhere on the page and for the rest of the visit (sessionStorage "golboard.shown"). Nothing is removed from the page, so the
+ *  live script keeps writing under the cover and a tap shows the score as it stands. Headlines that name a marked club are covered the
+ *  same way, and so are a club page's place, record and form. The league table is left alone: it cannot be hidden for one club. */
+export function hideScript() {
+  return `(function () {
+  if (window.__golboardHide) window.__golboardHide.stop();
+  var KEY = "golboard.hideScores", SHOWN = "golboard.shown", FOLLOWING = "golboard.following";
+  function store(name) { try { return window[name]; } catch (e) { return null; } }
+  function list(name, key) {
+    try { var v = JSON.parse(store(name).getItem(key) || "[]"); return Array.isArray(v) ? v.filter(function (x) { return typeof x === "string"; }) : []; } catch (e) { return []; }
+  }
+  function save(name, key, value) { try { store(name).setItem(key, JSON.stringify(value)); } catch (e) {} }
+  var hidden = list("localStorage", KEY), shown = list("sessionStorage", SHOWN);
+  function all(sel) { return Array.prototype.slice.call(document.querySelectorAll(sel)); }
+  function is(id) { return hidden.indexOf(id) >= 0; }
+  function text(el, k) { var x = el.querySelector(k); return x ? x.textContent : ""; }
+  var SCORE = /\\d\\s*[\\u2013-]\\s*\\d/;
+  // A game by its own marks when it has no score in the built page (the live script may have written one since), else by data-game.
+  function keyOf(el) {
+    var d = el.dataset;
+    return d.home && d.away && d.date ? d.home + " " + d.away + " " + d.date : el.getAttribute("data-game");
+  }
+  function givesAway(el) { return SCORE.test(text(el, ".mid")) || el.dataset.state === "live" || el.dataset.state === "finished" || !!el.querySelector(".state, .events"); }
+  function button(key, label, words, before, block) {
+    var b = document.createElement("button");
+    b.type = "button"; b.className = block ? "reveal block" : "reveal"; b.textContent = words;
+    b.setAttribute("data-key", key);
+    if (label) b.setAttribute("aria-label", label);
+    before.parentNode.insertBefore(b, before);
+    return b;
+  }
+  function mine(el, sel) { return Array.prototype.filter.call(el.children, function (c) { return c.matches(sel); }); }
+  // cover and uncover touch the page only when something changes, so watching the page for changes cannot loop
+  function cover(el, key, label, words, inside) {
+    if (!el.classList.contains("masked")) el.classList.add("masked");
+    mine(el, ".mid, .state, .events, .story").forEach(function (c) { if (c.getAttribute("aria-hidden") !== "true") c.setAttribute("aria-hidden", "true"); });
+    var host = inside ? el : el.parentNode;
+    var have = Array.prototype.filter.call(host.children, function (c) { return c.className.indexOf("reveal") >= 0 && (inside || c.nextSibling === el); })[0];
+    if (have) { if (have.getAttribute("data-key") !== key) { have.setAttribute("data-key", key); if (label) have.setAttribute("aria-label", label); } return; }
+    if (inside) { var mid = mine(el, ".mid, .story")[0]; button(key, label, words, mid ? mid.nextSibling || mid : el.firstChild, false); if (mid && mid.nextSibling === null) el.appendChild(el.querySelector(".reveal")); }
+    else button(key, label, words, el, true);
+  }
+  function uncover(el, inside) {
+    if (el.classList.contains("masked")) el.classList.remove("masked");
+    mine(el, ".mid, .state, .events, .story").forEach(function (c) { if (c.hasAttribute("aria-hidden")) c.removeAttribute("aria-hidden"); });
+    var host = inside ? el : el.parentNode;
+    Array.prototype.filter.call(host.children, function (c) { return c.className.indexOf("reveal") >= 0 && (inside || c.nextSibling === el); }).forEach(function (b) { b.remove(); });
+  }
+  function marks() {
+    all("[data-hide]").forEach(function (el) {
+      var on = is(el.getAttribute("data-hide"));
+      if (el.type === "checkbox") { if (el.checked !== on) el.checked = on; return; }
+      if (el.getAttribute("aria-pressed") !== String(on)) el.setAttribute("aria-pressed", String(on));
+      var words = on ? "Scores hidden" : "Hide scores";
+      if (el.textContent !== words) el.textContent = words;
+    });
+  }
+  // the Following page: one switch for each club followed, by the name the page's own picker gives it
+  function switches() {
+    var box = document.getElementById("hide-clubs");
+    if (!box) return;
+    var following = list("localStorage", FOLLOWING);
+    var want = following.join(" ");
+    if (box.getAttribute("data-for") === want) return;
+    box.setAttribute("data-for", want);
+    box.textContent = "";
+    following.forEach(function (id) {
+      var named = document.querySelector('[data-club="' + id.replace(/[^a-z0-9-]/g, "") + '"][data-name]');
+      var li = document.createElement("li"), label = document.createElement("label"), input = document.createElement("input");
+      input.type = "checkbox"; input.setAttribute("data-hide", id);
+      label.appendChild(input);
+      label.appendChild(document.createTextNode(" " + (named ? named.getAttribute("data-name") : id)));
+      li.appendChild(label); box.appendChild(li);
+    });
+  }
+  function apply() {
+    switches();
+    marks();
+    all("[data-game], [data-home]").forEach(function (el) {
+      var key = keyOf(el);
+      if (!key) return;
+      var teams = key.split(" ");
+      if ((is(teams[0]) || is(teams[1])) && shown.indexOf(key) < 0 && givesAway(el))
+        cover(el, key, "Show the score of " + text(el, ".home") + " against " + text(el, ".away"), "Show", true);
+      else uncover(el, true);
+    });
+    all("li[data-clubs]").forEach(function (li) {
+      var link = li.querySelector("a"), key = "story " + (link ? link.getAttribute("href") : "");
+      if ((li.getAttribute("data-clubs") || "").split(" ").some(function (id) { return id && is(id); }) && shown.indexOf(key) < 0)
+        cover(li, key, "", "A headline about a club whose scores you hide. Show", true);
+      else uncover(li, true);
+    });
+    all("[data-spoils]").forEach(function (el) {
+      var id = el.getAttribute("data-spoils"), key = "club " + id + " " + (el.getAttribute("data-what") || "");
+      if (is(id) && shown.indexOf(key) < 0) cover(el, key, "", "Show the " + (el.getAttribute("data-what") || "rest"), false);
+      else uncover(el, false);
+    });
+  }
+  function set(id, on) {
+    var at = hidden.indexOf(id);
+    if (on && at < 0) hidden.push(id);
+    if (!on && at >= 0) hidden.splice(at, 1);
+    save("localStorage", KEY, hidden);
+    apply();
+  }
+  function onClick(e) {
+    var t = e.target && e.target.closest ? e.target.closest(".reveal, button[data-hide]") : null;
+    if (!t) return;
+    if (t.className.indexOf("reveal") >= 0) {
+      e.preventDefault();
+      var key = t.getAttribute("data-key");
+      if (shown.indexOf(key) < 0) { shown.push(key); save("sessionStorage", SHOWN, shown); }
+      apply();
+    } else set(t.getAttribute("data-hide"), !is(t.getAttribute("data-hide")));
+  }
+  function onChange(e) {
+    var t = e.target;
+    if (t && t.getAttribute && t.getAttribute("data-hide") && t.type === "checkbox") set(t.getAttribute("data-hide"), t.checked);
+    else if (t && t.getAttribute && t.getAttribute("data-club")) setTimeout(apply, 0);  // a club was followed or unfollowed: the switches follow
+  }
+  document.addEventListener("click", onClick);
+  document.addEventListener("change", onChange);
+  // the live script writes scores in, and the poster's arrows change its game: cover what arrives
+  var watcher = typeof MutationObserver === "function" ? new MutationObserver(function () { if (typeof document !== "undefined") apply(); }) : null;
+  if (watcher && document.body) watcher.observe(document.body, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ["data-state", "data-game", "data-home", "data-date"] });
+  window.__golboardHide = { stop: function () { document.removeEventListener("click", onClick); document.removeEventListener("change", onChange); if (watcher) watcher.disconnect(); } };
+  apply();
 })();
 `;
 }
@@ -628,6 +777,7 @@ export function followScript() {
   }
   function row(m) {
     var li = document.createElement("li"), when = new Date(m.kickoff);
+    if (m.home && m.away) li.setAttribute("data-game", m.home + " " + m.away + " " + (m.date || String(m.kickoff || "").slice(0, 10)));
     function cell(cls, text) { var s = document.createElement("span"); s.className = cls; s.textContent = text; li.appendChild(s); }
     cell("home", m.homeName);
     cell("mid", m.score && m.score.ft ? m.score.ft[0] + "\\u2013" + m.score.ft[1] : isNaN(when) ? "vs" : when.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
@@ -721,6 +871,11 @@ function followingPage(served, api, competitions) {
 <p class="note" id="following-count">You are not following any clubs yet.</p>
 ${groups.join("\n")}
 <noscript><p class="note">Following needs JavaScript.</p></noscript>
+</section>
+<section class="glass" id="hide">
+<h2>Hide scores</h2>
+<p class="note" id="hide-none">Watching a game later? Tick a club and its scores stay covered until you tap Show. Follow a club first and it shows here.</p>
+<ul class="clubs" id="hide-clubs"></ul>
 </section>
 <section class="glass" id="games">
 <h2>Games</h2>
@@ -886,7 +1041,7 @@ function qualifying(b, format, api) {
 export function pages({ api = "public/api/v1", out = "public", zones = loadZones, pickem = pickemData() } = {}) {
   const { competitions } = JSON.parse(readFileSync(join(api, "competitions.json"), "utf8"));
   const byId = new Map(competitions.map((c) => [c.id, c]));
-  const files = new Map([["site.css", CSS], ["live.js", liveScript()], ["follow.js", followScript()], ["pickem.js", pickemScript()]]);
+  const files = new Map([["site.css", CSS], ["live.js", liveScript()], ["follow.js", followScript() + hideScript()], ["pickem.js", pickemScript()]]);  // hiding scores rides in follow.js: both are about your clubs, and a page keeps to two scripts
   for (const font of FONTS) files.set(`fonts/${font}`, readFileSync(join(HERE, "assets", "fonts", font)));
   const served = leagues().filter((l) => byId.has(l.id));
   served.forEach((league, i) => files.set(`${league.id}/index.html`, leaguePage(league, byId.get(league.id), api,

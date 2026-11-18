@@ -87,6 +87,20 @@ Following switch (Following adds each followed club's own `news/<id>.json`), a s
 (`localStorage` key `golboard.following`, a list of team ids). The headlines are only as fresh as the last build, as is everything else
 on these pages.
 
+
+### Hide scores (spoiler-free)
+
+A club's scores can be hidden until tapped (Salah, 2026-11-14: "spoiler-free mode (scores hidden until tapped, per team)"). A club page's
+**Hide scores** button, or the switch beside each followed club on `/following/`, adds the club to `golboard.hideScores` (localStorage, kept
+on the device). Then, on every page that shows the club's games, a played or live game gives way to a **Show** button: the league, club, news and
+Following pages (`hideScript()` in `scripts/api/pages.mjs`, folded into `follow.js`), and the homepage's poster, round list and headlines
+(`src/views/HomeView.vue`, `src/data/hide.ts`). A club page also covers the club's place, record and form. A game shown stays shown for the
+visit (`golboard.shown`, sessionStorage), on any page. A kick-off time is never covered. The league tables are not covered.
+
+The homepage is built with Serie A's result already in its HTML, so a small script in the page's head (`HIDE_GUARD`, allowed by its hash)
+marks a device that hides any club, and the homepage keeps every score out of sight until it has read which. The poster keeps the score's
+shape (a faded "?–?") with a **Show score** button under it.
+
 ## Where it comes from, and how we know it is right
 
 - **Results and fixtures:** [openfootball/football.json](https://github.com/openfootball/football.json), public domain (CC0), free for any

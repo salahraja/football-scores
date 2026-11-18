@@ -6,6 +6,7 @@ import { covered, today, type TodayGame } from "../data/live";
 import { teamId } from "../data/clubid";
 import { clubNews, loadFollowing, loadScope, mergeStories, news, saveFollowing, saveScope, type Article, type Scope } from "../data/follow";
 import { clubColour } from "../data/clubColours";
+import { covered as hides, gameKey, HIDE, loadHidden, loadShown, saveShown, storyCovered, storyKey } from "../data/hide";
 import { breakCups, cupGames, groupOf, loadDay, localDay, type Cup, type DayMatch, type Group } from "../data/internationals";
 
 // The homepage (Salah, 2026-10-30, the Stadio "Poster" with glass boxes): the league's name and the newest round's result set as a
@@ -114,10 +115,11 @@ const longName = computed(() => lines.value.length > 1);
 const todays = ref<Record<string, TodayGame[]>>({});
 const nowGames = computed(() => todays.value[chosen.value] ?? []);
 const games = computed(() => {
-  if (nowGames.value.length) return nowGames.value.map((g) => ({ home: g.home, away: g.away, score: g.score, status: g.status, text: g.text }));
-  if (cup.value) return cupDay.value.map((g) => ({ home: g.home, away: g.away, score: g.score, status: g.status, text: g.text }));
-  if (other.value) return other.value.matches.map((m) => ({ home: m.home, away: m.away, score: m.score as [number, number] | null, status: "finished", text: other.value!.round }));
-  return (newest.value?.events ?? []).map((e) => ({ home: e.homeTeam.name, away: e.awayTeam.name, score: [e.homeScore.current, e.awayScore.current] as [number, number] | null, status: "finished", text: `Matchday ${newest.value?.round} · ${note}` }));
+  const ids = (home: string, away: string) => ({ homeId: teamId(home), awayId: teamId(away) });
+  if (nowGames.value.length) return nowGames.value.map((g) => ({ home: g.home, away: g.away, ...ids(g.home, g.away), score: g.score, status: g.status, text: g.text }));
+  if (cup.value) return cupDay.value.map((g) => ({ home: g.home, away: g.away, ...ids(g.home, g.away), score: g.score, status: g.status, text: g.text }));
+  if (other.value) return other.value.matches.map((m) => ({ home: m.home, away: m.away, homeId: m.homeId, awayId: m.awayId, score: m.score as [number, number] | null, status: "finished", text: other.value!.round }));
+  return (newest.value?.events ?? []).map((e) => ({ home: e.homeTeam.name, away: e.awayTeam.name, homeId: idFor(e.homeTeam.name), awayId: idFor(e.awayTeam.name), score: [e.homeScore.current, e.awayScore.current] as [number, number] | null, status: "finished", text: `Matchday ${newest.value?.round} · ${note}` }));
 });
 const shown = ref(0); // how far the arrows have moved from the first game shown
 const first = computed(() => {
@@ -128,7 +130,37 @@ const game = computed(() => {
   const all = games.value;
   return all.length ? all[(((first.value + shown.value) % all.length) + all.length) % all.length] : null;
 });
-const meta = computed(() => game.value?.text ?? "");
+// Hide scores (data/hide.ts): a hidden club's result gives way to a Show button on the poster and in the round's list, and a
+// headline naming the club to one of its own. Read once the page runs; until then a device that hides any club sees no score at
+// all (Page.astro marks it, and the board is "ready" once read), so the built page's result never flashes past.
+const hidden = ref<string[]>([]);
+const shownKeys = ref<string[]>([]);
+const ready = ref(false);
+function readHidden() {
+  hidden.value = loadHidden();
+  shownKeys.value = loadShown();
+  ready.value = true;
+}
+const hid = (home: string, away: string, givesAway: boolean) => hides(hidden.value, shownKeys.value, home, away, givesAway);
+const showLabel = (home: string, away: string) => `Show the score of ${home} against ${away}`;
+function reveal(key: string) {
+  if (shownKeys.value.includes(key)) return;
+  shownKeys.value = [...shownKeys.value, key];
+  saveShown(shownKeys.value);
+}
+const posterHidden = computed(() => !!game.value && hid(game.value.homeId, game.value.awayId, !!game.value.score || game.value.status === "live"));
+// a club hidden in another tab, or on a club page before coming Back to this one, is hidden here too
+const onStorage = (e: StorageEvent) => { if (e.key === HIDE) readHidden(); };
+const onPageShow = (e: PageTransitionEvent) => { if (e.persisted) readHidden(); };
+onMounted(() => {
+  window.addEventListener("storage", onStorage);
+  window.addEventListener("pageshow", onPageShow);
+});
+onUnmounted(() => {
+  window.removeEventListener("storage", onStorage);
+  window.removeEventListener("pageshow", onPageShow);
+});
+const meta = computed(() => (posterHidden.value ? "Score hidden" : game.value?.text ?? ""));
 // the poster in the two clubs' colours (clubColours.ts); a club we have no colour for keeps the slate on its side
 const clubs = computed(() => {
   const home = clubColour(game.value?.home), away = clubColour(game.value?.away);
@@ -170,7 +202,7 @@ function fillWithScore() {
   score.style.setProperty("--tall", String(tall));
   score.style.marginTop = `${h * (tall - 1)}px`;
 }
-watch([title, game, titleEl, scoreEl], async () => {
+watch([title, game, titleEl, scoreEl, posterHidden], async () => {
   await nextTick();
   fillWithScore();
 });
@@ -230,6 +262,7 @@ watch(chosen, async (id) => {
   await open(id);
 });
 onMounted(async () => {
+  readHidden();
   following.value = loadFollowing();
   scope.value = loadScope();
   loadClubs();
@@ -271,7 +304,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <section class="board">
+  <section class="board" :class="{ ready }">
     <!-- The poster, as on the league pages: the league's name between its arrows, then a game between its arrows (Juventus's first when they played). -->
     <section v-if="game" class="poster" data-test="hero" aria-label="Featured result" @touchstart.passive="swipeStart" @touchend.passive="swipeEnd">
       <div v-if="clubs" :key="`${game.home}-${game.away}`" class="poster__club" :style="clubs" aria-hidden="true"></div>
@@ -285,13 +318,18 @@ onMounted(async () => {
       </div>
       <div class="poster__result" data-swipe="game" :key="`${game.home}-${game.away}`" :class="slide.name">
         <span class="poster__team home" :style="{ '--word': longestWord(game.home) }">{{ game.home }}</span>
-        <span ref="scoreEl" class="poster__score">{{ game.score ? `${game.score[0]}–${game.score[1]}` : "v" }}</span>
+        <!-- a hidden score keeps the score's place and shape (a faded "?–?", stretched like a score), so the poster is not left empty -->
+        <div v-if="posterHidden" class="poster__hidden">
+          <span ref="scoreEl" class="poster__score poster__unknown" aria-hidden="true" @click="reveal(gameKey(game.homeId, game.awayId))">?–?</span>
+          <button type="button" class="poster__show" data-test="show-score" :aria-label="showLabel(game.home, game.away)" @click="reveal(gameKey(game.homeId, game.awayId))">Show score</button>
+        </div>
+        <span v-else ref="scoreEl" class="poster__score">{{ game.score ? `${game.score[0]}–${game.score[1]}` : "v" }}</span>
         <span class="poster__team away" :style="{ '--word': longestWord(game.away) }">{{ game.away }}</span>
         <div v-if="games.length > 1" class="poster__gamenav">
           <button type="button" class="arrow long" aria-label="Previous game" data-test="game-prev" @click="stepGame(-1)"><svg viewBox="0 0 48 24" aria-hidden="true"><path d="M47 12H6M12 5l-7 7 7 7" /></svg></button>
           <button type="button" class="arrow long" aria-label="Next game" data-test="game-next" @click="stepGame(1)"><svg viewBox="0 0 48 24" aria-hidden="true"><path d="M1 12h41M36 5l7 7-7 7" /></svg></button>
         </div>
-        <p class="poster__meta" :class="{ onair: game.status === 'live' }" data-test="state">{{ meta }}</p>
+        <p class="poster__meta" :class="{ onair: game.status === 'live' && !posterHidden }" data-test="state">{{ meta }}</p>
       </div>
       <nav v-if="list.length" ref="pick" class="pick" aria-label="Choose a league" data-test="leagues">
         <button v-for="c in list" :key="c.id" type="button" :aria-pressed="chosen === c.id" :class="{ on: chosen === c.id }" data-test="league" @click="choose(c.id)"><span v-if="liveIn(c.id)" class="ondot" aria-label="Live now"></span>{{ c.name }}</button>
@@ -343,7 +381,8 @@ onMounted(async () => {
             <h2 id="t-round">Today</h2>
             <div v-for="m in nowGames" :key="m.home" class="match" :class="{ onair: m.status === 'live' }">
               <span class="match__h">{{ m.home }}</span>
-              <span class="dent match__s">{{ m.score ? `${m.score[0]}–${m.score[1]}` : m.text.replace("Today ", "") }}</span>
+              <button v-if="hid(teamId(m.home), teamId(m.away), !!m.score || m.status === 'live')" type="button" class="dent match__s reveal" :aria-label="showLabel(m.home, m.away)" @click="reveal(gameKey(teamId(m.home), teamId(m.away)))">Show</button>
+              <span v-else class="dent match__s">{{ m.score ? `${m.score[0]}–${m.score[1]}` : m.text.replace("Today ", "") }}</span>
               <span>{{ m.away }}</span>
             </div>
             <a class="more" :href="`/leagues/${chosen}/`">All results</a>
@@ -352,7 +391,8 @@ onMounted(async () => {
             <h2 id="t-round">{{ cupDay[0]?.text.includes("Yesterday") ? "Yesterday" : "Today" }}</h2>
             <div v-for="m in cupDay" :key="m.home" class="match" :class="{ onair: m.status === 'live' }">
               <span class="match__h">{{ m.home }}</span>
-              <span class="dent match__s">{{ m.score ? `${m.score[0]}–${m.score[1]}` : m.text.split(" · ").pop()?.replace("Today ", "") }}</span>
+              <button v-if="hid(teamId(m.home), teamId(m.away), !!m.score || m.status === 'live')" type="button" class="dent match__s reveal" :aria-label="showLabel(m.home, m.away)" @click="reveal(gameKey(teamId(m.home), teamId(m.away)))">Show</button>
+              <span v-else class="dent match__s">{{ m.score ? `${m.score[0]}–${m.score[1]}` : m.text.split(" · ").pop()?.replace("Today ", "") }}</span>
               <span>{{ m.away }}</span>
             </div>
             <a class="more" :href="`/leagues/${cup.id}/`">All results</a>
@@ -361,7 +401,8 @@ onMounted(async () => {
             <h2 id="t-round">{{ other.round }}</h2>
             <div v-for="m in other.matches" :key="m.id" class="match">
               <span class="match__h">{{ m.home }}</span>
-              <span class="dent match__s">{{ m.score[0] }}–{{ m.score[1] }}</span>
+              <button v-if="hid(m.homeId, m.awayId, true)" type="button" class="dent match__s reveal" :aria-label="showLabel(m.home, m.away)" @click="reveal(gameKey(m.homeId, m.awayId))">Show</button>
+              <span v-else class="dent match__s">{{ m.score[0] }}–{{ m.score[1] }}</span>
               <span>{{ m.away }}</span>
             </div>
             <a class="more" :href="`/leagues/${other.id}/`">All results</a>
@@ -370,7 +411,8 @@ onMounted(async () => {
             <h2 id="t-round">Matchday {{ newest?.round }}</h2>
             <div v-for="m in newest?.events ?? []" :key="m.id" class="match">
               <span class="match__h">{{ m.homeTeam.name }}</span>
-              <span class="dent match__s">{{ m.homeScore.current }}–{{ m.awayScore.current }}</span>
+              <button v-if="hid(idFor(m.homeTeam.name), idFor(m.awayTeam.name), true)" type="button" class="dent match__s reveal" :aria-label="showLabel(m.homeTeam.name, m.awayTeam.name)" @click="reveal(gameKey(idFor(m.homeTeam.name), idFor(m.awayTeam.name)))">Show</button>
+              <span v-else class="dent match__s">{{ m.homeScore.current }}–{{ m.awayScore.current }}</span>
               <span>{{ m.awayTeam.name }}</span>
             </div>
             <a class="more" href="/results">All results</a>
@@ -390,7 +432,7 @@ onMounted(async () => {
           <p v-else-if="!articles" class="note">Loading headlines…</p>
           <p v-else-if="!stories.length" class="note">{{ scope === "following" ? (following.length ? "No headlines mention your clubs right now." : "Follow clubs with the star in a table and their stories show here.") : "No headlines yet." }}</p>
           <ul v-else class="stories">
-            <li v-for="a in stories" :key="a.url"><a class="story" :href="a.url" rel="noopener"><span class="t">{{ a.title }}</span><span class="m">{{ a.source }} · {{ when(a.published) }}</span></a></li>
+            <li v-for="a in stories" :key="a.url"><button v-if="storyCovered(hidden, shownKeys, a.clubs, a.url)" type="button" class="reveal block" @click="reveal(storyKey(a.url))">A headline about a club whose scores you hide. Show</button><a v-else class="story" :href="a.url" rel="noopener"><span class="t">{{ a.title }}</span><span class="m">{{ a.source }} · {{ when(a.published) }}</span></a></li>
           </ul>
           <p class="headlines__links"><a class="more" href="/news/">All headlines</a><a class="more" href="/following/">Choose clubs</a></p>
         </section>
