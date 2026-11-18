@@ -238,7 +238,7 @@ function shell({ title, description, path, body, live = null, here = "", script 
 <link rel="canonical" href="${esc(SITE + path)}">
 <link rel="preload" href="/leagues/fonts/barlow-condensed-800-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/leagues/site.css">
-${script ? '<script src="/leagues/live.js" defer></script>\n' : ""}${pickem ? '<script src="/leagues/pickem.js" defer></script>\n' : ""}<script src="/leagues/follow.js" defer></script>\n${ld ? `${jsonLd(ld)}\n` : ""}</head>
+${script ? '<script src="/leagues/live.js" defer></script>\n' : ""}${pickem ? '<script src="/leagues/pickem.js" defer></script>\n' : ""}<script src="/leagues/follow.js" defer></script>\n<script src="/theme-toggle.js" defer></script>\n${ld ? `${jsonLd(ld)}\n` : ""}</head>
 <body${live ? ` data-sportscore="${esc(live)}"` : ""}>
 <nav class="nav" aria-label="Site"><a href="/">Home</a><a href="/leagues/"${here === "all" ? ' aria-current="page"' : ""}>Leagues</a><a href="/news/"${here === "news" ? ' aria-current="page"' : ""}>News</a><a href="/following/"${here === "following" ? ' aria-current="page"' : ""}>Following</a></nav>
 ${body}
