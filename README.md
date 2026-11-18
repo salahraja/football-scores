@@ -41,7 +41,11 @@ It also gathers football headlines (`api/v1/news.json`) and builds `/news/` and 
 `netlify.toml` holds the build command, `dist` as the publish directory, no rewrite (each page is its own built HTML file, and an unknown address gets `404.html`)
 and a few security headers. Create the site from the repository, then add one environment variable (Site configuration, Environment
 variables): **`FOOTBALL_DATA_TOKEN`** = your football-data.org API token. Without it the site builds from the committed snapshot.
-New data appears on each deploy (trigger a deploy, or a Netlify build hook on a schedule).
+New data appears on each deploy. A scheduled job (`.github/workflows/refresh.yml`) makes one when it is needed: twice an hour it builds
+the API from the sources and, when a result changed or a new day began, commits `data/refresh.json` (a digest of every matches, table
+and groups file). That push is what makes Netlify build, so there is no build hook and no secret. It stops at 8 rebuilds a day, 45
+minutes apart, because the free plan has 300 build minutes a month (a build takes about a minute) and stops building past them.
+To rebuild by hand: Actions, "Refresh when results change", Run workflow, tick "force".
 
 Node: the build pins **Node 24** (`NODE_VERSION` in `netlify.toml`, `.nvmrc`, and `engines` `>=22.23` in `package.json`). The Goose wasm is
 wasm64 (memory64): checked here, Node 22.18.0 refuses it (`invalid memory limits flags 0x4`), Node 22.23.4 and 24.22.2 run it by
