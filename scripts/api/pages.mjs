@@ -28,7 +28,7 @@ const CSS = `@font-face { font-family: "Barlow Condensed"; font-weight: 800; fon
 @font-face { font-family: "Instrument Sans"; font-weight: 400 700; font-display: swap; src: url("/leagues/fonts/instrument-sans-latin.woff2") format("woff2"); }
 /* Stadio: slate to paper, brick red condensed capitals, near-black; boxes are glass (the facelift's tokens) */
 :root {
-  --bg: #eeeeec; --card: #f7f7f5; --slate: #6f7e98; --slate-2: #a9b3c3; --fg: #1b1c20; --muted: #5b5f68; --accent: #b3261e;
+  --bg: #eeeeec; --card: #f7f7f5; --slate: #6f7e98; --slate-2: #a9b3c3; --fg: #1b1c20; --muted: #5b5f68; --accent: #c4302a;
   --line: rgb(27 28 32 / 12%); --glass: rgb(250 250 252 / 58%); --glass-solid: #f7f7f5; --rim: rgb(255 255 255 / 70%);
   --display: "Barlow Condensed", "Arial Narrow", sans-serif; --sans: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
@@ -47,7 +47,7 @@ a:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
   box-shadow: inset 0 1px 0 var(--rim), 0 10px 30px -12px rgb(27 28 32 / 35%); }
 .nav a { padding: 8px 14px; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 0.875rem; white-space: nowrap; }
 /* the current page is pressed into the bar, its name in the signature red (Salah, 2026-11-15) */
-.nav a[aria-current="page"] { background: rgb(255 255 255 / 62%); color: #b3261e; box-shadow: inset 0 3px 6px rgb(0 0 0 / 28%), inset 0 1px 2px rgb(0 0 0 / 22%), inset 0 -1px 1px rgb(255 255 255 / 60%); }
+.nav a[aria-current="page"] { background: rgb(255 255 255 / 62%); color: #c4302a; box-shadow: inset 0 3px 6px rgb(0 0 0 / 28%), inset 0 1px 2px rgb(0 0 0 / 22%), inset 0 -1px 1px rgb(255 255 255 / 60%); }
 @media (prefers-color-scheme: dark) { .nav a[aria-current="page"] { background: rgb(0 0 0 / 35%); color: #c4302a; box-shadow: inset 0 3px 7px rgb(0 0 0 / 65%), inset 0 1px 2px rgb(0 0 0 / 55%), inset 0 -1px 1px rgb(255 255 255 / 8%); } }
 /* the same four links on every page (Home, Leagues, News, Following); anything too wide for a phone scrolls */
 .nav { overflow-x: auto; scrollbar-width: none; } .nav a { flex: none; }

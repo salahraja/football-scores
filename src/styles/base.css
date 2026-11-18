@@ -86,7 +86,7 @@ html:has(.poster) body { background-image: linear-gradient(var(--slate) 0 50%, v
 .links { display: flex; gap: 2px; flex-wrap: nowrap; }
 .links a { color: var(--fg); text-decoration: none; padding: 8px 14px; border-radius: 999px; font-weight: 700; font-size: 0.875rem; white-space: nowrap; line-height: 1.45; }
 /* the current page is pressed into the bar, its name in the signature red (Salah, 2026-11-15) */
-.links a[aria-current="page"] { background: rgb(255 255 255 / 62%); color: #b3261e; box-shadow: inset 0 3px 6px rgb(0 0 0 / 28%), inset 0 1px 2px rgb(0 0 0 / 22%), inset 0 -1px 1px rgb(255 255 255 / 60%); }
+.links a[aria-current="page"] { background: rgb(255 255 255 / 62%); color: #c4302a; box-shadow: inset 0 3px 6px rgb(0 0 0 / 28%), inset 0 1px 2px rgb(0 0 0 / 22%), inset 0 -1px 1px rgb(255 255 255 / 60%); }
 @media (prefers-color-scheme: dark) { .links a[aria-current="page"] { background: rgb(0 0 0 / 35%); color: #c4302a; box-shadow: inset 0 3px 7px rgb(0 0 0 / 65%), inset 0 1px 2px rgb(0 0 0 / 55%), inset 0 -1px 1px rgb(255 255 255 / 8%); } }
 
 /* standings */
