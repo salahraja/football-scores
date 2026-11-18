@@ -1,0 +1,51 @@
+# The site is static: results, tables and the API only change when it is built, and the host builds on every push to main.
+# Twice an hour this job builds the API from the sources and compares its facts (matches, tables, groups) with the digests saved in
+# data/refresh.json. When a result changed, or a new day began, it commits that one file. The push is what makes the host build.
+#
+# It needs no build hook and no secret. The job it replaces (rebuild.yml) posted to NETLIFY_BUILD_HOOK, a secret that was never set:
+# it passed without doing anything until 2026-11-17, so the tables only moved when code was pushed.
+# The free build minutes are safe: at most 8 rebuilds a day, 45 minutes apart (scripts/api/refresh.mjs, tests/api-refresh.test.ts).
+# To rebuild now: Actions > Refresh when results change > Run workflow, with "force" ticked.
+name: Refresh when results change
+on:
+  schedule:
+    - cron: "7,37 * * * *"
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Rebuild even if nothing changed
+        type: boolean
+        default: false
+permissions:
+  contents: write
+concurrency:
+  group: refresh
+  cancel-in-progress: false
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      # Plain Node, no packages. The API is built into a scratch folder: this job publishes nothing itself.
+      - name: Download the sources
+        run: |
+          node scripts/api/fetch-openfootball.mjs | tee "$RUNNER_TEMP/fetch.log"
+          node scripts/api/fetch-wikipedia.mjs | tee -a "$RUNNER_TEMP/fetch.log"
+      - name: Build the API
+        run: node scripts/api/build.mjs --out "$RUNNER_TEMP/site"
+      - name: Did anything change?
+        id: decide
+        run: node scripts/api/refresh.mjs --api "$RUNNER_TEMP/site/api/v1" --fetch-log "$RUNNER_TEMP/fetch.log" ${{ inputs.force && '--force' || '' }}
+      - name: Commit the new digests, so the host builds
+        if: steps.decide.outputs.rebuild == 'true'
+        env:
+          MESSAGE: ${{ steps.decide.outputs.message }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/refresh.json
+          git commit -m "$MESSAGE"
+          git push || (git pull --rebase origin main && git push)
