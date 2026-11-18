@@ -6,6 +6,7 @@ import { covered, today, type TodayGame } from "../data/live";
 import { teamId } from "../data/clubid";
 import { clubNews, loadFollowing, loadScope, mergeStories, news, saveFollowing, saveScope, type Article, type Scope } from "../data/follow";
 import { clubColour } from "../data/clubColours";
+import { drawPoster, sharePoster } from "../data/sharePoster";
 import { breakCups, cupGames, groupOf, loadDay, localDay, type Cup, type DayMatch, type Group } from "../data/internationals";
 
 // The homepage (Salah, 2026-10-30, the Stadio "Poster" with glass boxes): the league's name and the newest round's result set as a
@@ -187,6 +188,21 @@ async function readToday(id: string) {
   const games = await today(id);
   todays.value = { ...todays.value, [id]: games }; // spread after the wait: leagues arrive in any order, and none may overwrite another
 }
+// The share poster (sharePoster.ts): the game on the poster as a Stories-size image, to the share sheet or downloaded.
+const sharing = ref(false);
+const slug = (t: string) => t.toLowerCase().normalize("NFD").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+async function shareGame() {
+  const g = game.value;
+  if (!g || sharing.value) return;
+  sharing.value = true;
+  try {
+    const score = g.score ? `${g.score[0]}–${g.score[1]}` : "v";
+    const blob = await drawPoster({ league: title.value, home: g.home, away: g.away, score: g.score, meta: meta.value, homeColour: clubColour(g.home) ?? null, awayColour: clubColour(g.away) ?? null });
+    if (blob) await sharePoster(blob, `${slug(g.home)}-${g.score ? `${g.score[0]}-${g.score[1]}` : "v"}-${slug(g.away)}.png`, `${g.home} ${score} ${g.away}`);
+  } finally {
+    sharing.value = false;
+  }
+}
 let poll: ReturnType<typeof setInterval> | undefined;
 onUnmounted(() => clearInterval(poll));
 function stepGame(by: number) {
@@ -340,6 +356,7 @@ onMounted(async () => {
           <button type="button" class="arrow long" aria-label="Next game" data-test="game-next" @click="stepGame(1)"><svg viewBox="0 0 48 24" aria-hidden="true"><path d="M1 12h41M36 5l7 7-7 7" /></svg></button>
         </div>
         <p class="poster__meta" :class="{ onair: game.status === 'live' }" data-test="state">{{ meta }}</p>
+        <button type="button" class="share" :disabled="sharing" data-test="share" aria-label="Share this result as a picture" @click="shareGame"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" /></svg>Share</button>
       </div>
       <nav v-if="list.length" ref="pick" class="pick" aria-label="Choose a league" data-test="leagues">
         <button v-for="c in list" :key="c.id" type="button" :aria-pressed="chosen === c.id" :class="{ on: chosen === c.id }" data-test="league" @click="choose(c.id)"><span v-if="liveIn(c.id)" class="ondot" aria-label="Live now"></span>{{ c.name }}</button>
@@ -447,3 +464,11 @@ onMounted(async () => {
     </div>
   </section>
 </template>
+
+<style>
+/* The share poster's button: a small glass pill under the result, in the poster's ink. */
+.poster__result .share { grid-column: 1 / -1; justify-self: center; display: inline-flex; align-items: center; gap: 6px; margin-top: 4px; padding: 8px 16px;
+  border: 0; border-radius: 999px; font: 700 0.875rem var(--font-sans); color: var(--fg); background: var(--glass-fill); cursor: pointer; }
+.poster__result .share svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.poster__result .share:disabled { opacity: 0.5; }
+</style>
