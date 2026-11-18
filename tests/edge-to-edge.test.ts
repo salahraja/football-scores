@@ -47,3 +47,13 @@ describe("Safari's strip takes the colour of the top of the page", () => {
     expect(css).toMatch(/html:has\(\.poster\),\s*html:has\(\.poster\) body\s*\{[^}]*background-color:\s*var\(--slate\)/);
   });
 });
+
+// Salah, 2026-11-18: "the white bar doesn't show on home but it is everywhere else". The league, news and following pages open with the
+// same slate poster, so their body is the slate too, and the foot of the page stays off-white.
+describe("Safari's strip on the league, news and following pages", () => {
+  it("on a page with the poster, the body is the poster's slate", () => {
+    expect(pages).toMatch(/html:has\(\.poster\),\s*html:has\(\.poster\) body\s*\{[^}]*background-color:\s*var\(--slate\)/);
+    // a fixed 120px the poster always covers, not half the page: the league list sits below a short poster and stays off-white
+    expect(pages).toMatch(/html:has\(\.poster\) body\s*\{[^}]*background-image:\s*linear-gradient\(var\(--slate\) 0 120px, var\(--bg\) 120px\)/);
+  });
+});
