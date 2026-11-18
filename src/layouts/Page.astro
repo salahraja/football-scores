@@ -3,6 +3,7 @@
 import "../styles/tokens.css";
 import "../styles/base.css";
 import NavBar from "../components/NavBar.vue";
+import { HIDE_GUARD } from "../data/hide";
 
 interface Props { title: string; current: string; description?: string }
 const { title, current, description = "Serie A scores, results and league table" } = Astro.props;
@@ -17,6 +18,7 @@ const { title, current, description = "Serie A scores, results and league table"
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>{title}</title>
+    <script is:inline set:html={HIDE_GUARD}></script>
   </head>
   <body>
     <div id="app">
