@@ -1,5 +1,5 @@
 {
-  "_about": "Team names that differ by more than club words and accents, mapped to our id (the slug teams.mjs makes, on the left). Each one was found by the official-table test, where two sources named the same club differently; the cup and international ones (14 November 2026) by comparing SportScore's live-score names with the Wikipedia names on its last eight match days of each competition (tests/api-cup-live.test.ts).",
+  "_about": "Team names that differ by more than club words and accents, mapped to our id (the slug teams.mjs makes, on the left). Each one was found by the official-table test, where two sources named the same club differently; the cup and international ones (14 November 2026) by comparing SportScore's live-score names with the Wikipedia names on its last eight match days of each competition (tests/api-cup-live.test.ts); the league ones of 17 November 2026 the same way, over 30 October to 9 November (tests/api-league-live-names.test.ts, scripts/api/check-live-names.mjs).",
   "aliases": {
     "real-racing-santander": "racing-santander",
     "cambuur-leeuwarden": "cambuur",
@@ -35,6 +35,10 @@
     "ogc-nice": "nice",
     "az-alkmaar": "az",
     "excelsior-rotterdam": "excelsior",
+    "excelsior-sbv": "excelsior",
+    "deportivo": "deportivo-coruna",
+    "havre-athletic": "le-havre",
+    "troyes": "es-troyes",
     "nec-nijmegen": "nec",
     "avs-futebol": "avs",
     "vitoria": "vitoria-guimaraes",

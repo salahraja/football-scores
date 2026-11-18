@@ -55,7 +55,11 @@ writes each score and state ("Live · 2nd half", "Full time") into the row with 
 schedule can be a day out (openfootball had LaLiga's 31 October games on 1 November); the poster moves to a game that is live; it stops
 when they have all finished.
 SportScore's terms ask for a visible link, so those pages say "Live scores powered by SportScore". The script names clubs with the same
-function and aliases as `teams.mjs` (copied in at build time). On 31 October 2026 goals showed on SportScore a median 0.2 min after ESPN
+function and aliases as `teams.mjs` (copied in at build time). A name the feed uses that makes a different id from ours is a club whose
+live scores never show, so the names are checked against the feed itself: `node scripts/api/check-live-names.mjs` reads SportScore's
+fixtures for a window of days and lists every name that is not a team of ours. On 17 November 2026 it found four, all promoted clubs
+(Deportivo La Coruña, Le Havre, Troyes, Excelsior), now in `data/api/aliases.json` and `tests/api-league-live-names.test.ts`; the cups
+and internationals were clean. Run it when a season starts or a competition is added. On 31 October 2026 goals showed on SportScore a median 0.2 min after ESPN
 and final whistles 1.2 min after (each ±1 min). The site's CSP allows `connect-src https://sportscore.com` for this. Without the script the
 page is still complete. A hidden team (Israel) has no row, so a game of theirs that SportScore sends is never shown.
 
