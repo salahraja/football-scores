@@ -38,6 +38,10 @@ const CSS = `@font-face { font-family: "Barlow Condensed"; font-weight: 800; fon
 *, *::before, *::after { box-sizing: border-box; }
 html { background: var(--bg); overflow-x: clip; }
 body { margin: 0; font: 16px/1.45 var(--sans); color: var(--fg); background: var(--bg); overflow-x: clip; }
+/* Safari 26 colours the strip under the status bar with the body's background (WebKit bug 301756). Every page here opens with the slate
+   poster, so the body is the slate and the strip runs into it (Salah, 2026-11-18, as on Home); the foot of the page stays off-white. */
+html:has(.poster), html:has(.poster) body { background-color: var(--slate); }
+html:has(.poster) body { background-image: linear-gradient(var(--slate) 0 120px, var(--bg) 120px); }  /* the poster always covers the top 120px */
 a { color: inherit; }
 a:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
 .nav { position: sticky; top: calc(10px + env(safe-area-inset-top, 0px)); z-index: 10; display: flex; gap: 2px; width: fit-content;
