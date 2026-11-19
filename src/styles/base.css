@@ -64,8 +64,13 @@ code { font-family: var(--font-mono); font-weight: 700; }
 /* Safari 26 colours the strip under the status bar with the body's background (theme-color is ignored; WebKit bug 301756). A page that
    opens with the slate poster gets a slate body, so the strip runs into the poster instead of standing out in off-white (Salah, 2026-11-17:
    "It's not see through"). The sheet below the poster keeps its own --bg. */
-html:has(.poster), html:has(.poster) body { background-color: var(--slate); }
-html:has(.poster) body { background-image: linear-gradient(var(--slate) 0 50%, var(--bg) 50%); } /* the foot of the page stays off-white below the sheet */
+/* Salah, 2026-11-18: "The bar is back on home only. Also the gradient should be only on the top like it is here" (Leagues). On a game
+   in club colours the slate strip stood out above the poster. Now one colour, --top, is the body's and the poster's top: the shown
+   game's club colours (HomeView puts them on the page root) mixed into the slate, or the slate alone. The poster fades from it to the
+   page near the top, like the league pages. */
+html:has(.poster) { --top: color-mix(in srgb, color-mix(in srgb, var(--home-c, var(--slate)), var(--away-c, var(--slate))) var(--club-share), var(--slate)); }
+html:has(.poster), html:has(.poster) body { background-color: var(--top); }
+html:has(.poster) body { background-image: linear-gradient(var(--top) 0 50%, var(--bg) 50%); } /* the foot of the page stays off-white below the sheet */
 
 /* navbar */
 .navbar {
@@ -120,7 +125,7 @@ html:has(.poster) body { background-image: linear-gradient(var(--slate) 0 50%, v
   /* Salah, 2026-11-08: on an iPhone the poster stopped at Safari's address bar and a flat band showed under it ("still doesn't
      extend"). Safari draws the page under its bar (checked with a test page), so the poster now runs to the bottom of the screen
      (100lvh, below) and keeps its slate to the bottom instead of fading to near black, which read as a band. */
-  background: linear-gradient(180deg, var(--slate), var(--slate-2) 60%, color-mix(in srgb, var(--slate-2) 55%, var(--bg))); text-align: center;
+  background: linear-gradient(180deg, var(--top, var(--slate)), var(--bg) 38%); text-align: center;
 }
 .poster__title { font: 800 min(clamp(4rem, 24vw, 21rem), calc((100vw - 124px) / (var(--chars, 7) * 0.47)))/0.82 var(--font-display); color: var(--accent); text-transform: uppercase; margin: 0; white-space: nowrap; }
 .poster__result { display: grid; grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1fr) auto; grid-template-areas: "prev home mid away next" ". meta meta meta ."; justify-items: stretch; align-items: center; gap: clamp(8px, 2vw, 22px); max-width: var(--max-width); margin: var(--space-2) auto 0; }
@@ -314,9 +319,7 @@ tr[class*="zone--"] > .pos { box-shadow: inset 3px 0 0 var(--zone, transparent);
    size, not seen on the plain poster), and so did animating registered colour properties. A new pair fades in instead. */
 .poster > .poster__club {
   position: absolute; inset: 0; z-index: -1; pointer-events: none;
-  background:
-    linear-gradient(180deg, transparent 0 55%, color-mix(in srgb, var(--slate-2) 55%, var(--bg))),
-    linear-gradient(90deg, color-mix(in srgb, var(--home-c) var(--club-share), var(--club-base)), color-mix(in srgb, var(--away-c) var(--club-share), var(--club-base)));
+  background: linear-gradient(180deg, var(--top), var(--bg) 38%);
   animation: club-in 0.6s ease both;
 }
 .poster { isolation: isolate; }

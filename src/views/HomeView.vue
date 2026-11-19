@@ -132,8 +132,23 @@ const meta = computed(() => game.value?.text ?? "");
 // the poster in the two clubs' colours (clubColours.ts); a club we have no colour for keeps the slate on its side
 const clubs = computed(() => {
   const home = clubColour(game.value?.home), away = clubColour(game.value?.away);
-  return home || away ? { "--home-c": home ?? "var(--club-base)", "--away-c": away ?? "var(--club-base)" } : null;
+  if (!home && !away) return null;
+  const vars: Record<string, string> = {};
+  if (home) vars["--home-c"] = home;
+  if (away) vars["--away-c"] = away;
+  return vars;
 });
+// the same colours on the page root, so the body's --top (base.css), which Safari paints under the status bar, matches the poster's top
+function clubsOnRoot(vars: Record<string, string> | null) {
+  if (typeof document === "undefined") return;  // the build renders this page on the server
+  const root = document.documentElement.style;
+  for (const name of ["--home-c", "--away-c"]) {
+    if (vars?.[name]) root.setProperty(name, vars[name]);
+    else root.removeProperty(name);
+  }
+}
+watch(clubs, clubsOnRoot, { immediate: true });
+onUnmounted(() => clubsOnRoot(null));
 function liveIn(id: string) {
   return (todays.value[id] ?? []).some((g) => g.status === "live");
 }
