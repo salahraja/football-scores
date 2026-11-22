@@ -243,22 +243,23 @@ export function buildNews({ api = join(ROOT, "public/api/v1"), raw = join(ROOT, 
       for (const [id, name] of Object.entries(teams)) clubs.push({ id, name });
     }
     const terms = clubTerms(clubs);
-    const tagged = (list) => list.map(({ tags, ...a }) => ({ ...a, clubs: clubs.filter((c) => mentions({ ...a, tags }, terms.get(c.id))).map((c) => c.id) }));
+    // a story is about a club when its headline or its text names it; a feed's tag alone files roundups that never do (Salah, 2026-11-22: drop them)
+    const names = (a, c) => mentions({ title: a.title, summary: null, tags: [] }, terms.get(c.id)) || clubExcerpt(a.parts ?? [], terms.get(c.id)) !== null;
+    const tagged = (list) => list.map(({ tags, ...a }) => ({ ...a, clubs: clubs.filter((c) => names(a, c)).map((c) => c.id) }));
     const everything = tagged(merge(lists, Infinity));
     const bare = ({ parts, ...a }) => a;
     articles = everything.slice(0, LIMIT).map(bare);
     // a club's copy of a story says only what the story says about that club; a headline that names the club keeps the summary it came with
     const about = (a, c) => {
       const excerpt = clubExcerpt(a.parts ?? [], terms.get(c.id));
-      if (excerpt) return { ...bare(a), summary: excerpt };
-      return mentions({ title: a.title, summary: null, tags: [] }, terms.get(c.id)) ? bare(a) : { ...bare(a), summary: null };
+      return excerpt ? { ...bare(a), summary: excerpt } : bare(a);
     };
-    // news/<club>.json: the club's own Guardian feed (all about it, whatever a headline says) and the general stories that name it
+    // news/<club>.json: the stories in the club's own Guardian feed and in the general feeds whose headline or text names it
     const perClub = new Map();
     for (const c of clubs) {
       let own = [];
       try { own = parseRss(readFileSync(join(raw, "club", `${c.id}.xml`), "utf8"), "The Guardian", { withParts: true }).map(({ tags, ...a }) => ({ ...a, clubs: [c.id] })); } catch { /* none saved */ }
-      perClub.set(c.id, merge([everything.filter((a) => a.clubs.includes(c.id)).map((a) => about(a, c)), own.map((a) => about(a, c))], CLUB_LIMIT));
+      perClub.set(c.id, merge([everything.filter((a) => a.clubs.includes(c.id)).map((a) => about(a, c)), own.filter((a) => names(a, c)).map((a) => about(a, c))], CLUB_LIMIT));
     }
     mkdirSync(join(api, "news"), { recursive: true });
     for (const [id, list] of perClub) write(join(api, "news", `${id}.json`), { generatedAt: now, articles: list });

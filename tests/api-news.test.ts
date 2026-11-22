@@ -242,11 +242,12 @@ describe("each club's own news file", () => {
   };
   const read = (dir: string, id: string) => JSON.parse(readFileSync(join(dir, "news", `${id}.json`), "utf8"));
 
-  it("holds the club's Guardian stories (all about the club, whatever the headline says) and the general stories that name it, newest first, each once", () => {
+  // Owner reversal, Salah 2026-11-22 ("drop"): a Guardian story that never names the club, in its headline or its text, is no longer kept.
+  it("holds the club's Guardian stories that name it and the general stories that name it, newest first, each once", () => {
     const dir = api();
     buildNews({ api: dir, raw: raw(), now: "2026-11-13T10:00:00Z" });
     const napoli = read(dir, "napoli");
-    expect(napoli.articles.map((a: { title: string }) => a.title)).toEqual(["Napoli sign a defender", "Napoli's midfield is the league's best", "A story about nothing named"]);
+    expect(napoli.articles.map((a: { title: string }) => a.title)).toEqual(["Napoli sign a defender", "Napoli's midfield is the league's best"]);
     expect(napoli.articles.every((a: { clubs: string[] }) => a.clubs.includes("napoli"))).toBe(true);   // the Guardian's tag says so
     expect(napoli.articles[0].source).toBe("BBC Sport");                                                // the general copy, not the Guardian's twin
   });
@@ -360,16 +361,19 @@ describe("the part of a story that is about one club", () => {
 <item><title>Europa League: Celtic lose</title><link>https://g.test/roundup</link><pubDate>Thu, 12 Nov 2026 18:30:00 GMT</pubDate><description>${ROUNDUP}</description></item>
 <item><title>European football: Bayern win</title><link>https://g.test/nothing</link><pubDate>Thu, 12 Nov 2026 17:30:00 GMT</pubDate><description>&lt;p&gt;Bayern sailed to a 6-1 win.&lt;/p&gt;</description></item>
 <item><title>Juventus sign a striker</title><link>https://g.test/own</link><pubDate>Thu, 12 Nov 2026 16:30:00 GMT</pubDate><description>&lt;p&gt;The deal is done, with a fee agreed.&lt;/p&gt;</description></item></channel></rss>`);
-      writeFileSync(join(dir, "bbc-sport.xml"), `<rss><channel><item><title>Napoli and Juventus meet</title><link>https://b.test/g</link><pubDate>Thu, 12 Nov 2026 12:30:00 GMT</pubDate><description>Napoli host the league leaders in a game that could decide the title race this year.</description></item></channel></rss>`);
+      writeFileSync(join(dir, "bbc-sport.xml"), `<rss><channel><item><title>Napoli and Juventus meet</title><link>https://b.test/g</link><pubDate>Thu, 12 Nov 2026 12:30:00 GMT</pubDate><description>Napoli host the league leaders in a game that could decide the title race this year.</description></item>
+<item><title>Weekend round-up</title><link>https://b.test/tagged</link><pubDate>Thu, 12 Nov 2026 11:30:00 GMT</pubDate><description>Goals and red cards across Europe.</description><category>Juventus</category></item></channel></rss>`);
       return dir;
     };
 
-    it("gives the club only the lines about it; a headline that names the club keeps its own summary; a roundup with nothing about it has none", () => {
+    // Salah, 2026-11-22 ("drop"): a story whose headline and text never name the club is left out of its file, not shown without a summary.
+    it("gives the club only the lines about it; a headline that names the club keeps its own summary; a roundup with nothing about it is left out", () => {
       const dir = api();
       buildNews({ api: dir, raw: raw(), now: "2026-11-13T10:00:00Z" });
       const byTitle = Object.fromEntries(JSON.parse(readFileSync(join(dir, "news/juventus.json"), "utf8")).articles.map((a: { title: string; summary: string | null }) => [a.title, a.summary]));
       expect(byTitle["Europa League: Celtic lose"]).toBe("VAR rules out Juventus winner in draw with Rennes · Elsewhere, Juventus had a winner chalked off by VAR in the 88th minute.");
-      expect(byTitle["European football: Bayern win"]).toBeNull();
+      expect(byTitle).not.toHaveProperty("European football: Bayern win");   // filed under Juventus by the Guardian, but never names them
+      expect(byTitle).not.toHaveProperty("Weekend round-up");                // only its tag says Juventus
       expect(byTitle["Juventus sign a striker"]).toBe("The deal is done, with a fee agreed.");
       expect(byTitle["Napoli and Juventus meet"]).toMatch(/^Napoli host the league leaders/);   // named in the headline
     });
