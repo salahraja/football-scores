@@ -73,12 +73,15 @@ non-commercial use; BBC's and ESPN's current terms were not confirmed (the BBC p
 `api:fetch` also reads The Guardian's feed for each club that has one (`https://www.theguardian.com/football/<tag>/rss`, the tag per club in
 `data/api/guardian-feeds.json`: 122 of the 156 clubs; found by trying the club's name as a tag and keeping a feed only when its stories are about the
 club). The requests go three at a time with a pause between, because the Guardian rate-limits bursts; a club whose feed fails keeps its saved copy in
-`data/news/club/`. Those tags are the Guardian's own, so a roundup ("European football: ...") appears under every club it covers.
+`data/news/club/`. Those tags are the Guardian's own, so a roundup ("European football: ...") appears under every club it covers. A club's file
+keeps such a roundup only when its headline or text names the club, with the club's lines as its summary; a roundup filed under the club by its tag
+alone is left out (Salah, 2026-11-22: 5 of the 20 stories in Juventus's feed that day), and the same rule sets `clubs` in `news.json`.
 
 A story is tagged with a club when the club's name, or a well-known short name ("Man Utd", "Spurs"), appears as whole words in the
-headline, the summary or the feed's own tags. A short name that could mean two clubs ("United", "Manchester", "Madrid") is left out, so a
+headline or the story's text (a feed's own tag alone no longer counts, see above). A short name that could mean two clubs ("United", "Manchester", "Madrid") is left out, so a
 story may be missed but is not filed under the wrong club; a one-word name needs a capital letter ("Nice" the club, not "nice"). Stories
-that only name a player are not tagged. The iPhone app has the same rules (`Golboard/Follow.swift`); the tests hold the same cases.
+that only name a player are not tagged. The iPhone app has the same rules (`Golboard/Follow.swift`), except that it still counts a feed's tags
+(to change there); the tests hold the same cases.
 
 The homepage carries both too (`src/views/HomeView.vue`): its Headlines box shows the six newest stories from `api/v1/news.json` with an All /
 Following switch (Following adds each followed club's own `news/<id>.json`), a star beside each club in its table follows the club, and the marked row and the poster's first game are a followed club's
