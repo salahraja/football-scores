@@ -229,4 +229,17 @@ describe("the homepage's leagues", () => {
     await flushPromises();
     expect(poster()).toContain("Girona");
   });
+
+  // Salah, 2026-11-22: "La Liga takes up a lot of space, let's try to make the league names fit similarly despite word count."
+  // On a phone each word of the name was sized by the longest word, so "LA / LIGA" (4 letters) drew far bigger than "PREMIER / LEAGUE".
+  it("draws every league's name at the same size on a phone, however short its words", async () => {
+    stub();
+    const w = home();
+    await flushPromises();
+    const chars = () => [...new Set(w.findAll(".poster__word").map((s) => (s.element as HTMLElement).style.getPropertyValue("--chars")))];
+    const serieA = chars();
+    await w.findAll('[data-test="league"]')[1].trigger("click");
+    await flushPromises();
+    expect(serieA).toEqual(chars());
+  });
 });
