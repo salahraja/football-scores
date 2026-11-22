@@ -25,18 +25,21 @@ const list = ref<Competition[]>([]);
 // Built as HTML with Serie A chosen; the league in the address, if any, is opened once the page runs (so the built HTML and the
 // first render in the browser agree).
 const chosen = ref(HOME);
+// The league on the poster and in the table: it follows `chosen` once that league has arrived, so a swipe never shows Serie A while
+// the next league is on its way (Salah, 2026-11-21: "Every time you swipe to a different league, it goes back to ... Serie A").
+const onPoster = ref(HOME);
 const loaded = ref<Record<string, League>>({});
 const failed = ref(false);
 const pick = ref<HTMLElement | null>(null);
-const other = computed(() => (chosen.value === HOME ? null : loaded.value[chosen.value] ?? null));
+const other = computed(() => (onPoster.value === HOME ? null : loaded.value[onPoster.value] ?? null));
 // In an international break (internationals.ts) the nations' tournaments lead the list; a cup has no league table, only its groups.
 const cups = ref<Cup[]>([]);
 const dayMatches = ref<DayMatch[]>([]);
-const cup = computed(() => cups.value.find((c) => c.id === chosen.value) ?? null);
+const cup = computed(() => cups.value.find((c) => c.id === onPoster.value) ?? null);
 const cupDay = computed(() => (cup.value ? cupGames(dayMatches.value, cup.value.id, localDay()) : []));
 const group = ref<Group | null>(null);
-const zones = computed(() => loaded.value[chosen.value]?.zones ?? []);
-const zoneNote = computed(() => loaded.value[chosen.value]?.note ?? "");
+const zones = computed(() => loaded.value[onPoster.value]?.zones ?? []);
+const zoneNote = computed(() => loaded.value[onPoster.value]?.note ?? "");
 const clubIds = computed(() => Object.fromEntries((loaded.value[HOME]?.table ?? []).map((r) => [r.name, r.id])));
 // Serie A's own feed names clubs its own way ("Inter", "Como 1907"), so a row's id comes from the API's table when it has the name, else from the name.
 const idFor = (name: string) => clubIds.value[name] ?? teamId(name);
@@ -86,15 +89,43 @@ function longestWord(name: string) {
 function places(z: { from: number; to: number }) {
   return z.from === z.to ? `${z.from}` : `${z.from}–${z.to}`;
 }
+// One read per league at a time: a swipe onto a league that is already being read ahead waits for that read.
+const reading = new Map<string, Promise<void>>();
+function read(id: string): Promise<void> {
+  const c = list.value.find((x) => x.id === id);
+  if (!c || loaded.value[id] || cups.value.some((x) => x.id === id)) return Promise.resolve();
+  let r = reading.get(id);
+  if (!r) {
+    r = loadLeague(c)
+      .then((l) => void (loaded.value = { ...loaded.value, [id]: l }))
+      .finally(() => reading.delete(id));
+    reading.set(id, r);
+  }
+  return r;
+}
 async function open(id: string) {
   failed.value = false;
-  const c = list.value.find((x) => x.id === id);
-  if (!c || loaded.value[id] || cups.value.some((x) => x.id === id)) return;
   try {
-    loaded.value = { ...loaded.value, [id]: await loadLeague(c) };
+    await read(id);
   } catch {
-    failed.value = true;
+    if (chosen.value === id) failed.value = true;
   }
+}
+// The leagues either side, read ahead so the next swipe is there at once; a failed read here says nothing until it is chosen.
+function readAhead() {
+  const at = list.value.findIndex((c) => c.id === chosen.value);
+  if (at < 0 || list.value.length < 2) return;
+  for (const by of [1, -1]) read(list.value[(at + by + list.value.length) % list.value.length].id).catch(() => {});
+}
+// Puts the chosen league on the poster once it has arrived; one that could not be read leaves the last league up, with the note.
+let nextSlide: { name: string; league: boolean } | null = null;
+async function show(id: string) {
+  await open(id);
+  const ready = id === HOME || !!loaded.value[id] || cups.value.some((x) => x.id === id);
+  if (chosen.value !== id || !ready || onPoster.value === id) return;
+  if (nextSlide) slide.value = nextSlide;
+  nextSlide = null;
+  onPoster.value = id;
 }
 function choose(id: string) {
   chosen.value = id;
@@ -112,7 +143,7 @@ const lines = computed(() => (title.value.includes(" ") ? title.value.split(" ")
 const longName = computed(() => lines.value.length > 1);
 // Salah, 2026-11-07: "live scores should always show first". Today's games lead whenever there are any, with those on now at the front; the last round fills in.
 const todays = ref<Record<string, TodayGame[]>>({});
-const nowGames = computed(() => todays.value[chosen.value] ?? []);
+const nowGames = computed(() => todays.value[onPoster.value] ?? []);
 const games = computed(() => {
   if (nowGames.value.length) return nowGames.value.map((g) => ({ home: g.home, away: g.away, score: g.score, status: g.status, text: g.text }));
   if (cup.value) return cupDay.value.map((g) => ({ home: g.home, away: g.away, score: g.score, status: g.status, text: g.text }));
@@ -225,7 +256,7 @@ function neighbour(by: number) {
   return list.value[(at + by + list.value.length) % list.value.length].name;
 }
 function step(by: number) {
-  slide.value = { name: by > 0 ? "from-right" : "from-left", league: true };
+  nextSlide = { name: by > 0 ? "from-right" : "from-left", league: true }; // played when the league goes up, not before
   const at = list.value.findIndex((c) => c.id === chosen.value);
   choose(list.value[(at + by + list.value.length) % list.value.length].id);
 }
@@ -242,7 +273,8 @@ watch([cup, game], async ([c, g]) => {
 watch(chosen, async (id) => {
   await nextTick();
   pick.value?.querySelector(".on")?.scrollIntoView?.({ inline: "center", block: "nearest", behavior: "smooth" });
-  await open(id);
+  await show(id);
+  readAhead();
 });
 onMounted(async () => {
   following.value = loadFollowing();
@@ -268,7 +300,8 @@ onMounted(async () => {
       if (!asked) choose(found[0].id);
     }
     await open(HOME);
-    if (chosen.value !== HOME) await open(chosen.value);
+    if (chosen.value !== HOME) await show(chosen.value);
+    readAhead();
     await Promise.all(list.value.map((c) => readToday(c.id)));
     // nothing on in the first league and a game on elsewhere: open on the game that is on, unless the address asked for a league
     // (`asked`, read before the break above wrote a cup into the address)
@@ -313,7 +346,7 @@ onMounted(async () => {
       </nav>
       <p v-if="nowGames.length" class="poster__credit">Live scores powered by <a href="https://sportscore.com">SportScore</a></p>
     </section>
-    <p v-if="failed" class="note" role="status" data-test="league-failed">That league could not be read just now. <button type="button" class="again" @click="open(chosen)">Try again</button></p>
+    <p v-if="failed" class="note" role="status" data-test="league-failed">That league could not be read just now. <button type="button" class="again" @click="show(chosen)">Try again</button></p>
 
     <div class="sheet">
     <div class="board__grid">
@@ -361,7 +394,7 @@ onMounted(async () => {
               <span class="dent match__s">{{ m.score ? `${m.score[0]}–${m.score[1]}` : m.text.replace("Today ", "") }}</span>
               <span>{{ m.away }}</span>
             </div>
-            <a class="more" :href="`/leagues/${chosen}/`">All results</a>
+            <a class="more" :href="`/leagues/${onPoster}/`">All results</a>
           </template>
           <template v-else-if="cup">
             <h2 id="t-round">{{ cupDay[0]?.text.includes("Yesterday") ? "Yesterday" : "Today" }}</h2>
