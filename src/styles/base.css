@@ -1,5 +1,10 @@
 @font-face { font-family: "Barlow Condensed"; font-weight: 800; font-display: swap; src: url("/fonts/barlow-condensed-800-latin.woff2") format("woff2"); }
 @font-face { font-family: "Instrument Sans"; font-weight: 400 700; font-display: swap; src: url("/fonts/instrument-sans-latin.woff2") format("woff2"); }
+/* Until Barlow arrives, fonts the phone already has, each scaled to Barlow's width (measured 2026-11-20 in WebKit on one line of
+   capitals and digits), so the poster's first frame keeps its layout; the system sans is 1.4 times as wide (look audit 2026-11-18). */
+@font-face { font-family: "Barlow fallback HN"; src: local("Helvetica Neue Condensed Bold"), local("HelveticaNeue-CondensedBold"); size-adjust: 89.7%; }
+@font-face { font-family: "Barlow fallback AN"; src: local("Avenir Next Condensed Bold"), local("AvenirNextCondensed-Bold"); size-adjust: 90.8%; }
+@font-face { font-family: "Barlow fallback Arial"; src: local("Arial Narrow Bold"), local("ArialNarrow-Bold"); size-adjust: 86.9%; }
 *, *::before, *::after { box-sizing: border-box; }
 html { color-scheme: light dark; overflow-x: clip; background: var(--bg); }
 .board { position: relative; }

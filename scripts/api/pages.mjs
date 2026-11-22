@@ -160,7 +160,7 @@ h2 { font: 800 1.9rem/1 var(--display); text-transform: uppercase; margin: 0 0 0
 .list b { display: block; font: 800 2rem/1 var(--display); text-transform: uppercase; color: var(--accent); }
 .list span { color: var(--muted); }
 footer { grid-column: 1 / -1; color: var(--muted); font-size: 0.8125rem; }
-@media (max-width: 400px) { .standings .wdl { display: none; } }
+@media (max-width: 460px) { .standings .wdl { display: none; } }  /* every phone: the club name keeps its room (look audit 2026-11-18) */
 .star { border: 0; background: none; padding: 0 6px 0 0; font: inherit; font-size: 1rem; line-height: 1; color: var(--accent); cursor: pointer; }
 .follow { margin-top: 0.5rem; padding: 8px 16px; border: 0; border-radius: 999px; font: 700 0.875rem var(--sans); cursor: pointer; color: var(--fg); background: var(--glass);
   box-shadow: inset 0 1px 0 var(--rim), 0 8px 20px -10px rgb(27 28 32 / 40%); }
@@ -175,7 +175,11 @@ footer { grid-column: 1 / -1; color: var(--muted); font-size: 0.8125rem; }
 .story { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2px; padding: 12px 0; text-decoration: none; overflow-wrap: anywhere; }
 .story .t { font-weight: 700; } .story .s { color: var(--muted); font-size: 0.9375rem; } .story .m { color: var(--accent); font-size: 0.8125rem; font-weight: 700; }
 .story:hover .t { text-decoration: underline; }
-details { border-bottom: 1px solid var(--line); padding: 6px 0; } summary { cursor: pointer; font-weight: 700; padding: 6px 0; }
+details { border-bottom: 1px solid var(--line); padding: 6px 0; } summary { cursor: pointer; font-weight: 700; padding: 6px 0; list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+summary::-webkit-details-marker { display: none; }  /* the site's own arrow, not the browser's triangle (look audit 2026-11-18) */
+summary .chev { font: 800 1.5rem/1 var(--display); opacity: 0.55; transition: transform 0.2s ease; }
+details[open] > summary .chev { transform: rotate(90deg); }
+@media (prefers-reduced-motion: reduce) { summary .chev { transition: none; } }
 .clubs { list-style: none; margin: 0; padding: 0 0 8px; display: grid; gap: 4px 16px; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); }
 .clubs label { display: flex; align-items: center; gap: 8px; padding: 4px 0; cursor: pointer; }
 /* bracket pick'em: cards of buttons; a pick is pressed in like the form badges */
@@ -714,7 +718,7 @@ function followingPage(served, api, competitions) {
     const { teams } = JSON.parse(readFileSync(join(api, league.id, competitions.get(league.id).current, "teams.json"), "utf8"));
     const clubs = Object.entries(teams).sort((a, b) => a[1].localeCompare(b[1]));
     return `<details>
-<summary>${esc(league.name)}</summary>
+<summary>${esc(league.name)}<span class="chev" aria-hidden="true">›</span></summary>
 <ul class="clubs">${clubs.map(([id, name]) => `<li><label><input type="checkbox" data-club="${esc(id)}" data-name="${esc(name)}"> ${esc(name)}</label></li>`).join("\n")}</ul>
 </details>`;
   });

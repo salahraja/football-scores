@@ -16,6 +16,8 @@ const { title, current, description = "Serie A scores, results and league table"
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <!-- the poster is sized for this font: fetched first, so the first frame is not drawn in a wide fallback (look audit 2026-11-18) -->
+    <link rel="preload" href="/fonts/barlow-condensed-800-latin.woff2" as="font" type="font/woff2" crossorigin />
     <title>{title}</title>
     <script is:inline src="/theme-toggle.js" defer></script>
   </head>

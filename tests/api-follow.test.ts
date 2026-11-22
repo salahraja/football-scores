@@ -48,7 +48,12 @@ describe("the pages", () => {
   it("/following/ lets you pick any club, league by league, and has places for their games and headlines", () => {
     const html = read(out, "following/index.html");
     expect(html).toContain("<title>Following | golboard</title>");
-    expect(html).toMatch(/<details[^>]*>\s*<summary>Serie A<\/summary>/);
+    expect(html).toMatch(/<details[^>]*>\s*<summary>Serie A<span class="chev" aria-hidden="true">›<\/span><\/summary>/);
+    // the site's own drawn arrow, not the browser's bare triangle (look audit 2026-11-18)
+    const css = read(out, "leagues/site.css");
+    expect(css).toMatch(/summary \{[^}]*list-style: none/);
+    expect(css).toContain("summary::-webkit-details-marker { display: none; }");
+    expect(css).toMatch(/details\[open\] > summary \.chev \{[^}]*rotate\(90deg\)/);
     expect(html).toMatch(/<input type="checkbox" data-club="napoli" data-name="Napoli">/);
     expect(html).toContain('id="following-games"');
     expect(html).toMatch(/<ul class="news" id="mine-news">/);   // filled by follow.js from the followed clubs' own news files
