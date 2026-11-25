@@ -134,7 +134,8 @@ on these pages.
   timeline equal the score in every game read. Eredivisie and Primeira Liga shots carry no expected goals.
 - **A second witness:** a score Wikipedia's grid filled in that ESPN's game contradicts is not used; the game waits for openfootball
   and `meta.json` names it (`espn.overruled`). On 23 November 2026 the grid said Juventus 0-10 Venezia for a 4-0, and the table had
-  counted it.
+  counted it. On Netlify, whose builds keep no ESPN data between runs, the witness sees only the last three days, so that
+  score is also put right in `data/api/corrections.json` (2026-27), citing ESPN's match page.
 - **Tournaments:** English Wikipedia pages (CC BY-SA 4.0), one match box per game with the date, the kick-off (a local time with its
   UTC offset, or Central European time for UEFA's) and the score (`scripts/api/tournament.mjs`; `data/api/tournaments.json` names the
   pages and what each one's headings mean). A tournament's pages are saved together or not at all, so a table never mixes two days. A score on a game dated the build day or later is not used yet. Group

@@ -57,5 +57,20 @@
         "source": "https://en.wikipedia.org/?oldid=1380192446"
       }
     ]
+    },
+  "2026-27": {
+    "it-1": [
+      {
+        "date": "2026-11-23",
+        "home": "juventus",
+        "away": "venezia",
+        "had": null,
+        "ft": [
+          4,
+          0
+        ],
+        "source": "https://www.espn.com/soccer/match/_/gameId/401875008"
+      }
+    ]
   }
 }
