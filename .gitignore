@@ -29,6 +29,7 @@ __pycache__/
 # golboard API: downloaded sources and the built JSON (rebuilt by npm run api)
 data/openfootball/
 data/wikipedia/
+data/espn/
 data/news/
 public/api/
 public/api.next/
