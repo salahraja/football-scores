@@ -3,13 +3,14 @@
 // the optional live scores. Each page says how far its results go and credits the sources it used.
 //   node scripts/api/pages.mjs [--api public/api/v1] [--out public]
 // Node only, no dependencies.
-import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { SITE, hiddenCountries, leagues, loadZones, nationNames, pickemData, tournaments, zoneNames } from "./config.mjs";
 import { pickemScript } from "./pickem.mjs";
 import { CLUB_WORDS, aliasMap, slug } from "./teams.mjs";
 import { kickoff } from "./time.mjs";
+import { GAME_CSS, gameBody } from "./gamepage.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const FONTS = ["barlow-condensed-800-latin.woff2", "instrument-sans-latin.woff2"];  // both SIL Open Font License, from the facelift branch
@@ -259,10 +260,51 @@ ${body}
 const marks = (m) => (m.score ? "" : ` data-date="${m.date}" data-home="${esc(m.home)}" data-away="${esc(m.away)}"`);
 const mid = (m) => (m.score ? `${m.score.ft[0]}–${m.score.ft[1]}` : (m.time ?? "vs"));  // a lone dash looked like a score
 
-function game(m, names, today = null) {
+function game(m, names, today = null, detail = null) {
   const late = today && !m.score && m.date < today ? " · result not in" : "";
-  return `<li${marks(m)}><span class="home">${esc(names[m.home])}</span><span class="mid">${esc(mid(m))}</span><span class="away">${esc(names[m.away])}</span><span class="when">${esc(m.round ?? "")} · ${short(m.date)}${late}</span></li>`;
+  // the link to a game's own page sits outside the parts live.js rewrites (home, mid, away, when)
+  const more = detail?.(m) ? `<a class="more" href="${detail(m)}">Shots and touches</a>` : "";
+  return `<li${marks(m)}><span class="home">${esc(names[m.home])}</span><span class="mid">${esc(mid(m))}</span><span class="away">${esc(names[m.away])}</span><span class="when">${esc(m.round ?? "")} · ${short(m.date)}${late}</span>${more}</li>`;
 }
+
+/** The games of a league season that have a page of their own (api/v1/<league>/<season>/games, from ESPN): a function from a match to
+ *  its page's address, or null. */
+function details(api, league, season) {
+  const dir = join(api, league, season, "games");
+  const have = new Set(existsSync(dir) ? readdirSync(dir).filter((f) => f.endsWith(".json")).map((f) => f.slice(0, -5)) : []);
+  return (m) => (m.score && have.has(`${m.date}-${m.home}-${m.away}`) ? `/leagues/${league}/${m.date}-${m.home}-${m.away}/` : null);
+}
+
+/** One page per game with detail (`league` is a league or a tournament: its id and name): the score on the poster, then gamepage.mjs's timeline, shot map and touch maps. */
+function gamePages(league, season, api) {
+  const dir = join(api, league.id, season, "games");
+  if (!existsSync(dir)) return new Map();
+  const { teams } = JSON.parse(readFileSync(join(api, league.id, season, "teams.json"), "utf8"));
+  const { matches } = JSON.parse(readFileSync(join(api, league.id, season, "matches.json"), "utf8"));
+  const byId = new Map(matches.map((m) => [m.id, m]));
+  const out = new Map();
+  for (const file of readdirSync(dir).filter((f) => f.endsWith(".json")).sort()) {
+    const g = JSON.parse(readFileSync(join(dir, file), "utf8"));
+    const m = byId.get(g.match);
+    if (!m?.score) continue;
+    const names = { home: teams[g.home.team], away: teams[g.away.team] };
+    const name = file.slice(0, -5);
+    const title = `${names.home} ${m.score.ft[0]}–${m.score.ft[1]} ${names.away}`;
+    const body = `<header class="poster">
+<p class="note"><a href="/leagues/${league.id}/">${esc(league.name)}</a> · ${day(m.date)}${m.round ? ` · ${esc(m.round)}` : ""}</p>
+<h1 style="--n: ${Math.max(...title.split(/\s+/).map((w) => w.length))}">${esc(names.home)} <span class="score">${m.score.ft[0]}–${m.score.ft[1]}</span> ${esc(names.away)}</h1>
+<p class="note">${[g.home.formation, g.away.formation].every(Boolean) ? `${esc(g.home.formation)} v ${esc(g.away.formation)}` : ""}</p>
+</header>
+<main class="board" style="grid-template-columns: minmax(0, 1fr)">
+${gameBody(g, names)}
+<footer>Lineups, timeline, shots and touches from <a href="${esc(g.source.url)}">ESPN</a>. The score is ours: ${used(m)}.</footer>
+</main>`;
+    out.set(`${league.id}/${name}/index.html`, shell({ title, path: `/leagues/${league.id}/${name}/`, body, here: "league",
+      description: `${title}, ${league.name}, ${day(m.date)}: the goals, every shot on a map, and where each player had the ball.` }));
+  }
+  return out;
+}
+const used = (m) => (m.source === "wikipedia" ? SOURCES.wikipedia : SOURCES.openfootball);
 
 /** The poster's game: the week's first unscored game that has kicked off or is about to (live scores fill it), else the latest result. */
 function featured(week, latest, names, today) {
@@ -307,7 +349,8 @@ function leaguePage(league, competition, api, before, after, zonesFor) {
   const range = (z) => (z.from === z.to ? nth(z.from) : `${nth(z.from)}–${nth(z.to)}`);
   const legend = zoning ? `<ul class="zones" aria-label="What the places lead to">${zoning.zones.map((z) => `<li data-zone="${z.kind}"><b>${esc(names[z.kind])}</b> ${range(z)}</li>`).join("")}</ul>
 <p class="note">${esc(zoning.note)}</p>` : "";
-  const list = (games) => `<ul class="games" aria-live="polite">${games.map((m) => game(m, teams, today)).join("\n")}</ul>`;
+  const detail = details(api, league.id, season);
+  const list = (games) => `<ul class="games" aria-live="polite">${games.map((m) => game(m, teams, today, detail)).join("\n")}</ul>`;
   // Top scorers and clean sheets, copied from the season's Wikipedia page (build.mjs leadersFile); a club we have a page for is linked
   const leaders = existsSync(join(api, league.id, season, "leaders.json")) ? read("leaders.json") : null;
   const board = (id, title, word, short, list) => (list ? `<section class="glass" id="${id}">
@@ -377,6 +420,7 @@ function clubPages(league, competition, api, zonesFor) {
   const today = JSON.parse(readFileSync(join(api, "meta.json"), "utf8")).generatedAt.slice(0, 10);
   const zoning = zonesFor(season, league.id);
   const names = zoneNames();
+  const detail = details(api, league.id, season);
   const byKickoff = (a, b) => (a.date + (a.time ?? "")).localeCompare(b.date + (b.time ?? ""));
   const pages = new Map();
   for (const row of table) {
@@ -392,7 +436,7 @@ function clubPages(league, competition, api, zonesFor) {
       const other = teams[home ? m.away : m.home];
       return `<li class="f-${o}" title="${esc(`${said[o]} ${home ? h : a}–${home ? a : h} ${home ? "v" : "at"} ${other}, ${short(m.date)}`)}"><span aria-hidden="true">${o.toUpperCase()}</span><span class="sr-only">${said[o]} ${home ? h : a}–${home ? a : h} ${home ? "v" : "at"} ${esc(other)}</span></li>`; }).join("");
     const zone = zoning?.zones.find((z) => row.position >= z.from && row.position <= z.to);
-    const list = (gs) => `<ul class="games">${gs.map((m) => game(m, teams, today)).join("\n")}</ul>`;
+    const list = (gs) => `<ul class="games">${gs.map((m) => game(m, teams, today, detail)).join("\n")}</ul>`;
     const gd = `${row.gd > 0 ? "+" : ""}${row.gd}`;
     const body = `<header class="poster">
 <h1 style="--n: ${Math.max(...club.split(/\s+/).map((w) => w.length))}">${esc(club)}</h1>
@@ -794,7 +838,8 @@ ${rows.map((r) => `<tr class="row"${r.status ? ` data-zone="${esc(r.status)}"` :
   const clock = config.clock ? `Kick-offs are ${config.clock}.` : "Kick-offs are local time at each ground.";
   // live scores from SportScore, as on the league pages, while the page has games still to play
   const live = config.sportscore && (week.length || next.length) ? config.sportscore : null;
-  const list = (games) => `<ul class="games">${games.map((m) => game(m, teams, today)).join("\n")}</ul>`;
+  const detail = details(api, t.id, t.season);
+  const list = (games) => `<ul class="games">${games.map((m) => game(m, teams, today, detail)).join("\n")}</ul>`;
   const longest = Math.max(...t.name.split(/\s+/).map((w) => w.length));
   const body = `<header class="poster">
 <div class="titlebar solo"><span aria-hidden="true"></span><h1 style="--n: ${longest}">${esc(t.name)}</h1><span aria-hidden="true"></span></div>
@@ -909,14 +954,16 @@ function qualifying(b, format, api) {
 export function pages({ api = "public/api/v1", out = "public", zones = loadZones, pickem = pickemData() } = {}) {
   const { competitions } = JSON.parse(readFileSync(join(api, "competitions.json"), "utf8"));
   const byId = new Map(competitions.map((c) => [c.id, c]));
-  const files = new Map([["site.css", CSS], ["live.js", liveScript()], ["follow.js", followScript()], ["pickem.js", pickemScript()]]);
+  const files = new Map([["site.css", CSS + GAME_CSS], ["live.js", liveScript()], ["follow.js", followScript()], ["pickem.js", pickemScript()]]);
   for (const font of FONTS) files.set(`fonts/${font}`, readFileSync(join(HERE, "assets", "fonts", font)));
   const served = leagues().filter((l) => byId.has(l.id));
   served.forEach((league, i) => files.set(`${league.id}/index.html`, leaguePage(league, byId.get(league.id), api,
     served[(i - 1 + served.length) % served.length], served[(i + 1) % served.length], zones)));
   for (const league of served) for (const [path, html] of clubPages(league, byId.get(league.id), api, zones)) files.set(path, html);
+  for (const league of served) for (const [path, html] of gamePages(league, byId.get(league.id).current, api)) files.set(path, html);
   const cups = existsSync(join(api, "tournaments.json")) ? JSON.parse(readFileSync(join(api, "tournaments.json"), "utf8")).tournaments : [];
   for (const t of cups) files.set(`${t.id}/index.html`, tournamentPage(t, api));
+  for (const t of cups) for (const [path, html] of gamePages(t, t.season, api)) files.set(path, html);
   const picks = brackets(pickem, api);
   for (const { bracket, format, names, codes } of picks) files.set(`bracket/${bracket.id}/index.html`, bracketPage(bracket, format, names, codes));
   files.set("index.html", shell({ title: "Leagues", path: "/leagues/", here: "all", description: `Tables, results and fixtures for eight European leagues${cups.length ? `, ${cups.map((t) => t.name).join(", ")}` : ""}.`,

@@ -1,0 +1,904 @@
+{
+ "_about": "An invented match in the shape of ESPN's football summary and core plays feeds (field names as seen on 25 November 2026). Every name, id and number is made up.",
+ "summary": {
+  "header": {
+   "id": "9001",
+   "competitions": [
+    {
+     "date": "2026-11-22T14:00Z",
+     "status": {
+      "type": {
+       "state": "post",
+       "completed": true,
+       "detail": "FT"
+      }
+     },
+     "competitors": [
+      {
+       "homeAway": "home",
+       "team": {
+        "id": "1",
+        "displayName": "Alpha FC"
+       },
+       "score": "2"
+      },
+      {
+       "homeAway": "away",
+       "team": {
+        "id": "2",
+        "displayName": "Beta United"
+       },
+       "score": "1"
+      }
+     ],
+     "odds": [
+      {
+       "provider": {
+        "name": "some-book"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  "rosters": [
+   {
+    "homeAway": "home",
+    "formation": "4-3-3",
+    "team": {
+     "id": "1",
+     "displayName": "Alpha FC"
+    },
+    "roster": [
+     {
+      "starter": true,
+      "jersey": "10",
+      "athlete": {
+       "id": "11",
+       "displayName": "Ana Ito"
+      },
+      "position": {
+       "abbreviation": "AM"
+      },
+      "subbedIn": false,
+      "subbedOut": false,
+      "formationPlace": "10"
+     },
+     {
+      "starter": true,
+      "jersey": "9",
+      "athlete": {
+       "id": "12",
+       "displayName": "Bo Lund"
+      },
+      "position": {
+       "abbreviation": "CF"
+      },
+      "subbedIn": false,
+      "subbedOut": false,
+      "formationPlace": "11"
+     },
+     {
+      "starter": false,
+      "jersey": "14",
+      "athlete": {
+       "id": "13",
+       "displayName": "Cy Moor"
+      },
+      "position": {
+       "abbreviation": "CM"
+      },
+      "subbedIn": true,
+      "subbedOut": false
+     }
+    ]
+   },
+   {
+    "homeAway": "away",
+    "formation": "3-5-2",
+    "team": {
+     "id": "2",
+     "displayName": "Beta United"
+    },
+    "roster": [
+     {
+      "starter": true,
+      "jersey": "7",
+      "athlete": {
+       "id": "21",
+       "displayName": "Dee Park"
+      },
+      "position": {
+       "abbreviation": "RW"
+      },
+      "subbedIn": false,
+      "subbedOut": false,
+      "formationPlace": "7"
+     },
+     {
+      "starter": true,
+      "jersey": "4",
+      "athlete": {
+       "id": "22",
+       "displayName": "Eli Ruiz"
+      },
+      "position": {
+       "abbreviation": "CD"
+      },
+      "subbedIn": false,
+      "subbedOut": false,
+      "formationPlace": "4"
+     }
+    ]
+   }
+  ],
+  "keyEvents": [
+   {
+    "type": {
+     "text": "Kickoff"
+    },
+    "clock": {
+     "displayValue": "1'"
+    }
+   },
+   {
+    "type": {
+     "text": "Goal - Header"
+    },
+    "scoringPlay": true,
+    "clock": {
+     "displayValue": "53'"
+    },
+    "team": {
+     "id": "1"
+    },
+    "participants": [
+     {
+      "athlete": {
+       "id": "12",
+       "displayName": "Bo Lund"
+      }
+     },
+     {
+      "athlete": {
+       "id": "11",
+       "displayName": "Ana Ito"
+      }
+     }
+    ]
+   },
+   {
+    "type": {
+     "text": "Penalty - Scored"
+    },
+    "scoringPlay": true,
+    "clock": {
+     "displayValue": "55'"
+    },
+    "team": {
+     "id": "2"
+    },
+    "participants": [
+     {
+      "athlete": {
+       "id": "21",
+       "displayName": "Dee Park"
+      }
+     }
+    ]
+   },
+   {
+    "type": {
+     "text": "Yellow Card"
+    },
+    "clock": {
+     "displayValue": "60'"
+    },
+    "team": {
+     "id": "2"
+    },
+    "participants": [
+     {
+      "athlete": {
+       "id": "22",
+       "displayName": "Eli Ruiz"
+      }
+     }
+    ]
+   },
+   {
+    "type": {
+     "text": "Substitution"
+    },
+    "clock": {
+     "displayValue": "70'"
+    },
+    "team": {
+     "id": "1"
+    },
+    "participants": [
+     {
+      "athlete": {
+       "id": "13",
+       "displayName": "Cy Moor"
+      }
+     },
+     {
+      "athlete": {
+       "id": "11",
+       "displayName": "Ana Ito"
+      }
+     }
+    ]
+   },
+   {
+    "type": {
+     "text": "Own Goal"
+    },
+    "scoringPlay": true,
+    "clock": {
+     "displayValue": "84'"
+    },
+    "team": {
+     "id": "1"
+    },
+    "participants": [
+     {
+      "athlete": {
+       "id": "22",
+       "displayName": "Eli Ruiz"
+      }
+     }
+    ]
+   },
+   {
+    "type": {
+     "text": "Red Card"
+    },
+    "clock": {
+     "displayValue": "90'+2'"
+    },
+    "team": {
+     "id": "2"
+    },
+    "participants": [
+     {
+      "athlete": {
+       "id": "22",
+       "displayName": "Eli Ruiz"
+      }
+     }
+    ]
+   }
+  ],
+  "pickcenter": [
+   {
+    "provider": {
+     "name": "some-book"
+    }
+   }
+  ],
+  "odds": [
+   {
+    "x": 1
+   }
+  ]
+ },
+ "plays": [
+  {
+   "count": 16,
+   "pageIndex": 1,
+   "pageSize": 10,
+   "pageCount": 2,
+   "items": [
+    {
+     "id": "1001",
+     "type": {
+      "text": "Kickoff",
+      "type": "kickoff"
+     },
+     "text": "invented",
+     "valid": true,
+     "period": {
+      "number": 1
+     },
+     "clock": {
+      "value": 0.0,
+      "displayValue": "1'"
+     },
+     "team": {
+      "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/teams/1?lang=en&region=us"
+     },
+     "participants": [],
+     "source": {
+      "id": "38",
+      "description": "X"
+     }
+    },
+    {
+     "id": "1002",
+     "type": {
+      "text": "Pass",
+      "type": "pass"
+     },
+     "text": "invented",
+     "valid": true,
+     "period": {
+      "number": 1
+     },
+     "clock": {
+      "value": 10.0,
+      "displayValue": "1'"
+     },
+     "team": {
+      "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/teams/1?lang=en&region=us"
+     },
+     "participants": [
+      {
+       "athlete": {
+        "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/athletes/11?lang=en&region=us"
+       },
+       "team": {
+        "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/teams/1?lang=en&region=us"
+       },
+       "order": 1,
+       "type": "passer"
+      }
+     ],
+     "source": {
+      "id": "38",
+      "description": "X"
+     },
+     "fieldPositionX": 50.0,
+     "fieldPositionY": 50.0
+    },
+    {
+     "id": "1003",
+     "type": {
+      "text": "Pass",
+      "type": "pass"
+     },
+     "text": "invented",
+     "valid": true,
+     "period": {
+      "number": 1
+     },
+     "clock": {
+      "value": 70.0,
+      "displayValue": "2'"
+     },
+     "team": {
+      "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/teams/1?lang=en&region=us"
+     },
+     "participants": [
+      {
+       "athlete": {
+        "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/athletes/11?lang=en&region=us"
+       },
+       "team": {
+        "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/teams/1?lang=en&region=us"
+       },
+       "order": 1,
+       "type": "passer"
+      }
+     ],
+     "source": {
+      "id": "38",
+      "description": "X"
+     },
+     "fieldPositionX": 10.0,
+     "fieldPositionY": 5.0
+    },
+    {
+     "id": "1004",
+     "type": {
+      "text": "Ball touch",
+      "type": "ball-touch"
+     },
+     "text": "invented",
+     "valid": true,
+     "period": {
+      "number": 1
+     },
+     "clock": {
+      "value": 80.0,
+      "displayValue": "2'"
+     },
+     "team": {
+      "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/teams/1?lang=en&region=us"
+     },
+     "participants": [
+      {
+       "athlete": {
+        "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/athletes/11?lang=en&region=us"
+       },
+       "team": {
+        "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/teams/1?lang=en&region=us"
+       },
+       "order": 1,
+       "type": "passer"
+      }
+     ],
+     "source": {
+      "id": "38",
+      "description": "X"
+     },
+     "fieldPositionX": 99.0,
+     "fieldPositionY": 99.0
+    },
+    {
+     "id": "1005",
+     "type": {
+      "text": "Pass",
+      "type": "pass"
+     },
+     "text": "invented",
+     "valid": true,
+     "period": {
+      "number": 1
+     },
+     "clock": {
+      "value": 100.0,
+      "displayValue": "2'"
+     },
+     "team": {
+      "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/teams/2?lang=en&region=us"
+     },
+     "participants": [
+      {
+       "athlete": {
+        "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/athletes/21?lang=en&region=us"
+       },
+       "team": {
+        "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/teams/2?lang=en&region=us"
+       },
+       "order": 1,
+       "type": "passer"
+      }
+     ],
+     "source": {
+      "id": "38",
+      "description": "X"
+     },
+     "fieldPositionX": 60.0,
+     "fieldPositionY": 30.0
+    },
+    {
+     "id": "1006",
+     "type": {
+      "text": "Shot Blocked",
+      "type": "shot-blocked"
+     },
+     "text": "invented",
+     "valid": true,
+     "period": {
+      "number": 1
+     },
+     "clock": {
+      "value": 300.0,
+      "displayValue": "6'"
+     },
+     "team": {
+      "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/teams/2?lang=en&region=us"
+     },
+     "participants": [
+      {
+       "athlete": {
+        "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/athletes/21?lang=en&region=us"
+       },
+       "team": {
+        "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/teams/2?lang=en&region=us"
+       },
+       "order": 1,
+       "type": "passer"
+      }
+     ],
+     "source": {
+      "id": "38",
+      "description": "X"
+     },
+     "fieldPositionX": 85.0,
+     "fieldPositionY": 40.0,
+     "expectedGoals": 0.05,
+     "contactType": {
+      "text": "Right Foot"
+     }
+    },
+    {
+     "id": "1007",
+     "type": {
+      "text": "Goal",
+      "type": "goal"
+     },
+     "text": "invented",
+     "valid": true,
+     "period": {
+      "number": 2
+     },
+     "clock": {
+      "value": 3162.0,
+      "displayValue": "53'"
+     },
+     "team": {
+      "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/teams/1?lang=en&region=us"
+     },
+     "participants": [
+      {
+       "athlete": {
+        "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/athletes/12?lang=en&region=us"
+       },
+       "team": {
+        "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/teams/1?lang=en&region=us"
+       },
+       "order": 1,
+       "type": "passer"
+      }
+     ],
+     "source": {
+      "id": "38",
+      "description": "X"
+     },
+     "fieldPositionX": 95.7,
+     "fieldPositionY": 49.0,
+     "scoringPlay": true,
+     "expectedGoals": 0.307,
+     "contactType": {
+      "text": "Header"
+     },
+     "ownGoal": false,
+     "penaltyKick": false,
+     "goalPositionY": 49.9,
+     "goalPositionZ": 26.0
+    },
+    {
+     "id": "1008",
+     "type": {
+      "text": "Penalty - Scored",
+      "type": "penalty---scored"
+     },
+     "text": "invented",
+     "valid": true,
+     "period": {
+      "number": 2
+     },
+     "clock": {
+      "value": 3300.0,
+      "displayValue": "56'"
+     },
+     "team": {
+      "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/teams/2?lang=en&region=us"
+     },
+     "participants": [
+      {
+       "athlete": {
+        "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/athletes/21?lang=en&region=us"
+       },
+       "team": {
+        "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/teams/2?lang=en&region=us"
+       },
+       "order": 1,
+       "type": "passer"
+      }
+     ],
+     "source": {
+      "id": "38",
+      "description": "X"
+     },
+     "fieldPositionX": 88.5,
+     "fieldPositionY": 50.0,
+     "scoringPlay": true,
+     "expectedGoals": 0.79,
+     "penaltyKick": true,
+     "contactType": {
+      "text": "Left Foot"
+     }
+    },
+    {
+     "id": "1009",
+     "type": {
+      "text": "Shot Off Target",
+      "type": "shot-off-target"
+     },
+     "text": "invented",
+     "valid": true,
+     "period": {
+      "number": 2
+     },
+     "clock": {
+      "value": 4000.0,
+      "displayValue": "67'"
+     },
+     "team": {
+      "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/teams/1?lang=en&region=us"
+     },
+     "participants": [
+      {
+       "athlete": {
+        "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/athletes/11?lang=en&region=us"
+       },
+       "team": {
+        "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/teams/1?lang=en&region=us"
+       },
+       "order": 1,
+       "type": "passer"
+      }
+     ],
+     "source": {
+      "id": "38",
+      "description": "X"
+     },
+     "fieldPositionX": 80.0,
+     "fieldPositionY": 70.0,
+     "expectedGoals": 0.02
+    },
+    {
+     "id": "1010",
+     "type": {
+      "text": "Shot Hit Woodwork",
+      "type": "shot-hit-woodwork"
+     },
+     "text": "invented",
+     "valid": true,
+     "period": {
+      "number": 2
+     },
+     "clock": {
+      "value": 4100.0,
+      "displayValue": "69'"
+     },
+     "team": {
+      "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/teams/1?lang=en&region=us"
+     },
+     "participants": [
+      {
+       "athlete": {
+        "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/athletes/12?lang=en&region=us"
+       },
+       "team": {
+        "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/teams/1?lang=en&region=us"
+       },
+       "order": 1,
+       "type": "passer"
+      }
+     ],
+     "source": {
+      "id": "38",
+      "description": "X"
+     },
+     "fieldPositionX": 90.0,
+     "fieldPositionY": 45.0
+    }
+   ]
+  },
+  {
+   "count": 16,
+   "pageIndex": 2,
+   "pageSize": 10,
+   "pageCount": 2,
+   "items": [
+    {
+     "id": "1011",
+     "type": {
+      "text": "Substitution",
+      "type": "substitution"
+     },
+     "text": "invented",
+     "valid": true,
+     "period": {
+      "number": 2
+     },
+     "clock": {
+      "value": 4200.0,
+      "displayValue": "71'"
+     },
+     "team": {
+      "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/teams/1?lang=en&region=us"
+     },
+     "participants": [
+      {
+       "athlete": {
+        "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/athletes/13?lang=en&region=us"
+       },
+       "team": {
+        "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/teams/1?lang=en&region=us"
+       },
+       "order": 1,
+       "type": "passer"
+      }
+     ],
+     "source": {
+      "id": "38",
+      "description": "X"
+     }
+    },
+    {
+     "id": "1012",
+     "type": {
+      "text": "Foul",
+      "type": "foul"
+     },
+     "text": "invented",
+     "valid": true,
+     "period": {
+      "number": 2
+     },
+     "clock": {
+      "value": 4300.0,
+      "displayValue": "72'"
+     },
+     "team": {
+      "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/teams/2?lang=en&region=us"
+     },
+     "participants": [
+      {
+       "athlete": {
+        "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/athletes/22?lang=en&region=us"
+       },
+       "team": {
+        "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/teams/2?lang=en&region=us"
+       },
+       "order": 1,
+       "type": "passer"
+      }
+     ],
+     "source": {
+      "id": "38",
+      "description": "X"
+     },
+     "fieldPositionX": 40.0,
+     "fieldPositionY": 40.0
+    },
+    {
+     "id": "1013",
+     "type": {
+      "text": "Pass",
+      "type": "pass"
+     },
+     "text": "invented",
+     "valid": true,
+     "period": {
+      "number": 2
+     },
+     "clock": {
+      "value": 4400.0,
+      "displayValue": "74'"
+     },
+     "team": {
+      "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/teams/2?lang=en&region=us"
+     },
+     "participants": [
+      {
+       "athlete": {
+        "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/athletes/22?lang=en&region=us"
+       },
+       "team": {
+        "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/teams/2?lang=en&region=us"
+       },
+       "order": 1,
+       "type": "passer"
+      }
+     ],
+     "source": {
+      "id": "38",
+      "description": "X"
+     },
+     "fieldPositionX": 120.0,
+     "fieldPositionY": -5.0
+    },
+    {
+     "id": "1999",
+     "type": {
+      "text": "Goal Kick",
+      "type": "goal-kick"
+     },
+     "text": "invented",
+     "period": {
+      "number": 2
+     },
+     "clock": {
+      "value": 4600.0,
+      "displayValue": "77'"
+     },
+     "team": {
+      "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/teams/2?lang=en&region=us"
+     },
+     "participants": [
+      {
+       "athlete": {
+        "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/athletes/22?lang=en&region=us"
+       },
+       "team": {
+        "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/teams/2?lang=en&region=us"
+       },
+       "order": 1,
+       "type": "passer"
+      }
+     ],
+     "source": {
+      "id": "38",
+      "description": "X"
+     },
+     "fieldPositionX": 4.0,
+     "fieldPositionY": 50.0,
+     "valid": true
+    },
+    {
+     "id": "1014",
+     "type": {
+      "text": "Pass",
+      "type": "pass"
+     },
+     "text": "invented",
+     "valid": false,
+     "period": {
+      "number": 2
+     },
+     "clock": {
+      "value": 4500.0,
+      "displayValue": "76'"
+     },
+     "team": {
+      "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/teams/2?lang=en&region=us"
+     },
+     "participants": [
+      {
+       "athlete": {
+        "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/athletes/22?lang=en&region=us"
+       },
+       "team": {
+        "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/teams/2?lang=en&region=us"
+       },
+       "order": 1,
+       "type": "passer"
+      }
+     ],
+     "source": {
+      "id": "38",
+      "description": "X"
+     },
+     "fieldPositionX": 50.0,
+     "fieldPositionY": 50.0
+    },
+    {
+     "id": "1015",
+     "type": {
+      "text": "Own Goal",
+      "type": "own-goal"
+     },
+     "text": "invented",
+     "valid": true,
+     "period": {
+      "number": 2
+     },
+     "clock": {
+      "value": 5000.0,
+      "displayValue": "84'"
+     },
+     "team": {
+      "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/teams/2?lang=en&region=us"
+     },
+     "participants": [
+      {
+       "athlete": {
+        "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/athletes/22?lang=en&region=us"
+       },
+       "team": {
+        "$ref": "http://sports.core.api.espn.com/v2/sports/soccer/leagues/xxx.1/seasons/2026/teams/2?lang=en&region=us"
+       },
+       "order": 1,
+       "type": "passer"
+      }
+     ],
+     "source": {
+      "id": "38",
+      "description": "X"
+     },
+     "fieldPositionX": 5.0,
+     "fieldPositionY": 50.0,
+     "scoringPlay": true,
+     "ownGoal": true
+    }
+   ]
+  }
+ ]
+}
