@@ -1,7 +1,7 @@
-// Download each league's finished games from ESPN's football feeds and save our own summary of each (espn.mjs) into
-// data/espn/<season>/<league>/<espn id>.json for scripts/api/build.mjs. Salah's decision, 25 November 2026: use the feeds while golboard
-// has no customers (ESPN's terms allow personal use only; docs/api.md). So we ask as little as we can, from the build only, never from a
-// visitor's browser:
+// Download each league's, cup's and international's finished games from ESPN's football feeds and save our own summary of each
+// (espn.mjs) into data/espn/<season>/<league or tournament>/<espn id>.json for scripts/api/build.mjs. Salah's decision, 25 November
+// 2026: use the feeds while golboard has no customers (ESPN's terms allow personal use only; docs/api.md). So we ask as little as we
+// can, from the build only, never from a visitor's browser:
 //   - one scoreboard per league per day, for the last `days` days;
 //   - for a game not saved yet, its summary and its plays (two pages), once, at least six hours after kick-off (the plays are still
 //     corrected for about two hours after the final whistle);
@@ -11,7 +11,7 @@
 import { existsSync, mkdirSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { leagues } from "./config.mjs";
+import { leagues, tournaments } from "./config.mjs";
 import { reduceMatch } from "./espn.mjs";
 
 const SITE = "https://site.api.espn.com/apis/site/v2/sports/soccer";
@@ -26,10 +26,12 @@ async function get(url, fetchFn, wait) {
   return res.json();
 }
 
-export async function fetchMatches({ out, season = "2026-27", now = new Date(), days = 3, ids = leagues().map((l) => l.id), max = 40,
+export async function fetchMatches({ out, season = "2026-27", now = new Date(), days = 3, ids = [...leagues(), ...tournaments()].map((l) => l.id), max = 40,
   fetchFn = fetch, wait = () => new Promise((r) => setTimeout(r, 700)) } = {}) {
   const report = { saved: [], kept: [], later: 0 };
-  for (const league of leagues().filter((l) => l.espn && ids.includes(l.id))) {
+  // the leagues in `season`; each cup and international in its own (tournaments.json)
+  const comps = [...leagues().map((l) => ({ ...l, season })), ...tournaments()];
+  for (const league of comps.filter((l) => l.espn && ids.includes(l.id))) {
     for (let d = 0; d < days; d++) {
       const day = new Date(now.getTime() - d * 86_400_000).toISOString().slice(0, 10);
       let events;
@@ -40,7 +42,7 @@ export async function fetchMatches({ out, season = "2026-27", now = new Date(), 
         continue;
       }
       for (const ev of events) {
-        const target = join(out, season, league.id, `${ev.id}.json`);
+        const target = join(out, league.season, league.id, `${ev.id}.json`);
         if (!ev.status?.type?.completed || Date.parse(ev.date) + SETTLE > now.getTime() || existsSync(target)) continue;
         if (report.saved.length >= max) { report.later += 1; continue; }
         try {

@@ -11,7 +11,7 @@ app or page can read it. Built by `npm run api` (download, then build) into `pub
 | `api/v1/<league>/<season>/matches.json` | `{ competition, season, matches: [{ id, round, stage, date, time, home, away, status, score, source }] }` |
 | `api/v1/<league>/<season>/table.json` | `{ competition, season, table: [{ position, team, played, won, drawn, lost, gf, ga, gd, points, adjustment }], adjustments }` |
 | `api/v1/<league>/<season>/teams.json` | `{ competition, season, teams: { <team id>: <name> } }` |
-| `api/v1/<league>/<season>/games/<date>-<home>-<away>.json` | One finished game in detail, from ESPN's feeds: `{ competition, season, match, source, kickoff, home, away, players, events, shots, positions, touches }`. `match` is our match id; `players` the lineups (`id`, `name`, `side`, `number`, `position`, `starter`); `events` the goals, cards and substitutions in order; `shots` every shot with where it was taken from (`x`, `y`), `outcome`, `xg` (null where ESPN has none) and `penalty`; `touches` each player's on-ball touches counted in 30 zones. Positions are percent of the pitch, the player's own team attacking toward x = 100, y = 0 its right touchline. Only for games ESPN has and our results agree with |
+| `api/v1/<league or tournament>/<season>/games/<date>-<home>-<away>.json` | One finished game in detail (the leagues, the cups and the internationals), from ESPN's feeds: `{ competition, season, match, source, kickoff, home, away, players, events, shots, positions, touches }`. `match` is our match id; `players` the lineups (`id`, `name`, `side`, `number`, `position`, `starter`); `events` the goals, cards and substitutions in order; `shots` every shot with where it was taken from (`x`, `y`), `outcome`, `xg` (null where ESPN has none) and `penalty`; `touches` each player's on-ball touches counted in 30 zones. Positions are percent of the pitch, the player's own team attacking toward x = 100, y = 0 its right touchline. Only for games ESPN has and our results agree with |
 | `api/v1/meta.json` | version, when it was built, the sources and their licences, per league season: games finished and to play, the date of the last result, corrections applied; and `files`: every other file of the build with the sha256 of its bytes |
 | `api/v1/news.json` | `{ generatedAt, articles: [{ title, summary, url, source, published, image, clubs }] }`: football headlines, newest first (at most 60), from BBC Sport, The Guardian and ESPN's own RSS feeds; `clubs` lists the team ids the story names. Written by `scripts/api/news.mjs`, after `build.mjs`, so it is not in `meta.json`'s file list |
 | `api/v1/news/<club id>.json` | `{ generatedAt, articles }` in the same shape, at most 30 per club, newest first: the general headlines that name the club plus The Guardian's own feed for it (`data/api/guardian-feeds.json`). One file per club of every league, so a club the three general feeds never mention (Juventus had none on 2026-11-12) still has its stories. A club with no Guardian feed gets only the general ones |
@@ -42,14 +42,15 @@ change as the data it describes.
 
 `npm run api:build` also writes plain HTML pages from the API it just built (`scripts/api/pages.mjs`): `/leagues/` and
 `/leagues/<league>/` in the site's Stadio look (the facelift: a slate poster with the league in brick-red Barlow Condensed over the
-game of the moment, then glass boxes for this week, the table, the latest results and the next fixtures). Each league game ESPN
-has detail for (`games/*.json`) gets a page of its own, `/leagues/<league>/<date>-<home>-<away>/`, linked as "Shots and touches"
-from the league's and the clubs' game lists (`scripts/api/gamepage.mjs`): the score, the timeline, home and away shots and expected
+game of the moment, then glass boxes for this week, the table, the latest results and the next fixtures). Each game ESPN has
+detail for (`games/*.json`), in a league, a cup or an international, gets a page of its own, `/leagues/<league or tournament>/<date>-<home>-<away>/`,
+linked as "Shots and touches" from the league's, the clubs' and the cup's game lists (`scripts/api/gamepage.mjs`): the score, the timeline, home and away shots and expected
 goals, a shot map (every shot from where it was taken; a circle's area grows with its xG; filled for a goal, a thick ring saved, a thin
 ring off target, dashed blocked) with a list of every shot, and touch maps for each side and each player: on-ball touches counted in 30
 zones (the boxes, the six-yard boxes' width, halfway and a third of each half), coloured by touches per square metre in five steps
 of one red, with the count printed in each zone. All drawn as SVG when the page is built: no script, colours from CSS classes so the
-dark theme works, a title and a description on each map for screen readers. A page with 34 maps is about 9 KB compressed. No framework (in our test on a
+dark theme works, a title and a description on each map for screen readers. A page with 34 maps is about 9 KB compressed. ESPN has no
+positions for AFCON qualifying, so those pages have the timeline and numbers only. A hidden team's game (Israel) gets no file and no page. No framework (in our test on a
 throttled phone a plain page showed in 376 ms against 912 ms for the Vue app), one stylesheet (`/leagues/site.css`) and the two fonts
 (OFL) served from `/leagues/fonts/`, light and dark.
 Each page says how far its results go, gives kick-off times in the league's own time zone (`clock` in `data/api/leagues.json`), and
@@ -152,5 +153,4 @@ on these pages.
   its terms for apps are confirmed.
 - A schedule: a job that rebuilds every 30 minutes on match days. Netlify's free build minutes are too few for that, so it will publish
   from a separate place.
-- Game detail and pages for the cups and internationals (ESPN has them all; AFCON qualifying without positions).
 - Live minute-by-minute scores (licensed by the leagues), club crests and league logos (trademarks).

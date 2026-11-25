@@ -1,5 +1,5 @@
 {
-  "_about": "The cups and international tournaments golboard's API serves, beside the club leagues in leagues.json. Their games come from English Wikipedia pages, one match box per game. pages: each page and what its boxes are: a fixed group (group, name), or groups read from the page's \"Group N\" headings within a division (groups: headings, division), with rounds from the headings when rounds is \"headings\" (Matchday 1...). teams: clubs or nations (nations by FIFA code, data/api/nations.json). tz and clock: the time zone the boxes give kick-offs in; without tz, each box gives its own UTC offset. zones: what each place leads to, for every group or only one division's. hosts: nations already in the finals as hosts; a host's group sends the host plus the best of the rest. tiebreak: as in leagues.json, plus h2h_away_gf and away_wins. A head-to-head rule counts only the games among the teams still level at that point. sportscore: the competition's name in SportScore's free API, for live scores on the page (AFCON qualifying is under the finals' name there). hide: teams never shown, by FIFA code: that nation, and clubs whose box carries that country's flag ({{fbaicon|ISR}}); their rows and games are left out, but every other team's record still counts its games against them (Salah, 2026-11-14).",
+  "_about": "The cups and international tournaments golboard's API serves, beside the club leagues in leagues.json. Their games come from English Wikipedia pages, one match box per game. pages: each page and what its boxes are: a fixed group (group, name), or groups read from the page's \"Group N\" headings within a division (groups: headings, division), with rounds from the headings when rounds is \"headings\" (Matchday 1...). teams: clubs or nations (nations by FIFA code, data/api/nations.json). tz and clock: the time zone the boxes give kick-offs in; without tz, each box gives its own UTC offset. zones: what each place leads to, for every group or only one division's. hosts: nations already in the finals as hosts; a host's group sends the host plus the best of the rest. tiebreak: as in leagues.json, plus h2h_away_gf and away_wins. A head-to-head rule counts only the games among the teams still level at that point. sportscore: the competition's name in SportScore's free API, for live scores on the page (AFCON qualifying is under the finals' name there). espn: its code in ESPN's football feeds, for each finished game's lineups, timeline, shots and touch zones (scripts/api/espn.mjs; AFCON qualifying has no positions there). hide: teams never shown, by FIFA code: that nation, and clubs whose box carries that country's flag ({{fbaicon|ISR}}); their rows and games are left out, but every other team's record still counts its games against them (Salah, 2026-11-14).",
   "hide": [
     "ISR"
   ],
@@ -7,6 +7,7 @@
     {
       "id": "afcon",
       "sportscore": "caf-africa-cup-of-nations",
+      "espn": "caf.nations_qual",
       "name": "AFCON qualifying",
       "full": "Africa Cup of Nations qualifying",
       "region": "Africa",
@@ -103,6 +104,7 @@
     {
       "id": "champions-league",
       "sportscore": "uefa-champions-league",
+      "espn": "uefa.champions",
       "name": "Champions League",
       "full": "UEFA Champions League",
       "region": "Europe",
@@ -146,6 +148,7 @@
     {
       "id": "europa-league",
       "sportscore": "uefa-europa-league",
+      "espn": "uefa.europa",
       "name": "Europa League",
       "full": "UEFA Europa League",
       "region": "Europe",
@@ -189,6 +192,7 @@
     {
       "id": "conference-league",
       "sportscore": "uefa-europa-conference-league",
+      "espn": "uefa.europa.conf",
       "name": "Conference League",
       "full": "UEFA Conference League",
       "region": "Europe",
@@ -232,6 +236,7 @@
     {
       "id": "nations-league",
       "sportscore": "uefa-nations-league",
+      "espn": "uefa.nations",
       "name": "Nations League",
       "full": "UEFA Nations League",
       "region": "Europe",
