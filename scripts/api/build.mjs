@@ -68,12 +68,13 @@ export function witness(merged, unmerged, dir) {
 /** Our games' detail from ESPN's feeds (fetch-espn.mjs saves one reduced file per game in `dir`): each paired with our own finished
  *  game by its two teams within three days (sources can be a day apart), with our team ids. A game whose score is not ours is left out
  *  and named in `disagree`; a team we cannot name is left out and named in `unknown`. Never throws. Null when `dir` has no games. */
-export function gameFiles(dir, matches, teams, overruled = []) {
+export function gameFiles(dir, matches, teams, overruled = [], hidden = new Set()) {
   const saved = savedGames(dir);
   if (!saved.length) return null;
   const files = new Map(), report = { games: 0, unknown: [], disagree: [], overruled };
   for (const g of saved) {
     const home = teamId(g.home.name), away = teamId(g.away.name);
+    if (hidden.has(home) || hidden.has(away)) continue;  // a hidden team's game is left out without a word (tournaments.json hide)
     const missing = [[home, g.home.name], [away, g.away.name]].filter(([id]) => !teams[id]).map(([, n]) => n);
     if (missing.length) { for (const n of missing) if (!report.unknown.includes(n)) report.unknown.push(n); continue; }
     const day = Date.parse(`${g.kickoff.slice(0, 10)}T00:00:00Z`);
@@ -178,12 +179,15 @@ export function build({ input = "data/openfootball", wikipedia = join(ROOT, "dat
       zones: (t.zones ?? []).map((z) => ({ kind: z.kind, label: z.label, from: z.from, to: z.to, division: z.division ?? null })),
       hosts: (t.hosts ?? []).map((c) => nation(c).id), groups: tables });
     files.set(`${base}/teams.json`, { tournament: t.id, season: t.season, teams });
+    const detail = gameFiles(join(espn, t.season, t.id), matches, teams, [], hidden);
+    for (const [name, body] of detail?.files ?? []) files.set(`${base}/games/${name}.json`, { competition: t.id, season: t.season, ...body });
     current.set(t.id, { matches, teams });  // today.json carries the cups' and internationals' games too, under the tournament's id
     const finished = matches.filter((m) => m.status === "finished");
     meta.tournaments[t.id] = { [t.season]: { finished: finished.length, scheduled: matches.length - finished.length,
       lastResult: finished.reduce((d, m) => (m.date > d ? m.date : d), "") || null,
       overdue: matches.filter((m) => m.status === "scheduled" && m.date < lateBefore).length,
-      wikipedia: Object.fromEntries(t.pages.filter((p) => saved.pages?.[p.title]).map((p) => [p.title, saved.pages[p.title].revid])) } };
+      wikipedia: Object.fromEntries(t.pages.filter((p) => saved.pages?.[p.title]).map((p) => [p.title, saved.pages[p.title].revid])),
+      ...(detail ? { espn: detail.report } : {}) } };
     served.push({ id: t.id, name: t.name, full: t.full, region: t.region, teams: t.teams, season: t.season, finals: t.finals });
     usedWikipedia = true;
   }

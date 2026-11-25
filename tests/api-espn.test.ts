@@ -127,6 +127,15 @@ describe("downloading finished matches", () => {
     expect(again.filter((u) => !u.includes("/scoreboard"))).toEqual([]);
   });
 
+  it("fetches the cups and internationals too, under the tournament's own season", async () => {
+    const out = mkdtempSync(join(tmpdir(), "golboard-espn-")); dirs.push(out);
+    const asked: string[] = [];
+    const report = await fetchMatches({ out, season: "2026-27", now, days: 1, ids: ["champions-league"], fetchFn: feed(asked), wait: async () => {} });
+    expect(report.saved).toEqual(["champions-league/9001"]);
+    expect(asked[0]).toContain("/uefa.champions/scoreboard?dates=20261122");
+    expect(existsSync(join(out, "2026-27", "champions-league", "9001.json"))).toBe(true);
+  });
+
   it("never throws: a failed download keeps going and says why", async () => {
     const out = mkdtempSync(join(tmpdir(), "golboard-espn-")); dirs.push(out);
     const report = await fetchMatches({ out, season: "2026-27", now, days: 1, ids: ["it-1", "en-1"], wait: async () => {},

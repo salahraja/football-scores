@@ -274,9 +274,8 @@ function details(api, league, season) {
   return (m) => (m.score && have.has(`${m.date}-${m.home}-${m.away}`) ? `/leagues/${league}/${m.date}-${m.home}-${m.away}/` : null);
 }
 
-/** One page per game with detail: the score on the poster, then gamepage.mjs's timeline, shot map and touch maps. */
-function gamePages(league, competition, api) {
-  const season = competition.current;
+/** One page per game with detail (`league` is a league or a tournament: its id and name): the score on the poster, then gamepage.mjs's timeline, shot map and touch maps. */
+function gamePages(league, season, api) {
   const dir = join(api, league.id, season, "games");
   if (!existsSync(dir)) return new Map();
   const { teams } = JSON.parse(readFileSync(join(api, league.id, season, "teams.json"), "utf8"));
@@ -824,7 +823,8 @@ ${rows.map((r) => `<tr class="row"${r.status ? ` data-zone="${esc(r.status)}"` :
   const clock = config.clock ? `Kick-offs are ${config.clock}.` : "Kick-offs are local time at each ground.";
   // live scores from SportScore, as on the league pages, while the page has games still to play
   const live = config.sportscore && (week.length || next.length) ? config.sportscore : null;
-  const list = (games) => `<ul class="games">${games.map((m) => game(m, teams, today)).join("\n")}</ul>`;
+  const detail = details(api, t.id, t.season);
+  const list = (games) => `<ul class="games">${games.map((m) => game(m, teams, today, detail)).join("\n")}</ul>`;
   const longest = Math.max(...t.name.split(/\s+/).map((w) => w.length));
   const body = `<header class="poster">
 <div class="titlebar solo"><span aria-hidden="true"></span><h1 style="--n: ${longest}">${esc(t.name)}</h1><span aria-hidden="true"></span></div>
@@ -945,9 +945,10 @@ export function pages({ api = "public/api/v1", out = "public", zones = loadZones
   served.forEach((league, i) => files.set(`${league.id}/index.html`, leaguePage(league, byId.get(league.id), api,
     served[(i - 1 + served.length) % served.length], served[(i + 1) % served.length], zones)));
   for (const league of served) for (const [path, html] of clubPages(league, byId.get(league.id), api, zones)) files.set(path, html);
-  for (const league of served) for (const [path, html] of gamePages(league, byId.get(league.id), api)) files.set(path, html);
+  for (const league of served) for (const [path, html] of gamePages(league, byId.get(league.id).current, api)) files.set(path, html);
   const cups = existsSync(join(api, "tournaments.json")) ? JSON.parse(readFileSync(join(api, "tournaments.json"), "utf8")).tournaments : [];
   for (const t of cups) files.set(`${t.id}/index.html`, tournamentPage(t, api));
+  for (const t of cups) for (const [path, html] of gamePages(t, t.season, api)) files.set(path, html);
   const picks = brackets(pickem, api);
   for (const { bracket, format, names, codes } of picks) files.set(`bracket/${bracket.id}/index.html`, bracketPage(bracket, format, names, codes));
   files.set("index.html", shell({ title: "Leagues", path: "/leagues/", here: "all", description: `Tables, results and fixtures for eight European leagues${cups.length ? `, ${cups.map((t) => t.name).join(", ")}` : ""}.`,

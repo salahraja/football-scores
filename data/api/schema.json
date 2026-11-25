@@ -156,12 +156,12 @@
     },
 
     "game": {
-      "description": "One finished league game in detail, from ESPN's football feeds (Salah's decision, 25 November 2026; see docs/api.md): the lineups, the timeline, every shot, and each player's on-ball touches in 30 zones. Positions are percent of the pitch with the player's own team attacking toward x = 100 and y = 0 its right touchline. Players are named by ESPN's id within the file.",
+      "description": "One finished game (a league's, a cup's or an international) in detail, from ESPN's football feeds (Salah's decision, 25 November 2026; see docs/api.md): the lineups, the timeline, every shot, and each player's on-ball touches in 30 zones. Positions are percent of the pitch with the player's own team attacking toward x = 100 and y = 0 its right touchline. Players are named by ESPN's id within the file.",
       "type": "object",
       "required": ["competition", "season", "match", "source", "kickoff", "home", "away", "players", "events", "shots", "positions", "touches"],
       "additionalProperties": false,
       "properties": {
-        "competition": { "$ref": "#/$defs/leagueId" },
+        "competition": { "oneOf": [{ "$ref": "#/$defs/leagueId" }, { "$ref": "#/$defs/tournamentId" }] },
         "season": { "$ref": "#/$defs/season" },
         "match": { "description": "Our match id (matches.json).", "type": "string" },
         "source": { "type": "object", "required": ["name", "url"], "additionalProperties": false, "properties": { "name": { "const": "ESPN" }, "url": { "type": "string", "pattern": "^https://www\\.espn\\.com/" } } },
@@ -181,6 +181,18 @@
         "positions": { "description": "False when the feed had no positions for this game (shots and touches are then empty).", "type": "boolean" },
         "touches": { "description": "Each player's on-ball touches by zone: index = column x 5 + row; columns from the own goal line at 0, 16.5, 34.5, 52.5, 70.5 and 88.5 m of 105; rows from the right touchline at 0, 13.84, 24.84, 43.16 and 54.16 m of 68.",
           "type": "object", "additionalProperties": { "type": "array", "items": { "$ref": "#/$defs/count" }, "minItems": 30, "maxItems": 30 } }
+      }
+    },
+    "espnReport": {
+      "description": "ESPN's games for this season (games/*.json): how many were paired with ours, team names we could not map, ESPN game ids whose score was not ours (left out), and our match ids whose Wikipedia score ESPN contradicted (not used; a league's only). A hidden team's game is left out and not listed.",
+      "type": "object",
+      "required": ["games", "unknown", "disagree", "overruled"],
+      "additionalProperties": false,
+      "properties": {
+        "games": { "$ref": "#/$defs/count" },
+        "unknown": { "type": "array", "items": { "type": "string" } },
+        "disagree": { "type": "array", "items": { "type": "string" } },
+        "overruled": { "type": "array", "items": { "type": "string" } }
       }
     },
     "gameSide": { "type": "object", "required": ["team", "formation"], "additionalProperties": false, "properties": { "team": { "$ref": "#/$defs/teamId" }, "formation": { "oneOf": [{ "type": "string" }, { "type": "null" }] } } },
@@ -412,18 +424,7 @@
                     }
                   }
                 },
-                "espn": {
-                  "description": "ESPN's games for this season (games/*.json): how many were paired with ours, club names we could not map to a team, ESPN game ids whose score was not ours (left out), and Wikipedia scores ESPN contradicted (not used).",
-                  "type": "object",
-                  "required": ["games", "unknown", "disagree", "overruled"],
-                  "additionalProperties": false,
-                  "properties": {
-                    "games": { "$ref": "#/$defs/count" },
-                    "unknown": { "type": "array", "items": { "type": "string" } },
-                    "disagree": { "type": "array", "items": { "type": "string" } },
-                    "overruled": { "description": "Our match ids whose Wikipedia score ESPN contradicted: left unscored until openfootball has them.", "type": "array", "items": { "type": "string" } }
-                  }
-                }
+                "espn": { "$ref": "#/$defs/espnReport" }
               }
             }
           }
@@ -443,7 +444,8 @@
                 "scheduled": { "$ref": "#/$defs/count" },
                 "lastResult": { "oneOf": [{ "$ref": "#/$defs/date" }, { "type": "null" }] },
                 "overdue": { "$ref": "#/$defs/count" },
-                "wikipedia": { "description": "Each Wikipedia page's revision, by title.", "type": "object", "additionalProperties": { "type": "integer", "minimum": 1 } }
+                "wikipedia": { "description": "Each Wikipedia page's revision, by title.", "type": "object", "additionalProperties": { "type": "integer", "minimum": 1 } },
+                "espn": { "$ref": "#/$defs/espnReport" }
               }
             }
           }
