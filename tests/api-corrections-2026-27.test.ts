@@ -11,7 +11,8 @@ describe("2026-27 corrections", () => {
   it("Juventus 4-0 Venezia, from ESPN's match page", () => {
     const fix = loadCorrections("2026-27", "it-1");
     expect(fix).toContainEqual({ date: "2026-11-23", home: "juventus", away: "venezia", had: null, ft: [4, 0], source: "https://www.espn.com/soccer/match/_/gameId/401875008" });
-    const [m] = applyCorrections([{ id: "it-1:2026-11-23:juventus-venezia", date: "2026-11-23", home: "juventus", away: "venezia", status: "scheduled", score: null }], fix);
+    const game = { id: "it-1:2026-11-23:juventus-venezia", date: "2026-11-23", home: "juventus", away: "venezia", status: "scheduled", score: null };
+    const [m] = applyCorrections([game] as never, fix) as unknown as Array<{ score: { ft: number[] }; source: string }>;
     expect(m.score.ft).toEqual([4, 0]);
     expect(m.source).toBe("correction");
   });
