@@ -42,7 +42,14 @@ change as the data it describes.
 
 `npm run api:build` also writes plain HTML pages from the API it just built (`scripts/api/pages.mjs`): `/leagues/` and
 `/leagues/<league>/` in the site's Stadio look (the facelift: a slate poster with the league in brick-red Barlow Condensed over the
-game of the moment, then glass boxes for this week, the table, the latest results and the next fixtures). No framework (in our test on a
+game of the moment, then glass boxes for this week, the table, the latest results and the next fixtures). Each league game ESPN
+has detail for (`games/*.json`) gets a page of its own, `/leagues/<league>/<date>-<home>-<away>/`, linked as "Shots and touches"
+from the league's and the clubs' game lists (`scripts/api/gamepage.mjs`): the score, the timeline, home and away shots and expected
+goals, a shot map (every shot from where it was taken; a circle's area grows with its xG; filled for a goal, a thick ring saved, a thin
+ring off target, dashed blocked) with a list of every shot, and touch maps for each side and each player: on-ball touches counted in 30
+zones (the boxes, the six-yard boxes' width, halfway and a third of each half), coloured by touches per square metre in five steps
+of one red, with the count printed in each zone. All drawn as SVG when the page is built: no script, colours from CSS classes so the
+dark theme works, a title and a description on each map for screen readers. A page with 34 maps is about 9 KB compressed. No framework (in our test on a
 throttled phone a plain page showed in 376 ms against 912 ms for the Vue app), one stylesheet (`/leagues/site.css`) and the two fonts
 (OFL) served from `/leagues/fonts/`, light and dark.
 Each page says how far its results go, gives kick-off times in the league's own time zone (`clock` in `data/api/leagues.json`), and
@@ -145,6 +152,5 @@ on these pages.
   its terms for apps are confirmed.
 - A schedule: a job that rebuilds every 30 minutes on match days. Netlify's free build minutes are too few for that, so it will publish
   from a separate place.
-- Game detail for the cups and internationals (ESPN has them all; AFCON qualifying without positions), and the pages that draw the
-  shots and touch zones (next).
+- Game detail and pages for the cups and internationals (ESPN has them all; AFCON qualifying without positions).
 - Live minute-by-minute scores (licensed by the leagues), club crests and league logos (trademarks).
