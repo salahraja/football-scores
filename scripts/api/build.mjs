@@ -1,10 +1,10 @@
 // golboard's API: a folder of static JSON built from saved source files (no server, and no key in any app).
-//   node scripts/api/build.mjs [--input data/openfootball] [--wikipedia data/wikipedia] [--out public] [--seasons 2025-26,2026-27]
+//   node scripts/api/build.mjs [--input data/openfootball] [--wikipedia data/wikipedia] [--espn data/espn] [--out public] [--seasons 2025-26,2026-27]
 // writes <out>/api/v1/competitions.json, <out>/api/v1/<league>/<season>/{matches,table,teams}.json and <out>/api/v1/meta.json;
 // and for each tournament with a saved <wikipedia>/<season>/<id>.json, <out>/api/v1/tournaments.json and <out>/api/v1/<id>/<season>/{matches,groups,teams}.json.
 // Every season is checked before anything is written; one failure and nothing is written, so the last good API stays up.
 import { createHash } from "node:crypto";
-import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { SITE, hiddenCountries, leagues, tournaments, loadAdjustments, loadCorrections, loadPostponed, loadZones, zoneNames } from "./config.mjs";
@@ -38,8 +38,58 @@ export function validate(season, teams) {
   return problems;
 }
 
+/** The games fetch-espn.mjs saved for one league season, in file-name order; [] when there are none. */
+function savedGames(dir) {
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir).filter((f) => f.endsWith(".json")).sort().flatMap((f) => {
+    try { return [JSON.parse(readFileSync(join(dir, f), "utf8"))]; } catch { return []; }
+  });
+}
+
+/** A score Wikipedia's grid filled in that ESPN's saved game for the same two teams (within three days) contradicts is taken back: the
+ *  game goes back to how openfootball has it (not played yet) until openfootball scores it. One mistyped cell (Juventus 0-10 Venezia on
+ *  23 November 2026, a 4-0) must not reach the table. Returns the matches and the ids taken back. */
+export function witness(merged, unmerged, dir) {
+  const saved = savedGames(dir);
+  const before = new Map(unmerged.map((m) => [m.id, m]));
+  const overruled = [];
+  const matches = merged.map((m) => {
+    if (m.source !== "wikipedia" || !m.score) return m;
+    const day = Date.parse(`${m.date}T00:00:00Z`);
+    const g = saved.find((x) => teamId(x.home.name) === m.home && teamId(x.away.name) === m.away
+      && Math.abs(Date.parse(`${x.kickoff.slice(0, 10)}T00:00:00Z`) - day) <= 3 * 86_400_000);
+    if (!g || (g.home.score === m.score.ft[0] && g.away.score === m.score.ft[1])) return m;
+    overruled.push(m.id);
+    return before.get(m.id) ?? m;
+  });
+  return { matches, overruled };
+}
+
+/** Our games' detail from ESPN's feeds (fetch-espn.mjs saves one reduced file per game in `dir`): each paired with our own finished
+ *  game by its two teams within three days (sources can be a day apart), with our team ids. A game whose score is not ours is left out
+ *  and named in `disagree`; a team we cannot name is left out and named in `unknown`. Never throws. Null when `dir` has no games. */
+export function gameFiles(dir, matches, teams, overruled = []) {
+  const saved = savedGames(dir);
+  if (!saved.length) return null;
+  const files = new Map(), report = { games: 0, unknown: [], disagree: [], overruled };
+  for (const g of saved) {
+    const home = teamId(g.home.name), away = teamId(g.away.name);
+    const missing = [[home, g.home.name], [away, g.away.name]].filter(([id]) => !teams[id]).map(([, n]) => n);
+    if (missing.length) { for (const n of missing) if (!report.unknown.includes(n)) report.unknown.push(n); continue; }
+    const day = Date.parse(`${g.kickoff.slice(0, 10)}T00:00:00Z`);
+    const ours = matches.find((m) => m.home === home && m.away === away && Math.abs(Date.parse(`${m.date}T00:00:00Z`) - day) <= 3 * 86_400_000);
+    if (!ours || ours.status !== "finished") continue;  // not played yet in our data: paired once our result is in
+    if (ours.score.ft[0] !== g.home.score || ours.score.ft[1] !== g.away.score) { report.disagree.push(g.espn); continue; }
+    const { espn, kickoff, players, events, shots, positions, touches } = g;
+    files.set(`${ours.date}-${home}-${away}`, { match: ours.id, source: { name: "ESPN", url: `https://www.espn.com/soccer/match/_/gameId/${espn}` },
+      kickoff, home: { team: home, formation: g.home.formation }, away: { team: away, formation: g.away.formation }, players, events, shots, positions, touches });
+    report.games += 1;
+  }
+  return { files, report };
+}
+
 /** Build everything in memory, check it, then write it all at once. Throws (writing nothing) when any season fails validation. */
-export function build({ input = "data/openfootball", wikipedia = join(ROOT, "data/wikipedia"), out = "public", seasons = ["2025-26", "2026-27"], now = new Date().toISOString(), mutate, zones = loadZones } = {}) {
+export function build({ input = "data/openfootball", wikipedia = join(ROOT, "data/wikipedia"), espn = join(ROOT, "data/espn"), out = "public", seasons = ["2025-26", "2026-27"], now = new Date().toISOString(), mutate, zones = loadZones } = {}) {
   const files = new Map();
   const meta = { version: 1, generatedAt: now, sources: [OPENFOOTBALL], leagues: {} };
   // a game more than three days before the build with no result: its source has stalled (see api:check)
@@ -58,11 +108,14 @@ export function build({ input = "data/openfootball", wikipedia = join(ROOT, "dat
       parsed.matches = applyCorrections(parsed.matches, loadCorrections(season, league.id));
       // Wikipedia's grid scores the games openfootball has not got to yet; it never overwrites a score openfootball has (wikipedia.mjs).
       const page = join(wikipedia, season, `${league.id}.json`);
-      let wiki = null;
+      let wiki = null, overruled = [];
       if (existsSync(page)) {
         const saved = JSON.parse(readFileSync(page, "utf8"));
         const merged = applyResults(parsed.matches, parseResults(saved.wikitext), parsed.teams, `https://en.wikipedia.org/?oldid=${saved.revid}`, now.slice(0, 10));
-        parsed.matches = merged.matches;
+        const checked = witness(merged.matches, parsed.matches, join(espn, season, league.id));
+        parsed.matches = checked.matches;
+        overruled = checked.overruled;
+        merged.filled -= overruled.length;
         wiki = { revision: saved.revid, filled: merged.filled, disagreements: merged.disagreements };
         // the short names fans use, where the grid has them (openfootball's "Espanyol Barcelona" reads like two teams)
         for (const { name, short } of parseNames(saved.wikitext)) if (parsed.teams[teamId(name)]) parsed.teams[teamId(name)] = short;
@@ -82,12 +135,15 @@ export function build({ input = "data/openfootball", wikipedia = join(ROOT, "dat
       files.set(`${base}/table.json`, { competition: league.id, season, table, adjustments,
         zones: zoning ? { zones: zoning.zones.map((z) => ({ kind: z.kind, label: names[z.kind], from: z.from, to: z.to })), note: zoning.note } : null });
       files.set(`${base}/teams.json`, { competition: league.id, season, teams: parsed.teams });
+      const games = gameFiles(join(espn, season, league.id), parsed.matches, parsed.teams, overruled);
+      for (const [name, body] of games?.files ?? []) files.set(`${base}/games/${name}.json`, { competition: league.id, season, ...body });
       // How far the source has got: the app says "results up to <date>" rather than pretending a stale table is live.
       meta.leagues[league.id] ??= {};
       meta.leagues[league.id][season] = { finished: finished.length, scheduled: parsed.matches.length - finished.length,
         lastResult: finished.reduce((d, m) => (m.date > d ? m.date : d), "") || null,
         corrections: parsed.matches.filter((m) => m.source === "correction").length,
-        overdue: parsed.matches.filter((m) => m.status === "scheduled" && m.date < lateBefore && !postponed.has(m.id)).length, ...(wiki ? { wikipedia: wiki } : {}) };
+        overdue: parsed.matches.filter((m) => m.status === "scheduled" && m.date < lateBefore && !postponed.has(m.id)).length, ...(wiki ? { wikipedia: wiki } : {}),
+        ...(games ? { espn: games.report } : {}) };
       have.push(season);
     }
     if (have.length) competitions.push({ id: league.id, name: league.name, country: league.country, seasons: have, current: have.at(-1) });
@@ -171,7 +227,7 @@ export function build({ input = "data/openfootball", wikipedia = join(ROOT, "dat
 if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
   const arg = (name, fallback) => { const i = process.argv.indexOf(`--${name}`); return i > 0 ? process.argv[i + 1] : fallback; };
   const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
-  const done = build({ input: arg("input", join(root, "data/openfootball")), wikipedia: arg("wikipedia", join(root, "data/wikipedia")), out: arg("out", join(root, "public")),
+  const done = build({ input: arg("input", join(root, "data/openfootball")), wikipedia: arg("wikipedia", join(root, "data/wikipedia")), espn: arg("espn", join(root, "data/espn")), out: arg("out", join(root, "public")),
     seasons: arg("seasons", "2025-26,2026-27").split(",") });
   console.log(`api: ${done.files} files for ${done.competitions} competitions`);
 }
