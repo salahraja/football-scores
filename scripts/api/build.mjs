@@ -14,6 +14,7 @@ import { computeTable } from "./table.mjs";
 import { teamId } from "./teams.mjs";
 import { teamCalendars } from "./calendar.mjs";
 import { applyResults, parseNames, parseResults } from "./wikipedia.mjs";
+import { parseLeaders } from "./leaders.mjs";
 import { groupTables, nation, pageGames } from "./tournament.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
@@ -38,6 +39,18 @@ export function validate(season, teams) {
   return problems;
 }
 
+/** The season page's top scorers and clean sheets (leaders.mjs) with our team ids, or null. Never throws: these lists come from tables
+ *  editors reshape, so a bad one is left out and the scores and tables still publish. A club with no team this season gets team null. */
+export function leadersFile(stats, teams) {
+  if (!stats?.text) return null;
+  let lists;
+  try { lists = parseLeaders(stats.text); } catch { return null; }
+  if (!lists.goals && !lists.cleanSheets) return null;
+  const ids = (list) => list && { asOf: list.asOf,
+    rows: list.rows.map((r) => ({ rank: r.rank, player: r.player, club: r.club, team: teams[teamId(r.club)] ? teamId(r.club) : null, value: r.value })) };
+  return { source: { ...WIKIPEDIA, url: `https://en.wikipedia.org/?oldid=${stats.revid}` }, goals: ids(lists.goals), cleanSheets: ids(lists.cleanSheets) };
+}
+
 /** Build everything in memory, check it, then write it all at once. Throws (writing nothing) when any season fails validation. */
 export function build({ input = "data/openfootball", wikipedia = join(ROOT, "data/wikipedia"), out = "public", seasons = ["2025-26", "2026-27"], now = new Date().toISOString(), mutate, zones = loadZones } = {}) {
   const files = new Map();
@@ -58,7 +71,7 @@ export function build({ input = "data/openfootball", wikipedia = join(ROOT, "dat
       parsed.matches = applyCorrections(parsed.matches, loadCorrections(season, league.id));
       // Wikipedia's grid scores the games openfootball has not got to yet; it never overwrites a score openfootball has (wikipedia.mjs).
       const page = join(wikipedia, season, `${league.id}.json`);
-      let wiki = null;
+      let wiki = null, stats = null;
       if (existsSync(page)) {
         const saved = JSON.parse(readFileSync(page, "utf8"));
         const merged = applyResults(parsed.matches, parseResults(saved.wikitext), parsed.teams, `https://en.wikipedia.org/?oldid=${saved.revid}`, now.slice(0, 10));
@@ -66,6 +79,7 @@ export function build({ input = "data/openfootball", wikipedia = join(ROOT, "dat
         wiki = { revision: saved.revid, filled: merged.filled, disagreements: merged.disagreements };
         // the short names fans use, where the grid has them (openfootball's "Espanyol Barcelona" reads like two teams)
         for (const { name, short } of parseNames(saved.wikitext)) if (parsed.teams[teamId(name)]) parsed.teams[teamId(name)] = short;
+        stats = saved.stats ?? null;
         usedWikipedia = true;
       }
       mutate?.(parsed);
@@ -82,6 +96,8 @@ export function build({ input = "data/openfootball", wikipedia = join(ROOT, "dat
       files.set(`${base}/table.json`, { competition: league.id, season, table, adjustments,
         zones: zoning ? { zones: zoning.zones.map((z) => ({ kind: z.kind, label: names[z.kind], from: z.from, to: z.to })), note: zoning.note } : null });
       files.set(`${base}/teams.json`, { competition: league.id, season, teams: parsed.teams });
+      const leaders = leadersFile(stats, parsed.teams);
+      if (leaders) files.set(`${base}/leaders.json`, { competition: league.id, season, ...leaders });
       // How far the source has got: the app says "results up to <date>" rather than pretending a stale table is live.
       meta.leagues[league.id] ??= {};
       meta.leagues[league.id][season] = { finished: finished.length, scheduled: parsed.matches.length - finished.length,

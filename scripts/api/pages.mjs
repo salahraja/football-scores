@@ -113,6 +113,7 @@ h2 { font: 800 1.9rem/1 var(--display); text-transform: uppercase; margin: 0 0 0
 .standings td, .standings tbody th { padding: 9px 6px; border-bottom: 1px solid var(--line); font-weight: 400; }
 .standings .left { text-align: left; } .standings .pts { font-weight: 700; }
 .standings td.pos { font: 800 1.15rem var(--display); opacity: 0.6; text-align: left; }
+.leaders .club { display: block; color: var(--muted); font-size: 0.8125rem; } .leaders tbody th { overflow-wrap: anywhere; }
 /* zones: a bar on the position (decorative: the legend and a hidden label say the same in words) */
 [data-zone="cl"] { --zone: #2563c9; } [data-zone="clq"] { --zone: #7aa2e3; } [data-zone="el"] { --zone: #d9771f; }
 [data-zone="elq"] { --zone: #eaa765; } [data-zone="eclq"] { --zone: #2e9a5f; } [data-zone="ecl_po"] { --zone: #7cc49b; }
@@ -307,6 +308,18 @@ function leaguePage(league, competition, api, before, after, zonesFor) {
   const legend = zoning ? `<ul class="zones" aria-label="What the places lead to">${zoning.zones.map((z) => `<li data-zone="${z.kind}"><b>${esc(names[z.kind])}</b> ${range(z)}</li>`).join("")}</ul>
 <p class="note">${esc(zoning.note)}</p>` : "";
   const list = (games) => `<ul class="games" aria-live="polite">${games.map((m) => game(m, teams, today)).join("\n")}</ul>`;
+  // Top scorers and clean sheets, copied from the season's Wikipedia page (build.mjs leadersFile); a club we have a page for is linked
+  const leaders = existsSync(join(api, league.id, season, "leaders.json")) ? read("leaders.json") : null;
+  const board = (id, title, word, short, list) => (list ? `<section class="glass" id="${id}">
+<h2>${title}</h2>
+<table class="standings leaders">
+<caption>${list.asOf ? `Up to ${day(list.asOf)}, from` : "From"} <a href="${esc(leaders.source.url)}">Wikipedia</a>.</caption>
+<thead><tr><th scope="col" class="left"><span aria-hidden="true">#</span><span class="sr-only">Rank</span></th><th scope="col" class="left">Player</th><th scope="col"><abbr title="${word}">${short}</abbr></th></tr></thead>
+<tbody>
+${list.rows.map((r) => `<tr class="leader"><td class="pos">${r.rank}</td><th scope="row" class="left">${esc(r.player)}<span class="club">${r.team ? `<a href="/leagues/${league.id}/${esc(r.team)}/">${esc(teams[r.team] ?? r.club)}</a>` : esc(r.club)}</span></th><td class="pts">${r.value}</td></tr>`).join("\n")}
+</tbody>
+</table>
+</section>` : "");
   const go = (l, dir, word) => `<a class="arrow ${dir}" href="/leagues/${l.id}/" aria-label="${word} league: ${esc(l.name)}"><span aria-hidden="true">${dir === "prev" ? "‹" : "›"}</span></a>`;
   const body = `<header class="poster">
 <div class="titlebar">${go(before, "prev", "Previous")}<h1 style="--n: ${Math.max(...league.name.split(/\s+/).map((w) => w.length))}">${esc(league.name)}</h1>${go(after, "next", "Next")}</div>
@@ -339,8 +352,10 @@ ${latest.length ? list(latest) : '<p class="note">None yet.</p>'}
 <h2>Next fixtures</h2>
 ${next.length ? list(next) : '<p class="note">None left this season.</p>'}
 </section>
+${board("scorers", "Top scorers", "Goals", "G", leaders?.goals)}
+${board("keepers", "Clean sheets", "Clean sheets", "CS", leaders?.cleanSheets)}
 </div>
-<footer>Results from ${used.map((s) => SOURCES[s]).join(" and ")}. Kick-off times are ${esc(league.clock)}.${live ? ' Live scores <a href="https://sportscore.com/">powered by SportScore</a>.' : ""}</footer>
+<footer>Results from ${used.map((s) => SOURCES[s]).join(" and ")}.${leaders ? ` Top scorers and clean sheets from ${used.includes("wikipedia") ? "Wikipedia too" : SOURCES.wikipedia}.` : ""} Kick-off times are ${esc(league.clock)}.${live ? ' Live scores <a href="https://sportscore.com/">powered by SportScore</a>.' : ""}</footer>
 </main>`;
   const team = (id) => ({ "@type": "SportsTeam", name: teams[id] });
   const events = [...week, ...next].map((m) => ({ "@type": "SportsEvent", name: `${teams[m.home]} v ${teams[m.away]}`,

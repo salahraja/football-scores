@@ -11,6 +11,7 @@ app or page can read it. Built by `npm run api` (download, then build) into `pub
 | `api/v1/<league>/<season>/matches.json` | `{ competition, season, matches: [{ id, round, stage, date, time, home, away, status, score, source }] }` |
 | `api/v1/<league>/<season>/table.json` | `{ competition, season, table: [{ position, team, played, won, drawn, lost, gf, ga, gd, points, adjustment }], adjustments }` |
 | `api/v1/<league>/<season>/teams.json` | `{ competition, season, teams: { <team id>: <name> } }` |
+| `api/v1/<league>/<season>/leaders.json` | `{ competition, season, source, goals, cleanSheets }`: the top scorers and goalkeepers' clean sheets, each `{ asOf, rows: [{ rank, player, club, team, value }] }` or null. Copied from the season's Wikipedia page, not computed (we have no per-game scorers for the leagues); `asOf` is the date its editors give, or null; `team` is our id for `club`, or null when no team this season has that name; `source.url` names the revision. Left out when the page has no table we can read |
 | `api/v1/meta.json` | version, when it was built, the sources and their licences, per league season: games finished and to play, the date of the last result, corrections applied; and `files`: every other file of the build with the sha256 of its bytes |
 | `api/v1/news.json` | `{ generatedAt, articles: [{ title, summary, url, source, published, image, clubs }] }`: football headlines, newest first (at most 60), from BBC Sport, The Guardian and ESPN's own RSS feeds; `clubs` lists the team ids the story names. Written by `scripts/api/news.mjs`, after `build.mjs`, so it is not in `meta.json`'s file list |
 | `api/v1/news/<club id>.json` | `{ generatedAt, articles }` in the same shape, at most 30 per club, newest first: the general headlines that name the club plus The Guardian's own feed for it (`data/api/guardian-feeds.json`). One file per club of every league, so a club the three general feeds never mention (Juventus had none on 2026-11-12) still has its stories. A club with no Guardian feed gets only the general ones |
@@ -18,7 +19,7 @@ app or page can read it. Built by `npm run api` (download, then build) into `pub
 | `api/v1/<tournament>/<season>/matches.json` | `{ tournament, season, matches }`: like a league's, plus `group` (`A`, `A1`, or `league` for a single league-phase table), `stage` `group`, `round` (`Group A`, `League A, Group 1`, `Matchday 3`), and `kickoff` with a UTC offset |
 | `api/v1/<tournament>/<season>/groups.json` | `{ tournament, season, zones: [{ kind, label, from, to, division }], hosts, groups: [{ group, name, division, table }] }`: one computed table per group; each row adds `status`: the kind of zone its place falls in, `host` (in the finals already as a host), or null |
 | `api/v1/<tournament>/<season>/teams.json` | `{ tournament, season, teams: { <team id>: <name> } }` |
-| `api/v1/schema.json` | the contract: a JSON Schema (2020-12) with one `$defs` entry per file type (`competitions`, `matches`, `table`, `teams`, `tournaments`, `tournamentMatches`, `groups`, `tournamentTeams`, `today`, `news`, `meta`). Kept in `data/api/schema.json` |
+| `api/v1/schema.json` | the contract: a JSON Schema (2020-12) with one `$defs` entry per file type (`competitions`, `matches`, `table`, `teams`, `leaders`, `tournaments`, `tournamentMatches`, `groups`, `tournamentTeams`, `today`, `news`, `meta`). Kept in `data/api/schema.json` |
 
 League ids: `it-1` Serie A, `en-1` Premier League, `es-1` LaLiga, `de-1` Bundesliga, `fr-1` Ligue 1, `nl-1` Eredivisie, `pt-1` Primeira
 Liga, `en-2` Championship. Tournament ids: `afcon` AFCON qualifying (48 nations, 12 groups of four, September 2026 to March 2027), `champions-league`,
@@ -41,7 +42,8 @@ change as the data it describes.
 
 `npm run api:build` also writes plain HTML pages from the API it just built (`scripts/api/pages.mjs`): `/leagues/` and
 `/leagues/<league>/` in the site's Stadio look (the facelift: a slate poster with the league in brick-red Barlow Condensed over the
-game of the moment, then glass boxes for this week, the table, the latest results and the next fixtures). No framework (in our test on a
+game of the moment, then glass boxes for this week, the table, the latest results, the next fixtures, and the top scorers and clean
+sheets where the season's Wikipedia page has them). No framework (in our test on a
 throttled phone a plain page showed in 376 ms against 912 ms for the Vue app), one stylesheet (`/leagues/site.css`) and the two fonts
 (OFL) served from `/leagues/fonts/`, light and dark.
 Each page says how far its results go, gives kick-off times in the league's own time zone (`clock` in `data/api/leagues.json`), and
@@ -104,6 +106,14 @@ on these pages.
   the build until it gets an alias. On 31 October 2026 this filled 254 games (results up to 25-30 October instead of 20 September); 139 of
   them could be paired with SportScore's results and all 139 agreed. The reader reproduces all 3,016 official 2025-26 scores from the
   grids (`tests/api-wikipedia.test.ts`). Pages that use this data credit Wikipedia under CC BY-SA.
+- **League leaders:** the "Season statistics" section of the same Wikipedia pages (`scripts/api/leaders.mjs`): the top-scorers table on
+  all eight, clean sheets on six (La Liga's Zamora table is a ratio, so it is not used; the Eredivisie page has none).
+  Copied as the page gives them, ties and all; a closing row such as "Six players" names no one and is left out; a table we cannot read
+  gives no list rather than a wrong one, and never stops the build.
+  The fetch keeps the section with the season page's own revision, even when the grid comes from a template. On 25 November 2026 La
+  Liga's 11 rows equalled laliga.com's and the Bundesliga's top ten equalled bundesliga.com's (`tests/api-leaders.test.ts` holds the
+  eight sections of that day). The pages trail the leagues by up to a few weeks (Primeira Liga's said 2 November), so each list shows its
+  own "up to" date.
 - **Tournaments:** English Wikipedia pages (CC BY-SA 4.0), one match box per game with the date, the kick-off (a local time with its
   UTC offset, or Central European time for UEFA's) and the score (`scripts/api/tournament.mjs`; `data/api/tournaments.json` names the
   pages and what each one's headings mean). A tournament's pages are saved together or not at all, so a table never mixes two days. A score on a game dated the build day or later is not used yet. Group

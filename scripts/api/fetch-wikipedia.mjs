@@ -2,13 +2,15 @@
 // into data/wikipedia/<season>/<league or tournament>.json for
 // scripts/api/build.mjs, through the MediaWiki API with a User-Agent that names us, as Wikimedia asks.
 //   node scripts/api/fetch-wikipedia.mjs [--out data/wikipedia] [--seasons 2026-27]
-// Only the grid is kept (the Sports table / sports results module calls), with the revision it came from. Some pages keep the grid in a
+// Only the grid is kept (the Sports table / sports results module calls), with the revision it came from, and the season page's
+// "Season statistics" section for the leaders tables (leaders.mjs), with its own revision. Some pages keep the grid in a
 // template ({{2026–27 La Liga table|show_matches=only}}); that template is read instead. A failed or gridless download keeps the saved
 // file and says why; it never throws, so a build never stops for lack of fresh data. Node only, no dependencies.
 import { mkdirSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { leagues, tournaments } from "./config.mjs";
+import { statsSection } from "./leaders.mjs";
 import { matchText } from "./tournament.mjs";
 
 const API = "https://en.wikipedia.org/w/api.php";
@@ -49,6 +51,8 @@ export async function fetchPages({ out, seasons, ids = leagues().map((l) => l.id
       const name = `${season}/${league.id}`;
       try {
         let got = await page(`${dashed} ${league.wikipedia}`, fetchFn);
+        // the leaders tables (leaders.mjs) are on the season page itself, whichever page the grid comes from
+        const stats = { title: got.title, revid: got.revid, timestamp: got.timestamp, text: statsSection(got.text) };
         let wikitext = grids(got.text);
         if (!wikitext) {
           // the grid lives in a template the page transcludes: {{2026–27 La Liga table|show_matches=only}}
@@ -61,7 +65,7 @@ export async function fetchPages({ out, seasons, ids = leagues().map((l) => l.id
         if (!wikitext) { report.kept.push(`${name} (no results grid)`); continue; }
         const target = join(out, season, `${league.id}.json`);
         mkdirSync(dirname(target), { recursive: true });
-        writeFileSync(`${target}.tmp`, JSON.stringify({ title: got.title, revid: got.revid, timestamp: got.timestamp, wikitext }));
+        writeFileSync(`${target}.tmp`, JSON.stringify({ title: got.title, revid: got.revid, timestamp: got.timestamp, wikitext, stats }));
         renameSync(`${target}.tmp`, target);
         report.saved.push(name);
       } catch (e) {
