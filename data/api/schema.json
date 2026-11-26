@@ -249,6 +249,20 @@
       }
     },
 
+    "playerLatest": {
+      "description": "Each player's latest game with detail in a league season (games/*.json), for Following's players: the game's page name under games/, its date and score line, and the player's on-ball touches, shots and goals in it (own goals not counted). Only players who started or came on.",
+      "type": "object",
+      "required": ["competition", "season", "players"],
+      "additionalProperties": false,
+      "properties": {
+        "competition": { "$ref": "#/$defs/leagueId" },
+        "season": { "$ref": "#/$defs/season" },
+        "players": { "type": "object", "propertyNames": { "pattern": "^[0-9]+$" }, "additionalProperties": { "type": "object", "required": ["game", "date", "title", "touches", "shots", "goals"], "additionalProperties": false, "properties": {
+          "game": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+$" }, "date": { "$ref": "#/$defs/date" }, "title": { "type": "string", "minLength": 1 },
+          "touches": { "$ref": "#/$defs/count" }, "shots": { "$ref": "#/$defs/count" }, "goals": { "$ref": "#/$defs/count" } } } }
+      }
+    },
+
     "today": {
       "description": "Every league's and tournament's games from the day before the build to three days after, in kick-off order, with team names: one small file for a widget. league is the league's id or the tournament's (a club keeps one id in both, so a followed club's cup games are here too); a reader that does not know an id skips the game.",
       "type": "object",

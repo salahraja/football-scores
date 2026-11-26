@@ -131,4 +131,5 @@ export const GAME_CSS = `
 }
 #touches summary { font-weight: 600; }
 .games .more { grid-column: 1 / -1; text-align: center; font-size: 0.8125rem; }
+#my-players .player-last { display: block; color: var(--muted); font-size: 0.875rem; margin-top: 2px; }
 `;
