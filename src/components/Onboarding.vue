@@ -160,11 +160,17 @@ const kinds = [["league", "Leagues"], ["clubs", "European cups"], ["nations", "I
 .setup__group h3 { margin: 18px 0 8px; font-size: 1rem; }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip { font: 600 1rem var(--font-sans); padding: 10px 14px; border-radius: 999px; border: 1px solid var(--border); background: transparent; color: var(--fg); cursor: pointer; }
-.chip[aria-pressed="true"], .player[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent, #fff); }
+/* chosen: pressed in, like the menu's current page (base.css .links a[aria-current="page"]; Salah, 2026-11-26: "a depressed button look") */
+.chip, .player { transition: box-shadow 0.15s ease, background-color 0.15s ease; }
+.chip[aria-pressed="true"], .player[aria-pressed="true"] { background: rgb(255 255 255 / 62%); border-color: transparent; color: #c4302a; box-shadow: inset 0 3px 6px rgb(0 0 0 / 28%), inset 0 1px 2px rgb(0 0 0 / 22%), inset 0 -1px 1px rgb(255 255 255 / 60%); }
+@media (prefers-color-scheme: dark) {
+  .chip[aria-pressed="true"], .player[aria-pressed="true"] { background: rgb(0 0 0 / 35%); box-shadow: inset 0 3px 7px rgb(0 0 0 / 65%), inset 0 1px 2px rgb(0 0 0 / 55%), inset 0 -1px 1px rgb(255 255 255 / 8%); }
+}
+@media (prefers-reduced-motion: reduce) { .chip, .player { transition: none; } }
 .setup__search { width: 100%; box-sizing: border-box; font: 1rem inherit; padding: 12px 14px; margin: 4px 0 14px; border-radius: 14px; border: 1px solid var(--border); background: transparent; color: var(--fg); }
 .setup__players { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .player { width: 100%; text-align: left; display: grid; gap: 2px; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--border); background: transparent; color: var(--fg); cursor: pointer; font: inherit; }
-.player span { color: var(--fg-muted); font-size: 0.875rem; } .player[aria-pressed="true"] span { color: var(--on-accent, #fff); }
+.player span { color: var(--fg-muted); font-size: 0.875rem; } .player[aria-pressed="true"] span { color: var(--fg-muted); }
 .setup__foot { position: fixed; left: 0; right: 0; bottom: 0; display: flex; justify-content: space-between; align-items: center; gap: 12px;
   padding: 12px max(16px, calc(50% - 320px)) calc(12px + env(safe-area-inset-bottom, 0px)); background: var(--bg); border-top: 1px solid var(--border); }
 .setup__nav { display: flex; gap: 8px; }
