@@ -65,6 +65,8 @@ AFCON qualifying under SportScore's `caf-africa-cup-of-nations`), the browser as
 writes each score and state ("Live · 2nd half", "Full time") into the row with the same two teams, within three days of today because a
 schedule can be a day out (openfootball had LaLiga's 31 October games on 1 November); the poster moves to a game that is live; it stops
 when they have all finished.
+The live rows and the homepage show the match minute ("Live · 67'") from SportScore's match detail, one call per live game; without
+it they show the half ("Live · 2nd half").
 SportScore's terms ask for a visible link, so those pages say "Live scores powered by SportScore". The script names clubs with the same
 function and aliases as `teams.mjs` (copied in at build time). A name the feed uses that makes a different id from ours is a club whose
 live scores never show, so the names are checked against the feed itself: `node scripts/api/check-live-names.mjs` reads SportScore's
