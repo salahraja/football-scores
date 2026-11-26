@@ -10,7 +10,7 @@ const COMPETITION: Record<string, string> = {
 const HIDDEN = /\bisrael/i;
 
 export interface TodayGame { home: string; away: string; score: [number, number] | null; status: "live" | "finished" | "upcoming"; text: string; time: string }
-interface Raw { home: string; away: string; home_score: string | number | null; away_score: string | number | null; status: string; status_text?: string; time: string }
+interface Raw { home: string; away: string; home_score: string | number | null; away_score: string | number | null; status: string; status_text?: string; time: string; url?: string }
 
 function kickoff(iso: string) {
   return new Date(iso).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
@@ -33,13 +33,41 @@ export function covered(id: string) {
   return id in COMPETITION;
 }
 
+// The match's slug in SportScore's detail call, from its page address (/football/match/<teams>/<id>/), as the league pages' live.js reads it.
+function slugOf(url = "") {
+  const p = url.split("/").filter(Boolean);
+  return p.length >= 4 ? `${p[2]}-${p[3]}` : null;
+}
+
+// The minute of a live game, from SportScore's match detail (the league pages show it too); null when it cannot be read.
+async function liveMinute(m: Raw): Promise<number | null> {
+  const slug = slugOf(m.url);
+  if (!slug) return null;
+  try {
+    const reply = await fetch(`https://sportscore.com/api/v1/match/?sport=football&slug=${encodeURIComponent(slug)}`);
+    if (!reply.ok) return null;
+    const minute = ((await reply.json()) as { match?: { live_minute?: number | string | null } }).match?.live_minute;
+    return minute ? Number(minute) || null : null;
+  } catch {
+    return null;
+  }
+}
+
 export async function today(id: string, date = new Date().toISOString().slice(0, 10)): Promise<TodayGame[]> {
   if (!covered(id)) return [];
   try {
     const reply = await fetch(`https://sportscore.com/api/v1/fixtures/?sport=football&date=${date}&competition=${COMPETITION[id]}`);
     if (!reply.ok) return [];
     const all = ((await reply.json()) as { matches?: Raw[] }).matches ?? [];
-    return ordered(all.filter((m) => !HIDDEN.test(m.home) && !HIDDEN.test(m.away)).map(game));
+    const shown = all.filter((m) => !HIDDEN.test(m.home) && !HIDDEN.test(m.away));
+    // live games say their minute ("Live · 67'"), one detail call each; the half ("Live · 2nd half") when the detail is not there
+    const games = await Promise.all(shown.map(async (m) => {
+      const g = game(m);
+      if (g.status !== "live") return g;
+      const minute = await liveMinute(m);
+      return minute ? { ...g, text: `Live · ${minute}'` } : g;
+    }));
+    return ordered(games);
   } catch {
     return [];
   }
