@@ -319,6 +319,15 @@ tr[class*="zone--"] > .pos { box-shadow: inset 3px 0 0 var(--zone, transparent);
 @media (max-width: 760px) and (pointer: coarse) {
   .poster { position: relative; min-height: calc(100lvh + 120px); padding-bottom: calc(var(--space-2) + 120px); }
 }
+/* the phone poster's parallax (Salah, 2026-11-25: "only gone from the outer duo screen"): not sticky, so Safari does not clip it, but
+   moved down exactly as far as the page scrolls until the sheet has covered it, so it holds still as the sheet slides up, as the sticky
+   poster does on wider screens. */
+@supports (animation-timeline: scroll()) {
+  @media (max-width: 760px) and (pointer: coarse) and (prefers-reduced-motion: no-preference) {
+    .poster { animation: poster-hold linear both; animation-timeline: scroll(root); animation-range: 0 calc(100lvh + 120px); }
+  }
+}
+@keyframes poster-hold { to { transform: translateY(calc(100lvh + 120px)); } }
 
 /* Club colours (2026-11-08): the poster runs from the home club's colour to the away club's, mixed into its own slate so the names
    stay readable. Clubs without a colour keep the slate. The gradient is an empty layer of its own behind the poster: changing a style
