@@ -100,10 +100,10 @@ Goose is untrusted code. Every command below runs with an empty environment (`en
 
 ```sh
 # 1. The Goose compiler, once (about 70 s; cmake via pip if it is not installed). Installed at ~/.local/share/goose-lang;
-#    this repo was built and tested with github.com/aardappel/goose commit a108677d.
+#    this repo was built and tested with github.com/aardappel/goose commit 1838de4 (2026-11-24; a108677d until 2026-11-26).
 python3 -m venv ~/.cache/goose-venv && ~/.cache/goose-venv/bin/pip install cmake
 git clone https://github.com/aardappel/goose ~/.local/share/goose-lang
-cd ~/.local/share/goose-lang && git checkout a108677d
+cd ~/.local/share/goose-lang && git checkout 1838de4
 PATH=~/.cache/goose-venv/bin:$PATH cmake -B build -DCMAKE_BUILD_TYPE=Release && PATH=~/.cache/goose-venv/bin:$PATH cmake --build build -j8
 
 # 2. This repo
