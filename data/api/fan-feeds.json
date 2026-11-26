@@ -1,0 +1,8 @@
+{
+  "_about": "Independent fan sites' feeds for each club (Salah, 2026-11-26: \"We also should be pulling from team fan sites\"): { <club id>: [{ name, url }] }. Read by scripts/api/news.mjs like the Guardian's club feeds: every story is about that club, goes in news/<club>.json only (never the general headlines), and is credited to the site by name. Only the headline, a short summary and the link are kept; a story is read on the site. Each feed was checked by hand: 200, RSS or Atom, recent items, robots.txt allows it. No betting-owned sites.",
+  "feeds": {
+    "juventus": [
+      { "name": "Juvefc.com", "url": "https://www.juvefc.com/feed/" }
+    ]
+  }
+}
