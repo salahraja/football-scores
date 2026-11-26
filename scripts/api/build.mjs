@@ -123,6 +123,25 @@ export function playersFile(dir, teams) {
   return { source: { name: "ESPN", url: "https://www.espn.com/soccer/" }, players };
 }
 
+/** Every player's latest game with detail in one league season (from gameFiles' files): the game's page name, date and score line, and
+ *  the player's touches, shots and goals in it. A player counts as having played after starting or coming on. */
+export function latestByPlayer(files, matches, teams) {
+  const byId = new Map(matches.map((m) => [m.id, m]));
+  const out = {};
+  for (const [name, g] of [...files].sort((a, b) => a[0].localeCompare(b[0]))) {  // by date, so a later game overwrites
+    const m = byId.get(g.match);
+    if (!m?.score) continue;
+    const title = `${teams[m.home]} ${m.score.ft[0]}–${m.score.ft[1]} ${teams[m.away]}`;
+    const cameOn = new Set(g.events.filter((e) => e.kind === "sub" && e.player).map((e) => e.player));
+    for (const p of g.players) {
+      if (!p.starter && !cameOn.has(p.id)) continue;
+      out[p.id] = { game: name, date: m.date, title, touches: (g.touches[p.id] ?? []).reduce((a, b) => a + b, 0),
+        shots: g.shots.filter((s) => s.player === p.id).length, goals: g.events.filter((e) => (e.kind === "goal" || e.kind === "penalty") && e.player === p.id).length };
+    }
+  }
+  return out;
+}
+
 /** Build everything in memory, check it, then write it all at once. Throws (writing nothing) when any season fails validation. */
 export function build({ input = "data/openfootball", wikipedia = join(ROOT, "data/wikipedia"), espn = join(ROOT, "data/espn"), out = "public", seasons = ["2025-26", "2026-27"], now = new Date().toISOString(), mutate, zones = loadZones } = {}) {
   const files = new Map();
@@ -177,6 +196,7 @@ export function build({ input = "data/openfootball", wikipedia = join(ROOT, "dat
       if (squads) files.set(`${base}/players.json`, { competition: league.id, season, ...squads });
       const games = gameFiles(join(espn, season, league.id), parsed.matches, parsed.teams, overruled);
       for (const [name, body] of games?.files ?? []) files.set(`${base}/games/${name}.json`, { competition: league.id, season, ...body });
+      if (games?.files.size) files.set(`${base}/player-latest.json`, { competition: league.id, season, players: latestByPlayer(games.files, parsed.matches, parsed.teams) });
       // How far the source has got: the app says "results up to <date>" rather than pretending a stale table is live.
       meta.leagues[league.id] ??= {};
       meta.leagues[league.id][season] = { finished: finished.length, scheduled: parsed.matches.length - finished.length,

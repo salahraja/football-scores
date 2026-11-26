@@ -4,7 +4,8 @@ import { getDataNote, getResultRounds, getStandings } from "../data";
 import { competitions, league as loadLeague, zoneOf, type Competition, type League } from "../data/leagues";
 import { covered, today, type TodayGame } from "../data/live";
 import { teamId } from "../data/clubid";
-import { clubNews, loadFollowing, loadScope, mergeStories, news, saveFollowing, saveScope, type Article, type Scope } from "../data/follow";
+import { clubNews, loadFollowing, loadLeagues, loadScope, mergeStories, news, saveFollowing, saveScope, setupDone, type Article, type Scope } from "../data/follow";
+import Onboarding from "../components/Onboarding.vue";
 import { clubColour } from "../data/clubColours";
 import { breakCups, cupGames, groupOf, loadDay, localDay, type Cup, type DayMatch, type Group } from "../data/internationals";
 
@@ -306,8 +307,22 @@ onMounted(async () => {
     newsFailed.value = true; // the table and the scores stand on their own
   }
 });
+// The setup (components/Onboarding.vue): on a first visit by someone who follows nothing, or when the address asks for it (?setup=1,
+// the Following page's link). Afterwards Home opens on the first league chosen.
+const setup = ref(false);
+function setupFinished() {
+  setup.value = false;
+  following.value = loadFollowing();
+  const first = loadLeagues().find((id) => list.value.some((c) => c.id === id));
+  if (first) { choose(first); show(first); }
+  const url = new URL(window.location.href);
+  if (url.searchParams.has("setup")) { url.searchParams.delete("setup"); window.history.replaceState(window.history.state, "", url); }
+}
+onMounted(() => {
+  setup.value = new URLSearchParams(window.location.search).get("setup") === "1" || (!setupDone() && loadFollowing().length === 0);
+});
 onMounted(async () => {
-  const asked = new URLSearchParams(window.location.search).get("league");
+  const asked = new URLSearchParams(window.location.search).get("league") ?? loadLeagues()[0] ?? null;
   if (asked) chosen.value = asked;
   try {
     list.value = await competitions();
@@ -465,5 +480,6 @@ onMounted(async () => {
       </div>
     </div>
     </div>
+    <Onboarding v-if="setup" @done="setupFinished" />
   </section>
 </template>

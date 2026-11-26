@@ -736,6 +736,65 @@ export function followScript() {
     var box = e.target;
     if (box && box.matches && box.matches('input[data-club]')) set(box.getAttribute("data-club"), box.checked);
   }
+  // the players chosen in the setup (golboard.players): club, goals when Wikipedia's top scorers list them, the latest game with detail
+  function players() {
+    var box = document.getElementById("my-players"), none = document.getElementById("players-none");
+    if (!box) return;
+    var saved = [];
+    try { saved = JSON.parse(read("golboard.players") || "[]"); } catch (e) { saved = []; }
+    if (!Array.isArray(saved)) saved = [];
+    saved = saved.filter(function (p) { return p && typeof p.id === "string" && typeof p.name === "string"; });
+    if (none) none.hidden = saved.length > 0;
+    if (!saved.length) return;
+    function get(path) { return fetch("/api/v1/" + path).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }); }
+    function plain(s) { return String(s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim(); }
+    function nth(n) { return n + (n % 100 >= 11 && n % 100 <= 13 ? "th" : ["th", "st", "nd", "rd"][n % 10] || "th"); }
+    get("competitions.json").then(function (c) {
+      var comps = {};
+      ((c && c.competitions) || []).forEach(function (x) { comps[x.id] = x; });
+      var leagues = saved.map(function (p) { return p.league; }).filter(function (l, i, a) { return a.indexOf(l) === i; });
+      return Promise.all(leagues.map(function (l) {
+        var cur = comps[l];
+        if (!cur) return [l, null, null, null];
+        return Promise.all([get(l + "/" + cur.current + "/leaders.json"), get(l + "/" + cur.current + "/player-latest.json")])
+          .then(function (r) { return [l, cur.name, r[0], r[1]]; });
+      }));
+    }).then(function (rows) {
+      var by = {};
+      rows.forEach(function (r) { by[r[0]] = { name: r[1], leaders: r[2], latest: r[3] }; });
+      box.textContent = "";
+      saved.forEach(function (p) {
+        var d = by[p.league] || {};
+        var li = document.createElement("li");
+        var head = document.createElement("b");
+        head.textContent = p.name + (p.club ? " · " + p.club : "");
+        li.appendChild(head);
+        var scorer = d.leaders && d.leaders.goals ? d.leaders.goals.rows.filter(function (r) { return r.team === p.team && plain(r.player) === plain(p.name); })[0] : null;
+        if (scorer) {
+          var g = document.createElement("span");
+          g.className = "note";
+          g.textContent = " " + scorer.value + (scorer.value === 1 ? " goal" : " goals") + ", " + nth(scorer.rank) + " in " + (d.name || "the league");
+          li.appendChild(g);
+        }
+        var last = d.latest && d.latest.players ? d.latest.players[p.id] : null;
+        var line = document.createElement("span");
+        line.className = "player-last";
+        if (last) {
+          var a = document.createElement("a");
+          a.href = "/leagues/" + p.league + "/" + last.game + "/";
+          a.textContent = last.title;
+          line.appendChild(document.createTextNode("Last game: "));
+          line.appendChild(a);
+          line.appendChild(document.createTextNode(", " + last.touches + " touches, " + last.shots + (last.shots === 1 ? " shot" : " shots") + ", " + last.goals + (last.goals === 1 ? " goal" : " goals")));
+        } else {
+          line.textContent = "No game with detail yet.";
+        }
+        li.appendChild(line);
+        box.appendChild(li);
+      });
+    });
+  }
+  players();
   document.addEventListener("click", onClick);
   document.addEventListener("change", onChange);
   window.__golboardFollow = { stop: function () { document.removeEventListener("click", onClick); document.removeEventListener("change", onChange); } };
@@ -792,7 +851,13 @@ function followingPage(served, api, competitions) {
 <h2>Your clubs</h2>
 <p class="note" id="following-count">You are not following any clubs yet.</p>
 ${groups.join("\n")}
+<p class="note"><a href="/?setup=1">Set up golboard again</a>: your leagues, clubs, national teams and players.</p>
 <noscript><p class="note">Following needs JavaScript.</p></noscript>
+</section>
+<section class="glass" id="players">
+<h2>Your players</h2>
+<p class="note" id="players-none">Pick players in the <a href="/?setup=1">setup</a> and their goals and last game show here.</p>
+<ul class="news" id="my-players" aria-live="polite"></ul>
 </section>
 <section class="glass" id="games">
 <h2>Games</h2>

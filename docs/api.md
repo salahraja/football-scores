@@ -13,6 +13,7 @@ app or page can read it. Built by `npm run api` (download, then build) into `pub
 | `api/v1/<league>/<season>/teams.json` | `{ competition, season, teams: { <team id>: <name> } }` |
 | `api/v1/<league>/<season>/leaders.json` | `{ competition, season, source, goals, cleanSheets }`: the top scorers and goalkeepers' clean sheets, each `{ asOf, rows: [{ rank, player, club, team, value }] }` or null. Copied from the season's Wikipedia page, not computed (we have no per-game scorers for the leagues); `asOf` is the date its editors give, or null; `team` is our id for `club`, or null when no team this season has that name; `source.url` names the revision. Left out when the page has no table we can read |
 | `api/v1/<league>/<season>/players.json` | `{ competition, season, source, players: [{ id, name, team, number, position }] }`: every player of the season's clubs, for choosing whom to follow, from each club's squad in ESPN's feeds (`scripts/api/fetch-squads.mjs`, kept a week), by club then shirt number. `id` is ESPN's player id, the same the game files use; `position` is G, D, M or F. 4,824 players on 25 November 2026 |
+| `api/v1/<league>/<season>/player-latest.json` | `{ competition, season, players: { <ESPN player id>: { game, date, title, touches, shots, goals } } }`: each player's latest game with detail (`games/<game>.json`), its score line, and the player's touches, shots and goals in it (own goals not counted); only players who started or came on. For Following's players |
 | `api/v1/<league or tournament>/<season>/games/<date>-<home>-<away>.json` | One finished game in detail (the leagues, the cups and the internationals), from ESPN's feeds: `{ competition, season, match, source, kickoff, home, away, players, events, shots, positions, touches }`. `match` is our match id; `players` the lineups (`id`, `name`, `side`, `number`, `position`, `starter`); `events` the goals, cards and substitutions in order; `shots` every shot with where it was taken from (`x`, `y`), `outcome`, `xg` (null where ESPN has none) and `penalty`; `touches` each player's on-ball touches counted in 30 zones. Positions are percent of the pitch, the player's own team attacking toward x = 100, y = 0 its right touchline. Only for games ESPN has and our results agree with |
 | `api/v1/meta.json` | version, when it was built, the sources and their licences, per league season: games finished and to play, the date of the last result, corrections applied; and `files`: every other file of the build with the sha256 of its bytes |
 | `api/v1/news.json` | `{ generatedAt, articles: [{ title, summary, url, source, published, image, clubs }] }`: football headlines, newest first (at most 60), from BBC Sport, The Guardian and ESPN's own RSS feeds; `clubs` lists the team ids the story names. Written by `scripts/api/news.mjs`, after `build.mjs`, so it is not in `meta.json`'s file list |
@@ -21,7 +22,7 @@ app or page can read it. Built by `npm run api` (download, then build) into `pub
 | `api/v1/<tournament>/<season>/matches.json` | `{ tournament, season, matches }`: like a league's, plus `group` (`A`, `A1`, or `league` for a single league-phase table), `stage` `group`, `round` (`Group A`, `League A, Group 1`, `Matchday 3`), and `kickoff` with a UTC offset |
 | `api/v1/<tournament>/<season>/groups.json` | `{ tournament, season, zones: [{ kind, label, from, to, division }], hosts, groups: [{ group, name, division, table }] }`: one computed table per group; each row adds `status`: the kind of zone its place falls in, `host` (in the finals already as a host), or null |
 | `api/v1/<tournament>/<season>/teams.json` | `{ tournament, season, teams: { <team id>: <name> } }` |
-| `api/v1/schema.json` | the contract: a JSON Schema (2020-12) with one `$defs` entry per file type (`competitions`, `matches`, `table`, `teams`, `leaders`, `players`, `game`, `tournaments`, `tournamentMatches`, `groups`, `tournamentTeams`, `today`, `news`, `meta`). Kept in `data/api/schema.json` |
+| `api/v1/schema.json` | the contract: a JSON Schema (2020-12) with one `$defs` entry per file type (`competitions`, `matches`, `table`, `teams`, `leaders`, `players`, `playerLatest`, `game`, `tournaments`, `tournamentMatches`, `groups`, `tournamentTeams`, `today`, `news`, `meta`). Kept in `data/api/schema.json` |
 
 League ids: `it-1` Serie A, `en-1` Premier League, `es-1` LaLiga, `de-1` Bundesliga, `fr-1` Ligue 1, `nl-1` Eredivisie, `pt-1` Primeira
 Liga, `en-2` Championship. Tournament ids: `afcon` AFCON qualifying (48 nations, 12 groups of four, September 2026 to March 2027), `champions-league`,
@@ -78,6 +79,14 @@ and final whistles 1.2 min after (each ±1 min). The site's CSP allows `connect-
 page is still complete. A hidden team (Israel) has no row, so a game of theirs that SportScore sends is never shown.
 
 ## News and Following
+
+**The setup** (`src/components/Onboarding.vue`, Salah, 2026-11-25): a first visit to Home by someone who follows nothing opens four
+steps, and `/?setup=1` (linked from Following) opens them again: the leagues and cups you follow (Home then opens on the first), your
+clubs (from those leagues and cups, or all leagues), national teams (from the internationals), and players (searched by name in the
+chosen leagues' `players.json`). Skip leaves everything as it was. All of it stays on the device: clubs and national teams join the
+stars' list (`golboard.following`), with `golboard.leagues`, `golboard.players` and `golboard.setup` beside it. Following shows each
+chosen player with their club, their goals when Wikipedia's top scorers list them, and their latest game with detail, from
+`player-latest.json`.
 
 `npm run api:fetch` also downloads the three football feeds into `data/news/` (a feed that fails keeps its saved copy), and `api:build`
 turns them into `api/v1/news.json` (`scripts/api/news.mjs`; it never fails the build). Only the headline, a short plain-text summary, the
