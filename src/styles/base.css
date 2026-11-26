@@ -75,7 +75,9 @@ code { font-family: var(--font-mono); font-weight: 700; }
    page near the top, like the league pages. */
 html:has(.poster) { --top: color-mix(in srgb, color-mix(in srgb, var(--home-c, var(--slate)), var(--away-c, var(--slate))) var(--club-share), var(--slate)); }
 html:has(.poster), html:has(.poster) body { background-color: var(--top); }
-html:has(.poster) body { background-image: linear-gradient(var(--top) 0 50%, var(--bg) 50%); } /* the foot of the page stays off-white below the sheet */
+/* the body's own colour shows only at the very top (under the poster, which covers it); below, it is the page's, so no club colour shows
+   round the sheet's corners or beside it on a wide screen (Salah, 2026-11-25, the iPhone Duo's outer screen: "brown edges") */
+html:has(.poster) body { background-image: linear-gradient(var(--top) 0 30lvh, var(--bg) 30lvh); }
 
 /* navbar */
 .navbar {

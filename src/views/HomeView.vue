@@ -182,9 +182,24 @@ function clubsOnRoot(vars: Record<string, string> | null) {
     if (vars?.[name]) root.setProperty(name, vars[name]);
     else root.removeProperty(name);
   }
+  paintBar(vars !== null || document.querySelector(".poster") !== null);
+}
+// Safari reads its bar's colour (and, on a wide screen such as the iPhone Duo's outer one, its side strip's) from the body's background
+// when the page loads, and kept the first game's club colours after a swipe changed only the variables under it (Salah, 2026-11-25). So
+// each change of game writes the resolved colour onto the body itself, and into theme-color for browsers that read that instead.
+function paintBar(onHome: boolean) {
+  const body = document.body.style;
+  body.removeProperty("background-color");
+  let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+  if (!onHome) { meta?.remove(); return; }
+  const colour = getComputedStyle(document.body).backgroundColor;
+  if (!colour) return;
+  body.setProperty("background-color", colour);
+  if (!meta) { meta = document.createElement("meta"); meta.name = "theme-color"; document.head.append(meta); }
+  meta.content = colour;
 }
 watch(clubs, clubsOnRoot, { immediate: true });
-onUnmounted(() => clubsOnRoot(null));
+onUnmounted(() => { clubsOnRoot(null); paintBar(false); });
 function liveIn(id: string) {
   return (todays.value[id] ?? []).some((g) => g.status === "live");
 }
