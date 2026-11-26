@@ -233,6 +233,22 @@
     },
     "gameSide": { "type": "object", "required": ["team", "formation"], "additionalProperties": false, "properties": { "team": { "$ref": "#/$defs/teamId" }, "formation": { "oneOf": [{ "type": "string" }, { "type": "null" }] } } },
 
+    "players": {
+      "description": "A league season's players, for choosing whom to follow: each club's squad from ESPN's football feeds (fetch-squads.mjs, kept a week), with our team ids, by club then shirt number. id is ESPN's player id, the same one game files use.",
+      "type": "object",
+      "required": ["competition", "season", "source", "players"],
+      "additionalProperties": false,
+      "properties": {
+        "competition": { "$ref": "#/$defs/leagueId" },
+        "season": { "$ref": "#/$defs/season" },
+        "source": { "type": "object", "required": ["name", "url"], "additionalProperties": false, "properties": { "name": { "const": "ESPN" }, "url": { "type": "string", "pattern": "^https://www\\.espn\\.com/" } } },
+        "players": { "type": "array", "minItems": 1, "items": { "type": "object", "required": ["id", "name", "team", "number", "position"], "additionalProperties": false, "properties": {
+          "id": { "type": "string", "pattern": "^[0-9]+$" }, "name": { "type": "string", "minLength": 1 }, "team": { "$ref": "#/$defs/teamId" },
+          "number": { "oneOf": [{ "type": "integer", "minimum": 0 }, { "type": "null" }] },
+          "position": { "description": "G, D, M or F.", "oneOf": [{ "type": "string" }, { "type": "null" }] } } } }
+      }
+    },
+
     "today": {
       "description": "Every league's and tournament's games from the day before the build to three days after, in kick-off order, with team names: one small file for a widget. league is the league's id or the tournament's (a club keeps one id in both, so a followed club's cup games are here too); a reader that does not know an id skips the game.",
       "type": "object",
