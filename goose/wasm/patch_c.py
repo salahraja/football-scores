@@ -34,6 +34,7 @@ static size_t gs_page_size = 65536;
 static int madvise(void *a, size_t n, int adv) { (void)a; (void)n; (void)adv; return 0; }
 static size_t gs_os_page_size(void) { return 65536; }
 static void gs_regions_init(void) { gs_page_size = 65536; }
+static void gs_fault_uninstall(void) {}  /* no fault handler to take down (Goose 1838de4 added the call) */
 static void gs_native_stack_init(void) {}
 static void gs_native_stack_free(void) {}
 static uint8_t *gs_os_reserve(size_t usable, size_t size) {
