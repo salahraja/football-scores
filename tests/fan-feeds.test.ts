@@ -51,3 +51,51 @@ describe("fan sites", () => {
     expect(existsSync(join(api, "news", "napoli.json"))).toBe(true);
   });
 });
+
+describe("the fan-site list", () => {
+  it("names clubs by our ids and each site by name with an https feed, at most two a club", () => {
+    const all = fanFeeds();
+    expect(Object.keys(all).length).toBeGreaterThan(60);
+    for (const [id, sites] of Object.entries(all)) {
+      expect(id).toMatch(/^[a-z0-9]+(-[a-z0-9]+)*$/);
+      expect(sites.length).toBeLessThanOrEqual(2);
+      for (const s of sites) { expect(s.name.length).toBeGreaterThan(0); expect(s.url).toMatch(/^https:\/\//); }
+    }
+  });
+
+  it("holds no site of a network left out on purpose (betting links, or founded in Israel)", () => {
+    const urls = Object.values(fanFeeds()).flat().map((s) => s.url);
+    expect(urls.filter((u) => /vitalfootball\.co\.uk|fansided\.com|minutemedia|deportivo-la-coruna\.com/.test(u))).toEqual([]);
+  });
+});
+
+describe("Atom feeds", () => {
+  // SB Nation's club blogs and some others publish Atom (<feed><entry>), not RSS (<rss><item>): 19 of the 108 fan feeds on 2026-11-26
+  const ATOM = `<?xml version="1.0" encoding="UTF-8"?><feed xmlns="http://www.w3.org/2005/Atom"><title type="text">A Blog</title>
+<entry><author><name>A Writer</name></author><title type="html"><![CDATA[The Daily Hilario: Thursday]]></title>
+<link rel="alternate" type="text/html" href="https://blog.test/daily-hilario" /><id>https://blog.test/?p=1</id>
+<updated>2026-11-26T08:20:52+00:00</updated><published>2026-11-26T08:00:00+00:00</published>
+<summary type="html"><![CDATA[<p>Chelsea news &amp; notes.</p>]]></summary></entry>
+<entry><title>No link here</title><updated>2026-11-26T07:00:00+00:00</updated></entry></feed>`;
+
+  it("are read like RSS: title, the page link, the published date and the summary", async () => {
+    const { parseRss } = await import("../scripts/api/news.mjs");
+    expect(parseRss(ATOM, "A Blog")).toEqual([{ title: "The Daily Hilario: Thursday", summary: "Chelsea news & notes.", url: "https://blog.test/daily-hilario",
+      source: "A Blog", published: "2026-11-26T08:00:00.000Z", image: null, tags: [] }]);
+  });
+});
+
+describe("the feed shapes fan sites use", () => {
+  it("Blogger's Atom, with its attributes in single quotes", async () => {
+    const { parseRss } = await import("../scripts/api/news.mjs");
+    const xml = `<feed xmlns='http://www.w3.org/2005/Atom'><entry><id>x</id><published>2026-11-22T16:18:23.438+00:00</published><title type='text'>Tats leads the way</title>
+<link rel='replies' type='text/html' href='https://b.test/2026/11/x.html#comment-form'/><link rel='alternate' type='text/html' href='https://b.test/2026/11/x.html' title='Tats'/></entry></feed>`;
+    expect(parseRss(xml, "Jim Brown's Journal")[0]).toMatchObject({ title: "Tats leads the way", url: "https://b.test/2026/11/x.html", published: "2026-11-22T16:18:23.438Z" });
+  });
+
+  it("KUMB's RSS, whose items carry a plain <date> instead of pubDate (read as UTC)", async () => {
+    const { parseRss } = await import("../scripts/api/news.mjs");
+    const xml = `<rss version="2.0"><channel><item><title>Every word Scott Parker said</title><date>2026-11-26 16:35:27</date><link>http://www.kumb.com/story.php?id=140574</link><description>Parker urged the fans.</description></item></channel></rss>`;
+    expect(parseRss(xml, "KUMB")[0]).toMatchObject({ title: "Every word Scott Parker said", url: "http://www.kumb.com/story.php?id=140574", published: "2026-11-26T16:35:27.000Z" });
+  });
+});

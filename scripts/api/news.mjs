@@ -60,15 +60,27 @@ function text(block, name) {
   return (cdata ? cdata[1] : unescapeEntities(m[1])).trim();
 }
 
-/** The articles of an RSS 2.0 feed: [{ title, summary, url, source, published (ISO), image, tags }]. An item with no title, web link or date is skipped.
+/** A plain "2026-11-26 16:35:27" (KUMB's <date>, no time zone) as UTC; anything else as it is. */
+const plainDate = (v) => (v && /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(v) ? `${v.replace(" ", "T")}Z` : v);
+
+/** An Atom entry's page: the href of its rel="alternate" link, else of its first link with no rel. */
+function atomLink(block) {
+  const links = [...block.matchAll(/<link\b([^>]*)\/?>/gi)].map((m) => m[1]);
+  // attributes in double or single quotes (Blogger writes rel='alternate' href='...')
+  const pick = links.find((a) => /\brel=["']alternate["']/i.test(a)) ?? links.find((a) => !/\brel=/i.test(a));
+  return pick ? /\bhref=["']([^"']+)["']/i.exec(pick)?.[1] ?? "" : "";
+}
+
+/** The articles of an RSS 2.0 or Atom feed: [{ title, summary, url, source, published (ISO), image, tags }]. An item with no title, web link or date is skipped.
  *  With `withParts`, each also carries `parts` (the description's bullets and paragraphs), for picking out what is said about one club; never published. */
 export function parseRss(xml, source, { withParts = false } = {}) {
   const out = [];
-  for (const item of String(xml).matchAll(/<item\b[^>]*>([\s\S]*?)<\/item>/gi)) {
-    const block = item[1];
+  // RSS 2.0 <item>s, and Atom <entry>s (SB Nation's club blogs and some other fan sites publish Atom)
+  for (const item of String(xml).matchAll(/<(item|entry)\b[^>]*>([\s\S]*?)<\/\1>/gi)) {
+    const block = item[2], atom = item[1].toLowerCase() === "entry";
     const title = unescapeEntities(text(block, "title") ?? "");
-    const url = text(block, "link") ?? "";
-    const published = Date.parse(text(block, "pubDate") ?? text(block, "dc:date") ?? "");
+    const url = atom ? unescapeEntities(atomLink(block)) : text(block, "link") ?? "";
+    const published = Date.parse((atom ? text(block, "published") ?? text(block, "updated") : text(block, "pubDate") ?? text(block, "dc:date") ?? plainDate(text(block, "date"))) ?? "");
     if (!title || !/^https?:\/\//i.test(url) || Number.isNaN(published)) continue;
     let image = null, widest = -1;
     for (const m of block.matchAll(/<media:(?:thumbnail|content)\b([^>]*)>/gi)) {
@@ -80,7 +92,7 @@ export function parseRss(xml, source, { withParts = false } = {}) {
       const cdata = /^\s*<!\[CDATA\[([\s\S]*?)\]\]>\s*$/.exec(m[1]);
       return unescapeEntities((cdata ? cdata[1] : unescapeEntities(m[1])).trim());
     });
-    const description = text(block, "description");
+    const description = atom ? text(block, "summary") ?? text(block, "content") : text(block, "description");
     const summary = description ? plain(description) : "";
     out.push({ title, summary: summary || null, url, source, published: new Date(published).toISOString(), image, tags, ...(withParts ? { parts: description ? descriptionParts(description) : [] } : {}) });
   }
