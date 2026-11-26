@@ -19,3 +19,9 @@
     X-Frame-Options = "DENY"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
     # Content-Security-Policy is written at build time to dist/_headers by scripts/csp.mjs (it allows the build's inline scripts by hash)
+
+# the home-screen app's manifest (public/manifest.webmanifest): browsers expect this type; Netlify sent application/octet-stream
+[[headers]]
+  for = "/manifest.webmanifest"
+  [headers.values]
+    Content-Type = "application/manifest+json"
