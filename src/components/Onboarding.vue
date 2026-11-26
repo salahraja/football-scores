@@ -53,8 +53,11 @@ async function loadOptions() {
   for (const c of from) for (const [id, name] of Object.entries(await teams(c))) if (!all.has(id)) all.set(id, name);
   options.value = [...all].map(([id, name]) => ({ id, name })).sort((a, b) => a.name.localeCompare(b.name));
 }
+// every league's squads, so any player can be found (Salah, 2026-11-26: "You should be able to look up any player"); the chosen
+// leagues come first, so their players lead the results
 async function loadSquads() {
-  const from = clubComps.value.filter((c) => c.kind === "league");
+  const all = comps.value.filter((c) => c.kind === "league");
+  const from = [...all.filter((c) => leagues.value.includes(c.id)), ...all.filter((c) => !leagues.value.includes(c.id))];
   const out: Player[] = [];
   for (const c of from) {
     const names = await teams(c);
@@ -126,7 +129,7 @@ const kinds = [["league", "Leagues"], ["clubs", "European cups"], ["nations", "I
       </template>
 
       <template v-else>
-        <p class="note">Find players by name. Following shows their goals and their last game.</p>
+        <p class="note">Find any player in the eight leagues by name. Following shows their goals and their last game.</p>
         <input v-model="search" class="setup__search" type="search" placeholder="Search players" aria-label="Search players" data-test="setup-search" />
         <ul class="setup__players">
           <li v-for="p in found" :key="p.id">
@@ -135,7 +138,7 @@ const kinds = [["league", "Leagues"], ["clubs", "European cups"], ["nations", "I
             </button>
           </li>
         </ul>
-        <p v-if="search.trim().length >= 2 && !found.length" class="note">No player by that name in these leagues.</p>
+        <p v-if="search.trim().length >= 2 && !found.length" class="note">No player by that name.</p>
         <p v-if="players.length" class="note">Following: {{ players.map((p) => p.name).join(", ") }}</p>
       </template>
 

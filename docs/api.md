@@ -82,8 +82,8 @@ page is still complete. A hidden team (Israel) has no row, so a game of theirs t
 
 **The setup** (`src/components/Onboarding.vue`, Salah, 2026-11-25): a first visit to Home by someone who follows nothing opens four
 steps, and `/?setup=1` (linked from Following) opens them again: the leagues and cups you follow (Home then opens on the first), your
-clubs (from those leagues and cups, or all leagues), national teams (from the internationals), and players (searched by name in the
-chosen leagues' `players.json`). Skip leaves everything as it was. All of it stays on the device: clubs and national teams join the
+clubs (from those leagues and cups, or all leagues), national teams (from the internationals), and players (searched by name in every
+league's `players.json`, the chosen leagues' first). Skip leaves everything as it was. All of it stays on the device: clubs and national teams join the
 stars' list (`golboard.following`), with `golboard.leagues`, `golboard.players` and `golboard.setup` beside it. Following shows each
 chosen player with their club, their goals when Wikipedia's top scorers list them, and their latest game with detail, from
 `player-latest.json`.
