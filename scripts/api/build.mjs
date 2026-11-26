@@ -102,6 +102,27 @@ export function gameFiles(dir, matches, teams, overruled = [], hidden = new Set(
   return { files, report };
 }
 
+/** A league season's players (fetch-squads.mjs saves one squad per club in `dir`) with our team ids, ordered by club then shirt number;
+ *  a club we cannot name is left out. Null when `dir` has no squads. Never throws. */
+export function playersFile(dir, teams) {
+  if (!existsSync(dir)) return null;
+  const seen = new Set(), players = [];
+  for (const f of readdirSync(dir).filter((n) => n.endsWith(".json") && !n.startsWith("_")).sort()) {
+    let squad;
+    try { squad = JSON.parse(readFileSync(join(dir, f), "utf8")); } catch { continue; }
+    const team = teamId(squad.team?.name ?? "");
+    if (!teams[team]) continue;
+    for (const p of squad.players ?? []) {
+      if (!p.id || !p.name || seen.has(p.id)) continue;
+      seen.add(p.id);
+      players.push({ id: p.id, name: p.name, team, number: Number.isInteger(p.number) ? p.number : null, position: p.position ?? null });
+    }
+  }
+  if (!players.length) return null;
+  players.sort((a, b) => a.team.localeCompare(b.team) || (a.number ?? 999) - (b.number ?? 999) || a.name.localeCompare(b.name));
+  return { source: { name: "ESPN", url: "https://www.espn.com/soccer/" }, players };
+}
+
 /** Build everything in memory, check it, then write it all at once. Throws (writing nothing) when any season fails validation. */
 export function build({ input = "data/openfootball", wikipedia = join(ROOT, "data/wikipedia"), espn = join(ROOT, "data/espn"), out = "public", seasons = ["2025-26", "2026-27"], now = new Date().toISOString(), mutate, zones = loadZones } = {}) {
   const files = new Map();
@@ -152,6 +173,8 @@ export function build({ input = "data/openfootball", wikipedia = join(ROOT, "dat
       files.set(`${base}/teams.json`, { competition: league.id, season, teams: parsed.teams });
       const leaders = leadersFile(stats, parsed.teams);
       if (leaders) files.set(`${base}/leaders.json`, { competition: league.id, season, ...leaders });
+      const squads = playersFile(join(espn, season, league.id, "squads"), parsed.teams);
+      if (squads) files.set(`${base}/players.json`, { competition: league.id, season, ...squads });
       const games = gameFiles(join(espn, season, league.id), parsed.matches, parsed.teams, overruled);
       for (const [name, body] of games?.files ?? []) files.set(`${base}/games/${name}.json`, { competition: league.id, season, ...body });
       // How far the source has got: the app says "results up to <date>" rather than pretending a stale table is live.

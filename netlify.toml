@@ -25,3 +25,7 @@
   for = "/manifest.webmanifest"
   [headers.values]
     Content-Type = "application/manifest+json"
+
+# keeps the ESPN games and squads (data/espn) between builds (netlify/plugins/espn-cache)
+[[plugins]]
+  package = "./netlify/plugins/espn-cache"
