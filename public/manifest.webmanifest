@@ -1,0 +1,15 @@
+{
+  "name": "golboard",
+  "short_name": "golboard",
+  "description": "Live scores, tables, results, top scorers and match maps for eight European leagues, the European cups and the internationals.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#eeeeec",
+  "theme_color": "#6f7e98",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
