@@ -102,7 +102,7 @@ describe("text that shows a font on purpose", () => {
 describe("numbers", () => {
   it("are never drawn in a poster font: its file is registered without digits, the colon or dashes", async () => {
     const seen: string[] = [];
-    class Spy extends FakeFace { constructor(family: string, src: string, d?: { unicodeRange?: string }) { super(family, src); seen.push(d?.unicodeRange ?? ""); } }
+    class Spy extends FakeFace { constructor(family: string, src: string, d?: { unicodeRange?: string }) { super(family, src); if (family.startsWith("golboard-poster-")) seen.push(d?.unicodeRange ?? ""); } }
     Object.defineProperty(window, "FontFace", { value: Spy, configurable: true });
     delete (window as unknown as { golboardPosterFont?: unknown }).golboardPosterFont; load();
     await api().available();
@@ -114,5 +114,24 @@ describe("numbers", () => {
     const { isNumber } = api().rule as unknown as { isNumber(t: string): boolean };
     for (const t of ["2-1", "1–0", "12:30", " 15:00 ", "3 – 2"]) expect(isNumber(t)).toBe(true);
     for (const t of ["Ligue 1", "Serie A", "FT", ""]) expect(isNumber(t)).toBe(false);
+  });
+});
+
+// Salah, 2026-11-26: "Actually make the numbers Chalerist." Scores, times and the digits in names use Chalerist's numbers. The
+// Chalerist demo has none, so until a full version is added the browser falls back to Barlow digit by digit, as today.
+describe("numbers in Chalerist", () => {
+  it("registers Chalerist's file a second time for the digits, the colon and dashes only", async () => {
+    const seen: [string, string, string][] = [];
+    class Spy extends FakeFace { constructor(family: string, src: string, d?: { unicodeRange?: string }) { super(family, src); seen.push([family, this.url, d?.unicodeRange ?? ""]); } }
+    Object.defineProperty(window, "FontFace", { value: Spy, configurable: true });
+    delete (window as unknown as { golboardPosterFont?: unknown }).golboardPosterFont; load();
+    await api().available();
+    const numbers = seen.filter(([fam]) => fam === "golboard-numbers");
+    expect(numbers).toEqual([["golboard-numbers", "/fonts/poster/chalerist.ttf", "U+2D, U+30-3A, U+2013-2014"]]);
+  });
+
+  it("puts the numbers font in front of what a number had, so a missing digit still draws in Barlow", () => {
+    const { numberFamily } = api().rule as unknown as { numberFamily(was: string): string };
+    expect(numberFamily('"Barlow Condensed", sans-serif')).toBe('"golboard-numbers", "Barlow Condensed", sans-serif');
   });
 });

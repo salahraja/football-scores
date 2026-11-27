@@ -184,8 +184,9 @@ The big red display text (league names, kick-off times, scores, GOLBOARD) can us
 Raceday, Chalerist or Primate, picked in the setup's first step and kept on the device (`golboard.posterFont`).
 `public/poster-font.js` holds the list and one rule for any font, measured in the browser: it thickens a font toward a stroke of 12%
 of its letter height without closing its inner gaps, and grows text back to the width it had in Barlow (at most 1.6 times).
-Numbers stay as they are (Salah: "The numbers should stay the same"): the fonts are registered without digits, the colon and dashes,
-so scores and kick-off times always draw in Barlow at today's size and weight. The app's pages load it in `src/layouts/Page.astro`; the generated pages load it from
+Numbers keep today's size and weight (Salah: "The numbers should stay the same"), and are drawn in Chalerist ("Actually make the
+numbers Chalerist"): the poster fonts are registered without digits, the colon and dashes, and `chalerist.ttf` is registered a
+second time for those characters only. The Chalerist demo has no digits, so numbers stay in Barlow until a full version is added. The app's pages load it in `src/layouts/Page.astro`; the generated pages load it from
 `/leagues/follow.js`.
 
 **The font files are not in the repo.** They are personal-use only, so `/public/fonts/poster/` is git-ignored. A font whose file is

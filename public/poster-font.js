@@ -6,8 +6,10 @@
 // One rule for any font, measured in the browser, so no font needs its own numbers: every red text in the display font gets
 //   - boldness: thickened toward a stroke of TARGET of its letter height, never closing KEEP_GAP of its tightest inner gap (H, O, 0);
 //   - size: grown back to the width it had in Barlow, at most MAX_GROW times (a league page's name fills its poster under CAP px);
-//   - numbers stay as they are (Salah, 2026-11-26: "The numbers should stay the same"): a poster font is registered without
-//     digits, the colon and dashes, so those always draw in Barlow, and a score or time on its own is left at today's size and weight.
+//   - numbers keep today's size and weight (Salah, 2026-11-26: "The numbers should stay the same"): a poster font is registered
+//     without digits, the colon and dashes, and draws them in Chalerist instead ("Actually make the numbers Chalerist"), from the same
+//     file registered for those characters only. The Chalerist demo has no digits, so until a full version is added they fall back
+//     to Barlow digit by digit, as today.
 (function () {
   "use strict";
   if (window.golboardPosterFont) return;
@@ -25,6 +27,16 @@
   var family = function (f) { return "golboard-poster-" + f.id; };
   // every character but the digits, the colon, the hyphen and the en and em dashes (U+2D, U+30-3A, U+2013-2014)
   var LETTERS = "U+0-2C, U+2E-2F, U+3B-2012, U+2015-10FFFF";
+  // the numbers font: Chalerist's digits, colon and dashes (U+2D, U+30-3A, U+2013-2014)
+  var NUMBERS = { family: "golboard-numbers", file: "chalerist.ttf", range: "U+2D, U+30-3A, U+2013-2014" }, numbersLoaded = null;
+  function loadNumbers() {
+    if (!numbersLoaded) {
+      var face = new FontFace(NUMBERS.family, "url(" + DIR + NUMBERS.file + ")", { unicodeRange: NUMBERS.range });
+      numbersLoaded = face.load().then(function () { document.fonts.add(face); }, function () { numbersLoaded = null; });
+    }
+    return numbersLoaded;
+  }
+  function numberFamily(was) { return '"' + NUMBERS.family + '", ' + was; }
   function isNumber(t) { return /\d/.test(t) && /^[\d\s:\u002d\u2013\u2014]+$/.test(t.trim()); }
 
   function read() { try { return window.localStorage.getItem(KEY); } catch (e) { return null; } }
@@ -90,17 +102,18 @@
     var best = null; [[text], words.length > 1 ? words : null].filter(Boolean).forEach(function (o) { var m = fit(o); if (!best || m > best.m * 1.15) best = { o: o, m: m }; });
     layout(best.o); h.style.fontSize = best.m + "px";
   }
-  // a score or time inside a restyled name (a match page's "Bologna 1-1 Udinese"): put back exactly what it had
-  function pin(el, was) {
+  // a score or time: the numbers font in front of what it had; inside a restyled name (a match page's "Bologna 1-1 Udinese") its
+  // size, weight and spacing are put back too
+  function pin(el, was, nested) {
     el.setAttribute("data-pf", "number"); el.setAttribute("data-pf-style", el.getAttribute("style") || "");
-    el.style.fontFamily = was.family; el.style.fontWeight = was.weight; el.style.fontSize = was.size;
-    el.style.letterSpacing = was.spacing; el.style.webkitTextStroke = "0";
+    el.style.fontFamily = numberFamily(was.family);
+    if (nested) { el.style.fontWeight = was.weight; el.style.fontSize = was.size; el.style.letterSpacing = was.spacing; el.style.webkitTextStroke = "0"; }
   }
   function style(el, cs) {
     var f = active.font, m = active.m, size = parseFloat(cs.fontSize);
     el.setAttribute("data-pf", f.id); el.setAttribute("data-pf-style", el.getAttribute("style") || "");
     var r = document.createRange(); r.selectNodeContents(el); var before = r.getBoundingClientRect().width;
-    el.style.fontFamily = '"' + family(f) + '", ' + cs.fontFamily; el.style.fontWeight = "400";
+    el.style.fontFamily = '"' + family(f) + '", ' + numberFamily(cs.fontFamily); el.style.fontWeight = "400";
     el.style.webkitTextStroke = m.stroke + "em currentColor"; el.style.paintOrder = "stroke fill";
     el.style.letterSpacing = f.spacing ? m.stroke + "em" : "normal";
     if (el.matches(".titlebar h1")) { el.setAttribute("data-pf-html", el.innerHTML); fitTitle(el); return; }
@@ -120,7 +133,7 @@
     }
     var numbers = todo.filter(function (t) { return isNumber(t.el.textContent); });
     todo.forEach(function (t) { if (numbers.indexOf(t) < 0) style(t.el, t.cs); });
-    numbers.forEach(function (t) { var up = t.el.parentElement && t.el.parentElement.closest("[data-pf]"); if (up && up.getAttribute("data-pf") !== "number") pin(t.el, t.was); });
+    numbers.forEach(function (t) { var up = t.el.parentElement && t.el.parentElement.closest("[data-pf]"); pin(t.el, t.was, !!(up && up.getAttribute("data-pf") !== "number")); });
   }
   function undo() {
     var done = document.querySelectorAll("[data-pf]");
@@ -133,6 +146,7 @@
   }
   function use(id) {
     var f = byId[id] || FONTS[0];
+    loadNumbers();
     return load(f).then(function (ok) {
       if (!ok) return;
       var m = measure(f); if (!m) return;
@@ -145,7 +159,7 @@
   }
   function set(id) { if (!byId[id]) return Promise.resolve(); write(id); return use(id); }
 
-  window.golboardPosterFont = { fonts: FONTS, current: current, set: set, available: available, family: family, rule: { strokeFor: strokeFor, growFor: growFor, isNumber: isNumber } };
+  window.golboardPosterFont = { fonts: FONTS, current: current, set: set, available: available, family: family, rule: { strokeFor: strokeFor, growFor: growFor, isNumber: isNumber, numberFamily: numberFamily } };
   var start = function () { use(current()); };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
 })();
