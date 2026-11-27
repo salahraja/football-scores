@@ -6,6 +6,10 @@
   #    writes nothing, and neither stops the site build) -> Vite, which copies public/api and public/leagues into dist
   command = "node scripts/fetch-data.mjs && npm run data && (npm run api || echo 'api build skipped') && VITE_DATA=generated npm run build"
   publish = "dist"
+  # No build for pull-request previews (Salah, 2026-11-27: "skip previews"). They used 86 of November's first 153 build minutes on the
+  # free plan, and every change is checked locally (npm test, npm run build) and on the phone before merging. Exit 0 skips the build;
+  # live builds (merges, the rebuild hook) are untouched. Remove this line to bring previews back.
+  ignore = 'test "$CONTEXT" = "deploy-preview"'
 
 [build.environment]
   # wasm64 (memory64) runs by default from Node 22.23 and 24; 22.18 and older fail. See README.
