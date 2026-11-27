@@ -5,6 +5,7 @@ on:
   schedule:
     - cron: "5 */4 * * *"
   workflow_dispatch:
+permissions: {}  # it only calls the build hook; it needs no token
 jobs:
   rebuild:
     runs-on: ubuntu-latest

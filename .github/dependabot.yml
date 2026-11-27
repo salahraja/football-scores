@@ -1,0 +1,24 @@
+# Weekly dependency update pull requests (2026-11-27, as ranoo has). A new release must be a week old first (cooldown), which gives a
+# yanked or compromised release time to be caught before it reaches this repo.
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 2
+    groups:
+      all:
+        patterns: ["*"]
+    cooldown:
+      default-days: 7
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 2
+    groups:
+      all:
+        patterns: ["*"]
+    cooldown:
+      default-days: 7
