@@ -97,3 +97,22 @@ describe("text that shows a font on purpose", () => {
     expect(readFileSync("src/components/Onboarding.vue", "utf8")).toMatch(/data-test="setup-fonts" data-pf-skip/);
   });
 });
+
+// Salah, 2026-11-26: "The numbers should stay the same." Scores and kick-off times keep today's Barlow, size and weight.
+describe("numbers", () => {
+  it("are never drawn in a poster font: its file is registered without digits, the colon or dashes", async () => {
+    const seen: string[] = [];
+    class Spy extends FakeFace { constructor(family: string, src: string, d?: { unicodeRange?: string }) { super(family, src); seen.push(d?.unicodeRange ?? ""); } }
+    Object.defineProperty(window, "FontFace", { value: Spy, configurable: true });
+    delete (window as unknown as { golboardPosterFont?: unknown }).golboardPosterFont; load();
+    await api().available();
+    expect(seen.length).toBe(5);
+    for (const range of seen) { expect(range).not.toBe(""); expect(range).not.toMatch(/U\+0-FFFF/); expect(range).toMatch(/U\+3B-/); }
+  });
+
+  it("text that is only a score or a time is told apart from a name with a number in it", () => {
+    const { isNumber } = api().rule as unknown as { isNumber(t: string): boolean };
+    for (const t of ["2-1", "1–0", "12:30", " 15:00 ", "3 – 2"]) expect(isNumber(t)).toBe(true);
+    for (const t of ["Ligue 1", "Serie A", "FT", ""]) expect(isNumber(t)).toBe(false);
+  });
+});

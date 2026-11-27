@@ -6,7 +6,8 @@
 // One rule for any font, measured in the browser, so no font needs its own numbers: every red text in the display font gets
 //   - boldness: thickened toward a stroke of TARGET of its letter height, never closing KEEP_GAP of its tightest inner gap (H, O, 0);
 //   - size: grown back to the width it had in Barlow, at most MAX_GROW times (a league page's name fills its poster under CAP px);
-//   - dashes: a font without an en dash uses its own hyphen (the missing glyph would fall back to heavy Barlow).
+//   - numbers stay as they are (Salah, 2026-11-26: "The numbers should stay the same"): a poster font is registered without
+//     digits, the colon and dashes, so those always draw in Barlow, and a score or time on its own is left at today's size and weight.
 (function () {
   "use strict";
   if (window.golboardPosterFont) return;
@@ -22,6 +23,9 @@
   ];
   var byId = {}; FONTS.forEach(function (f) { byId[f.id] = f; });
   var family = function (f) { return "golboard-poster-" + f.id; };
+  // every character but the digits, the colon, the hyphen and the en and em dashes (U+2D, U+30-3A, U+2013-2014)
+  var LETTERS = "U+0-2C, U+2E-2F, U+3B-2012, U+2015-10FFFF";
+  function isNumber(t) { return /\d/.test(t) && /^[\d\s:\u002d\u2013\u2014]+$/.test(t.trim()); }
 
   function read() { try { return window.localStorage.getItem(KEY); } catch (e) { return null; } }
   function write(v) { try { window.localStorage.setItem(KEY, v); } catch (e) { /* not remembered */ } }
@@ -30,7 +34,7 @@
   var loaded = {};
   function load(f) {
     if (!loaded[f.id]) {
-      var face = new FontFace(family(f), "url(" + DIR + f.file + ")");
+      var face = new FontFace(family(f), "url(" + DIR + f.file + ")", { unicodeRange: LETTERS });
       // only a load that worked is kept: a missing file is asked for again next time
       loaded[f.id] = face.load().then(function () { document.fonts.add(face); return true; }, function () { delete loaded[f.id]; return false; });
     }
@@ -67,7 +71,6 @@
     return {
       stroke: strokeFor(stem, I.cap, gap),
       grow: Math.min(MAX_GROW, Math.max(1, w('800 100px "Barlow Condensed"', sample) / w("400 100px " + fam, sample))),
-      dash: w("100px " + fam + ", monospace", "–") !== w("100px monospace", "–"),
     };
   }
 
@@ -87,8 +90,14 @@
     var best = null; [[text], words.length > 1 ? words : null].filter(Boolean).forEach(function (o) { var m = fit(o); if (!best || m > best.m * 1.15) best = { o: o, m: m }; });
     layout(best.o); h.style.fontSize = best.m + "px";
   }
-  function style(el) {
-    var f = active.font, m = active.m, cs = getComputedStyle(el), size = parseFloat(cs.fontSize);
+  // a score or time inside a restyled name (a match page's "Bologna 1-1 Udinese"): put back exactly what it had
+  function pin(el, was) {
+    el.setAttribute("data-pf", "number"); el.setAttribute("data-pf-style", el.getAttribute("style") || "");
+    el.style.fontFamily = was.family; el.style.fontWeight = was.weight; el.style.fontSize = was.size;
+    el.style.letterSpacing = was.spacing; el.style.webkitTextStroke = "0";
+  }
+  function style(el, cs) {
+    var f = active.font, m = active.m, size = parseFloat(cs.fontSize);
     el.setAttribute("data-pf", f.id); el.setAttribute("data-pf-style", el.getAttribute("style") || "");
     var r = document.createRange(); r.selectNodeContents(el); var before = r.getBoundingClientRect().width;
     el.style.fontFamily = '"' + family(f) + '", ' + cs.fontFamily; el.style.fontWeight = "400";
@@ -99,19 +108,19 @@
   }
   function apply() {
     if (!active) return;
-    var all = document.body.querySelectorAll("*");
+    // first note what every red display text looks like now, then change the names; a number keeps what it had
+    var all = document.body.querySelectorAll("*"), todo = [];
     for (var i = 0; i < all.length; i++) {
       var el = all[i];
       // data-pf-skip: text that shows a font on purpose, such as the setup's font names
       if (el.hasAttribute("data-pf") || !ownText(el) || el.closest("[data-pf-skip]")) continue;
       var cs = getComputedStyle(el);
-      if (cs.color === RED && /Barlow/.test(cs.fontFamily)) style(el);
+      if (cs.color === RED && /Barlow/.test(cs.fontFamily))
+        todo.push({ el: el, cs: cs, was: { family: cs.fontFamily, weight: cs.fontWeight, size: cs.fontSize, spacing: cs.letterSpacing } });
     }
-    if (!active.m.dash) {
-      var done = document.querySelectorAll("[data-pf]");
-      for (var k = 0; k < done.length; k++) for (var n = done[k].firstChild; n; n = n.nextSibling)
-        if (n.nodeType === 3 && /[–—]/.test(n.textContent)) n.textContent = n.textContent.replace(/[–—]/g, "-");
-    }
+    var numbers = todo.filter(function (t) { return isNumber(t.el.textContent); });
+    todo.forEach(function (t) { if (numbers.indexOf(t) < 0) style(t.el, t.cs); });
+    numbers.forEach(function (t) { var up = t.el.parentElement && t.el.parentElement.closest("[data-pf]"); if (up && up.getAttribute("data-pf") !== "number") pin(t.el, t.was); });
   }
   function undo() {
     var done = document.querySelectorAll("[data-pf]");
@@ -136,7 +145,7 @@
   }
   function set(id) { if (!byId[id]) return Promise.resolve(); write(id); return use(id); }
 
-  window.golboardPosterFont = { fonts: FONTS, current: current, set: set, available: available, family: family, rule: { strokeFor: strokeFor, growFor: growFor } };
+  window.golboardPosterFont = { fonts: FONTS, current: current, set: set, available: available, family: family, rule: { strokeFor: strokeFor, growFor: growFor, isNumber: isNumber } };
   var start = function () { use(current()); };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
 })();

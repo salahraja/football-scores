@@ -183,11 +183,12 @@ Astro wakes the island with a small inline script. The site's Content-Security-P
 The big red display text (league names, kick-off times, scores, GOLBOARD) can use a poster font: Neloich by default, or Taller,
 Raceday, Chalerist or Primate, picked in the setup's first step and kept on the device (`golboard.posterFont`).
 `public/poster-font.js` holds the list and one rule for any font, measured in the browser: it thickens a font toward a stroke of 12%
-of its letter height without closing its inner gaps, grows text back to the width it had in Barlow (at most 1.6 times), and uses the
-font's hyphen when it has no en dash. The app's pages load it in `src/layouts/Page.astro`; the generated pages load it from
+of its letter height without closing its inner gaps, and grows text back to the width it had in Barlow (at most 1.6 times).
+Numbers stay as they are (Salah: "The numbers should stay the same"): the fonts are registered without digits, the colon and dashes,
+so scores and kick-off times always draw in Barlow at today's size and weight. The app's pages load it in `src/layouts/Page.astro`; the generated pages load it from
 `/leagues/follow.js`.
 
 **The font files are not in the repo.** They are personal-use only, so `/public/fonts/poster/` is git-ignored. A font whose file is
 missing is not offered, and with none the site stays in Barlow Condensed. To use them live, buy each font's commercial licence (after
 revenue), then add the files to `public/fonts/poster/` (`neloich.ttf`, `taller.otf`, `raceday.otf`, `chalerist.ttf`, `primate.otf`)
-and commit them. The Neloich and Chalerist demos have no numbers, so scores stay in Barlow until the full versions are bought.
+and commit them. 
