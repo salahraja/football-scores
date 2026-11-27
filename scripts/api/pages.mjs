@@ -870,7 +870,7 @@ ${groups.join("\n")}
 <h2>Headlines</h2>
 <p class="note" id="news-none" hidden></p>
 <ul class="news" id="mine-news"></ul>
-<p class="note">Headlines from ${PUBLISHERS}. Each club's own feed adds its latest stories.</p>
+<p class="note">Headlines from ${PUBLISHERS}. Each club's own feeds, The Guardian's and its fan sites', add their latest stories, credited to each.</p>
 </section>
 </main>`;
   return shell({ title: "Following", path: "/following/", here: "following", body, description: "The clubs you follow: their games and their headlines." });

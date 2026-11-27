@@ -24,7 +24,10 @@ export function fetchFeeds(options?: {
   raw?: string;
   fetch?: (url: string, init: { headers: Record<string, string>; signal?: AbortSignal }) => Promise<Response>;
 }): Promise<{ saved: string[]; kept: string[] }>;
-export function buildNews(options?: { api?: string; raw?: string; now?: string }): { articles: number };
+export type FanSite = { name: string; url: string };
+export function buildNews(options?: { api?: string; raw?: string; now?: string; fans?: Record<string, FanSite[]> }): { articles: number };
+export function fanFeeds(): Record<string, FanSite[]>;
+export function fetchFanFeeds(options?: { raw?: string; fetch?: (url: string, init?: unknown) => Promise<Response>; feeds?: Record<string, FanSite[]>; pool?: number; gap?: number }): Promise<{ saved: number; kept: number }>;
 export function guardianFeeds(): Record<string, string>;
 export function fetchClubFeeds(options?: {
   raw?: string;
