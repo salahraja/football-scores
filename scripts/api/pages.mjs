@@ -609,6 +609,8 @@ export function liveScript() {
 export function followScript() {
   return `(function () {
   if (window.__golboardFollow) window.__golboardFollow.stop();
+  // the poster font for this page's big red text (public/poster-font.js), loaded from here so each page keeps its script tags
+  if (!document.querySelector('script[src="/poster-font.js"]')) { var pf = document.createElement("script"); pf.src = "/poster-font.js"; pf.defer = true; document.head.appendChild(pf); }
   var KEY = "golboard.following", SCOPE = "golboard.newsScope";
   function read(key) { try { return window.localStorage.getItem(key); } catch (e) { return null; } }
   function write(key, value) { try { window.localStorage.setItem(key, value); } catch (e) {} }

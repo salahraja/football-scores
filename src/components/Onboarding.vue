@@ -98,6 +98,20 @@ function skip() {
   emit("done");
 }
 const kinds = [["league", "Leagues"], ["clubs", "European cups"], ["nations", "International"]] as const;
+
+// the poster font (public/poster-font.js; Salah, 2026-11-26: "Let's do 5, with 2, 3, 4 and Premitive as onboarding options"): only the
+// fonts whose file is on the site are offered, each name in its own font; a tap switches the page's red text, this setup's title too
+interface PosterFonts { fonts: { id: string; name: string }[]; current(): string; set(id: string): Promise<void>; available(): Promise<string[]> }
+const posterFonts = () => (window as unknown as { golboardPosterFont?: PosterFonts }).golboardPosterFont;
+const fontChoices = ref<{ id: string; name: string }[]>([]);
+const font = ref("");
+onMounted(async () => {
+  const pf = posterFonts(); if (!pf) return;
+  const ids = await pf.available();
+  fontChoices.value = pf.fonts.filter((f) => ids.includes(f.id));
+  font.value = pf.current();
+});
+async function pickFont(id: string) { font.value = id; await posterFonts()?.set(id); }
 </script>
 
 <template>
@@ -113,6 +127,14 @@ const kinds = [["league", "Leagues"], ["clubs", "European cups"], ["nations", "I
           <div class="chips">
             <button v-for="c in comps.filter((x) => x.kind === kind)" :key="c.id" type="button" class="chip" :data-pick="c.id"
               :aria-pressed="leagues.includes(c.id)" @click="toggleLeague(c.id)">{{ c.name }}</button>
+          </div>
+        </div>
+        <div v-if="fontChoices.length" class="setup__group" data-test="setup-fonts" data-pf-skip>
+          <h3>Poster font</h3>
+          <p class="note">The big red names and scores. Pick a look; you can change it later.</p>
+          <div class="chips">
+            <button v-for="f in fontChoices" :key="f.id" type="button" class="chip chip--font" :data-font="f.id" :aria-pressed="font === f.id"
+              :style="{ fontFamily: `'golboard-poster-${f.id}', var(--font-display)` }" @click="pickFont(f.id)">{{ f.name }}</button>
           </div>
         </div>
       </template>
@@ -161,6 +183,8 @@ const kinds = [["league", "Leagues"], ["clubs", "European cups"], ["nations", "I
 .setup__count { margin: 0; color: var(--fg-muted); font-size: 0.875rem; }
 .setup__title { font: 800 clamp(2.4rem, 11vw, 4rem)/0.95 var(--font-display); text-transform: uppercase; color: var(--accent); margin: 6px 0 12px; }
 .setup__group h3 { margin: 18px 0 8px; font-size: 1rem; }
+/* a font's name in that font: the poster fonts are display fonts with one weight, so no bold, and larger to read */
+.chip.chip--font { font-weight: 400; font-size: 2rem; line-height: 1; padding: 8px 16px; letter-spacing: 0.02em; text-transform: uppercase; }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip { font: 600 1rem var(--font-sans); padding: 10px 14px; border-radius: 999px; border: 1px solid var(--border); background: transparent; color: var(--fg); cursor: pointer; }
 /* chosen: pressed in, like the menu's current page (base.css .links a[aria-current="page"]; Salah, 2026-11-26: "a depressed button look") */
