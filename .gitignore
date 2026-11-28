@@ -29,6 +29,7 @@ __pycache__/
 # golboard API: downloaded sources and the built JSON (rebuilt by npm run api)
 data/openfootball/
 data/wikipedia/
+data/espn/
 data/news/
 public/api/
 public/api.next/
@@ -42,3 +43,6 @@ public/robots.txt
 
 # astro
 .astro/
+
+# poster fonts: personal-use licences only, never committed or deployed (public/poster-font.js hides a font whose file is missing)
+/public/fonts/poster/

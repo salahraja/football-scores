@@ -4,7 +4,8 @@ import { getDataNote, getResultRounds, getStandings } from "../data";
 import { competitions, league as loadLeague, zoneOf, type Competition, type League } from "../data/leagues";
 import { covered, today, type TodayGame } from "../data/live";
 import { teamId } from "../data/clubid";
-import { clubNews, loadFollowing, loadScope, mergeStories, news, saveFollowing, saveScope, type Article, type Scope } from "../data/follow";
+import { clubNews, loadFollowing, loadLeagues, loadScope, mergeStories, news, saveFollowing, saveScope, setupDone, type Article, type Scope } from "../data/follow";
+import Onboarding from "../components/Onboarding.vue";
 import { clubColour } from "../data/clubColours";
 import { drawPoster, sharePoster } from "../data/sharePoster";
 import { breakCups, cupGames, groupOf, loadDay, localDay, type Cup, type DayMatch, type Group } from "../data/internationals";
@@ -142,6 +143,11 @@ const title = computed(() => other.value?.name ?? cup.value?.name ?? "Serie A");
 const BREAKS: Record<string, string[]> = { Bundesliga: ["Bundes", "liga"], Eredivisie: ["Ere", "divisie"], Championship: ["Champion", "ship"], LaLiga: ["La", "Liga"] };
 const lines = computed(() => (title.value.includes(" ") ? title.value.split(" ") : BREAKS[title.value] ?? [title.value]));
 const longName = computed(() => lines.value.length > 1);
+// Every league's name at one size on a phone (Salah, 2026-11-22: "La Liga takes up a lot of space, let's try to make the league names
+// fit similarly despite word count"): sized as if its longest word had 8 letters ("Primeira", "Champion", the longest of any league
+// shown), so "LA / LIGA" and "SERIE / A" no longer draw nearly twice the size of "PREMIER / LEAGUE". A longer word still fits.
+const NAME_CHARS = 8;
+const nameChars = computed(() => Math.max(NAME_CHARS, ...lines.value.map((x) => x.length)));
 // Salah, 2026-11-07: "live scores should always show first". Today's games lead whenever there are any, with those on now at the front; the last round fills in.
 const todays = ref<Record<string, TodayGame[]>>({});
 const nowGames = computed(() => todays.value[onPoster.value] ?? []);
@@ -178,9 +184,24 @@ function clubsOnRoot(vars: Record<string, string> | null) {
     if (vars?.[name]) root.setProperty(name, vars[name]);
     else root.removeProperty(name);
   }
+  paintBar(vars !== null || document.querySelector(".poster") !== null);
+}
+// Safari reads its bar's colour (and, on a wide screen such as the iPhone Duo's outer one, its side strip's) from the body's background
+// when the page loads, and kept the first game's club colours after a swipe changed only the variables under it (Salah, 2026-11-25). So
+// each change of game writes the resolved colour onto the body itself, and into theme-color for browsers that read that instead.
+function paintBar(onHome: boolean) {
+  const body = document.body.style;
+  body.removeProperty("background-color");
+  let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+  if (!onHome) { meta?.remove(); return; }
+  const colour = getComputedStyle(document.body).backgroundColor;
+  if (!colour) return;
+  body.setProperty("background-color", colour);
+  if (!meta) { meta = document.createElement("meta"); meta.name = "theme-color"; document.head.append(meta); }
+  meta.content = colour;
 }
 watch(clubs, clubsOnRoot, { immediate: true });
-onUnmounted(() => clubsOnRoot(null));
+onUnmounted(() => { clubsOnRoot(null); paintBar(false); });
 function liveIn(id: string) {
   return (todays.value[id] ?? []).some((g) => g.status === "live");
 }
@@ -302,8 +323,22 @@ onMounted(async () => {
     newsFailed.value = true; // the table and the scores stand on their own
   }
 });
+// The setup (components/Onboarding.vue): on a first visit by someone who follows nothing, or when the address asks for it (?setup=1,
+// the Following page's link). Afterwards Home opens on the first league chosen.
+const setup = ref(false);
+function setupFinished() {
+  setup.value = false;
+  following.value = loadFollowing();
+  const first = loadLeagues().find((id) => list.value.some((c) => c.id === id));
+  if (first) { choose(first); show(first); }
+  const url = new URL(window.location.href);
+  if (url.searchParams.has("setup")) { url.searchParams.delete("setup"); window.history.replaceState(window.history.state, "", url); }
+}
+onMounted(() => {
+  setup.value = new URLSearchParams(window.location.search).get("setup") === "1" || (!setupDone() && loadFollowing().length === 0);
+});
 onMounted(async () => {
-  const asked = new URLSearchParams(window.location.search).get("league");
+  const asked = new URLSearchParams(window.location.search).get("league") ?? loadLeagues()[0] ?? null;
   if (asked) chosen.value = asked;
   try {
     list.value = await competitions();
@@ -343,7 +378,7 @@ onMounted(async () => {
         <button v-if="list.length" type="button" class="arrow" :aria-label="`Previous league: ${neighbour(-1)}`" data-test="league-prev" @click="step(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12H6M12 5l-7 7 7 7" /></svg></button>
         <h1 ref="titleEl" class="poster__title" :aria-label="title">
           <span class="poster__line" :class="{ wide: longName }" :style="{ '--len': title.length }">{{ title }}</span>
-          <template v-if="longName"><span v-for="w in lines" :key="w" class="poster__word" :style="{ '--chars': Math.max(...lines.map((x) => x.length)) }" aria-hidden="true">{{ w }}</span></template>
+          <template v-if="longName"><span v-for="w in lines" :key="w" class="poster__word" :style="{ '--chars': nameChars }" aria-hidden="true">{{ w }}</span></template>
         </h1>
         <button v-if="list.length" type="button" class="arrow" :aria-label="`Next league: ${neighbour(1)}`" data-test="league-next" @click="step(1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12h16M12 5l7 7-7 7" /></svg></button>
       </div>
@@ -462,6 +497,7 @@ onMounted(async () => {
       </div>
     </div>
     </div>
+    <Onboarding v-if="setup" @done="setupFinished" />
   </section>
 </template>
 

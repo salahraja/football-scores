@@ -60,15 +60,27 @@ function text(block, name) {
   return (cdata ? cdata[1] : unescapeEntities(m[1])).trim();
 }
 
-/** The articles of an RSS 2.0 feed: [{ title, summary, url, source, published (ISO), image, tags }]. An item with no title, web link or date is skipped.
+/** A plain "2026-11-26 16:35:27" (KUMB's <date>, no time zone) as UTC; anything else as it is. */
+const plainDate = (v) => (v && /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(v) ? `${v.replace(" ", "T")}Z` : v);
+
+/** An Atom entry's page: the href of its rel="alternate" link, else of its first link with no rel. */
+function atomLink(block) {
+  const links = [...block.matchAll(/<link\b([^>]*)\/?>/gi)].map((m) => m[1]);
+  // attributes in double or single quotes (Blogger writes rel='alternate' href='...')
+  const pick = links.find((a) => /\brel=["']alternate["']/i.test(a)) ?? links.find((a) => !/\brel=/i.test(a));
+  return pick ? /\bhref=["']([^"']+)["']/i.exec(pick)?.[1] ?? "" : "";
+}
+
+/** The articles of an RSS 2.0 or Atom feed: [{ title, summary, url, source, published (ISO), image, tags }]. An item with no title, web link or date is skipped.
  *  With `withParts`, each also carries `parts` (the description's bullets and paragraphs), for picking out what is said about one club; never published. */
 export function parseRss(xml, source, { withParts = false } = {}) {
   const out = [];
-  for (const item of String(xml).matchAll(/<item\b[^>]*>([\s\S]*?)<\/item>/gi)) {
-    const block = item[1];
+  // RSS 2.0 <item>s, and Atom <entry>s (SB Nation's club blogs and some other fan sites publish Atom)
+  for (const item of String(xml).matchAll(/<(item|entry)\b[^>]*>([\s\S]*?)<\/\1>/gi)) {
+    const block = item[2], atom = item[1].toLowerCase() === "entry";
     const title = unescapeEntities(text(block, "title") ?? "");
-    const url = text(block, "link") ?? "";
-    const published = Date.parse(text(block, "pubDate") ?? text(block, "dc:date") ?? "");
+    const url = atom ? unescapeEntities(atomLink(block)) : text(block, "link") ?? "";
+    const published = Date.parse((atom ? text(block, "published") ?? text(block, "updated") : text(block, "pubDate") ?? text(block, "dc:date") ?? plainDate(text(block, "date"))) ?? "");
     if (!title || !/^https?:\/\//i.test(url) || Number.isNaN(published)) continue;
     let image = null, widest = -1;
     for (const m of block.matchAll(/<media:(?:thumbnail|content)\b([^>]*)>/gi)) {
@@ -80,7 +92,7 @@ export function parseRss(xml, source, { withParts = false } = {}) {
       const cdata = /^\s*<!\[CDATA\[([\s\S]*?)\]\]>\s*$/.exec(m[1]);
       return unescapeEntities((cdata ? cdata[1] : unescapeEntities(m[1])).trim());
     });
-    const description = text(block, "description");
+    const description = atom ? text(block, "summary") ?? text(block, "content") : text(block, "description");
     const summary = description ? plain(description) : "";
     out.push({ title, summary: summary || null, url, source, published: new Date(published).toISOString(), image, tags, ...(withParts ? { parts: description ? descriptionParts(description) : [] } : {}) });
   }
@@ -229,8 +241,37 @@ export async function fetchClubFeeds({ raw = join(ROOT, "data/news"), fetch = gl
   return { saved, kept };
 }
 
+/** Each club's fan sites: { <club id>: [{ name, url }] } (data/api/fan-feeds.json). */
+export function fanFeeds() {
+  return JSON.parse(readFileSync(join(ROOT, "data/api/fan-feeds.json"), "utf8")).feeds;
+}
+
+/** Download each club's fan-site feeds into <raw>/fan/<club id>/<site slug>.xml, like the Guardian's club feeds (a few at a time, a short
+ *  gap; one that fails or is not a feed keeps its saved copy). */
+export async function fetchFanFeeds({ raw = join(ROOT, "data/news"), fetch = globalThis.fetch, feeds = fanFeeds(), pool = 3, gap = 300 } = {}) {
+  const queue = Object.entries(feeds).flatMap(([id, sites]) => sites.map((site) => ({ id, ...site })));
+  let saved = 0, kept = 0;
+  const worker = async () => {
+    for (let next = queue.shift(); next; next = queue.shift()) {
+      try {
+        const res = await fetch(next.url, { headers: { "User-Agent": AGENT }, signal: AbortSignal.timeout(15_000) });
+        const body = res.ok ? await res.text() : "";
+        if (!parseRss(body, next.name).length) throw new Error("no items");
+        mkdirSync(join(raw, "fan", next.id), { recursive: true });
+        writeFileSync(join(raw, "fan", next.id, `${slugOf(next.name)}.xml`), body);
+        saved++;
+      } catch {
+        kept++;
+      }
+      if (gap) await sleep(gap);
+    }
+  };
+  await Promise.all(Array.from({ length: pool }, worker));
+  return { saved, kept };
+}
+
 /** Write <api>/news.json from the saved feeds. Never throws: whatever goes wrong, the file holds the stories that could be read (or none). */
-export function buildNews({ api = join(ROOT, "public/api/v1"), raw = join(ROOT, "data/news"), now = new Date().toISOString() } = {}) {
+export function buildNews({ api = join(ROOT, "public/api/v1"), raw = join(ROOT, "data/news"), now = new Date().toISOString(), fans = fanFeeds() } = {}) {
   let articles = [];
   try {
     const lists = FEEDS.map((feed) => {
@@ -253,11 +294,15 @@ export function buildNews({ api = join(ROOT, "public/api/v1"), raw = join(ROOT, 
       if (excerpt) return { ...bare(a), summary: excerpt };
       return mentions({ title: a.title, summary: null, tags: [] }, terms.get(c.id)) ? bare(a) : { ...bare(a), summary: null };
     };
-    // news/<club>.json: the club's own Guardian feed (all about it, whatever a headline says) and the general stories that name it
+    // news/<club>.json: the club's own Guardian feed and fan sites (all about it, whatever a headline says) and the general stories that name it
     const perClub = new Map();
     for (const c of clubs) {
       let own = [];
       try { own = parseRss(readFileSync(join(raw, "club", `${c.id}.xml`), "utf8"), "The Guardian", { withParts: true }).map(({ tags, ...a }) => ({ ...a, clubs: [c.id] })); } catch { /* none saved */ }
+      // the club's fan sites (fan-feeds.json): all about the club too, credited to each site
+      for (const site of fans[c.id] ?? []) {
+        try { own = own.concat(parseRss(readFileSync(join(raw, "fan", c.id, `${slugOf(site.name)}.xml`), "utf8"), site.name, { withParts: true }).map(({ tags, ...a }) => ({ ...a, clubs: [c.id] }))); } catch { /* none saved */ }
+      }
       perClub.set(c.id, merge([everything.filter((a) => a.clubs.includes(c.id)).map((a) => about(a, c)), own.map((a) => about(a, c))], CLUB_LIMIT));
     }
     mkdirSync(join(api, "news"), { recursive: true });
@@ -283,6 +328,8 @@ if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
     console.log(`news: saved ${done.saved.join(", ") || "none"}${done.kept.length ? `; kept the saved copy of ${done.kept.join(", ")}` : ""}`);
     const clubs = await fetchClubFeeds();
     console.log(`news: ${clubs.saved} club feeds saved${clubs.kept ? `, ${clubs.kept} kept as they were` : ""}`);
+    const fan = await fetchFanFeeds();
+    console.log(`news: ${fan.saved} fan-site feeds saved${fan.kept ? `, ${fan.kept} kept as they were` : ""}`);
   } else if (mode === "build") {
     console.log(`news: ${buildNews().articles} stories`);
   } else {

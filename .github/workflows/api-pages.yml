@@ -25,6 +25,12 @@ jobs:
           node-version: "24"
           cache: npm
       - run: npm ci
+      # ESPN's games are fetched once each and kept between runs (scripts/api/fetch-espn.mjs), so each run asks only for new ones
+      - uses: actions/cache@v4
+        with:
+          path: data/espn
+          key: espn-${{ github.run_id }}
+          restore-keys: espn-
       # openfootball and Wikipedia; a failed fetch keeps the committed copy, so a source outage never publishes an empty API
       - run: npm run api
       - name: Say which leagues are late (does not stop the publish)

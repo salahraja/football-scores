@@ -152,3 +152,11 @@ only non-TS option with no new toolchain, the same bytes as TS, and nothing to m
 independent second implementation in the parity tests; re-test when Goose ships a WASM backend or fixes layouts for 4-byte pointers. Goose is
 fastest (about 12x faster than Python here), but the data is 20 rows in real use, so the speed buys nothing. TS-only is also a sound answer
 today: the logic is 56 lines and ICU is built in.
+
+## 2026-11-26: compiler a108677 → 1838de4
+
+Salah asked for a rebuild with the newer compiler (289 commits, mostly hardening: malformed input refused, clearer errors). Three
+changes on our side, all for the new runtime: `-q` is gone from the command line (both build scripts), the runtime calls
+`gs_fault_uninstall`, which the wasm patch now stubs like the rest of the fault handler, and it writes with `fputc`, which
+`shim64.c` now provides. The wasm went from 82,242 to 68,184 bytes. `npm run parity`: Python, Goose and wasm each 14/14 fixtures
+identical to the TS reference; `tests/engines.test.ts` and `tests/wasm-committed.test.ts` pass.

@@ -135,6 +135,12 @@ describe("league pages", () => {
     expect(page(out, "leagues/en-1/index.html")).toContain("Brighton &amp; Hove Albion");
     expect(existsSync(join(out, "leagues/site.css"))).toBe(true);
   });
+
+  it("drops the W, D and L columns on every phone, so a long club name stays on two lines (Paris Saint-Germain took three at 440px, audit 2026-11-18)", () => {
+    const css = page(site(), "leagues/site.css");
+    expect(css).toContain("@media (max-width: 460px) { .standings .wdl { display: none; } }");
+    expect(css).not.toContain("@media (max-width: 400px) { .standings .wdl");
+  });
 });
 
 // What each table position leads to (data/api/zones.json). A season's table fills the next season's places, so 2026-27 holds the 2027-28

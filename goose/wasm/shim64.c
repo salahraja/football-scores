@@ -41,6 +41,7 @@ FILE *const stderr = (FILE *)2, *const stdout = (FILE *)1;
 int fflush(FILE *f) { (void)f; return 0; }
 int setvbuf(FILE *f, char *b, int m, size_t s) { (void)f; (void)b; (void)m; (void)s; return 0; }
 size_t fwrite(const void *p, size_t sz, size_t n, FILE *f) { host_write((int)(uintptr_t)f, (const char *)p, sz * n); return n; }
+int fputc(int c, FILE *f) { char ch = (char)c; host_write((int)(uintptr_t)f, &ch, 1); return (unsigned char)c; }  /* Goose 1838de4's runtime uses it */
 
 /* %s %c %d %i %u %x %p, with l/ll/z/h length modifiers, %%; width and precision ignored (except %.*s). */
 int vsnprintf(char *buf, size_t cap, const char *fmt, va_list ap) {

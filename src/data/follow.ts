@@ -58,3 +58,25 @@ export function mergeStories(lists: Article[][]): Article[] {
       return seen.has(key) ? false : (seen.add(key), true);
     });
 }
+
+// The setup (src/components/Onboarding.vue, Salah 2026-11-25): the leagues and cups chosen, the players followed, and whether the setup
+// was finished or skipped. Clubs and national teams go in FOLLOWING with the stars. All on the device, every read allowed to fail.
+export const LEAGUES = "golboard.leagues";
+export const PLAYERS = "golboard.players";
+export const SETUP = "golboard.setup";
+export interface FollowedPlayer { id: string; name: string; team: string; league: string; club: string }
+
+function list<T>(key: string, ok: (x: unknown) => x is T): T[] {
+  try {
+    const v: unknown = JSON.parse(read(key) ?? "[]");
+    return Array.isArray(v) ? v.filter(ok) : [];
+  } catch {
+    return [];
+  }
+}
+export const loadLeagues = () => list(LEAGUES, (x): x is string => typeof x === "string");
+export const saveLeagues = (ids: string[]) => write(LEAGUES, JSON.stringify(ids));
+export const loadPlayers = () => list(PLAYERS, (x): x is FollowedPlayer => !!x && typeof (x as FollowedPlayer).id === "string" && typeof (x as FollowedPlayer).name === "string");
+export const savePlayers = (players: FollowedPlayer[]) => write(PLAYERS, JSON.stringify(players));
+export const setupDone = () => read(SETUP) === "done" || read(SETUP) === "skipped";
+export const markSetup = (how: "done" | "skipped") => write(SETUP, how);

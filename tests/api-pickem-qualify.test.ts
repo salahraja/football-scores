@@ -197,6 +197,11 @@ describe("pickem.js on the qualifying page", () => {
     expect($(".foot .note")!.textContent).toBe("0 of 1 groups picked");
   });
 
+  it("shows no finalists card when every group is over and you picked none (it read \"Your 0 in the finals\", audit 2026-11-18)", () => {
+    load(site(6));
+    expect($("#finalists")).toBeNull();
+  });
+
   it("says how you did once every game is played", () => {
     const done = site(6);
     storage.setItem("golboard.pickem.afcon-2027", JSON.stringify({ groups: { A: ["morocco", "gabon"] }, at: { A: "2026-09-01T00:00:00Z" } }));   // picked before the games
