@@ -167,6 +167,17 @@ on these pages.
 - **Nothing broken is published:** a build checks every season (duplicate ids, a team playing itself, impossible scores, unknown teams)
   and writes nothing if any check fails, so the last good API stays up. A download that fails keeps the saved copy.
 
+## How it stays fresh
+
+Nothing here has a server, so data is as fresh as the last build. `.github/workflows/refresh.yml` runs twice an hour: it downloads the
+sources, builds the API into a scratch folder and compares a digest of each `matches.json`, `table.json` and `groups.json` with the
+digests saved in `data/refresh.json`. When any differ, or a new day (UTC) began, it commits that file and the push makes the host build;
+the commit says which competitions changed. A file that is missing is not a change, and on a run where a download failed nothing is
+compared, so a source that is down for an hour does not cost builds or record a half-read league. Limits: 8 rebuilds a day, 45 minutes
+apart (Netlify's free plan: 300 build minutes a month, about one a build, and builds stop past them; 66 were used by 17 November 2026).
+Until 2026-11-17 the schedule was a job that posted to a build hook kept in a secret; neither the hook nor the secret was ever made,
+so it did nothing and tables only moved when code was pushed.
+
 ## Not here yet
 
 - The AFCON finals (Kenya, Tanzania and Uganda, from 19 June 2027): groups, then a knockout bracket.
@@ -175,6 +186,6 @@ on these pages.
 
 - Same-day and live results: SportScore's free API (attribution required, measured against ESPN on 31 October) or football-data.org once
   its terms for apps are confirmed.
-- A schedule: a job that rebuilds every 30 minutes on match days. Netlify's free build minutes are too few for that, so it will publish
-  from a separate place.
+- A build every 30 minutes on match days. The site is rebuilt when the built facts change (`scripts/api/refresh.mjs`, checked twice an
+  hour, at most 8 a day), and a same-day result is not in the built data at all: the page's script shows it from SportScore.
 - Live minute-by-minute scores (licensed by the leagues), club crests and league logos (trademarks).

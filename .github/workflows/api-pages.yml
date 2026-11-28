@@ -1,12 +1,12 @@
-# The football API (api/v1) and the league pages, rebuilt every two hours and published to GitHub Pages.
-# Why Pages and not Netlify: a Netlify deploy per refresh would use up the free credit in days (about 20 deploys a month); Pages is free
-# for a public repo and serves the same static files with `Access-Control-Allow-Origin: *`, so the app and the site can both read it.
-# One-time setup (Salah): Settings > Pages > Source: GitHub Actions. Until then the deploy step fails and says so.
+# The football API (api/v1) and the league pages, published to GitHub Pages. Run by hand only (Actions > Run workflow).
+# It was set to run every two hours. Its first scheduled run failed (2026-11-17, the day it reached main), because Pages was never
+# switched on for the repository (Settings > Pages > Source: GitHub Actions). The reason it was written no longer holds either: it
+# assumed the host allowed about 20 deploys a month, but the plan is 300 build minutes (about 330 builds), and refresh.yml now
+# rebuilds the site itself when results change. The app asks this address first and falls back to the site, so nothing reads it today.
+# To use Pages after all: switch it on, then put the schedule back (cron "11 */2 * * *").
 # Address once live: https://salahraja.github.io/football-scores/api/v1/today.json
 name: Football API on Pages
 on:
-  schedule:
-    - cron: "11 */2 * * *"
   workflow_dispatch:
 permissions:
   contents: read
