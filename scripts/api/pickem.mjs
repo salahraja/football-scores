@@ -263,7 +263,7 @@ export function pickemScript() {
       var sc = score(B, picks, B.now);
       summary = '<p id="score">' + (B.now.final ? "You got " + sc.right + " of " + sc.of + " right." : sc.right + " of your " + sc.of + " picks are in " + (groups.every(function (g) { return places(B, g) === 2; }) ? "the top two" : "their places") + " today.") + "</p>";
     }
-    if (!B.rounds.length && groupsDone()) finalists = '<div class="card" id="finalists"><h3>Your ' + mine.length + "<span>in the finals</span></h3><p>" + mine.map(function (t) { return esc(name(t)); }).join(", ") + "</p></div>";
+    if (!B.rounds.length && groupsDone() && mine.length) finalists = '<div class="card" id="finalists"><h3>Your ' + mine.length + "<span>in the finals</span></h3><p>" + mine.map(function (t) { return esc(name(t)); }).join(", ") + "</p></div>";
     root.innerHTML = (B.rounds.length ? '<div class="tabs" role="group" aria-label="Rounds">' + tabs + "</div>" : "")
       + '<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="' + p.total + '" aria-valuenow="' + p.done + '"><i style="width: ' + Math.round((p.done / p.total) * 100) + '%"></i></div>'
       + champ + summary + finalists + body

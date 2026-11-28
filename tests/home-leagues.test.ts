@@ -197,4 +197,49 @@ describe("the homepage's leagues", () => {
     expect(w.find('[data-test="league-failed"]').exists()).toBe(true);
     expect(w.get('[data-test="hero"]').text()).toContain("Serie A");
   });
+
+  // Salah, 2026-11-21: "Every time you swipe to a different league, it goes back to the Italian Serie A league." While the next
+  // league was still arriving, the poster fell back to Serie A's name and games; it now keeps the league it had until the next is in.
+  it("keeps the league on the poster until the next one has arrived, never Serie A in between", async () => {
+    const more: Record<string, unknown> = {
+      ...replies,
+      "competitions.json": { competitions: [...(replies["competitions.json"] as { competitions: object[] }).competitions, { id: "es-1", name: "LaLiga", current: "2026-27" }] },
+      "es-1/2026-27/table.json": { table: [row("girona", 1)], zones: { zones: [], note: "" } },
+      "es-1/2026-27/matches.json": { matches: [{ id: "c", round: "Matchday 12", stage: "league", home: "girona", away: "sevilla", status: "finished", date: "2026-11-08", score: { ft: [2, 0] } }] },
+      "es-1/2026-27/teams.json": { teams: { girona: "Girona", sevilla: "Sevilla" } },
+    };
+    let release = () => {};
+    const held = new Promise<void>((r) => (release = r));
+    vi.stubGlobal("fetch", vi.fn(async (url: string) => {
+      const key = url.replace("/api/v1/", "");
+      if (key.startsWith("es-1/")) await held;
+      return key in more ? { ok: true, status: 200, json: async () => more[key] } : { ok: false, status: 500 };
+    }));
+    window.history.replaceState(null, "", "/?league=en-1");
+    const w = home();
+    await flushPromises();
+    expect(w.get('[data-test="hero"]').text()).toContain("Premier League");
+    const poster = () => w.get(".poster__titlebar").text() + " " + w.get(".poster__result").text();
+    expect(poster()).toContain("Newcastle United");
+    await swipe(w.get(".poster__titlebar"), [300, 200], [100, 205]);
+    expect(poster()).not.toMatch(/Serie|Juventus/);
+    expect(poster()).toContain("Newcastle United");
+    expect(w.get('[data-test="league"].on').text()).toBe("LaLiga"); // the pill answers the swipe at once
+    release();
+    await flushPromises();
+    expect(poster()).toContain("Girona");
+  });
+
+  // Salah, 2026-11-22: "La Liga takes up a lot of space, let's try to make the league names fit similarly despite word count."
+  // On a phone each word of the name was sized by the longest word, so "LA / LIGA" (4 letters) drew far bigger than "PREMIER / LEAGUE".
+  it("draws every league's name at the same size on a phone, however short its words", async () => {
+    stub();
+    const w = home();
+    await flushPromises();
+    const chars = () => [...new Set(w.findAll(".poster__word").map((s) => (s.element as HTMLElement).style.getPropertyValue("--chars")))];
+    const serieA = chars();
+    await w.findAll('[data-test="league"]')[1].trigger("click");
+    await flushPromises();
+    expect(serieA).toEqual(chars());
+  });
 });

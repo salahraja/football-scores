@@ -128,11 +128,18 @@ describe("league pages", () => {
     const out = site();
     for (const id of ["it-1", "en-2"]) {
       const html = page(out, `leagues/${id}/index.html`);
-      expect(html.match(/<script[^>]*>/gi)).toEqual(['<script src="/leagues/live.js" defer>', '<script src="/leagues/follow.js" defer>']);  // arrows and live scores; following clubs
+      // The temporary light/dark switch (Salah, 2026-11-18) is left out of the count; drop this filter when it goes.
+      expect(html.match(/<script[^>]*>/gi)!.filter((s) => !s.includes("/theme-toggle.js"))).toEqual(['<script src="/leagues/live.js" defer>', '<script src="/leagues/follow.js" defer>']);  // arrows and live scores; following clubs
       expect(html.length).toBeLessThan(40_000);
     }
     expect(page(out, "leagues/en-1/index.html")).toContain("Brighton &amp; Hove Albion");
     expect(existsSync(join(out, "leagues/site.css"))).toBe(true);
+  });
+
+  it("drops the W, D and L columns on every phone, so a long club name stays on two lines (Paris Saint-Germain took three at 440px, audit 2026-11-18)", () => {
+    const css = page(site(), "leagues/site.css");
+    expect(css).toContain("@media (max-width: 460px) { .standings .wdl { display: none; } }");
+    expect(css).not.toContain("@media (max-width: 400px) { .standings .wdl");
   });
 });
 

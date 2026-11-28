@@ -32,7 +32,7 @@ Points are always `3 x wins + draws`, computed by the engines, so a points deduc
 ## Our own API (golboard)
 
 `npm run api` downloads openfootball's public-domain results for eight leagues (plus Wikipedia's pages for the European cups, the Nations League and AFCON qualifying) and builds a static JSON API in `public/api/v1/`
-(competitions, matches, tables, teams, meta). Tables are computed with each league's own rules and checked against the official 2025-26
+(competitions, matches, tables, teams, league leaders, game detail from ESPN, meta). Tables are computed with each league's own rules and checked against the official 2025-26
 record in the tests. Format and sources: `docs/api.md`.
 It also gathers football headlines (`api/v1/news.json`) and builds `/news/` and `/following/`, where you pick clubs to follow; see "News and Following" in `docs/api.md`.
 
@@ -100,10 +100,10 @@ Goose is untrusted code. Every command below runs with an empty environment (`en
 
 ```sh
 # 1. The Goose compiler, once (about 70 s; cmake via pip if it is not installed). Installed at ~/.local/share/goose-lang;
-#    this repo was built and tested with github.com/aardappel/goose commit a108677d.
+#    this repo was built and tested with github.com/aardappel/goose commit 1838de4 (2026-11-24; a108677d until 2026-11-26).
 python3 -m venv ~/.cache/goose-venv && ~/.cache/goose-venv/bin/pip install cmake
 git clone https://github.com/aardappel/goose ~/.local/share/goose-lang
-cd ~/.local/share/goose-lang && git checkout a108677d
+cd ~/.local/share/goose-lang && git checkout 1838de4
 PATH=~/.cache/goose-venv/bin:$PATH cmake -B build -DCMAKE_BUILD_TYPE=Release && PATH=~/.cache/goose-venv/bin:$PATH cmake --build build -j8
 
 # 2. This repo
@@ -177,3 +177,19 @@ Astro wakes the island with a small inline script. The site's Content-Security-P
 `scripts/csp.mjs` writes `dist/_headers` with the policy, allowing exactly the build's own inline scripts by their sha256
 (`tests/csp.test.ts`). The other security headers stay in `netlify.toml`. Changing the policy means changing `BASE` in
 `scripts/csp.mjs`, not `netlify.toml`.
+
+## Poster fonts (2026-11-26)
+
+The big red display text (league names, kick-off times, scores, GOLBOARD) can use a poster font: Neloich by default, or Taller,
+Raceday, Chalerist or Primate, picked in the setup's first step and kept on the device (`golboard.posterFont`).
+`public/poster-font.js` holds the list and one rule for any font, measured in the browser: it thickens a font toward a stroke of 12%
+of its letter height without closing its inner gaps, and grows text back to the width it had in Barlow (at most 1.6 times).
+Numbers keep today's size and weight (Salah: "The numbers should stay the same"), and are drawn in Chalerist ("Actually make the
+numbers Chalerist"): the poster fonts are registered without digits, the colon and dashes, and `chalerist.ttf` is registered a
+second time for those characters only. The Chalerist demo has no digits, so numbers stay in Barlow until a full version is added. The app's pages load it in `src/layouts/Page.astro`; the generated pages load it from
+`/leagues/follow.js`.
+
+**The font files are not in the repo.** They are personal-use only, so `/public/fonts/poster/` is git-ignored. A font whose file is
+missing is not offered, and with none the site stays in Barlow Condensed. To use them live, buy each font's commercial licence (after
+revenue), then add the files to `public/fonts/poster/` (`neloich.ttf`, `taller.otf`, `raceday.otf`, `chalerist.ttf`, `primate.otf`)
+and commit them. 

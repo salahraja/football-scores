@@ -3,13 +3,14 @@
 // the optional live scores. Each page says how far its results go and credits the sources it used.
 //   node scripts/api/pages.mjs [--api public/api/v1] [--out public]
 // Node only, no dependencies.
-import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { SITE, hiddenCountries, leagues, loadZones, nationNames, pickemData, tournaments, zoneNames } from "./config.mjs";
 import { pickemScript } from "./pickem.mjs";
 import { CLUB_WORDS, aliasMap, slug } from "./teams.mjs";
 import { kickoff } from "./time.mjs";
+import { GAME_CSS, gameBody } from "./gamepage.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const FONTS = ["barlow-condensed-800-latin.woff2", "instrument-sans-latin.woff2"];  // both SIL Open Font License, from the facelift branch
@@ -28,7 +29,7 @@ const CSS = `@font-face { font-family: "Barlow Condensed"; font-weight: 800; fon
 @font-face { font-family: "Instrument Sans"; font-weight: 400 700; font-display: swap; src: url("/leagues/fonts/instrument-sans-latin.woff2") format("woff2"); }
 /* Stadio: slate to paper, brick red condensed capitals, near-black; boxes are glass (the facelift's tokens) */
 :root {
-  --bg: #eeeeec; --card: #f7f7f5; --slate: #6f7e98; --slate-2: #a9b3c3; --fg: #1b1c20; --muted: #5b5f68; --accent: #b3261e;
+  --bg: #eeeeec; --card: #f7f7f5; --slate: #6f7e98; --slate-2: #a9b3c3; --fg: #1b1c20; --muted: #5b5f68; --accent: #c4302a;
   --line: rgb(27 28 32 / 12%); --glass: rgb(250 250 252 / 58%); --glass-solid: #f7f7f5; --rim: rgb(255 255 255 / 70%);
   --display: "Barlow Condensed", "Arial Narrow", sans-serif; --sans: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
@@ -38,6 +39,10 @@ const CSS = `@font-face { font-family: "Barlow Condensed"; font-weight: 800; fon
 *, *::before, *::after { box-sizing: border-box; }
 html { background: var(--bg); overflow-x: clip; }
 body { margin: 0; font: 16px/1.45 var(--sans); color: var(--fg); background: var(--bg); overflow-x: clip; }
+/* Safari 26 colours the strip under the status bar with the body's background (WebKit bug 301756). Every page here opens with the slate
+   poster, so the body is the slate and the strip runs into it (Salah, 2026-11-18, as on Home); the foot of the page stays off-white. */
+html:has(.poster), html:has(.poster) body { background-color: var(--slate); }
+html:has(.poster) body { background-image: linear-gradient(var(--slate) 0 120px, var(--bg) 120px); }  /* the poster always covers the top 120px */
 a { color: inherit; }
 a:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
 .nav { position: sticky; top: calc(10px + env(safe-area-inset-top, 0px)); z-index: 10; display: flex; gap: 2px; width: fit-content;
@@ -47,7 +52,7 @@ a:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
   box-shadow: inset 0 1px 0 var(--rim), 0 10px 30px -12px rgb(27 28 32 / 35%); }
 .nav a { padding: 8px 14px; border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 0.875rem; white-space: nowrap; }
 /* the current page is pressed into the bar, its name in the signature red (Salah, 2026-11-15) */
-.nav a[aria-current="page"] { background: rgb(255 255 255 / 62%); color: #b3261e; box-shadow: inset 0 3px 6px rgb(0 0 0 / 28%), inset 0 1px 2px rgb(0 0 0 / 22%), inset 0 -1px 1px rgb(255 255 255 / 60%); }
+.nav a[aria-current="page"] { background: rgb(255 255 255 / 62%); color: #c4302a; box-shadow: inset 0 3px 6px rgb(0 0 0 / 28%), inset 0 1px 2px rgb(0 0 0 / 22%), inset 0 -1px 1px rgb(255 255 255 / 60%); }
 @media (prefers-color-scheme: dark) { .nav a[aria-current="page"] { background: rgb(0 0 0 / 35%); color: #c4302a; box-shadow: inset 0 3px 7px rgb(0 0 0 / 65%), inset 0 1px 2px rgb(0 0 0 / 55%), inset 0 -1px 1px rgb(255 255 255 / 8%); } }
 /* the same four links on every page (Home, Leagues, News, Following); anything too wide for a phone scrolls */
 .nav { overflow-x: auto; scrollbar-width: none; } .nav a { flex: none; }
@@ -109,6 +114,7 @@ h2 { font: 800 1.9rem/1 var(--display); text-transform: uppercase; margin: 0 0 0
 .standings td, .standings tbody th { padding: 9px 6px; border-bottom: 1px solid var(--line); font-weight: 400; }
 .standings .left { text-align: left; } .standings .pts { font-weight: 700; }
 .standings td.pos { font: 800 1.15rem var(--display); opacity: 0.6; text-align: left; }
+.leaders .club { display: block; color: var(--muted); font-size: 0.8125rem; } .leaders tbody th { overflow-wrap: anywhere; }
 /* zones: a bar on the position (decorative: the legend and a hidden label say the same in words) */
 [data-zone="cl"] { --zone: #2563c9; } [data-zone="clq"] { --zone: #7aa2e3; } [data-zone="el"] { --zone: #d9771f; }
 [data-zone="elq"] { --zone: #eaa765; } [data-zone="eclq"] { --zone: #2e9a5f; } [data-zone="ecl_po"] { --zone: #7cc49b; }
@@ -156,7 +162,7 @@ h2 { font: 800 1.9rem/1 var(--display); text-transform: uppercase; margin: 0 0 0
 .list b { display: block; font: 800 2rem/1 var(--display); text-transform: uppercase; color: var(--accent); }
 .list span { color: var(--muted); }
 footer { grid-column: 1 / -1; color: var(--muted); font-size: 0.8125rem; }
-@media (max-width: 400px) { .standings .wdl { display: none; } }
+@media (max-width: 460px) { .standings .wdl { display: none; } }  /* every phone: the club name keeps its room (look audit 2026-11-18) */
 .star { border: 0; background: none; padding: 0 6px 0 0; font: inherit; font-size: 1rem; line-height: 1; color: var(--accent); cursor: pointer; }
 .follow { margin-top: 0.5rem; padding: 8px 16px; border: 0; border-radius: 999px; font: 700 0.875rem var(--sans); cursor: pointer; color: var(--fg); background: var(--glass);
   box-shadow: inset 0 1px 0 var(--rim), 0 8px 20px -10px rgb(27 28 32 / 40%); }
@@ -181,7 +187,11 @@ footer { grid-column: 1 / -1; color: var(--muted); font-size: 0.8125rem; }
 .story { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2px; padding: 12px 0; text-decoration: none; overflow-wrap: anywhere; }
 .story .t { font-weight: 700; } .story .s { color: var(--muted); font-size: 0.9375rem; } .story .m { color: var(--accent); font-size: 0.8125rem; font-weight: 700; }
 .story:hover .t { text-decoration: underline; }
-details { border-bottom: 1px solid var(--line); padding: 6px 0; } summary { cursor: pointer; font-weight: 700; padding: 6px 0; }
+details { border-bottom: 1px solid var(--line); padding: 6px 0; } summary { cursor: pointer; font-weight: 700; padding: 6px 0; list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+summary::-webkit-details-marker { display: none; }  /* the site's own arrow, not the browser's triangle (look audit 2026-11-18) */
+summary .chev { font: 800 1.5rem/1 var(--display); opacity: 0.55; transition: transform 0.2s ease; }
+details[open] > summary .chev { transform: rotate(90deg); }
+@media (prefers-reduced-motion: reduce) { summary .chev { transition: none; } }
 .clubs { list-style: none; margin: 0; padding: 0 0 8px; display: grid; gap: 4px 16px; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); }
 .clubs label { display: flex; align-items: center; gap: 8px; padding: 4px 0; cursor: pointer; }
 /* bracket pick'em: cards of buttons; a pick is pressed in like the form badges */
@@ -237,6 +247,11 @@ function shell({ title, description, path, body, live = null, here = "", script 
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="golboard">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="description" content="${esc(description)}">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -248,7 +263,7 @@ function shell({ title, description, path, body, live = null, here = "", script 
 <link rel="canonical" href="${esc(SITE + path)}">
 <link rel="preload" href="/leagues/fonts/barlow-condensed-800-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/leagues/site.css">
-${script ? '<script src="/leagues/live.js" defer></script>\n' : ""}${pickem ? '<script src="/leagues/pickem.js" defer></script>\n' : ""}<script src="/leagues/follow.js" defer></script>\n${ld ? `${jsonLd(ld)}\n` : ""}</head>
+${script ? '<script src="/leagues/live.js" defer></script>\n' : ""}${pickem ? '<script src="/leagues/pickem.js" defer></script>\n' : ""}<script src="/leagues/follow.js" defer></script>\n<script src="/theme-toggle.js" defer></script>\n${ld ? `${jsonLd(ld)}\n` : ""}</head>
 <body${live ? ` data-sportscore="${esc(live)}"` : ""}>
 <nav class="nav" aria-label="Site"><a href="/">Home</a><a href="/leagues/"${here === "all" ? ' aria-current="page"' : ""}>Leagues</a><a href="/news/"${here === "news" ? ' aria-current="page"' : ""}>News</a><a href="/following/"${here === "following" ? ' aria-current="page"' : ""}>Following</a></nav>
 ${body}
@@ -261,10 +276,51 @@ ${body}
 const marks = (m) => (m.score ? ` data-game="${esc(m.home)} ${esc(m.away)} ${m.date}"` : ` data-date="${m.date}" data-home="${esc(m.home)}" data-away="${esc(m.away)}"`);
 const mid = (m) => (m.score ? `${m.score.ft[0]}–${m.score.ft[1]}` : (m.time ?? "vs"));  // a lone dash looked like a score
 
-function game(m, names, today = null) {
+function game(m, names, today = null, detail = null) {
   const late = today && !m.score && m.date < today ? " · result not in" : "";
-  return `<li${marks(m)}><span class="home">${esc(names[m.home])}</span><span class="mid">${esc(mid(m))}</span><span class="away">${esc(names[m.away])}</span><span class="when">${esc(m.round ?? "")} · ${short(m.date)}${late}</span></li>`;
+  // the link to a game's own page sits outside the parts live.js rewrites (home, mid, away, when)
+  const more = detail?.(m) ? `<a class="more" href="${detail(m)}">Shots and touches</a>` : "";
+  return `<li${marks(m)}><span class="home">${esc(names[m.home])}</span><span class="mid">${esc(mid(m))}</span><span class="away">${esc(names[m.away])}</span><span class="when">${esc(m.round ?? "")} · ${short(m.date)}${late}</span>${more}</li>`;
 }
+
+/** The games of a league season that have a page of their own (api/v1/<league>/<season>/games, from ESPN): a function from a match to
+ *  its page's address, or null. */
+function details(api, league, season) {
+  const dir = join(api, league, season, "games");
+  const have = new Set(existsSync(dir) ? readdirSync(dir).filter((f) => f.endsWith(".json")).map((f) => f.slice(0, -5)) : []);
+  return (m) => (m.score && have.has(`${m.date}-${m.home}-${m.away}`) ? `/leagues/${league}/${m.date}-${m.home}-${m.away}/` : null);
+}
+
+/** One page per game with detail (`league` is a league or a tournament: its id and name): the score on the poster, then gamepage.mjs's timeline, shot map and touch maps. */
+function gamePages(league, season, api) {
+  const dir = join(api, league.id, season, "games");
+  if (!existsSync(dir)) return new Map();
+  const { teams } = JSON.parse(readFileSync(join(api, league.id, season, "teams.json"), "utf8"));
+  const { matches } = JSON.parse(readFileSync(join(api, league.id, season, "matches.json"), "utf8"));
+  const byId = new Map(matches.map((m) => [m.id, m]));
+  const out = new Map();
+  for (const file of readdirSync(dir).filter((f) => f.endsWith(".json")).sort()) {
+    const g = JSON.parse(readFileSync(join(dir, file), "utf8"));
+    const m = byId.get(g.match);
+    if (!m?.score) continue;
+    const names = { home: teams[g.home.team], away: teams[g.away.team] };
+    const name = file.slice(0, -5);
+    const title = `${names.home} ${m.score.ft[0]}–${m.score.ft[1]} ${names.away}`;
+    const body = `<header class="poster">
+<p class="note"><a href="/leagues/${league.id}/">${esc(league.name)}</a> · ${day(m.date)}${m.round ? ` · ${esc(m.round)}` : ""}</p>
+<h1 style="--n: ${Math.max(...title.split(/\s+/).map((w) => w.length))}">${esc(names.home)} <span class="score">${m.score.ft[0]}–${m.score.ft[1]}</span> ${esc(names.away)}</h1>
+<p class="note">${[g.home.formation, g.away.formation].every(Boolean) ? `${esc(g.home.formation)} v ${esc(g.away.formation)}` : ""}</p>
+</header>
+<main class="board" style="grid-template-columns: minmax(0, 1fr)">
+${gameBody(g, names)}
+<footer>Lineups, timeline, shots and touches from <a href="${esc(g.source.url)}">ESPN</a>. The score is ours: ${used(m)}.</footer>
+</main>`;
+    out.set(`${league.id}/${name}/index.html`, shell({ title, path: `/leagues/${league.id}/${name}/`, body, here: "league",
+      description: `${title}, ${league.name}, ${day(m.date)}: the goals, every shot on a map, and where each player had the ball.` }));
+  }
+  return out;
+}
+const used = (m) => (m.source === "wikipedia" ? SOURCES.wikipedia : SOURCES.openfootball);
 
 /** The poster's game: the week's first unscored game that has kicked off or is about to (live scores fill it), else the latest result. */
 function featured(week, latest, names, today) {
@@ -309,7 +365,20 @@ function leaguePage(league, competition, api, before, after, zonesFor) {
   const range = (z) => (z.from === z.to ? nth(z.from) : `${nth(z.from)}–${nth(z.to)}`);
   const legend = zoning ? `<ul class="zones" aria-label="What the places lead to">${zoning.zones.map((z) => `<li data-zone="${z.kind}"><b>${esc(names[z.kind])}</b> ${range(z)}</li>`).join("")}</ul>
 <p class="note">${esc(zoning.note)}</p>` : "";
-  const list = (games) => `<ul class="games" aria-live="polite">${games.map((m) => game(m, teams, today)).join("\n")}</ul>`;
+  const detail = details(api, league.id, season);
+  const list = (games) => `<ul class="games" aria-live="polite">${games.map((m) => game(m, teams, today, detail)).join("\n")}</ul>`;
+  // Top scorers and clean sheets, copied from the season's Wikipedia page (build.mjs leadersFile); a club we have a page for is linked
+  const leaders = existsSync(join(api, league.id, season, "leaders.json")) ? read("leaders.json") : null;
+  const board = (id, title, word, short, list) => (list ? `<section class="glass" id="${id}">
+<h2>${title}</h2>
+<table class="standings leaders">
+<caption>${list.asOf ? `Up to ${day(list.asOf)}, from` : "From"} <a href="${esc(leaders.source.url)}">Wikipedia</a>.</caption>
+<thead><tr><th scope="col" class="left"><span aria-hidden="true">#</span><span class="sr-only">Rank</span></th><th scope="col" class="left">Player</th><th scope="col"><abbr title="${word}">${short}</abbr></th></tr></thead>
+<tbody>
+${list.rows.map((r) => `<tr class="leader"><td class="pos">${r.rank}</td><th scope="row" class="left">${esc(r.player)}<span class="club">${r.team ? `<a href="/leagues/${league.id}/${esc(r.team)}/">${esc(teams[r.team] ?? r.club)}</a>` : esc(r.club)}</span></th><td class="pts">${r.value}</td></tr>`).join("\n")}
+</tbody>
+</table>
+</section>` : "");
   const go = (l, dir, word) => `<a class="arrow ${dir}" href="/leagues/${l.id}/" aria-label="${word} league: ${esc(l.name)}"><span aria-hidden="true">${dir === "prev" ? "‹" : "›"}</span></a>`;
   const body = `<header class="poster">
 <div class="titlebar">${go(before, "prev", "Previous")}<h1 style="--n: ${Math.max(...league.name.split(/\s+/).map((w) => w.length))}">${esc(league.name)}</h1>${go(after, "next", "Next")}</div>
@@ -342,8 +411,10 @@ ${latest.length ? list(latest) : '<p class="note">None yet.</p>'}
 <h2>Next fixtures</h2>
 ${next.length ? list(next) : '<p class="note">None left this season.</p>'}
 </section>
+${board("scorers", "Top scorers", "Goals", "G", leaders?.goals)}
+${board("keepers", "Clean sheets", "Clean sheets", "CS", leaders?.cleanSheets)}
 </div>
-<footer>Results from ${used.map((s) => SOURCES[s]).join(" and ")}. Kick-off times are ${esc(league.clock)}.${live ? ' Live scores <a href="https://sportscore.com/">powered by SportScore</a>.' : ""}</footer>
+<footer>Results from ${used.map((s) => SOURCES[s]).join(" and ")}.${leaders ? ` Top scorers and clean sheets from ${used.includes("wikipedia") ? "Wikipedia too" : SOURCES.wikipedia}.` : ""} Kick-off times are ${esc(league.clock)}.${live ? ' Live scores <a href="https://sportscore.com/">powered by SportScore</a>.' : ""}</footer>
 </main>`;
   const team = (id) => ({ "@type": "SportsTeam", name: teams[id] });
   const events = [...week, ...next].map((m) => ({ "@type": "SportsEvent", name: `${teams[m.home]} v ${teams[m.away]}`,
@@ -365,6 +436,7 @@ function clubPages(league, competition, api, zonesFor) {
   const today = JSON.parse(readFileSync(join(api, "meta.json"), "utf8")).generatedAt.slice(0, 10);
   const zoning = zonesFor(season, league.id);
   const names = zoneNames();
+  const detail = details(api, league.id, season);
   const byKickoff = (a, b) => (a.date + (a.time ?? "")).localeCompare(b.date + (b.time ?? ""));
   const pages = new Map();
   for (const row of table) {
@@ -380,7 +452,7 @@ function clubPages(league, competition, api, zonesFor) {
       const other = teams[home ? m.away : m.home];
       return `<li class="f-${o}" title="${esc(`${said[o]} ${home ? h : a}–${home ? a : h} ${home ? "v" : "at"} ${other}, ${short(m.date)}`)}"><span aria-hidden="true">${o.toUpperCase()}</span><span class="sr-only">${said[o]} ${home ? h : a}–${home ? a : h} ${home ? "v" : "at"} ${esc(other)}</span></li>`; }).join("");
     const zone = zoning?.zones.find((z) => row.position >= z.from && row.position <= z.to);
-    const list = (gs) => `<ul class="games">${gs.map((m) => game(m, teams, today)).join("\n")}</ul>`;
+    const list = (gs) => `<ul class="games">${gs.map((m) => game(m, teams, today, detail)).join("\n")}</ul>`;
     const gd = `${row.gd > 0 ? "+" : ""}${row.gd}`;
     const body = `<header class="poster">
 <h1 style="--n: ${Math.max(...club.split(/\s+/).map((w) => w.length))}">${esc(club)}</h1>
@@ -686,6 +758,8 @@ export function hideScript() {
 export function followScript() {
   return `(function () {
   if (window.__golboardFollow) window.__golboardFollow.stop();
+  // the poster font for this page's big red text (public/poster-font.js), loaded from here so each page keeps its script tags
+  if (!document.querySelector('script[src="/poster-font.js"]')) { var pf = document.createElement("script"); pf.src = "/poster-font.js"; pf.defer = true; document.head.appendChild(pf); }
   var KEY = "golboard.following", SCOPE = "golboard.newsScope";
   function read(key) { try { return window.localStorage.getItem(key); } catch (e) { return null; } }
   function write(key, value) { try { window.localStorage.setItem(key, value); } catch (e) {} }
@@ -814,6 +888,65 @@ export function followScript() {
     var box = e.target;
     if (box && box.matches && box.matches('input[data-club]')) set(box.getAttribute("data-club"), box.checked);
   }
+  // the players chosen in the setup (golboard.players): club, goals when Wikipedia's top scorers list them, the latest game with detail
+  function players() {
+    var box = document.getElementById("my-players"), none = document.getElementById("players-none");
+    if (!box) return;
+    var saved = [];
+    try { saved = JSON.parse(read("golboard.players") || "[]"); } catch (e) { saved = []; }
+    if (!Array.isArray(saved)) saved = [];
+    saved = saved.filter(function (p) { return p && typeof p.id === "string" && typeof p.name === "string"; });
+    if (none) none.hidden = saved.length > 0;
+    if (!saved.length) return;
+    function get(path) { return fetch("/api/v1/" + path).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }); }
+    function plain(s) { return String(s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim(); }
+    function nth(n) { return n + (n % 100 >= 11 && n % 100 <= 13 ? "th" : ["th", "st", "nd", "rd"][n % 10] || "th"); }
+    get("competitions.json").then(function (c) {
+      var comps = {};
+      ((c && c.competitions) || []).forEach(function (x) { comps[x.id] = x; });
+      var leagues = saved.map(function (p) { return p.league; }).filter(function (l, i, a) { return a.indexOf(l) === i; });
+      return Promise.all(leagues.map(function (l) {
+        var cur = comps[l];
+        if (!cur) return [l, null, null, null];
+        return Promise.all([get(l + "/" + cur.current + "/leaders.json"), get(l + "/" + cur.current + "/player-latest.json")])
+          .then(function (r) { return [l, cur.name, r[0], r[1]]; });
+      }));
+    }).then(function (rows) {
+      var by = {};
+      rows.forEach(function (r) { by[r[0]] = { name: r[1], leaders: r[2], latest: r[3] }; });
+      box.textContent = "";
+      saved.forEach(function (p) {
+        var d = by[p.league] || {};
+        var li = document.createElement("li");
+        var head = document.createElement("b");
+        head.textContent = p.name + (p.club ? " · " + p.club : "");
+        li.appendChild(head);
+        var scorer = d.leaders && d.leaders.goals ? d.leaders.goals.rows.filter(function (r) { return r.team === p.team && plain(r.player) === plain(p.name); })[0] : null;
+        if (scorer) {
+          var g = document.createElement("span");
+          g.className = "note";
+          g.textContent = " " + scorer.value + (scorer.value === 1 ? " goal" : " goals") + ", " + nth(scorer.rank) + " in " + (d.name || "the league");
+          li.appendChild(g);
+        }
+        var last = d.latest && d.latest.players ? d.latest.players[p.id] : null;
+        var line = document.createElement("span");
+        line.className = "player-last";
+        if (last) {
+          var a = document.createElement("a");
+          a.href = "/leagues/" + p.league + "/" + last.game + "/";
+          a.textContent = last.title;
+          line.appendChild(document.createTextNode("Last game: "));
+          line.appendChild(a);
+          line.appendChild(document.createTextNode(", " + last.touches + " touches, " + last.shots + (last.shots === 1 ? " shot" : " shots") + ", " + last.goals + (last.goals === 1 ? " goal" : " goals")));
+        } else {
+          line.textContent = "No game with detail yet.";
+        }
+        li.appendChild(line);
+        box.appendChild(li);
+      });
+    });
+  }
+  players();
   document.addEventListener("click", onClick);
   document.addEventListener("change", onChange);
   window.__golboardFollow = { stop: function () { document.removeEventListener("click", onClick); document.removeEventListener("change", onChange); } };
@@ -860,7 +993,7 @@ function followingPage(served, api, competitions) {
     const { teams } = JSON.parse(readFileSync(join(api, league.id, competitions.get(league.id).current, "teams.json"), "utf8"));
     const clubs = Object.entries(teams).sort((a, b) => a[1].localeCompare(b[1]));
     return `<details>
-<summary>${esc(league.name)}</summary>
+<summary>${esc(league.name)}<span class="chev" aria-hidden="true">›</span></summary>
 <ul class="clubs">${clubs.map(([id, name]) => `<li><label><input type="checkbox" data-club="${esc(id)}" data-name="${esc(name)}"> ${esc(name)}</label></li>`).join("\n")}</ul>
 </details>`;
   });
@@ -870,12 +1003,18 @@ function followingPage(served, api, competitions) {
 <h2>Your clubs</h2>
 <p class="note" id="following-count">You are not following any clubs yet.</p>
 ${groups.join("\n")}
+<p class="note"><a href="/?setup=1">Set up golboard again</a>: your leagues, clubs, national teams and players.</p>
 <noscript><p class="note">Following needs JavaScript.</p></noscript>
 </section>
 <section class="glass" id="hide">
 <h2>Hide scores</h2>
 <p class="note" id="hide-none">Watching a game later? Tick a club and its scores stay covered until you tap Show. Follow a club first and it shows here.</p>
 <ul class="clubs" id="hide-clubs"></ul>
+</section>
+<section class="glass" id="players">
+<h2>Your players</h2>
+<p class="note" id="players-none">Pick players in the <a href="/?setup=1">setup</a> and their goals and last game show here.</p>
+<ul class="news" id="my-players" aria-live="polite"></ul>
 </section>
 <section class="glass" id="games">
 <h2>Games</h2>
@@ -886,7 +1025,7 @@ ${groups.join("\n")}
 <h2>Headlines</h2>
 <p class="note" id="news-none" hidden></p>
 <ul class="news" id="mine-news"></ul>
-<p class="note">Headlines from ${PUBLISHERS}. Each club's own feed adds its latest stories.</p>
+<p class="note">Headlines from ${PUBLISHERS}. Each club's own feeds, The Guardian's and its fan sites', add their latest stories, credited to each.</p>
 </section>
 </main>`;
   return shell({ title: "Following", path: "/following/", here: "following", body, description: "The clubs you follow: their games and their headlines." });
@@ -926,7 +1065,8 @@ ${rows.map((r) => `<tr class="row"${r.status ? ` data-zone="${esc(r.status)}"` :
   const clock = config.clock ? `Kick-offs are ${config.clock}.` : "Kick-offs are local time at each ground.";
   // live scores from SportScore, as on the league pages, while the page has games still to play
   const live = config.sportscore && (week.length || next.length) ? config.sportscore : null;
-  const list = (games) => `<ul class="games">${games.map((m) => game(m, teams, today)).join("\n")}</ul>`;
+  const detail = details(api, t.id, t.season);
+  const list = (games) => `<ul class="games">${games.map((m) => game(m, teams, today, detail)).join("\n")}</ul>`;
   const longest = Math.max(...t.name.split(/\s+/).map((w) => w.length));
   const body = `<header class="poster">
 <div class="titlebar solo"><span aria-hidden="true"></span><h1 style="--n: ${longest}">${esc(t.name)}</h1><span aria-hidden="true"></span></div>
@@ -1041,14 +1181,16 @@ function qualifying(b, format, api) {
 export function pages({ api = "public/api/v1", out = "public", zones = loadZones, pickem = pickemData() } = {}) {
   const { competitions } = JSON.parse(readFileSync(join(api, "competitions.json"), "utf8"));
   const byId = new Map(competitions.map((c) => [c.id, c]));
-  const files = new Map([["site.css", CSS], ["live.js", liveScript()], ["follow.js", followScript() + hideScript()], ["pickem.js", pickemScript()]]);  // hiding scores rides in follow.js: both are about your clubs, and a page keeps to two scripts
+  const files = new Map([["site.css", CSS + GAME_CSS], ["live.js", liveScript()], ["follow.js", followScript() + hideScript()], ["pickem.js", pickemScript()]]);  // hiding scores rides in follow.js: both are about your clubs, and a page keeps to two scripts
   for (const font of FONTS) files.set(`fonts/${font}`, readFileSync(join(HERE, "assets", "fonts", font)));
   const served = leagues().filter((l) => byId.has(l.id));
   served.forEach((league, i) => files.set(`${league.id}/index.html`, leaguePage(league, byId.get(league.id), api,
     served[(i - 1 + served.length) % served.length], served[(i + 1) % served.length], zones)));
   for (const league of served) for (const [path, html] of clubPages(league, byId.get(league.id), api, zones)) files.set(path, html);
+  for (const league of served) for (const [path, html] of gamePages(league, byId.get(league.id).current, api)) files.set(path, html);
   const cups = existsSync(join(api, "tournaments.json")) ? JSON.parse(readFileSync(join(api, "tournaments.json"), "utf8")).tournaments : [];
   for (const t of cups) files.set(`${t.id}/index.html`, tournamentPage(t, api));
+  for (const t of cups) for (const [path, html] of gamePages(t, t.season, api)) files.set(path, html);
   const picks = brackets(pickem, api);
   for (const { bracket, format, names, codes } of picks) files.set(`bracket/${bracket.id}/index.html`, bracketPage(bracket, format, names, codes));
   files.set("index.html", shell({ title: "Leagues", path: "/leagues/", here: "all", description: `Tables, results and fixtures for eight European leagues${cups.length ? `, ${cups.map((t) => t.name).join(", ")}` : ""}.`,

@@ -11,14 +11,18 @@ app or page can read it. Built by `npm run api` (download, then build) into `pub
 | `api/v1/<league>/<season>/matches.json` | `{ competition, season, matches: [{ id, round, stage, date, time, home, away, status, score, source }] }` |
 | `api/v1/<league>/<season>/table.json` | `{ competition, season, table: [{ position, team, played, won, drawn, lost, gf, ga, gd, points, adjustment }], adjustments }` |
 | `api/v1/<league>/<season>/teams.json` | `{ competition, season, teams: { <team id>: <name> } }` |
+| `api/v1/<league>/<season>/leaders.json` | `{ competition, season, source, goals, cleanSheets }`: the top scorers and goalkeepers' clean sheets, each `{ asOf, rows: [{ rank, player, club, team, value }] }` or null. Copied from the season's Wikipedia page, not computed (we have no per-game scorers for the leagues); `asOf` is the date its editors give, or null; `team` is our id for `club`, or null when no team this season has that name; `source.url` names the revision. Left out when the page has no table we can read |
+| `api/v1/<league>/<season>/players.json` | `{ competition, season, source, players: [{ id, name, team, number, position }] }`: every player of the season's clubs, for choosing whom to follow, from each club's squad in ESPN's feeds (`scripts/api/fetch-squads.mjs`, kept a week), by club then shirt number. `id` is ESPN's player id, the same the game files use; `position` is G, D, M or F. 4,824 players on 25 November 2026 |
+| `api/v1/<league>/<season>/player-latest.json` | `{ competition, season, players: { <ESPN player id>: { game, date, title, touches, shots, goals } } }`: each player's latest game with detail (`games/<game>.json`), its score line, and the player's touches, shots and goals in it (own goals not counted); only players who started or came on. For Following's players |
+| `api/v1/<league or tournament>/<season>/games/<date>-<home>-<away>.json` | One finished game in detail (the leagues, the cups and the internationals), from ESPN's feeds: `{ competition, season, match, source, kickoff, home, away, players, events, shots, positions, touches }`. `match` is our match id; `players` the lineups (`id`, `name`, `side`, `number`, `position`, `starter`); `events` the goals, cards and substitutions in order; `shots` every shot with where it was taken from (`x`, `y`), `outcome`, `xg` (null where ESPN has none) and `penalty`; `touches` each player's on-ball touches counted in 30 zones. Positions are percent of the pitch, the player's own team attacking toward x = 100, y = 0 its right touchline. Only for games ESPN has and our results agree with |
 | `api/v1/meta.json` | version, when it was built, the sources and their licences, per league season: games finished and to play, the date of the last result, corrections applied; and `files`: every other file of the build with the sha256 of its bytes |
 | `api/v1/news.json` | `{ generatedAt, articles: [{ title, summary, url, source, published, image, clubs }] }`: football headlines, newest first (at most 60), from BBC Sport, The Guardian and ESPN's own RSS feeds; `clubs` lists the team ids the story names. Written by `scripts/api/news.mjs`, after `build.mjs`, so it is not in `meta.json`'s file list |
-| `api/v1/news/<club id>.json` | `{ generatedAt, articles }` in the same shape, at most 30 per club, newest first: the general headlines that name the club plus The Guardian's own feed for it (`data/api/guardian-feeds.json`). One file per club of every league, so a club the three general feeds never mention (Juventus had none on 2026-11-12) still has its stories. A club with no Guardian feed gets only the general ones |
+| `api/v1/news/<club id>.json` | `{ generatedAt, articles }` in the same shape, at most 30 per club, newest first: the general headlines that name the club plus The Guardian's own feed for it (`data/api/guardian-feeds.json`) and its independent fan sites' feeds (`data/api/fan-feeds.json`, each story credited to the site: 108 feeds for 71 clubs on 2026-11-26, Juvefc.com for Juventus first; RSS or Atom; no site of a network with betting links or founded in Israel). One file per club of every league, so a club the three general feeds never mention (Juventus had none on 2026-11-12) still has its stories. A club with no Guardian feed gets only the general ones |
 | `api/v1/tournaments.json` | `{ tournaments: [{ id, name, full, region, teams, season, finals }] }`: cups and international tournaments; `teams` is `clubs` or `nations`. Kept apart from `competitions.json`, whose readers expect one league table per competition |
 | `api/v1/<tournament>/<season>/matches.json` | `{ tournament, season, matches }`: like a league's, plus `group` (`A`, `A1`, or `league` for a single league-phase table), `stage` `group`, `round` (`Group A`, `League A, Group 1`, `Matchday 3`), and `kickoff` with a UTC offset |
 | `api/v1/<tournament>/<season>/groups.json` | `{ tournament, season, zones: [{ kind, label, from, to, division }], hosts, groups: [{ group, name, division, table }] }`: one computed table per group; each row adds `status`: the kind of zone its place falls in, `host` (in the finals already as a host), or null |
 | `api/v1/<tournament>/<season>/teams.json` | `{ tournament, season, teams: { <team id>: <name> } }` |
-| `api/v1/schema.json` | the contract: a JSON Schema (2020-12) with one `$defs` entry per file type (`competitions`, `matches`, `table`, `teams`, `tournaments`, `tournamentMatches`, `groups`, `tournamentTeams`, `today`, `news`, `meta`). Kept in `data/api/schema.json` |
+| `api/v1/schema.json` | the contract: a JSON Schema (2020-12) with one `$defs` entry per file type (`competitions`, `matches`, `table`, `teams`, `leaders`, `players`, `playerLatest`, `game`, `tournaments`, `tournamentMatches`, `groups`, `tournamentTeams`, `today`, `news`, `meta`). Kept in `data/api/schema.json` |
 
 League ids: `it-1` Serie A, `en-1` Premier League, `es-1` LaLiga, `de-1` Bundesliga, `fr-1` Ligue 1, `nl-1` Eredivisie, `pt-1` Primeira
 Liga, `en-2` Championship. Tournament ids: `afcon` AFCON qualifying (48 nations, 12 groups of four, September 2026 to March 2027), `champions-league`,
@@ -41,7 +45,16 @@ change as the data it describes.
 
 `npm run api:build` also writes plain HTML pages from the API it just built (`scripts/api/pages.mjs`): `/leagues/` and
 `/leagues/<league>/` in the site's Stadio look (the facelift: a slate poster with the league in brick-red Barlow Condensed over the
-game of the moment, then glass boxes for this week, the table, the latest results and the next fixtures). No framework (in our test on a
+game of the moment, then glass boxes for this week, the table, the latest results, the next fixtures, and the top scorers and clean
+sheets where the season's Wikipedia page has them). Each game ESPN has
+detail for (`games/*.json`), in a league, a cup or an international, gets a page of its own, `/leagues/<league or tournament>/<date>-<home>-<away>/`,
+linked as "Shots and touches" from the league's, the clubs' and the cup's game lists (`scripts/api/gamepage.mjs`): the score, the timeline, home and away shots and expected
+goals, a shot map (every shot from where it was taken; a circle's area grows with its xG; filled for a goal, a thick ring saved, a thin
+ring off target, dashed blocked) with a list of every shot, and touch maps for each side and each player: on-ball touches counted in 30
+zones (the boxes, the six-yard boxes' width, halfway and a third of each half), coloured by touches per square metre in five steps
+of one red, with the count printed in each zone. All drawn as SVG when the page is built: no script, colours from CSS classes so the
+dark theme works, a title and a description on each map for screen readers. A page with 34 maps is about 9 KB compressed. ESPN has no
+positions for AFCON qualifying, so those pages have the timeline and numbers only. A hidden team's game (Israel) gets no file and no page. No framework (in our test on a
 throttled phone a plain page showed in 376 ms against 912 ms for the Vue app), one stylesheet (`/leagues/site.css`) and the two fonts
 (OFL) served from `/leagues/fonts/`, light and dark.
 Each page says how far its results go, gives kick-off times in the league's own time zone (`clock` in `data/api/leagues.json`), and
@@ -54,12 +67,26 @@ AFCON qualifying under SportScore's `caf-africa-cup-of-nations`), the browser as
 writes each score and state ("Live · 2nd half", "Full time") into the row with the same two teams, within three days of today because a
 schedule can be a day out (openfootball had LaLiga's 31 October games on 1 November); the poster moves to a game that is live; it stops
 when they have all finished.
+The live rows and the homepage show the match minute ("Live · 67'") from SportScore's match detail, one call per live game; without
+it they show the half ("Live · 2nd half").
 SportScore's terms ask for a visible link, so those pages say "Live scores powered by SportScore". The script names clubs with the same
-function and aliases as `teams.mjs` (copied in at build time). On 31 October 2026 goals showed on SportScore a median 0.2 min after ESPN
+function and aliases as `teams.mjs` (copied in at build time). A name the feed uses that makes a different id from ours is a club whose
+live scores never show, so the names are checked against the feed itself: `node scripts/api/check-live-names.mjs` reads SportScore's
+fixtures for a window of days and lists every name that is not a team of ours. On 17 November 2026 it found four, all promoted clubs
+(Deportivo La Coruña, Le Havre, Troyes, Excelsior), now in `data/api/aliases.json` and `tests/api-league-live-names.test.ts`; the cups
+and internationals were clean. Run it when a season starts or a competition is added. On 31 October 2026 goals showed on SportScore a median 0.2 min after ESPN
 and final whistles 1.2 min after (each ±1 min). The site's CSP allows `connect-src https://sportscore.com` for this. Without the script the
 page is still complete. A hidden team (Israel) has no row, so a game of theirs that SportScore sends is never shown.
 
 ## News and Following
+
+**The setup** (`src/components/Onboarding.vue`, Salah, 2026-11-25): a first visit to Home by someone who follows nothing opens four
+steps, and `/?setup=1` (linked from Following) opens them again: the leagues and cups you follow (Home then opens on the first), your
+clubs (from those leagues and cups, or all leagues), national teams (from the internationals), and players (searched by name in every
+league's `players.json`, the chosen leagues' first). Skip leaves everything as it was. All of it stays on the device: clubs and national teams join the
+stars' list (`golboard.following`), with `golboard.leagues`, `golboard.players` and `golboard.setup` beside it. Following shows each
+chosen player with their club, their goals when Wikipedia's top scorers list them, and their latest game with detail, from
+`player-latest.json`.
 
 `npm run api:fetch` also downloads the three football feeds into `data/news/` (a feed that fails keeps its saved copy), and `api:build`
 turns them into `api/v1/news.json` (`scripts/api/news.mjs`; it never fails the build). Only the headline, a short plain-text summary, the
@@ -114,6 +141,28 @@ shape (a faded "?–?") with a **Show score** button under it.
   the build until it gets an alias. On 31 October 2026 this filled 254 games (results up to 25-30 October instead of 20 September); 139 of
   them could be paired with SportScore's results and all 139 agreed. The reader reproduces all 3,016 official 2025-26 scores from the
   grids (`tests/api-wikipedia.test.ts`). Pages that use this data credit Wikipedia under CC BY-SA.
+- **League leaders:** the "Season statistics" section of the same Wikipedia pages (`scripts/api/leaders.mjs`): the top-scorers table on
+  all eight, clean sheets on six (La Liga's Zamora table is a ratio, so it is not used; the Eredivisie page has none).
+  Copied as the page gives them, ties and all; a closing row such as "Six players" names no one and is left out; a table we cannot read
+  gives no list rather than a wrong one, and never stops the build.
+  The fetch keeps the section with the season page's own revision, even when the grid comes from a template. On 25 November 2026 La
+  Liga's 11 rows equalled laliga.com's and the Bundesliga's top ten equalled bundesliga.com's (`tests/api-leaders.test.ts` holds the
+  eight sections of that day). The pages trail the leagues by up to a few weeks (Primeira Liga's said 2 November), so each list shows its
+  own "up to" date.
+- **Game detail (lineups, timeline, shots, touch zones):** ESPN's football feeds, read by `scripts/api/fetch-espn.mjs` and reduced
+  to our own small summary by `scripts/api/espn.mjs`. **Salah's decision, 25 November 2026: use them while golboard has no customers.**
+  ESPN's terms (Disney's Terms of Use) allow personal, non-commercial use only and forbid automated access and public display without
+  written permission; the feeds are undocumented and can change or close. So: only the build asks, never a visitor's browser; one
+  scoreboard per league per day for the last three days, then each finished game once, six hours after kick-off, at most 40 a run;
+  betting blocks are dropped; we publish our summary (counts by zone, shots), never the feeds. The Pages workflow keeps `data/espn`
+  between runs so each run asks only for new games, and so does Netlify, through a build plugin of our own
+  (`netlify/plugins/espn-cache`, Netlify's build cache). Each game file links to ESPN's page for it. Checked on 25 November 2026: in
+  Juventus 4-0 Venezia the shots per side (13 and 13) and Venezia's expected goals (0.83) equal ESPN's own box score; the goals in the
+  timeline equal the score in every game read. Eredivisie and Primeira Liga shots carry no expected goals.
+- **A second witness:** a score Wikipedia's grid filled in that ESPN's game contradicts is not used; the game waits for openfootball
+  and `meta.json` names it (`espn.overruled`). On 23 November 2026 the grid said Juventus 0-10 Venezia for a 4-0, and the table had
+  counted it. On Netlify, whose builds keep no ESPN data between runs, the witness sees only the last three days, so that
+  score is also put right in `data/api/corrections.json` (2026-27), citing ESPN's match page.
 - **Tournaments:** English Wikipedia pages (CC BY-SA 4.0), one match box per game with the date, the kick-off (a local time with its
   UTC offset, or Central European time for UEFA's) and the score (`scripts/api/tournament.mjs`; `data/api/tournaments.json` names the
   pages and what each one's headings mean). A tournament's pages are saved together or not at all, so a table never mixes two days. A score on a game dated the build day or later is not used yet. Group

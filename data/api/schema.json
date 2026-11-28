@@ -155,6 +155,114 @@
       }
     },
 
+    "leaders": {
+      "description": "A league season's top scorers and goalkeepers' clean sheets, copied from the season's English Wikipedia page (not computed: we have no per-game scorers for the leagues). Either list is null when the page has none we can read; the file is left out when it has neither.",
+      "type": "object",
+      "required": ["competition", "season", "source", "goals", "cleanSheets"],
+      "additionalProperties": false,
+      "properties": {
+        "competition": { "$ref": "#/$defs/leagueId" },
+        "season": { "$ref": "#/$defs/season" },
+        "source": { "type": "object", "required": ["name", "url", "licence"], "additionalProperties": false, "properties": {
+          "name": { "const": "Wikipedia" }, "url": { "type": "string", "pattern": "^https://en\\.wikipedia\\.org/\\?oldid=[0-9]+$" }, "licence": { "const": "CC-BY-SA-4.0" } } },
+        "goals": { "$ref": "#/$defs/leaderList" },
+        "cleanSheets": { "$ref": "#/$defs/leaderList" }
+      }
+    },
+    "leaderList": {
+      "oneOf": [{ "type": "null" }, {
+        "type": "object",
+        "required": ["asOf", "rows"],
+        "additionalProperties": false,
+        "properties": {
+          "asOf": { "description": "The date the page's editors say the list is up to; null when the page gives none.", "oneOf": [{ "$ref": "#/$defs/date" }, { "type": "null" }] },
+          "rows": { "type": "array", "minItems": 1, "items": {
+            "type": "object",
+            "required": ["rank", "player", "club", "team", "value"],
+            "additionalProperties": false,
+            "properties": {
+              "rank": { "type": "integer", "minimum": 1 },
+              "player": { "type": "string", "pattern": "^[^\\[\\]{}|<>=]+$" },
+              "club": { "description": "The club as the page writes it.", "type": "string", "pattern": "^[^\\[\\]{}|<>=]+$" },
+              "team": { "description": "Our id for the club, or null when no team this season has that name.", "oneOf": [{ "$ref": "#/$defs/teamId" }, { "type": "null" }] },
+              "value": { "description": "Goals, or clean sheets.", "$ref": "#/$defs/count" }
+            }
+          } }
+        }
+      }]
+    },
+    "game": {
+      "description": "One finished game (a league's, a cup's or an international) in detail, from ESPN's football feeds (Salah's decision, 25 November 2026; see docs/api.md): the lineups, the timeline, every shot, and each player's on-ball touches in 30 zones. Positions are percent of the pitch with the player's own team attacking toward x = 100 and y = 0 its right touchline. Players are named by ESPN's id within the file.",
+      "type": "object",
+      "required": ["competition", "season", "match", "source", "kickoff", "home", "away", "players", "events", "shots", "positions", "touches"],
+      "additionalProperties": false,
+      "properties": {
+        "competition": { "oneOf": [{ "$ref": "#/$defs/leagueId" }, { "$ref": "#/$defs/tournamentId" }] },
+        "season": { "$ref": "#/$defs/season" },
+        "match": { "description": "Our match id (matches.json).", "type": "string" },
+        "source": { "type": "object", "required": ["name", "url"], "additionalProperties": false, "properties": { "name": { "const": "ESPN" }, "url": { "type": "string", "pattern": "^https://www\\.espn\\.com/" } } },
+        "kickoff": { "type": "string" },
+        "home": { "$ref": "#/$defs/gameSide" },
+        "away": { "$ref": "#/$defs/gameSide" },
+        "players": { "type": "array", "items": { "type": "object", "required": ["id", "name", "side", "number", "position", "starter"], "additionalProperties": false, "properties": {
+          "id": { "type": "string" }, "name": { "type": "string", "minLength": 1 }, "side": { "type": "string", "enum": ["home", "away"] },
+          "number": { "oneOf": [{ "type": "integer" }, { "type": "null" }] }, "position": { "oneOf": [{ "type": "string" }, { "type": "null" }] }, "starter": { "type": "boolean" } } } },
+        "events": { "type": "array", "items": { "type": "object", "required": ["minute", "kind", "side", "player", "other"], "additionalProperties": false, "properties": {
+          "minute": { "type": "string" }, "kind": { "enum": ["goal", "penalty", "own-goal", "yellow", "red", "sub"] }, "side": { "type": "string", "enum": ["home", "away"] },
+          "player": { "oneOf": [{ "type": "string" }, { "type": "null" }] }, "other": { "oneOf": [{ "type": "string" }, { "type": "null" }] } } } },
+        "shots": { "type": "array", "items": { "type": "object", "required": ["side", "player", "minute", "x", "y", "xg", "outcome", "body", "penalty"], "additionalProperties": false, "properties": {
+          "side": { "type": "string", "enum": ["home", "away"] }, "player": { "type": "string" }, "minute": { "type": "string" }, "x": { "type": "number" }, "y": { "type": "number" },
+          "xg": { "description": "ESPN's expected-goals value; null where the feed has none (Eredivisie, Primeira Liga).", "oneOf": [{ "type": "number", "minimum": 0, "maximum": 1 }, { "type": "null" }] },
+          "outcome": { "enum": ["goal", "saved", "off", "blocked", "post"] }, "body": { "oneOf": [{ "type": "string" }, { "type": "null" }] }, "penalty": { "type": "boolean" } } } },
+        "positions": { "description": "False when the feed had no positions for this game (shots and touches are then empty).", "type": "boolean" },
+        "touches": { "description": "Each player's on-ball touches by zone: index = column x 5 + row; columns from the own goal line at 0, 16.5, 34.5, 52.5, 70.5 and 88.5 m of 105; rows from the right touchline at 0, 13.84, 24.84, 43.16 and 54.16 m of 68.",
+          "type": "object", "additionalProperties": { "type": "array", "items": { "$ref": "#/$defs/count" }, "minItems": 30, "maxItems": 30 } }
+      }
+    },
+    "espnReport": {
+      "description": "ESPN's games for this season (games/*.json): how many were paired with ours, team names we could not map, ESPN game ids whose score was not ours (left out), and our match ids whose Wikipedia score ESPN contradicted (not used; a league's only). A hidden team's game is left out and not listed.",
+      "type": "object",
+      "required": ["games", "unknown", "disagree", "overruled"],
+      "additionalProperties": false,
+      "properties": {
+        "games": { "$ref": "#/$defs/count" },
+        "unknown": { "type": "array", "items": { "type": "string" } },
+        "disagree": { "type": "array", "items": { "type": "string" } },
+        "overruled": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "gameSide": { "type": "object", "required": ["team", "formation"], "additionalProperties": false, "properties": { "team": { "$ref": "#/$defs/teamId" }, "formation": { "oneOf": [{ "type": "string" }, { "type": "null" }] } } },
+
+    "players": {
+      "description": "A league season's players, for choosing whom to follow: each club's squad from ESPN's football feeds (fetch-squads.mjs, kept a week), with our team ids, by club then shirt number. id is ESPN's player id, the same one game files use.",
+      "type": "object",
+      "required": ["competition", "season", "source", "players"],
+      "additionalProperties": false,
+      "properties": {
+        "competition": { "$ref": "#/$defs/leagueId" },
+        "season": { "$ref": "#/$defs/season" },
+        "source": { "type": "object", "required": ["name", "url"], "additionalProperties": false, "properties": { "name": { "const": "ESPN" }, "url": { "type": "string", "pattern": "^https://www\\.espn\\.com/" } } },
+        "players": { "type": "array", "minItems": 1, "items": { "type": "object", "required": ["id", "name", "team", "number", "position"], "additionalProperties": false, "properties": {
+          "id": { "type": "string", "pattern": "^[0-9]+$" }, "name": { "type": "string", "minLength": 1 }, "team": { "$ref": "#/$defs/teamId" },
+          "number": { "oneOf": [{ "type": "integer", "minimum": 0 }, { "type": "null" }] },
+          "position": { "description": "G, D, M or F.", "oneOf": [{ "type": "string" }, { "type": "null" }] } } } }
+      }
+    },
+
+    "playerLatest": {
+      "description": "Each player's latest game with detail in a league season (games/*.json), for Following's players: the game's page name under games/, its date and score line, and the player's on-ball touches, shots and goals in it (own goals not counted). Only players who started or came on.",
+      "type": "object",
+      "required": ["competition", "season", "players"],
+      "additionalProperties": false,
+      "properties": {
+        "competition": { "$ref": "#/$defs/leagueId" },
+        "season": { "$ref": "#/$defs/season" },
+        "players": { "type": "object", "propertyNames": { "pattern": "^[0-9]+$" }, "additionalProperties": { "type": "object", "required": ["game", "date", "title", "touches", "shots", "goals"], "additionalProperties": false, "properties": {
+          "game": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+$" }, "date": { "$ref": "#/$defs/date" }, "title": { "type": "string", "minLength": 1 },
+          "touches": { "$ref": "#/$defs/count" }, "shots": { "$ref": "#/$defs/count" }, "goals": { "$ref": "#/$defs/count" } } } }
+      }
+    },
+
     "today": {
       "description": "Every league's and tournament's games from the day before the build to three days after, in kick-off order, with team names: one small file for a widget. league is the league's id or the tournament's (a club keeps one id in both, so a followed club's cup games are here too); a reader that does not know an id skips the game.",
       "type": "object",
@@ -381,7 +489,8 @@
                       }
                     }
                   }
-                }
+                },
+                "espn": { "$ref": "#/$defs/espnReport" }
               }
             }
           }
@@ -401,7 +510,8 @@
                 "scheduled": { "$ref": "#/$defs/count" },
                 "lastResult": { "oneOf": [{ "$ref": "#/$defs/date" }, { "type": "null" }] },
                 "overdue": { "$ref": "#/$defs/count" },
-                "wikipedia": { "description": "Each Wikipedia page's revision, by title.", "type": "object", "additionalProperties": { "type": "integer", "minimum": 1 } }
+                "wikipedia": { "description": "Each Wikipedia page's revision, by title.", "type": "object", "additionalProperties": { "type": "integer", "minimum": 1 } },
+                "espn": { "$ref": "#/$defs/espnReport" }
               }
             }
           }

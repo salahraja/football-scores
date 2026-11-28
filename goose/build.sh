@@ -8,5 +8,5 @@ OUT=${OUT:-$HOME/.cache/football-scores-goose}
 [ -x "$GOOSE" ] || { echo "error: no Goose compiler at $GOOSE (set GOOSE=; see README)" >&2; exit 1; }
 mkdir -p "$OUT/home"
 env -i PATH=/usr/bin:/bin:/opt/homebrew/bin HOME="$OUT/home" GOOSE_HOME="$OUT/home/.goose" \
-  "$GOOSE" build -q goose/cli.goose -o "$OUT/footy" >&2
+  "$GOOSE" build goose/cli.goose -o "$OUT/footy" >&2
 echo "$OUT/footy"

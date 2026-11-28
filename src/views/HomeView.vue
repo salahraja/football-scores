@@ -4,7 +4,8 @@ import { getDataNote, getResultRounds, getStandings } from "../data";
 import { competitions, league as loadLeague, zoneOf, type Competition, type League } from "../data/leagues";
 import { covered, today, type TodayGame } from "../data/live";
 import { teamId } from "../data/clubid";
-import { clubNews, loadFollowing, loadScope, mergeStories, news, saveFollowing, saveScope, type Article, type Scope } from "../data/follow";
+import { clubNews, loadFollowing, loadLeagues, loadScope, mergeStories, news, saveFollowing, saveScope, setupDone, type Article, type Scope } from "../data/follow";
+import Onboarding from "../components/Onboarding.vue";
 import { clubColour } from "../data/clubColours";
 import { covered as hides, gameKey, HIDE, loadHidden, loadShown, saveShown, storyCovered, storyKey } from "../data/hide";
 import { breakCups, cupGames, groupOf, loadDay, localDay, type Cup, type DayMatch, type Group } from "../data/internationals";
@@ -26,18 +27,21 @@ const list = ref<Competition[]>([]);
 // Built as HTML with Serie A chosen; the league in the address, if any, is opened once the page runs (so the built HTML and the
 // first render in the browser agree).
 const chosen = ref(HOME);
+// The league on the poster and in the table: it follows `chosen` once that league has arrived, so a swipe never shows Serie A while
+// the next league is on its way (Salah, 2026-11-21: "Every time you swipe to a different league, it goes back to ... Serie A").
+const onPoster = ref(HOME);
 const loaded = ref<Record<string, League>>({});
 const failed = ref(false);
 const pick = ref<HTMLElement | null>(null);
-const other = computed(() => (chosen.value === HOME ? null : loaded.value[chosen.value] ?? null));
+const other = computed(() => (onPoster.value === HOME ? null : loaded.value[onPoster.value] ?? null));
 // In an international break (internationals.ts) the nations' tournaments lead the list; a cup has no league table, only its groups.
 const cups = ref<Cup[]>([]);
 const dayMatches = ref<DayMatch[]>([]);
-const cup = computed(() => cups.value.find((c) => c.id === chosen.value) ?? null);
+const cup = computed(() => cups.value.find((c) => c.id === onPoster.value) ?? null);
 const cupDay = computed(() => (cup.value ? cupGames(dayMatches.value, cup.value.id, localDay()) : []));
 const group = ref<Group | null>(null);
-const zones = computed(() => loaded.value[chosen.value]?.zones ?? []);
-const zoneNote = computed(() => loaded.value[chosen.value]?.note ?? "");
+const zones = computed(() => loaded.value[onPoster.value]?.zones ?? []);
+const zoneNote = computed(() => loaded.value[onPoster.value]?.note ?? "");
 const clubIds = computed(() => Object.fromEntries((loaded.value[HOME]?.table ?? []).map((r) => [r.name, r.id])));
 // Serie A's own feed names clubs its own way ("Inter", "Como 1907"), so a row's id comes from the API's table when it has the name, else from the name.
 const idFor = (name: string) => clubIds.value[name] ?? teamId(name);
@@ -87,15 +91,43 @@ function longestWord(name: string) {
 function places(z: { from: number; to: number }) {
   return z.from === z.to ? `${z.from}` : `${z.from}–${z.to}`;
 }
+// One read per league at a time: a swipe onto a league that is already being read ahead waits for that read.
+const reading = new Map<string, Promise<void>>();
+function read(id: string): Promise<void> {
+  const c = list.value.find((x) => x.id === id);
+  if (!c || loaded.value[id] || cups.value.some((x) => x.id === id)) return Promise.resolve();
+  let r = reading.get(id);
+  if (!r) {
+    r = loadLeague(c)
+      .then((l) => void (loaded.value = { ...loaded.value, [id]: l }))
+      .finally(() => reading.delete(id));
+    reading.set(id, r);
+  }
+  return r;
+}
 async function open(id: string) {
   failed.value = false;
-  const c = list.value.find((x) => x.id === id);
-  if (!c || loaded.value[id] || cups.value.some((x) => x.id === id)) return;
   try {
-    loaded.value = { ...loaded.value, [id]: await loadLeague(c) };
+    await read(id);
   } catch {
-    failed.value = true;
+    if (chosen.value === id) failed.value = true;
   }
+}
+// The leagues either side, read ahead so the next swipe is there at once; a failed read here says nothing until it is chosen.
+function readAhead() {
+  const at = list.value.findIndex((c) => c.id === chosen.value);
+  if (at < 0 || list.value.length < 2) return;
+  for (const by of [1, -1]) read(list.value[(at + by + list.value.length) % list.value.length].id).catch(() => {});
+}
+// Puts the chosen league on the poster once it has arrived; one that could not be read leaves the last league up, with the note.
+let nextSlide: { name: string; league: boolean } | null = null;
+async function show(id: string) {
+  await open(id);
+  const ready = id === HOME || !!loaded.value[id] || cups.value.some((x) => x.id === id);
+  if (chosen.value !== id || !ready || onPoster.value === id) return;
+  if (nextSlide) slide.value = nextSlide;
+  nextSlide = null;
+  onPoster.value = id;
 }
 function choose(id: string) {
   chosen.value = id;
@@ -111,9 +143,14 @@ const title = computed(() => other.value?.name ?? cup.value?.name ?? "Serie A");
 const BREAKS: Record<string, string[]> = { Bundesliga: ["Bundes", "liga"], Eredivisie: ["Ere", "divisie"], Championship: ["Champion", "ship"], LaLiga: ["La", "Liga"] };
 const lines = computed(() => (title.value.includes(" ") ? title.value.split(" ") : BREAKS[title.value] ?? [title.value]));
 const longName = computed(() => lines.value.length > 1);
+// Every league's name at one size on a phone (Salah, 2026-11-22: "La Liga takes up a lot of space, let's try to make the league names
+// fit similarly despite word count"): sized as if its longest word had 8 letters ("Primeira", "Champion", the longest of any league
+// shown), so "LA / LIGA" and "SERIE / A" no longer draw nearly twice the size of "PREMIER / LEAGUE". A longer word still fits.
+const NAME_CHARS = 8;
+const nameChars = computed(() => Math.max(NAME_CHARS, ...lines.value.map((x) => x.length)));
 // Salah, 2026-11-07: "live scores should always show first". Today's games lead whenever there are any, with those on now at the front; the last round fills in.
 const todays = ref<Record<string, TodayGame[]>>({});
-const nowGames = computed(() => todays.value[chosen.value] ?? []);
+const nowGames = computed(() => todays.value[onPoster.value] ?? []);
 const games = computed(() => {
   const ids = (home: string, away: string) => ({ homeId: teamId(home), awayId: teamId(away) });
   if (nowGames.value.length) return nowGames.value.map((g) => ({ home: g.home, away: g.away, ...ids(g.home, g.away), score: g.score, status: g.status, text: g.text }));
@@ -164,8 +201,38 @@ const meta = computed(() => (posterHidden.value ? "Score hidden" : game.value?.t
 // the poster in the two clubs' colours (clubColours.ts); a club we have no colour for keeps the slate on its side
 const clubs = computed(() => {
   const home = clubColour(game.value?.home), away = clubColour(game.value?.away);
-  return home || away ? { "--home-c": home ?? "var(--club-base)", "--away-c": away ?? "var(--club-base)" } : null;
+  if (!home && !away) return null;
+  const vars: Record<string, string> = {};
+  if (home) vars["--home-c"] = home;
+  if (away) vars["--away-c"] = away;
+  return vars;
 });
+// the same colours on the page root, so the body's --top (base.css), which Safari paints under the status bar, matches the poster's top
+function clubsOnRoot(vars: Record<string, string> | null) {
+  if (typeof document === "undefined") return;  // the build renders this page on the server
+  const root = document.documentElement.style;
+  for (const name of ["--home-c", "--away-c"]) {
+    if (vars?.[name]) root.setProperty(name, vars[name]);
+    else root.removeProperty(name);
+  }
+  paintBar(vars !== null || document.querySelector(".poster") !== null);
+}
+// Safari reads its bar's colour (and, on a wide screen such as the iPhone Duo's outer one, its side strip's) from the body's background
+// when the page loads, and kept the first game's club colours after a swipe changed only the variables under it (Salah, 2026-11-25). So
+// each change of game writes the resolved colour onto the body itself, and into theme-color for browsers that read that instead.
+function paintBar(onHome: boolean) {
+  const body = document.body.style;
+  body.removeProperty("background-color");
+  let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+  if (!onHome) { meta?.remove(); return; }
+  const colour = getComputedStyle(document.body).backgroundColor;
+  if (!colour) return;
+  body.setProperty("background-color", colour);
+  if (!meta) { meta = document.createElement("meta"); meta.name = "theme-color"; document.head.append(meta); }
+  meta.content = colour;
+}
+watch(clubs, clubsOnRoot, { immediate: true });
+onUnmounted(() => { clubsOnRoot(null); paintBar(false); });
 function liveIn(id: string) {
   return (todays.value[id] ?? []).some((g) => g.status === "live");
 }
@@ -242,7 +309,7 @@ function neighbour(by: number) {
   return list.value[(at + by + list.value.length) % list.value.length].name;
 }
 function step(by: number) {
-  slide.value = { name: by > 0 ? "from-right" : "from-left", league: true };
+  nextSlide = { name: by > 0 ? "from-right" : "from-left", league: true }; // played when the league goes up, not before
   const at = list.value.findIndex((c) => c.id === chosen.value);
   choose(list.value[(at + by + list.value.length) % list.value.length].id);
 }
@@ -259,7 +326,8 @@ watch([cup, game], async ([c, g]) => {
 watch(chosen, async (id) => {
   await nextTick();
   pick.value?.querySelector(".on")?.scrollIntoView?.({ inline: "center", block: "nearest", behavior: "smooth" });
-  await open(id);
+  await show(id);
+  readAhead();
 });
 onMounted(async () => {
   readHidden();
@@ -272,8 +340,22 @@ onMounted(async () => {
     newsFailed.value = true; // the table and the scores stand on their own
   }
 });
+// The setup (components/Onboarding.vue): on a first visit by someone who follows nothing, or when the address asks for it (?setup=1,
+// the Following page's link). Afterwards Home opens on the first league chosen.
+const setup = ref(false);
+function setupFinished() {
+  setup.value = false;
+  following.value = loadFollowing();
+  const first = loadLeagues().find((id) => list.value.some((c) => c.id === id));
+  if (first) { choose(first); show(first); }
+  const url = new URL(window.location.href);
+  if (url.searchParams.has("setup")) { url.searchParams.delete("setup"); window.history.replaceState(window.history.state, "", url); }
+}
+onMounted(() => {
+  setup.value = new URLSearchParams(window.location.search).get("setup") === "1" || (!setupDone() && loadFollowing().length === 0);
+});
 onMounted(async () => {
-  const asked = new URLSearchParams(window.location.search).get("league");
+  const asked = new URLSearchParams(window.location.search).get("league") ?? loadLeagues()[0] ?? null;
   if (asked) chosen.value = asked;
   try {
     list.value = await competitions();
@@ -286,7 +368,8 @@ onMounted(async () => {
       if (!asked) choose(found[0].id);
     }
     await open(HOME);
-    if (chosen.value !== HOME) await open(chosen.value);
+    if (chosen.value !== HOME) await show(chosen.value);
+    readAhead();
     await Promise.all(list.value.map((c) => readToday(c.id)));
     // nothing on in the first league and a game on elsewhere: open on the game that is on, unless the address asked for a league
     // (`asked`, read before the break above wrote a cup into the address)
@@ -312,7 +395,7 @@ onMounted(async () => {
         <button v-if="list.length" type="button" class="arrow" :aria-label="`Previous league: ${neighbour(-1)}`" data-test="league-prev" @click="step(-1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12H6M12 5l-7 7 7 7" /></svg></button>
         <h1 ref="titleEl" class="poster__title" :aria-label="title">
           <span class="poster__line" :class="{ wide: longName }" :style="{ '--len': title.length }">{{ title }}</span>
-          <template v-if="longName"><span v-for="w in lines" :key="w" class="poster__word" :style="{ '--chars': Math.max(...lines.map((x) => x.length)) }" aria-hidden="true">{{ w }}</span></template>
+          <template v-if="longName"><span v-for="w in lines" :key="w" class="poster__word" :style="{ '--chars': nameChars }" aria-hidden="true">{{ w }}</span></template>
         </h1>
         <button v-if="list.length" type="button" class="arrow" :aria-label="`Next league: ${neighbour(1)}`" data-test="league-next" @click="step(1)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12h16M12 5l7 7-7 7" /></svg></button>
       </div>
@@ -336,7 +419,7 @@ onMounted(async () => {
       </nav>
       <p v-if="nowGames.length" class="poster__credit">Live scores powered by <a href="https://sportscore.com">SportScore</a></p>
     </section>
-    <p v-if="failed" class="note" role="status" data-test="league-failed">That league could not be read just now. <button type="button" class="again" @click="open(chosen)">Try again</button></p>
+    <p v-if="failed" class="note" role="status" data-test="league-failed">That league could not be read just now. <button type="button" class="again" @click="show(chosen)">Try again</button></p>
 
     <div class="sheet">
     <div class="board__grid">
@@ -385,7 +468,7 @@ onMounted(async () => {
               <span v-else class="dent match__s">{{ m.score ? `${m.score[0]}–${m.score[1]}` : m.text.replace("Today ", "") }}</span>
               <span>{{ m.away }}</span>
             </div>
-            <a class="more" :href="`/leagues/${chosen}/`">All results</a>
+            <a class="more" :href="`/leagues/${onPoster}/`">All results</a>
           </template>
           <template v-else-if="cup">
             <h2 id="t-round">{{ cupDay[0]?.text.includes("Yesterday") ? "Yesterday" : "Today" }}</h2>
@@ -439,5 +522,6 @@ onMounted(async () => {
       </div>
     </div>
     </div>
+    <Onboarding v-if="setup" @done="setupFinished" />
   </section>
 </template>

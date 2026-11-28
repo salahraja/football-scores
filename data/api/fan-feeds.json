@@ -1,0 +1,579 @@
+{
+  "_about": "Independent fan sites' feeds for each club (Salah, 2026-11-26: \"We also should be pulling from team fan sites\"): { <club id>: [{ name, url }] }. Read by scripts/api/news.mjs like the Guardian's club feeds: every story is about that club, goes in news/<club>.json only (never the general headlines), and is credited to the site by name. Only the headline, a short summary and the link are kept; a story is read on the site. Each feed was checked by hand: 200, RSS or Atom, recent items, robots.txt allows it. No betting-owned sites, and no sites of networks owned by betting companies or founded in Israel (FanSided, Minute Media; Vital Football left out for its owner's past betting venture). 71 clubs on 2026-11-26, each feed fetched and checked: 200, RSS or Atom, 5 or more items, newest within 30 days, robots.txt allows it.",
+  "feeds": {
+    "arsenal": [
+      {
+        "name": "Just Arsenal",
+        "url": "https://www.justarsenal.com/feed"
+      },
+      {
+        "name": "Arseblog",
+        "url": "https://arseblog.com/feed/"
+      }
+    ],
+    "aston-villa": [
+      {
+        "name": "My Old Man Said",
+        "url": "https://myoldmansaid.com/feed/"
+      },
+      {
+        "name": "A Villa Fan",
+        "url": "https://www.avillafan.com/feed/"
+      }
+    ],
+    "atalanta": [
+      {
+        "name": "Tutto Atalanta",
+        "url": "https://www.tuttoatalanta.com/rss/"
+      },
+      {
+        "name": "Calcio Atalanta",
+        "url": "https://www.calcioatalanta.it/feed/"
+      }
+    ],
+    "atletico-madrid": [
+      {
+        "name": "Into the Calderon",
+        "url": "https://www.intothecalderon.com/rss/index.xml"
+      }
+    ],
+    "az": [
+      {
+        "name": "AZFanpage",
+        "url": "https://www.azfanpage.nl/rss.xml"
+      }
+    ],
+    "barcelona": [
+      {
+        "name": "Barca Blaugranes",
+        "url": "https://www.barcablaugranes.com/rss/index.xml"
+      },
+      {
+        "name": "Barca Universal",
+        "url": "https://barcauniversal.com/feed/"
+      }
+    ],
+    "bayer-leverkusen": [
+      {
+        "name": "Never Champions",
+        "url": "https://neverchampions.blogspot.com/feeds/posts/default"
+      }
+    ],
+    "bayern-munich": [
+      {
+        "name": "Bavarian Football Works",
+        "url": "https://www.bavarianfootballworks.com/rss/index.xml"
+      },
+      {
+        "name": "Miasanrot",
+        "url": "https://miasanrot.de/feed/"
+      }
+    ],
+    "benfica": [
+      {
+        "name": "Geração Benfica",
+        "url": "https://geracaobenfica.blogspot.com/feeds/posts/default"
+      },
+      {
+        "name": "O Indefectível",
+        "url": "https://oindefectivel.blogspot.com/feeds/posts/default"
+      }
+    ],
+    "birmingham-city": [
+      {
+        "name": "Blues Focus",
+        "url": "https://bluesfocus.co.uk/feed/"
+      },
+      {
+        "name": "almajir.net",
+        "url": "https://almajir.net/feed/"
+      }
+    ],
+    "bologna": [
+      {
+        "name": "Zerocinquantuno",
+        "url": "https://www.zerocinquantuno.it/feed/"
+      },
+      {
+        "name": "1000 Cuori Rossoblu",
+        "url": "https://www.1000cuorirossoblu.it/feed/"
+      }
+    ],
+    "borussia-dortmund": [
+      {
+        "name": "Fear the Wall",
+        "url": "https://www.fearthewall.com/rss/index.xml"
+      },
+      {
+        "name": "Analyzing BVB",
+        "url": "https://analyzingbvb.substack.com/feed"
+      }
+    ],
+    "brentford": [
+      {
+        "name": "Bees United",
+        "url": "https://www.beesunited.org.uk/feed/"
+      },
+      {
+        "name": "Beesotted",
+        "url": "https://beesotted.com/feed/"
+      }
+    ],
+    "brighton-hove-albion": [
+      {
+        "name": "We Are Brighton",
+        "url": "https://www.wearebrighton.com/newsopinion/feed/"
+      },
+      {
+        "name": "The Brighton & Hove Wrap",
+        "url": "https://thebrightonandhovewrap.substack.com/feed"
+      }
+    ],
+    "burnley": [
+      {
+        "name": "UpTheClarets",
+        "url": "https://www.uptheclarets.com/feed"
+      }
+    ],
+    "cagliari": [
+      {
+        "name": "Calcio Casteddu",
+        "url": "https://www.calciocasteddu.it/feed/"
+      },
+      {
+        "name": "Cagliari News 24",
+        "url": "https://www.cagliarinews24.com/feed/"
+      }
+    ],
+    "cardiff-city": [
+      {
+        "name": "Mauve and Yellow Army",
+        "url": "https://mauveandyellowarmy.net/feed/"
+      }
+    ],
+    "charlton-athletic": [
+      {
+        "name": "Addicks Championship Diary",
+        "url": "https://addickschampionshipdiary.blogspot.com/feeds/posts/default"
+      }
+    ],
+    "chelsea": [
+      {
+        "name": "We Ain't Got No History",
+        "url": "https://weaintgotnohistory.sbnation.com/rss/index.xml"
+      },
+      {
+        "name": "The Chelsea Chronicle",
+        "url": "https://www.thechelseachronicle.com/feed/"
+      }
+    ],
+    "coventry-city": [
+      {
+        "name": "Sidewayssammy",
+        "url": "https://sidewayssammy.com/feed/"
+      },
+      {
+        "name": "Jim Brown's Journal",
+        "url": "https://jimbrownsjournal.blogspot.com/feeds/posts/default"
+      }
+    ],
+    "crystal-palace": [
+      {
+        "name": "The Eagles Beak",
+        "url": "https://theeaglesbeak.com/feed/"
+      },
+      {
+        "name": "The Holmesdale Online",
+        "url": "https://www.holmesdale.net/rss/"
+      }
+    ],
+    "deportivo-coruna": [
+      {
+        "name": "Riazor.org",
+        "url": "https://www.riazor.org/feed/"
+      }
+    ],
+    "eintracht-frankfurt": [
+      {
+        "name": "SGE4EVER",
+        "url": "https://www.sge4ever.de/feed/"
+      }
+    ],
+    "everton": [
+      {
+        "name": "Royal Blue Mersey",
+        "url": "https://royalbluemersey.sbnation.com/rss/index.xml"
+      },
+      {
+        "name": "ToffeeWeb",
+        "url": "https://www.toffeeweb.com/feed/"
+      }
+    ],
+    "feyenoord": [
+      {
+        "name": "De Feijenoorder",
+        "url": "https://defeijenoorder.nl/feed/"
+      }
+    ],
+    "fiorentina": [
+      {
+        "name": "Viola Nation",
+        "url": "https://www.violanation.com/rss/index.xml"
+      },
+      {
+        "name": "Firenze Viola",
+        "url": "https://www.firenzeviola.it/rss/"
+      }
+    ],
+    "fulham": [
+      {
+        "name": "Fulhamish",
+        "url": "https://www.fulhamish.co.uk/feed"
+      }
+    ],
+    "genoa": [
+      {
+        "name": "Pianeta Genoa 1893",
+        "url": "https://www.pianetagenoa1893.net/feed/"
+      }
+    ],
+    "hull-city": [
+      {
+        "name": "Ten Foot Tigers",
+        "url": "https://jackwatson.substack.com/feed"
+      }
+    ],
+    "inter": [
+      {
+        "name": "Sempre Inter",
+        "url": "https://sempreinter.com/feed/"
+      },
+      {
+        "name": "FcInterNews",
+        "url": "https://www.fcinternews.it/rss/"
+      }
+    ],
+    "juventus": [
+      {
+        "name": "Juvefc.com",
+        "url": "https://www.juvefc.com/feed/"
+      },
+      {
+        "name": "Black & White & Read All Over",
+        "url": "https://www.blackwhitereadallover.com/rss/index.xml"
+      }
+    ],
+    "koln": [
+      {
+        "name": "Geissblog",
+        "url": "https://geissblog.koeln/feed/"
+      }
+    ],
+    "lazio": [
+      {
+        "name": "The Laziali",
+        "url": "https://thelaziali.com/feed/"
+      },
+      {
+        "name": "La Lazio Siamo Noi",
+        "url": "https://www.lalaziosiamonoi.it/rss/"
+      }
+    ],
+    "lecce": [
+      {
+        "name": "Pianeta Lecce",
+        "url": "https://www.pianetalecce.it/feed"
+      }
+    ],
+    "leeds-united": [
+      {
+        "name": "The Square Ball",
+        "url": "https://thesquareball.net/feed/"
+      },
+      {
+        "name": "MOT Leeds News",
+        "url": "https://motleedsnews.com/feed"
+      }
+    ],
+    "lens": [
+      {
+        "name": "Lensois.com",
+        "url": "https://www.lensois.com/feed/"
+      }
+    ],
+    "lincoln-city": [
+      {
+        "name": "The Stacey West",
+        "url": "https://staceywest.net/feed/"
+      }
+    ],
+    "liverpool": [
+      {
+        "name": "This Is Anfield",
+        "url": "https://www.thisisanfield.com/feed/"
+      },
+      {
+        "name": "Empire of the Kop",
+        "url": "https://www.empireofthekop.com/feed/"
+      }
+    ],
+    "lyon": [
+      {
+        "name": "Olympique-et-Lyonnais",
+        "url": "https://www.olympique-et-lyonnais.com/feed"
+      }
+    ],
+    "manchester-city": [
+      {
+        "name": "Man City Square",
+        "url": "https://mancitysquare.com/feed"
+      },
+      {
+        "name": "Man City News",
+        "url": "https://mancitynews.com/feed/"
+      }
+    ],
+    "manchester-united": [
+      {
+        "name": "Stretty News",
+        "url": "https://strettynews.com/feed/"
+      },
+      {
+        "name": "The Peoples Person",
+        "url": "https://thepeoplesperson.com/feed/"
+      }
+    ],
+    "marseille": [
+      {
+        "name": "Football Club de Marseille",
+        "url": "https://www.footballclubdemarseille.fr/feed"
+      }
+    ],
+    "milan": [
+      {
+        "name": "SempreMilan",
+        "url": "https://sempremilan.com/feed"
+      },
+      {
+        "name": "MilanNews",
+        "url": "https://www.milannews.it/rss/"
+      }
+    ],
+    "napoli": [
+      {
+        "name": "Forza Napoli Press",
+        "url": "https://forzanapolipress.com/feed/"
+      },
+      {
+        "name": "Il Napolista",
+        "url": "https://www.ilnapolista.it/feed/"
+      }
+    ],
+    "nec": [
+      {
+        "name": "ForzaNEC",
+        "url": "https://www.forzanec.nl/feed/"
+      }
+    ],
+    "newcastle-united": [
+      {
+        "name": "The Mag",
+        "url": "https://www.themag.co.uk/feed/"
+      },
+      {
+        "name": "Coming Home Newcastle",
+        "url": "https://cominghomenewcastle.sbnation.com/rss/index.xml"
+      }
+    ],
+    "norwich-city": [
+      {
+        "name": "Along Come Norwich",
+        "url": "https://www.alongcomenorwich.com/feed/"
+      },
+      {
+        "name": "My Football Writer Norwich",
+        "url": "https://norwichcity.myfootballwriter.com/feed/"
+      }
+    ],
+    "nottingham-forest": [
+      {
+        "name": "David Marples",
+        "url": "https://davidmarples.substack.com/feed"
+      }
+    ],
+    "paris-saint-germain": [
+      {
+        "name": "PSG Talk",
+        "url": "https://psgtalk.com/feed/"
+      },
+      {
+        "name": "Canal Supporters",
+        "url": "https://canal-supporters.com/feed/"
+      }
+    ],
+    "parma": [
+      {
+        "name": "SportParma",
+        "url": "https://sportparma.com/feed/"
+      }
+    ],
+    "portsmouth": [
+      {
+        "name": "Fans Network Portsmouth",
+        "url": "https://www.fansnetwork.co.uk/football/portsmouth/rss"
+      }
+    ],
+    "psv-eindhoven": [
+      {
+        "name": "PSV Inside",
+        "url": "https://www.psvinside.nl/feed.xml"
+      }
+    ],
+    "queens-park-rangers": [
+      {
+        "name": "Fans Network Queens Park Rangers",
+        "url": "https://www.fansnetwork.co.uk/football/queensparkrangers/rss"
+      }
+    ],
+    "racing-santander": [
+      {
+        "name": "Racing1913",
+        "url": "https://racing1913.com/feed/"
+      }
+    ],
+    "real-madrid": [
+      {
+        "name": "Managing Madrid",
+        "url": "https://www.managingmadrid.com/rss/index.xml"
+      },
+      {
+        "name": "Madrid Universal",
+        "url": "https://madriduniversal.com/feed/"
+      }
+    ],
+    "rennes": [
+      {
+        "name": "Stade Rennais Online",
+        "url": "https://www.stade-rennais-online.com/spip.php?page=backend"
+      }
+    ],
+    "roma": [
+      {
+        "name": "Chiesa di Totti",
+        "url": "https://www.chiesaditotti.com/rss/index.xml"
+      },
+      {
+        "name": "Forza Roma",
+        "url": "https://www.forzaroma.info/feed"
+      }
+    ],
+    "sassuolo": [
+      {
+        "name": "Sassuolo 2000",
+        "url": "https://www.sassuolo2000.it/feed/"
+      }
+    ],
+    "sevilla": [
+      {
+        "name": "Vamos Mi Sevilla",
+        "url": "https://www.vamosmisevillafc.com/feed/"
+      },
+      {
+        "name": "JaviSFC",
+        "url": "https://javisfc.com/feed/"
+      }
+    ],
+    "sheffield-united": [
+      {
+        "name": "The Shoreham Journal",
+        "url": "https://theshorehamjournal.substack.com/feed"
+      }
+    ],
+    "southampton": [
+      {
+        "name": "Fans Network Southampton",
+        "url": "https://www.fansnetwork.co.uk/football/southampton/rss"
+      }
+    ],
+    "stuttgart": [
+      {
+        "name": "Vertikalpass",
+        "url": "https://vertikalpass.de/feed/"
+      },
+      {
+        "name": "Rund um den Brustring",
+        "url": "https://rundumdenbrustring.de/feed"
+      }
+    ],
+    "sunderland": [
+      {
+        "name": "Roker Report",
+        "url": "https://rokerreport.sbnation.com/rss/index.xml"
+      }
+    ],
+    "swansea-city": [
+      {
+        "name": "Fans Network Swansea City",
+        "url": "https://www.fansnetwork.co.uk/football/swanseacity/rss"
+      }
+    ],
+    "torino": [
+      {
+        "name": "Toro News",
+        "url": "https://www.toronews.net/feed"
+      }
+    ],
+    "tottenham-hotspur": [
+      {
+        "name": "Spurs Web",
+        "url": "https://www.spurs-web.com/feed/"
+      },
+      {
+        "name": "Cartilage Free Captain",
+        "url": "https://cartilagefreecaptain.sbnation.com/rss/index.xml"
+      }
+    ],
+    "udinese": [
+      {
+        "name": "Udinese Blog",
+        "url": "https://www.udineseblog.it/feed/"
+      },
+      {
+        "name": "Tutto Udinese",
+        "url": "https://www.tuttoudinese.it/rss/"
+      }
+    ],
+    "union-berlin": [
+      {
+        "name": "Textilvergehen",
+        "url": "https://www.textilvergehen.de/feed/"
+      }
+    ],
+    "west-ham-united": [
+      {
+        "name": "Claret and Hugh",
+        "url": "https://www.claretandhugh.info/feed/"
+      },
+      {
+        "name": "KUMB",
+        "url": "https://www.kumb.com/rss.php"
+      }
+    ],
+    "wolverhampton-wanderers": [
+      {
+        "name": "Southbank Resistance",
+        "url": "https://michaelpetalengro.substack.com/feed"
+      }
+    ],
+    "wrexham": [
+      {
+        "name": "Wrexham is the Game",
+        "url": "https://wrexhamisthegame.substack.com/feed"
+      },
+      {
+        "name": "Chips for a Quid",
+        "url": "https://chipsforaquid.substack.com/feed"
+      }
+    ]
+  }
+}

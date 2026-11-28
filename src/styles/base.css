@@ -1,5 +1,10 @@
 @font-face { font-family: "Barlow Condensed"; font-weight: 800; font-display: swap; src: url("/fonts/barlow-condensed-800-latin.woff2") format("woff2"); }
 @font-face { font-family: "Instrument Sans"; font-weight: 400 700; font-display: swap; src: url("/fonts/instrument-sans-latin.woff2") format("woff2"); }
+/* Until Barlow arrives, fonts the phone already has, each scaled to Barlow's width (measured 2026-11-20 in WebKit on one line of
+   capitals and digits), so the poster's first frame keeps its layout; the system sans is 1.4 times as wide (look audit 2026-11-18). */
+@font-face { font-family: "Barlow fallback HN"; src: local("Helvetica Neue Condensed Bold"), local("HelveticaNeue-CondensedBold"); size-adjust: 89.7%; }
+@font-face { font-family: "Barlow fallback AN"; src: local("Avenir Next Condensed Bold"), local("AvenirNextCondensed-Bold"); size-adjust: 90.8%; }
+@font-face { font-family: "Barlow fallback Arial"; src: local("Arial Narrow Bold"), local("ArialNarrow-Bold"); size-adjust: 86.9%; }
 *, *::before, *::after { box-sizing: border-box; }
 html { color-scheme: light dark; overflow-x: clip; background: var(--bg); }
 .board { position: relative; }
@@ -64,8 +69,15 @@ code { font-family: var(--font-mono); font-weight: 700; }
 /* Safari 26 colours the strip under the status bar with the body's background (theme-color is ignored; WebKit bug 301756). A page that
    opens with the slate poster gets a slate body, so the strip runs into the poster instead of standing out in off-white (Salah, 2026-11-17:
    "It's not see through"). The sheet below the poster keeps its own --bg. */
-html:has(.poster), html:has(.poster) body { background-color: var(--slate); }
-html:has(.poster) body { background-image: linear-gradient(var(--slate) 0 50%, var(--bg) 50%); } /* the foot of the page stays off-white below the sheet */
+/* Salah, 2026-11-18: "The bar is back on home only. Also the gradient should be only on the top like it is here" (Leagues). On a game
+   in club colours the slate strip stood out above the poster. Now one colour, --top, is the body's and the poster's top: the shown
+   game's club colours (HomeView puts them on the page root) mixed into the slate, or the slate alone. The poster fades from it to the
+   page near the top, like the league pages. */
+html:has(.poster) { --top: color-mix(in srgb, color-mix(in srgb, var(--home-c, var(--slate)), var(--away-c, var(--slate))) var(--club-share), var(--slate)); }
+html:has(.poster), html:has(.poster) body { background-color: var(--top); }
+/* the body's own colour shows only at the very top (under the poster, which covers it); below, it is the page's, so no club colour shows
+   round the sheet's corners or beside it on a wide screen (Salah, 2026-11-25, the iPhone Duo's outer screen: "brown edges") */
+html:has(.poster) body { background-image: linear-gradient(var(--top) 0 30lvh, var(--bg) 30lvh); }
 
 /* navbar */
 .navbar {
@@ -86,7 +98,7 @@ html:has(.poster) body { background-image: linear-gradient(var(--slate) 0 50%, v
 .links { display: flex; gap: 2px; flex-wrap: nowrap; }
 .links a { color: var(--fg); text-decoration: none; padding: 8px 14px; border-radius: 999px; font-weight: 700; font-size: 0.875rem; white-space: nowrap; line-height: 1.45; }
 /* the current page is pressed into the bar, its name in the signature red (Salah, 2026-11-15) */
-.links a[aria-current="page"] { background: rgb(255 255 255 / 62%); color: #b3261e; box-shadow: inset 0 3px 6px rgb(0 0 0 / 28%), inset 0 1px 2px rgb(0 0 0 / 22%), inset 0 -1px 1px rgb(255 255 255 / 60%); }
+.links a[aria-current="page"] { background: rgb(255 255 255 / 62%); color: #c4302a; box-shadow: inset 0 3px 6px rgb(0 0 0 / 28%), inset 0 1px 2px rgb(0 0 0 / 22%), inset 0 -1px 1px rgb(255 255 255 / 60%); }
 @media (prefers-color-scheme: dark) { .links a[aria-current="page"] { background: rgb(0 0 0 / 35%); color: #c4302a; box-shadow: inset 0 3px 7px rgb(0 0 0 / 65%), inset 0 1px 2px rgb(0 0 0 / 55%), inset 0 -1px 1px rgb(255 255 255 / 8%); } }
 
 /* standings */
@@ -120,7 +132,7 @@ html:has(.poster) body { background-image: linear-gradient(var(--slate) 0 50%, v
   /* Salah, 2026-11-08: on an iPhone the poster stopped at Safari's address bar and a flat band showed under it ("still doesn't
      extend"). Safari draws the page under its bar (checked with a test page), so the poster now runs to the bottom of the screen
      (100lvh, below) and keeps its slate to the bottom instead of fading to near black, which read as a band. */
-  background: linear-gradient(180deg, var(--slate), var(--slate-2) 60%, color-mix(in srgb, var(--slate-2) 55%, var(--bg))); text-align: center;
+  background: linear-gradient(180deg, var(--top, var(--slate)), var(--bg) 38%); text-align: center;
 }
 .poster__title { font: 800 min(clamp(4rem, 24vw, 21rem), calc((100vw - 124px) / (var(--chars, 7) * 0.47)))/0.82 var(--font-display); color: var(--accent); text-transform: uppercase; margin: 0; white-space: nowrap; }
 .poster__result { display: grid; grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1fr) auto; grid-template-areas: "prev home mid away next" ". meta meta meta ."; justify-items: stretch; align-items: center; gap: clamp(8px, 2vw, 22px); max-width: var(--max-width); margin: var(--space-2) auto 0; }
@@ -307,6 +319,15 @@ tr[class*="zone--"] > .pos { box-shadow: inset 3px 0 0 var(--zone, transparent);
 @media (max-width: 760px) and (pointer: coarse) {
   .poster { position: relative; min-height: calc(100lvh + 120px); padding-bottom: calc(var(--space-2) + 120px); }
 }
+/* the phone poster's parallax (Salah, 2026-11-25: "only gone from the outer duo screen"): not sticky, so Safari does not clip it, but
+   moved down exactly as far as the page scrolls until the sheet has covered it, so it holds still as the sheet slides up, as the sticky
+   poster does on wider screens. */
+@supports (animation-timeline: scroll()) {
+  @media (max-width: 760px) and (pointer: coarse) and (prefers-reduced-motion: no-preference) {
+    .poster { animation: poster-hold linear both; animation-timeline: scroll(root); animation-range: 0 calc(100lvh + 120px); }
+  }
+}
+@keyframes poster-hold { to { transform: translateY(calc(100lvh + 120px)); } }
 
 /* Club colours (2026-11-08): the poster runs from the home club's colour to the away club's, mixed into its own slate so the names
    stay readable. Clubs without a colour keep the slate. The gradient is an empty layer of its own behind the poster: changing a style
@@ -314,9 +335,7 @@ tr[class*="zone--"] > .pos { box-shadow: inset 3px 0 0 var(--zone, transparent);
    size, not seen on the plain poster), and so did animating registered colour properties. A new pair fades in instead. */
 .poster > .poster__club {
   position: absolute; inset: 0; z-index: -1; pointer-events: none;
-  background:
-    linear-gradient(180deg, transparent 0 55%, color-mix(in srgb, var(--slate-2) 55%, var(--bg))),
-    linear-gradient(90deg, color-mix(in srgb, var(--home-c) var(--club-share), var(--club-base)), color-mix(in srgb, var(--away-c) var(--club-share), var(--club-base)));
+  background: linear-gradient(180deg, var(--top), var(--bg) 38%);
   animation: club-in 0.6s ease both;
 }
 .poster { isolation: isolate; }

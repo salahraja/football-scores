@@ -43,7 +43,19 @@ describe("the app's pages run under the status bar", () => {
 // unless a fixed or sticky bar at the top has a solid colour of its own (WebKit bug 301756). The body was the page's off-white (#eeeeec)
 // while Home starts with the slate poster, so the strip stood out. On a page that opens with the poster, the body is the poster's slate.
 describe("Safari's strip takes the colour of the top of the page", () => {
+  // Owner reversal (Salah, 2026-11-18, "The bar is back on home only"): a game in club colours left the slate strip standing out, so the
+  // body is now the poster's top colour, --top (the slate, or the clubs' colours mixed into it). tests/home-top.test.ts holds the details.
+  it("on a page with the poster, the body is the poster's top colour", () => {
+    expect(css).toMatch(/html:has\(\.poster\),\s*html:has\(\.poster\) body\s*\{[^}]*background-color:\s*var\(--top\)/);
+  });
+});
+
+// Salah, 2026-11-18: "the white bar doesn't show on home but it is everywhere else". The league, news and following pages open with the
+// same slate poster, so their body is the slate too, and the foot of the page stays off-white.
+describe("Safari's strip on the league, news and following pages", () => {
   it("on a page with the poster, the body is the poster's slate", () => {
-    expect(css).toMatch(/html:has\(\.poster\),\s*html:has\(\.poster\) body\s*\{[^}]*background-color:\s*var\(--slate\)/);
+    expect(pages).toMatch(/html:has\(\.poster\),\s*html:has\(\.poster\) body\s*\{[^}]*background-color:\s*var\(--slate\)/);
+    // a fixed 120px the poster always covers, not half the page: the league list sits below a short poster and stays off-white
+    expect(pages).toMatch(/html:has\(\.poster\) body\s*\{[^}]*background-image:\s*linear-gradient\(var\(--slate\) 0 120px, var\(--bg\) 120px\)/);
   });
 });
