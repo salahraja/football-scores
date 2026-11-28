@@ -57,6 +57,10 @@ dark theme works, a title and a description on each map for screen readers. A pa
 positions for AFCON qualifying, so those pages have the timeline and numbers only. A hidden team's game (Israel) gets no file and no page. No framework (in our test on a
 throttled phone a plain page showed in 376 ms against 912 ms for the Vue app), one stylesheet (`/leagues/site.css`) and the two fonts
 (OFL) served from `/leagues/fonts/`, light and dark.
+**Form and previous meetings** (`scripts/api/form.mjs`, 2026-11-28): the league table has a Form column, each club's last five league
+results newest first, as chips said in words for a screen reader. It answers to the table box's own width: a tight box drops W, D and L
+first, and only a phone-narrow one drops Form, which the club page shows anyway. Each game page has **Previous meetings**, the two clubs'
+earlier league games in every season on file, up to six, newest first. A club's next game says how their last meeting ended.
 Each page says how far its results go, gives kick-off times in the league's own time zone (`clock` in `data/api/leagues.json`), and
 credits only the sources it used. "This week" comes first: every unscored game up to three days ahead (a game from before the build day
 with no score is waiting for its result, never "next").
