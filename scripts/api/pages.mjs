@@ -11,6 +11,7 @@ import { pickemScript } from "./pickem.mjs";
 import { CLUB_WORDS, aliasMap, slug } from "./teams.mjs";
 import { kickoff } from "./time.mjs";
 import { GAME_CSS, gameBody } from "./gamepage.mjs";
+import { formOf, meetings } from "./form.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const FONTS = ["barlow-condensed-800-latin.woff2", "instrument-sans-latin.woff2"];  // both SIL Open Font License, from the facelift branch
@@ -162,7 +163,15 @@ h2 { font: 800 1.9rem/1 var(--display); text-transform: uppercase; margin: 0 0 0
 .list b { display: block; font: 800 2rem/1 var(--display); text-transform: uppercase; color: var(--accent); }
 .list span { color: var(--muted); }
 footer { grid-column: 1 / -1; color: var(--muted); font-size: 0.8125rem; }
-@media (max-width: 460px) { .standings .wdl { display: none; } }  /* every phone: the club name keeps its room (look audit 2026-11-18) */
+@media (max-width: 460px) { .standings .wdl { display: none; } }
+/* the table's Form column: five small chips, newest first. It answers to the table box's own width (the box sits beside a side column on a
+   wide screen): a tight box drops W, D and L first, as FotMob's does, and only a phone-narrow one drops Form (the club page shows it) */
+.scroll { container-type: inline-size; }
+.formcol { white-space: nowrap; } td.formcol span[aria-hidden] { display: inline-block; width: 1.05rem; height: 1.05rem; line-height: 1.1rem; margin-left: 1px;
+  border-radius: 5px; text-align: center; font: 800 0.72rem var(--display); color: #fff; }
+td.formcol .f-w span[aria-hidden] { background: #23804d; } td.formcol .f-d span[aria-hidden] { background: #6b7280; } td.formcol .f-l span[aria-hidden] { background: #b3261e; }
+@container (max-width: 560px) { .standings .wdl { display: none; } }
+@container (max-width: 340px) { .standings .formcol { display: none; } }  /* every phone: the club name keeps its room (look audit 2026-11-18) */
 .star { border: 0; background: none; padding: 0 6px 0 0; font: inherit; font-size: 1rem; line-height: 1; color: var(--accent); cursor: pointer; }
 .follow { margin-top: 0.5rem; padding: 8px 16px; border: 0; border-radius: 999px; font: 700 0.875rem var(--sans); cursor: pointer; color: var(--fg); background: var(--glass);
   box-shadow: inset 0 1px 0 var(--rim), 0 8px 20px -10px rgb(27 28 32 / 40%); }
@@ -302,6 +311,7 @@ function gamePages(league, season, api) {
 </header>
 <main class="board" style="grid-template-columns: minmax(0, 1fr)">
 ${gameBody(g, names)}
+${previousMeetings(meetings(seasonsOf(api, league.id), m.home, m.away, m.date), teams, league)}
 <footer>Lineups, timeline, shots and touches from <a href="${esc(g.source.url)}">ESPN</a>. The score is ours: ${used(m)}.</footer>
 </main>`;
     out.set(`${league.id}/${name}/index.html`, shell({ title, path: `/leagues/${league.id}/${name}/`, body, here: "league",
@@ -310,6 +320,35 @@ ${gameBody(g, names)}
   return out;
 }
 const used = (m) => (m.source === "wikipedia" ? SOURCES.wikipedia : SOURCES.openfootball);
+
+/** Every season's matches on file for a league (a tournament has none here: its games are not league games). */
+function seasonsOf(api, id) {
+  const dir = join(api, id);
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir).filter((s) => existsSync(join(dir, s, "matches.json"))).map((s) => JSON.parse(readFileSync(join(dir, s, "matches.json"), "utf8")).matches);
+}
+
+/** Under a club's next game: how the two clubs' last league meeting on file ended, or nothing. */
+function lastTime(g, teams) {
+  return g ? `<p class="note">Last time: ${esc(teams[g.home] ?? g.home)} ${g.score.ft[0]}–${g.score.ft[1]} ${esc(teams[g.away] ?? g.away)}, ${esc(short(g.date))} ${g.date.slice(0, 4)}.</p>` : "";
+}
+
+/** A game page's box of the two clubs' earlier league meetings (at most six), or nothing for a cup or a first meeting on file. */
+function previousMeetings(list, teams, league) {
+  if (!list.length) return "";
+  const shown = list.slice(0, 6);
+  return `<section class="glass" id="meetings">
+<h2>Previous meetings</h2>
+<p class="note">${esc(league.name)} games between the two${list.length > shown.length ? `, the last ${shown.length} of ${list.length}` : ""}, newest first.</p>
+<ul class="games">${shown.map((g) => `<li><span class="home">${esc(teams[g.home] ?? g.home)}</span><span class="mid">${g.score.ft[0]}–${g.score.ft[1]}</span><span class="away">${esc(teams[g.away] ?? g.away)}</span><span class="when">${esc(short(g.date))} ${g.date.slice(0, 4)}</span></li>`).join("\n")}</ul>
+</section>`;
+}
+
+/** A table row's form: the last five league results, newest first, as small chips, each said in words. */
+function formCell(form, teams) {
+  const said = { w: "Won", d: "Drew", l: "Lost" };
+  return form.map((g) => `<span class="f-${g.result}" title="${esc(`${said[g.result]} ${g.for}–${g.against} ${g.home ? "v" : "at"} ${teams[g.opponent] ?? g.opponent}, ${short(g.date)}`)}"><span aria-hidden="true">${g.result.toUpperCase()}</span><span class="sr-only">${said[g.result]} ${g.for}–${g.against} ${g.home ? "v" : "at"} ${esc(teams[g.opponent] ?? g.opponent)}</span></span>`).join("");
+}
 
 /** The poster's game: the week's first unscored game that has kicked off or is about to (live scores fill it), else the latest result. */
 function featured(week, latest, names, today) {
@@ -350,7 +389,7 @@ function leaguePage(league, competition, api, before, after, zonesFor) {
   const late = meta.overdue ? ` ${meta.overdue === 1 ? "1 result" : `${meta.overdue} results`} from more than three days ago ${meta.overdue === 1 ? "is" : "are"} not in yet.` : "";
   const upTo = (meta.lastResult ? `Results up to ${day(meta.lastResult)}` : "No results yet") + (late ? `.${late.slice(0, -1)}` : "");
   const rows = table.map((r) => { const z = zoneAt(r.position); return `<tr class="row"${z ? ` data-zone="${z.kind}"` : ""}><td class="pos">${r.position}${z ? `<span class="sr-only">, ${esc(names[z.kind])}</span>` : ""}</td><th scope="row" class="left"><button class="star" type="button" data-club="${esc(r.team)}" data-name="${esc(teams[r.team])}" aria-pressed="false" aria-label="Follow ${esc(teams[r.team])}">☆</button><a href="/leagues/${league.id}/${esc(r.team)}/">${esc(teams[r.team])}</a></th><td>${r.played}</td>`
-    + `<td class="wdl">${r.won}</td><td class="wdl">${r.drawn}</td><td class="wdl">${r.lost}</td><td>${r.gd > 0 ? "+" : ""}${r.gd}</td><td class="pts">${r.points}</td></tr>`; }).join("\n");
+    + `<td class="wdl">${r.won}</td><td class="wdl">${r.drawn}</td><td class="wdl">${r.lost}</td><td>${r.gd > 0 ? "+" : ""}${r.gd}</td><td class="pts">${r.points}</td><td class="formcol">${formCell(formOf(leagueGames, r.team), teams)}</td></tr>`; }).join("\n");
   const range = (z) => (z.from === z.to ? nth(z.from) : `${nth(z.from)}–${nth(z.to)}`);
   const legend = zoning ? `<ul class="zones" aria-label="What the places lead to">${zoning.zones.map((z) => `<li data-zone="${z.kind}"><b>${esc(names[z.kind])}</b> ${range(z)}</li>`).join("")}</ul>
 <p class="note">${esc(zoning.note)}</p>` : "";
@@ -384,7 +423,7 @@ ${list(week)}
 <h2>The table</h2>
 <div class="scroll"><table class="standings">
 <caption>Worked out from the results, with ${esc(league.name)}'s own tie-break rules.</caption>
-<thead><tr><th scope="col" class="left"><span aria-hidden="true">#</span><span class="note" hidden>Position</span></th><th scope="col" class="left">Club</th><th scope="col"><abbr title="Played">P</abbr></th><th scope="col" class="wdl"><abbr title="Won">W</abbr></th><th scope="col" class="wdl"><abbr title="Drawn">D</abbr></th><th scope="col" class="wdl"><abbr title="Lost">L</abbr></th><th scope="col"><abbr title="Goal difference">GD</abbr></th><th scope="col"><abbr title="Points">Pts</abbr></th></tr></thead>
+<thead><tr><th scope="col" class="left"><span aria-hidden="true">#</span><span class="note" hidden>Position</span></th><th scope="col" class="left">Club</th><th scope="col"><abbr title="Played">P</abbr></th><th scope="col" class="wdl"><abbr title="Won">W</abbr></th><th scope="col" class="wdl"><abbr title="Drawn">D</abbr></th><th scope="col" class="wdl"><abbr title="Lost">L</abbr></th><th scope="col"><abbr title="Goal difference">GD</abbr></th><th scope="col"><abbr title="Points">Pts</abbr></th><th scope="col" class="formcol">Form</th></tr></thead>
 <tbody>
 ${rows}
 </tbody>
@@ -456,6 +495,7 @@ ${next ? `<section class="glass">
 <h2>Next game</h2>
 <p class="note">Kick-off ${esc(league.clock)}.</p>
 ${list([next])}
+${lastTime(meetings(seasonsOf(api, league.id), next.home, next.away, next.date)[0], teams)}
 </section>
 ` : ""}<section class="glass">
 <h2>Form</h2>
