@@ -29,6 +29,22 @@ const idIn = (ref, kind) => ref?.match(new RegExp(`/${kind}/(\\d+)`))?.[1] ?? nu
 const round = (v, places) => (typeof v === "number" ? Number(v.toFixed(places)) : null);
 
 /** Our summary of one finished match: `summary` is the summary feed, `pages` the plays feed's pages in order. */
+// ESPN's boxscore names for the team stats a game page shows (2026-11-28, the goal: what FotMob and SofaScore show)
+const STATS = { possession: "possessionPct", shots: "totalShots", onTarget: "shotsOnTarget", corners: "wonCorners", fouls: "foulsCommitted",
+  offsides: "offsides", yellow: "yellowCards", red: "redCards", saves: "saves", passes: "totalPasses", accuratePasses: "accuratePasses", tackles: "totalTackles" };
+
+/** Each side's team stats from a summary's boxscore, as numbers ({ home, away }), or null when ESPN has none. A stat it does not give is null. */
+export function teamStats(summary) {
+  const teams = summary?.boxscore?.teams ?? [];
+  const side = (s) => teams.find((t) => t.homeAway === s);
+  if (!side("home")?.statistics?.length || !side("away")?.statistics?.length) return null;
+  const read = (t) => Object.fromEntries(Object.entries(STATS).map(([ours, theirs]) => {
+    const v = Number(t.statistics.find((x) => x.name === theirs)?.displayValue);
+    return [ours, Number.isFinite(v) ? v : null];
+  }));
+  return { home: read(side("home")), away: read(side("away")) };
+}
+
 export function reduceMatch(summary, pages) {
   const comp = summary.header.competitions[0];
   const sideOfTeam = new Map(comp.competitors.map((c) => [String(c.team.id), c.homeAway]));
@@ -69,5 +85,6 @@ export function reduceMatch(summary, pages) {
     }
     if (shot || ON_BALL.has(type)) (touches[player] ??= Array(30).fill(0))[zoneOf(p.fieldPositionX, p.fieldPositionY)] += 1;
   }
-  return { espn: String(summary.header.id), kickoff: comp.date, home: team("home"), away: team("away"), players, events, shots, positions, touches };
+  return { espn: String(summary.header.id), kickoff: comp.date, home: team("home"), away: team("away"), players, events, shots, positions, touches,
+    stats: teamStats(summary) };
 }

@@ -95,8 +95,9 @@ export function gameFiles(dir, matches, teams, overruled = [], hidden = new Set(
     if (!ours || ours.status !== "finished") continue;  // not played yet in our data: paired once our result is in
     if (ours.score.ft[0] !== g.home.score || ours.score.ft[1] !== g.away.score) { report.disagree.push(g.espn); continue; }
     const { espn, kickoff, players, events, shots, positions, touches } = g;
+    const stats = g.stats ?? null;  // ESPN's team stats; null for a game saved before they were kept, until the backfill reaches it
     files.set(`${ours.date}-${home}-${away}`, { match: ours.id, source: { name: "ESPN", url: `https://www.espn.com/soccer/match/_/gameId/${espn}` },
-      kickoff, home: { team: home, formation: g.home.formation }, away: { team: away, formation: g.away.formation }, players, events, shots, positions, touches });
+      kickoff, home: { team: home, formation: g.home.formation }, away: { team: away, formation: g.away.formation }, players, events, shots, positions, touches, stats });
     report.games += 1;
   }
   return { files, report };

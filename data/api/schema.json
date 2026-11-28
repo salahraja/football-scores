@@ -216,9 +216,12 @@
           "outcome": { "enum": ["goal", "saved", "off", "blocked", "post"] }, "body": { "oneOf": [{ "type": "string" }, { "type": "null" }] }, "penalty": { "type": "boolean" } } } },
         "positions": { "description": "False when the feed had no positions for this game (shots and touches are then empty).", "type": "boolean" },
         "touches": { "description": "Each player's on-ball touches by zone: index = column x 5 + row; columns from the own goal line at 0, 16.5, 34.5, 52.5, 70.5 and 88.5 m of 105; rows from the right touchline at 0, 13.84, 24.84, 43.16 and 54.16 m of 68.",
-          "type": "object", "additionalProperties": { "type": "array", "items": { "$ref": "#/$defs/count" }, "minItems": 30, "maxItems": 30 } }
+          "type": "object", "additionalProperties": { "type": "array", "items": { "$ref": "#/$defs/count" }, "minItems": 30, "maxItems": 30 } },
+        "stats": { "description": "Each side's team stats from ESPN's boxscore (possession in percent; passes and accuratePasses are counts), or null when ESPN has none or the game was saved before they were kept (2026-11-28; the fetch fills them in). Optional.",
+          "oneOf": [{ "type": "null" }, { "type": "object", "required": ["home", "away"], "additionalProperties": false, "properties": { "home": { "$ref": "#/$defs/teamStats" }, "away": { "$ref": "#/$defs/teamStats" } } }] }
       }
     },
+    "teamStats": { "type": "object", "additionalProperties": false, "properties": { "possession": { "type": ["number", "null"] }, "shots": { "type": ["number", "null"] }, "onTarget": { "type": ["number", "null"] }, "corners": { "type": ["number", "null"] }, "fouls": { "type": ["number", "null"] }, "offsides": { "type": ["number", "null"] }, "yellow": { "type": ["number", "null"] }, "red": { "type": ["number", "null"] }, "saves": { "type": ["number", "null"] }, "passes": { "type": ["number", "null"] }, "accuratePasses": { "type": ["number", "null"] }, "tackles": { "type": ["number", "null"] } } },
     "espnReport": {
       "description": "ESPN's games for this season (games/*.json): how many were paired with ours, team names we could not map, ESPN game ids whose score was not ours (left out), and our match ids whose Wikipedia score ESPN contradicted (not used; a league's only). A hidden team's game is left out and not listed.",
       "type": "object",

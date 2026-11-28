@@ -7,7 +7,11 @@ export type MatchDetail = {
   shots: Array<{ side: Side; player: string; minute: string; x: number; y: number; xg: number | null; outcome: "goal" | "saved" | "off" | "blocked" | "post"; body: string | null; penalty: boolean }>;
   positions: boolean;
   touches: Record<string, number[]>;
+  stats: { home: TeamStats; away: TeamStats } | null;
 };
+export type TeamStats = { possession: number | null; shots: number | null; onTarget: number | null; corners: number | null; fouls: number | null;
+  offsides: number | null; yellow: number | null; red: number | null; saves: number | null; passes: number | null; accuratePasses: number | null; tackles: number | null };
+export function teamStats(summary: unknown): { home: TeamStats; away: TeamStats } | null;
 export const ZONES: { x: number[]; y: number[] };
 export function zoneOf(x: number, y: number): number;
 export function reduceMatch(summary: unknown, pages: unknown[]): MatchDetail;
