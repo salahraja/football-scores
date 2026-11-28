@@ -350,6 +350,7 @@ function previousMeetings(list, teams, league) {
 function formCell(form, teams) {
   const said = { w: "Won", d: "Drew", l: "Lost" };
   return form.map((g) => `<span class="f-${g.result}" title="${esc(`${said[g.result]} ${g.for}–${g.against} ${g.home ? "v" : "at"} ${teams[g.opponent] ?? g.opponent}, ${short(g.date)}`)}"><span aria-hidden="true">${g.result.toUpperCase()}</span><span class="sr-only">${said[g.result]} ${g.for}–${g.against} ${g.home ? "v" : "at"} ${esc(teams[g.opponent] ?? g.opponent)}</span></span>`).join("");
+}
 
 const gamesWord = (n) => `${n} ${n === 1 ? "game" : "games"}`;
 

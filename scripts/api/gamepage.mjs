@@ -113,6 +113,9 @@ function xgRace(game, names) {
 <svg class="xgrace" viewBox="-2 -2 ${W + 4} ${H + 8}" role="img" aria-labelledby="race-t"><title id="race-t">${esc(said)}</title>${ticks}`
     + `<path class="race home" d="${path(home.pts)}"/><path class="race away" d="${path(away.pts)}"/>${goals}</svg>
 <p class="note">${esc(names.home)} ${home.total.toFixed(1)} xG · ${esc(names.away)} ${away.total.toFixed(1)} xG${unrated ? ` · ${unrated === 1 ? "1 shot" : `${unrated} shots`} without an xG from ESPN not counted` : ""}</p>
+</section>`;
+}
+
 import { lineupPitch } from "./lineup.mjs";
 
 /** The two starting elevens on a pitch in their formations, and each bench (players who came on marked), or nothing when ESPN's
