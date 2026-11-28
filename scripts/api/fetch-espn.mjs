@@ -5,14 +5,16 @@
 //   - one scoreboard per league per day, for the last `days` days;
 //   - for a game not saved yet, its summary and its plays (two pages), once, at least six hours after kick-off (the plays are still
 //     corrected for about two hours after the final whistle);
-//   - at most `max` games a run, one request at a time with a pause between.
+//   - at most `max` games a run, one request at a time with a pause between;
+//   - and, for a game saved before its team stats were kept (2026-11-28), its summary once more (one page), at most `backfill` a run,
+//     the stats written in (null when ESPN has none, so it is never asked again).
 // A failed download is reported and skipped; it never throws, so a build never stops for it. Node only, no dependencies.
 //   node scripts/api/fetch-espn.mjs [--out data/espn] [--season 2026-27] [--days 3]
-import { existsSync, mkdirSync, renameSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { leagues, tournaments } from "./config.mjs";
-import { reduceMatch } from "./espn.mjs";
+import { reduceMatch, teamStats } from "./espn.mjs";
 
 const SITE = "https://site.api.espn.com/apis/site/v2/sports/soccer";
 const CORE = "https://sports.core.api.espn.com/v2/sports/soccer/leagues";
@@ -27,8 +29,8 @@ async function get(url, fetchFn, wait) {
 }
 
 export async function fetchMatches({ out, season = "2026-27", now = new Date(), days = 3, ids = [...leagues(), ...tournaments()].map((l) => l.id), max = 40,
-  fetchFn = fetch, wait = () => new Promise((r) => setTimeout(r, 700)) } = {}) {
-  const report = { saved: [], kept: [], later: 0 };
+  backfill = 30, fetchFn = fetch, wait = () => new Promise((r) => setTimeout(r, 700)) } = {}) {
+  const report = { saved: [], kept: [], later: 0, backfilled: [] };
   // the leagues in `season`; each cup and international in its own (tournaments.json)
   const comps = [...leagues().map((l) => ({ ...l, season })), ...tournaments()];
   for (const league of comps.filter((l) => l.espn && ids.includes(l.id))) {
@@ -62,6 +64,26 @@ export async function fetchMatches({ out, season = "2026-27", now = new Date(), 
       }
     }
   }
+  // games saved before the stats were kept: one summary each, at most `backfill` a run
+  for (const league of comps.filter((l) => l.espn && ids.includes(l.id))) {
+    const dir = join(out, league.season, league.id);
+    if (!existsSync(dir)) continue;
+    for (const file of readdirSync(dir).filter((f) => f.endsWith(".json")).sort()) {
+      if (report.backfilled.length >= backfill) break;
+      const path = join(dir, file);
+      let game;
+      try { game = JSON.parse(readFileSync(path, "utf8")); } catch { continue; }
+      if ("stats" in game) continue;
+      try {
+        const summary = await get(`${SITE}/${league.espn}/summary?event=${file.slice(0, -5)}`, fetchFn, wait);
+        writeFileSync(`${path}.tmp`, JSON.stringify({ ...game, stats: teamStats(summary) }));
+        renameSync(`${path}.tmp`, path);
+        report.backfilled.push(`${league.id}/${file.slice(0, -5)}`);
+      } catch (e) {
+        report.kept.push(`${league.id}/${file.slice(0, -5)} stats (${e?.reason ?? e?.name ?? "error"})`);
+      }
+    }
+  }
   return report;
 }
 
@@ -69,5 +91,5 @@ if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
   const arg = (name, fallback) => { const i = process.argv.indexOf(`--${name}`); return i > 0 ? process.argv[i + 1] : fallback; };
   const root = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
   const report = await fetchMatches({ out: arg("out", join(root, "data/espn")), season: arg("season", "2026-27"), days: Number(arg("days", "3")) });
-  console.log(`espn: saved ${report.saved.length}${report.later ? `, ${report.later} left for the next run` : ""}${report.kept.length ? `; skipped ${report.kept.join(", ")}` : ""}`);
+  console.log(`espn: saved ${report.saved.length}${report.backfilled.length ? `, stats added to ${report.backfilled.length}` : ""}${report.later ? `, ${report.later} left for the next run` : ""}${report.kept.length ? `; skipped ${report.kept.join(", ")}` : ""}`);
 }
