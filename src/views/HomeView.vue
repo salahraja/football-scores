@@ -3,6 +3,7 @@ import { computed, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
 import { getDataNote, getResultRounds, getStandings } from "../data";
 import { competitions, league as loadLeague, zoneOf, type Competition, type League } from "../data/leagues";
 import { covered, today, type TodayGame } from "../data/live";
+import { liveTable } from "../data/liveTable";
 import { teamId } from "../data/clubid";
 import { clubNews, loadFollowing, loadLeagues, loadScope, mergeStories, news, saveFollowing, saveScope, setupDone, type Article, type Scope } from "../data/follow";
 import Onboarding from "../components/Onboarding.vue";
@@ -208,6 +209,14 @@ async function readToday(id: string) {
   const games = await today(id);
   todays.value = { ...todays.value, [id]: games }; // spread after the wait: leagues arrive in any order, and none may overwrite another
 }
+// Tables that move with the goals (Salah, 2026-11-18): while the chosen league has games on, its table is the table as it stands
+// if the live scores ended now, marked live, with an arrow on each row that has moved. Nothing live: the table as it is.
+const otherRows = computed(() => (other.value ? liveTable(other.value.table, nowGames.value, teamId) : []));
+const serieRows = computed(() => liveTable(
+  table.map((r) => ({ id: idFor(r.team.name), name: r.team.name, position: r.position, played: r.matches, won: r.wins, drawn: r.draws, lost: r.losses, points: r.points })),
+  chosen.value === HOME ? nowGames.value : [], teamId));
+const tableLive = computed(() => !cup.value && (other.value ? otherRows.value : chosen.value === HOME ? serieRows.value : []).some((r) => r.live));
+const movedLabel = (n: number) => `${n > 0 ? "Up" : "Down"} ${Math.abs(n)} ${Math.abs(n) === 1 ? "place" : "places"} on today's scores`;
 let poll: ReturnType<typeof setInterval> | undefined;
 onUnmounted(() => clearInterval(poll));
 function stepGame(by: number) {
@@ -388,6 +397,7 @@ onMounted(async () => {
       <section class="glass" data-test="table" aria-labelledby="t-table">
         <h2 id="t-table">The table</h2>
         <p v-if="cup && group" class="note" data-test="group">{{ group.name }}</p>
+        <p v-if="tableLive" class="note onair" data-test="live-table"><span class="ondot" aria-hidden="true"></span>Live: as it stands now</p>
         <table class="mini">
           <thead><tr><th class="left">#</th><th class="left">Club</th><th>P</th><th>W</th><th>D</th><th>L</th><th>Pts</th></tr></thead>
           <tbody>
@@ -398,17 +408,17 @@ onMounted(async () => {
               </tr>
             </template>
             <template v-else-if="other">
-              <tr v-for="row in other.table" :key="row.id" :class="[{ mine: on(row.id) }, zoneClass(row.position)]">
-                <td class="pos">{{ row.position }}</td><td class="left"><button type="button" class="star" :data-club="row.id" :aria-pressed="on(row.id)" :aria-label="`${on(row.id) ? 'Unfollow' : 'Follow'} ${row.name}`" @click="toggleFollow(row.id)">{{ on(row.id) ? "★" : "☆" }}</button><a class="club" :href="`/leagues/${other.id}/${row.id}/`">{{ row.name }}</a></td><td>{{ row.played }}</td><td>{{ row.won }}</td>
+              <tr v-for="row in otherRows" :key="row.id" :class="[{ mine: on(row.id), playing: row.live }, zoneClass(row.position)]">
+                <td class="pos">{{ row.position }}<span v-if="row.moved" class="moved" :class="row.moved > 0 ? 'moved--up' : 'moved--down'" :aria-label="movedLabel(row.moved)" data-test="moved">{{ row.moved > 0 ? "▲" : "▼" }}</span></td><td class="left"><button type="button" class="star" :data-club="row.id" :aria-pressed="on(row.id)" :aria-label="`${on(row.id) ? 'Unfollow' : 'Follow'} ${row.name}`" @click="toggleFollow(row.id)">{{ on(row.id) ? "★" : "☆" }}</button><a class="club" :href="`/leagues/${other.id}/${row.id}/`">{{ row.name }}</a></td><td>{{ row.played }}</td><td>{{ row.won }}</td>
                 <td>{{ row.drawn }}</td><td>{{ row.lost }}</td><td class="pts">{{ row.points }}</td>
               </tr>
             </template>
             <template v-else>
-            <tr v-for="row in table" :key="row.id" :class="[{ mine: isMine(idFor(row.team.name)) }, zoneClass(row.position)]">
-              <td class="pos">{{ row.position }}</td><td class="left"><button type="button" class="star" :data-club="idFor(row.team.name)" :aria-pressed="on(idFor(row.team.name))" :aria-label="`${on(idFor(row.team.name)) ? 'Unfollow' : 'Follow'} ${row.team.name}`" @click="toggleFollow(idFor(row.team.name))">{{ on(idFor(row.team.name)) ? "★" : "☆" }}</button><a v-if="clubIds[row.team.name]" class="club" :href="`/leagues/it-1/${clubIds[row.team.name]}/`">{{ row.team.name }}</a><template v-else>{{ row.team.name }}</template></td><td>{{ row.matches }}</td><td>{{ row.wins }}</td>
-              <td>{{ row.draws }}</td><td>{{ row.losses }}</td><td class="pts">{{ row.points }}</td>
+            <tr v-for="row in serieRows" :key="row.id" :class="[{ mine: isMine(row.id), playing: row.live }, zoneClass(row.position)]">
+              <td class="pos">{{ row.position }}<span v-if="row.moved" class="moved" :class="row.moved > 0 ? 'moved--up' : 'moved--down'" :aria-label="movedLabel(row.moved)" data-test="moved">{{ row.moved > 0 ? "▲" : "▼" }}</span></td><td class="left"><button type="button" class="star" :data-club="row.id" :aria-pressed="on(row.id)" :aria-label="`${on(row.id) ? 'Unfollow' : 'Follow'} ${row.name}`" @click="toggleFollow(row.id)">{{ on(row.id) ? "★" : "☆" }}</button><a v-if="clubIds[row.name]" class="club" :href="`/leagues/it-1/${clubIds[row.name]}/`">{{ row.name }}</a><template v-else>{{ row.name }}</template></td><td>{{ row.played }}</td><td>{{ row.won }}</td>
+              <td>{{ row.drawn }}</td><td>{{ row.lost }}</td><td class="pts">{{ row.points }}</td>
             </tr>
-                      </template>
+          </template>
 </tbody>
         </table>
         <ul v-if="zones.length" class="zones" data-test="zones">
@@ -483,3 +493,11 @@ onMounted(async () => {
     <Onboarding v-if="setup" @done="setupFinished" />
   </section>
 </template>
+
+<style>
+/* Tables that move with the goals: a small arrow beside a moved row's place, on the same line, so no row grows. */
+.mini td.pos { white-space: nowrap; }
+.mini td.pos .moved { margin-left: 3px; font-family: inherit; font-size: 0.55rem; font-weight: 700; vertical-align: 2px; }
+.mini .moved--up { color: #2f9e57; }
+.mini .moved--down { color: var(--accent); }
+</style>
