@@ -119,7 +119,7 @@ function xgRace(game, names) {
 const KIND = { goal: "Goal", penalty: "Penalty", "own-goal": "Own goal", yellow: "Yellow card", red: "Red card", sub: "Substitution" };
 
 /** The page body below the poster: timeline, numbers, shot map, touch maps by side and by player. */
-export function gameBody(game, names) {
+export function gameBody(game, names, { playerHref = () => null } = {}) {
   const byId = new Map(game.players.map((p) => [p.id, p]));
   const who = (id) => byId.get(id)?.name ?? "Unknown player";
   const timeline = game.events.map((e) => {
@@ -141,7 +141,7 @@ ${row("Shots", side("home").length, side("away").length)}${row("On target", side
   const players = (s) => game.players.filter((p) => p.side === s && game.touches[p.id])
     .sort((a, b) => Number(b.starter) - Number(a.starter) || (a.number ?? 99) - (b.number ?? 99))
     .map((p) => { const n = game.touches[p.id].reduce((a, b) => a + b, 0);
-      return `<details><summary>${p.number ?? ""} ${esc(p.name)} · ${p.position ? `${esc(p.position)} · ` : ""}${n} touches<span class="chev" aria-hidden="true">›</span></summary>${zoneMap(game.touches[p.id], p.name, `p${p.id}`)}</details>`; }).join("\n");
+      return `<details><summary>${p.number ?? ""} ${esc(p.name)} · ${p.position ? `${esc(p.position)} · ` : ""}${n} touches<span class="chev" aria-hidden="true">›</span></summary>${zoneMap(game.touches[p.id], p.name, `p${p.id}`)}${playerHref(p.id) ? `<p class="note"><a href="${playerHref(p.id)}">${esc(p.name)}'s season</a></p>` : ""}</details>`; }).join("\n");
   const positioned = game.positions ? `<section class="glass" id="shots">
 <h2>Shots</h2>
 ${shotMap(game, names, who)}

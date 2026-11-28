@@ -10,7 +10,7 @@ import { SITE, hiddenCountries, leagues, loadZones, nationNames, pickemData, tou
 import { pickemScript } from "./pickem.mjs";
 import { CLUB_WORDS, aliasMap, slug } from "./teams.mjs";
 import { kickoff } from "./time.mjs";
-import { GAME_CSS, gameBody } from "./gamepage.mjs";
+import { GAME_CSS, gameBody, zoneMap } from "./gamepage.mjs";
 import { formOf, meetings } from "./form.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -296,6 +296,8 @@ function gamePages(league, season, api) {
   const { teams } = JSON.parse(readFileSync(join(api, league.id, season, "teams.json"), "utf8"));
   const { matches } = JSON.parse(readFileSync(join(api, league.id, season, "matches.json"), "utf8"));
   const byId = new Map(matches.map((m) => [m.id, m]));
+  const seasonFile = join(api, league.id, season, "player-season.json");
+  const seasonPlayers = existsSync(seasonFile) ? JSON.parse(readFileSync(seasonFile, "utf8")).players : null;
   const out = new Map();
   for (const file of readdirSync(dir).filter((f) => f.endsWith(".json")).sort()) {
     const g = JSON.parse(readFileSync(join(dir, file), "utf8"));
@@ -310,7 +312,7 @@ function gamePages(league, season, api) {
 <p class="note">${[g.home.formation, g.away.formation].every(Boolean) ? `${esc(g.home.formation)} v ${esc(g.away.formation)}` : ""}</p>
 </header>
 <main class="board" style="grid-template-columns: minmax(0, 1fr)">
-${gameBody(g, names)}
+${gameBody(g, names, { playerHref: (id) => (seasonPlayers?.[id] ? `/leagues/${league.id}/players/${id}/` : null) })}
 ${previousMeetings(meetings(seasonsOf(api, league.id), m.home, m.away, m.date), teams, league)}
 <footer>Lineups, timeline, shots and touches from <a href="${esc(g.source.url)}">ESPN</a>. The score is ours: ${used(m)}.</footer>
 </main>`;
@@ -348,6 +350,77 @@ function previousMeetings(list, teams, league) {
 function formCell(form, teams) {
   const said = { w: "Won", d: "Drew", l: "Lost" };
   return form.map((g) => `<span class="f-${g.result}" title="${esc(`${said[g.result]} ${g.for}–${g.against} ${g.home ? "v" : "at"} ${teams[g.opponent] ?? g.opponent}, ${short(g.date)}`)}"><span aria-hidden="true">${g.result.toUpperCase()}</span><span class="sr-only">${said[g.result]} ${g.for}–${g.against} ${g.home ? "v" : "at"} ${esc(teams[g.opponent] ?? g.opponent)}</span></span>`).join("");
+
+const gamesWord = (n) => `${n} ${n === 1 ? "game" : "games"}`;
+
+/** The league page's leaders from the games with detail (player-season.json): expected goals and assists, top ten each, linking the players. */
+function seasonLeaders(api, league, season, teams) {
+  const f = join(api, league.id, season, "player-season.json");
+  if (!existsSync(f)) return "";
+  const { games, players } = JSON.parse(readFileSync(f, "utf8"));
+  const box = (id, title, short, word, key, fmt) => {
+    const rows = Object.entries(players).filter(([, p]) => p[key] > 0).sort((a, b) => b[1][key] - a[1][key] || a[1].name.localeCompare(b[1].name)).slice(0, 10);
+    return `<section class="glass" id="${id}">
+<h2>${title}</h2>
+${rows.length ? `<table class="standings leaders">
+<caption>From the ${gamesWord(games)} ESPN has detail for.</caption>
+<thead><tr><th scope="col" class="left"><span aria-hidden="true">#</span><span class="sr-only">Rank</span></th><th scope="col" class="left">Player</th><th scope="col"><abbr title="${word}">${short}</abbr></th></tr></thead>
+<tbody>
+${rows.map(([pid, p], i) => `<tr class="leader"><td class="pos">${i + 1}</td><th scope="row" class="left"><a href="/leagues/${league.id}/players/${pid}/">${esc(p.name)}</a><span class="club">${esc(teams[p.team] ?? p.team)}</span></th><td class="pts">${fmt(p[key])}</td></tr>`).join("\n")}
+</tbody>
+</table>` : `<p class="note">No ${word.toLowerCase()} yet in the ${gamesWord(games)} ESPN has detail for.</p>`}
+</section>`;
+  };
+  return box("xg", "Expected goals", "xG", "Expected goals", "xg", (v) => v.toFixed(1)) + "\n" + box("assists", "Assists", "A", "Assists", "assists", String);
+}
+
+/** One page per player in a league season with detail (player-season.json): the season's numbers, a heat map of every touch, and each game. */
+function playerPages(league, season, api) {
+  const f = join(api, league.id, season, "player-season.json");
+  const out = new Map();
+  if (!existsSync(f)) return out;
+  const { games, players } = JSON.parse(readFileSync(f, "utf8"));
+  const { teams } = JSON.parse(readFileSync(join(api, league.id, season, "teams.json"), "utf8"));
+  const per90 = (v, m) => (m >= 90 ? ((v * 90) / m).toFixed(2) : "–");
+  const POS = { G: "Goalkeeper", D: "Defender", M: "Midfielder", F: "Forward" };
+  for (const [id, p] of Object.entries(players)) {
+    const club = teams[p.team] ?? p.team;
+    const row = (label, v) => `<tr><th scope="row">${label}</th><td>${v}</td></tr>`;
+    const numbers = [row("Games", `${p.apps}${p.starts !== p.apps ? ` (${p.starts} started)` : ""}`), row("Minutes", p.minutes), row("Goals", `${p.goals}${p.penalties ? ` (${p.penalties} from the spot)` : ""}`),
+      row("Assists", p.assists), row("Shots", `${p.shots}${p.shots ? `, ${p.onTarget} on target` : ""}`), row("Expected goals", `${p.xg.toFixed(2)}${p.noXg ? ` <span class="note">(${p.noXg} without an xG)</span>` : ""}`),
+      row("Goals and assists per 90", per90(p.goals + p.assists, p.minutes)), row("Touches", p.touches)].join("\n");
+    const log = p.games.map((g) => `<tr><td class="left">${esc(short(g.date))}</td><th scope="row" class="left"><a href="/leagues/${league.id}/${esc(g.game)}/">${esc(g.title)}</a></th><td>${g.minutes}'</td><td>${g.goals}</td><td>${g.assists}</td><td>${g.shots}</td><td>${g.xg.toFixed(2)}</td></tr>`).join("\n");
+    const body = `<header class="poster">
+<h1 style="--n: ${Math.max(...p.name.split(/\s+/).map((w) => w.length))}">${esc(p.name)}</h1>
+<p class="stand"><b><a href="/leagues/${league.id}/${esc(p.team)}/">${esc(club)}</a></b>${p.position ? ` · ${esc(POS[p.position] ?? p.position)}` : ""}${p.number !== null ? ` · #${p.number}` : ""}</p>
+<p class="note">${esc(league.name)} ${esc(season)} · From the ${gamesWord(games)} ESPN has detail for</p>
+</header>
+<main class="board">
+<section class="glass" id="season">
+<h2>The season</h2>
+<table class="standings sides"><tbody>
+${numbers}
+</tbody></table>
+</section>
+<section class="glass" id="heat">
+<h2>Where they had the ball</h2>
+<p class="note">Every on-ball touch of the season, counted in 30 zones, attacking right.</p>
+${zoneMap(p.zones, p.name, `s${id}`)}
+</section>
+<section class="glass" id="games">
+<h2>Game by game</h2>
+<div class="scroll"><table class="standings">
+<thead><tr><th scope="col" class="left">Date</th><th scope="col" class="left">Game</th><th scope="col"><abbr title="Minutes">Min</abbr></th><th scope="col"><abbr title="Goals">G</abbr></th><th scope="col"><abbr title="Assists">A</abbr></th><th scope="col"><abbr title="Shots">Sh</abbr></th><th scope="col"><abbr title="Expected goals">xG</abbr></th></tr></thead>
+<tbody>
+${log}
+</tbody></table></div>
+</section>
+<footer>From <a href="https://www.espn.com/soccer/">ESPN</a>'s game detail; the scores are ours.</footer>
+</main>`;
+    out.set(`${league.id}/players/${id}/index.html`, shell({ title: `${p.name}, ${club}: ${league.name} ${season}`, path: `/leagues/${league.id}/players/${id}/`, body, here: "league",
+      description: `${p.name} (${club}) in ${league.name} ${season}: ${p.goals} goals, ${p.assists} assists, ${p.xg.toFixed(1)} xG in ${p.minutes} minutes, and a heat map of every touch.` }));
+  }
+  return out;
 }
 
 /** The poster's game: the week's first unscored game that has kicked off or is about to (live scores fill it), else the latest result. */
@@ -441,6 +514,7 @@ ${next.length ? list(next) : '<p class="note">None left this season.</p>'}
 </section>
 ${board("scorers", "Top scorers", "Goals", "G", leaders?.goals)}
 ${board("keepers", "Clean sheets", "Clean sheets", "CS", leaders?.cleanSheets)}
+${seasonLeaders(api, league, season, teams)}
 </div>
 <footer>Results from ${used.map((s) => SOURCES[s]).join(" and ")}.${leaders ? ` Top scorers and clean sheets from ${used.includes("wikipedia") ? "Wikipedia too" : SOURCES.wikipedia}.` : ""} Kick-off times are ${esc(league.clock)}.${live ? ' Live scores <a href="https://sportscore.com/">powered by SportScore</a>.' : ""}</footer>
 </main>`;
@@ -1073,6 +1147,7 @@ export function pages({ api = "public/api/v1", out = "public", zones = loadZones
     served[(i - 1 + served.length) % served.length], served[(i + 1) % served.length], zones)));
   for (const league of served) for (const [path, html] of clubPages(league, byId.get(league.id), api, zones)) files.set(path, html);
   for (const league of served) for (const [path, html] of gamePages(league, byId.get(league.id).current, api)) files.set(path, html);
+  for (const league of served) for (const [path, html] of playerPages(league, byId.get(league.id).current, api)) files.set(path, html);
   const cups = existsSync(join(api, "tournaments.json")) ? JSON.parse(readFileSync(join(api, "tournaments.json"), "utf8")).tournaments : [];
   for (const t of cups) files.set(`${t.id}/index.html`, tournamentPage(t, api));
   for (const t of cups) for (const [path, html] of gamePages(t, t.season, api)) files.set(path, html);

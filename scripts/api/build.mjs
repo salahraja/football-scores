@@ -13,6 +13,7 @@ import { applyCorrections, parseSeason } from "./openfootball.mjs";
 import { computeTable } from "./table.mjs";
 import { teamId } from "./teams.mjs";
 import { teamCalendars } from "./calendar.mjs";
+import { seasonByPlayer } from "./players.mjs";
 import { applyResults, parseNames, parseResults } from "./wikipedia.mjs";
 import { parseLeaders } from "./leaders.mjs";
 import { groupTables, nation, pageGames } from "./tournament.mjs";
@@ -198,6 +199,9 @@ export function build({ input = "data/openfootball", wikipedia = join(ROOT, "dat
       const games = gameFiles(join(espn, season, league.id), parsed.matches, parsed.teams, overruled);
       for (const [name, body] of games?.files ?? []) files.set(`${base}/games/${name}.json`, { competition: league.id, season, ...body });
       if (games?.files.size) files.set(`${base}/player-latest.json`, { competition: league.id, season, players: latestByPlayer(games.files, parsed.matches, parsed.teams) });
+      // each player's season from the same games (players.mjs; the goal, 2026-11-28): the player pages and the assist and xG leaders
+      if (games?.files.size) files.set(`${base}/player-season.json`, { competition: league.id, season, games: games.files.size,
+        players: seasonByPlayer(games.files, parsed.matches, parsed.teams) });
       // How far the source has got: the app says "results up to <date>" rather than pretending a stale table is live.
       meta.leagues[league.id] ??= {};
       meta.leagues[league.id][season] = { finished: finished.length, scheduled: parsed.matches.length - finished.length,

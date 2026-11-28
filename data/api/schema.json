@@ -266,6 +266,26 @@
       }
     },
 
+    "playerSeason": {
+      "description": "Each player's season in a league, added up from the games with detail (games/*.json; `games` says how many): appearances, starts, minutes (from substitutions and red cards), goals (penalties in, own goals out), assists, shots, shots on target, ESPN's xG (shots without one counted in noXg, not guessed), touches, the 30 touch zones added up, and each game newest first. Only players who started or came on.",
+      "type": "object",
+      "required": ["competition", "season", "games", "players"],
+      "additionalProperties": false,
+      "properties": {
+        "competition": { "$ref": "#/$defs/leagueId" },
+        "season": { "$ref": "#/$defs/season" },
+        "games": { "$ref": "#/$defs/count" },
+        "players": { "type": "object", "propertyNames": { "pattern": "^[0-9]+$" }, "additionalProperties": { "type": "object",
+          "required": ["name", "team", "position", "number", "apps", "starts", "minutes", "goals", "penalties", "assists", "shots", "onTarget", "xg", "noXg", "touches", "zones", "games"], "additionalProperties": false, "properties": {
+          "name": { "type": "string", "minLength": 1 }, "team": { "type": "string", "minLength": 1 }, "position": { "type": ["string", "null"] }, "number": { "type": ["integer", "null"] },
+          "apps": { "$ref": "#/$defs/count" }, "starts": { "$ref": "#/$defs/count" }, "minutes": { "$ref": "#/$defs/count" }, "goals": { "$ref": "#/$defs/count" }, "penalties": { "$ref": "#/$defs/count" }, "assists": { "$ref": "#/$defs/count" }, "shots": { "$ref": "#/$defs/count" }, "onTarget": { "$ref": "#/$defs/count" }, "xg": { "type": "number", "minimum": 0 }, "noXg": { "$ref": "#/$defs/count" }, "touches": { "$ref": "#/$defs/count" },
+          "zones": { "type": "array", "items": { "$ref": "#/$defs/count" }, "minItems": 30, "maxItems": 30 },
+          "games": { "type": "array", "items": { "type": "object", "required": ["game", "date", "title", "minutes", "goals", "assists", "shots", "xg", "touches"], "additionalProperties": false, "properties": {
+            "game": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+$" }, "date": { "$ref": "#/$defs/date" }, "title": { "type": "string", "minLength": 1 },
+            "minutes": { "$ref": "#/$defs/count" }, "goals": { "$ref": "#/$defs/count" }, "assists": { "$ref": "#/$defs/count" }, "shots": { "$ref": "#/$defs/count" }, "xg": { "type": "number", "minimum": 0 }, "touches": { "$ref": "#/$defs/count" } } } } } } }
+      }
+    },
+
     "today": {
       "description": "Every league's and tournament's games from the day before the build to three days after, in kick-off order, with team names: one small file for a widget. league is the league's id or the tournament's (a club keeps one id in both, so a followed club's cup games are here too); a reader that does not know an id skips the game.",
       "type": "object",
