@@ -61,6 +61,25 @@ export function zoneMap(counts, label, id) {
     + `${rects.join("")}${lines()}${numbers.join("")}<text class="end" x="${L}" y="-2" text-anchor="end">Attack →</text></svg>`;
 }
 
+import { lineupPitch } from "./lineup.mjs";
+
+/** The two starting elevens on a pitch in their formations, and each bench (players who came on marked), or nothing when ESPN's
+ *  positions and formations do not add up. */
+function lineups(game, names) {
+  const pitch = lineupPitch(game, names);
+  if (!pitch) return "";
+  const cameOn = new Set(game.events.filter((e) => e.kind === "sub" && e.player).map((e) => e.player));
+  const bench = (s) => game.players.filter((p) => p.side === s && !p.starter).map((p) => `${p.number ?? ""} ${esc(p.name)}${cameOn.has(p.id) ? " ↑" : ""}`.trim());
+  return `<section class="glass" id="lineups">
+<h2>Lineups</h2>
+${pitch}
+<p class="note">${esc(names.home)} ${esc(game.home.formation)}, attacking right · ${esc(names.away)} ${esc(game.away.formation)}. Places are our reading of ESPN's positions.</p>
+${["home", "away"].some((s) => bench(s).length) ? `<details><summary>Benches<span class="chev" aria-hidden="true">›</span></summary>
+${["home", "away"].map((s) => (bench(s).length ? `<p class="note"><b>${esc(names[s])} bench:</b> ${bench(s).join(", ")}${bench(s).some((b) => b.endsWith("↑")) ? " (↑ came on)" : ""}</p>` : "")).join("\n")}
+</details>` : ""}
+</section>`;
+}
+
 const KIND = { goal: "Goal", penalty: "Penalty", "own-goal": "Own goal", yellow: "Yellow card", red: "Red card", sub: "Substitution" };
 
 /** The page body below the poster: timeline, numbers, shot map, touch maps by side and by player. */
@@ -102,7 +121,8 @@ ${["home", "away"].map((s) => `<h3>${esc(names[s])}</h3>
 ${zoneMap(sum(ids(s)), names[s], `t${s}`)}
 ${players(s)}`).join("\n")}
 </section>` : `<section class="glass"><p class="note">ESPN has no positions for this game, so there is no shot map or touch map.</p></section>`;
-  return `<section class="glass" id="timeline">
+  return `${lineups(game, names)}
+<section class="glass" id="timeline">
 <h2>Timeline</h2>
 <ol class="timeline">
 ${timeline || '<li class="note">No goals or cards.</li>'}
@@ -121,6 +141,9 @@ export const GAME_CSS = `
 .pitch { display: block; width: 100%; height: auto; margin: 0.5rem 0; }
 .pitch .pl rect, .pitch .pl line, .pitch .pl circle { fill: none; stroke: var(--muted); stroke-width: 0.3; } .pitch .pl .spot { fill: var(--muted); }
 .pitch .end { font: 600 3.6px var(--sans); fill: var(--muted); }
+.lineup .man circle { stroke-width: 0.35; } .lineup .man.home circle { fill: var(--accent); stroke: #fff; } .lineup .man.away circle { fill: var(--fg); stroke: var(--bg); }
+.lineup .man text { text-anchor: middle; font-family: var(--sans); } .lineup .num { font-size: 2.6px; font-weight: 800; dominant-baseline: middle; }
+.lineup .man.home .num { fill: #fff; } .lineup .man.away .num { fill: var(--bg); } .lineup .nm { font-size: 2.25px; font-weight: 600; fill: var(--fg); }
 .shot { stroke-width: 0.45; fill: none; } .shot.home { stroke: var(--accent); } .shot.away { stroke: var(--fg); }
 .shot.goal.home { fill: var(--accent); } .shot.goal.away { fill: var(--fg); } .shot.saved { stroke-width: 1; } .shot.blocked { stroke-dasharray: 0.9 0.6; }
 .pitch .z0 { fill: transparent; } .pitch .z1 { fill: #f8d9d4; } .pitch .z2 { fill: #f3aca2; } .pitch .z3 { fill: #e57669; } .pitch .z4 { fill: #ca382f; } .pitch .z5 { fill: #8a1714; }

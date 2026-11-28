@@ -57,6 +57,11 @@ dark theme works, a title and a description on each map for screen readers. A pa
 positions for AFCON qualifying, so those pages have the timeline and numbers only. A hidden team's game (Israel) gets no file and no page. No framework (in our test on a
 throttled phone a plain page showed in 376 ms against 912 ms for the Vue app), one stylesheet (`/leagues/site.css`) and the two fonts
 (OFL) served from `/leagues/fonts/`, light and dark.
+**Lineups** (`scripts/api/lineup.mjs`, 2026-11-28): a game page opens with both starting elevens on one pitch in their formations,
+home on the left attacking right. The rows come from the formation ("4-2-3-1"), the order from how deep each ESPN position plays (CD,
+LB, DM, CM, AM, LW, F...), and left to right from its L or R; the page says it is our reading of ESPN's positions. Each bench folds
+under it, with the players who came on marked. Left out when the positions do not add up to the formation (all 19 real Serie A games
+of 7–22 November 2026 were drawn).
 Each page says how far its results go, gives kick-off times in the league's own time zone (`clock` in `data/api/leagues.json`), and
 credits only the sources it used. "This week" comes first: every unscored game up to three days ahead (a game from before the build day
 with no score is waiting for its result, never "next").
