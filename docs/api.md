@@ -70,6 +70,11 @@ as two step lines, a dot on a goal, drawn as SVG at build time; shots ESPN gave 
 the season's numbers (games, minutes, goals, assists, shots, xG, goals and assists per 90, touches), a heat map of every touch, and a
 game-by-game log linking each game's page. The league page adds **Expected goals** and **Assists** leaders, top ten each. Both say how
 many games they come from: only the games ESPN has detail for, not the whole season. Each player on a game page links to their season.
+**Lineups** (`scripts/api/lineup.mjs`, 2026-11-28): a game page opens with both starting elevens on one pitch in their formations,
+home on the left attacking right. The rows come from the formation ("4-2-3-1"), the order from how deep each ESPN position plays (CD,
+LB, DM, CM, AM, LW, F...), and left to right from its L or R; the page says it is our reading of ESPN's positions. Each bench folds
+under it, with the players who came on marked. Left out when the positions do not add up to the formation (all 19 real Serie A games
+of 7–22 November 2026 were drawn).
 Each page says how far its results go, gives kick-off times in the league's own time zone (`clock` in `data/api/leagues.json`), and
 credits only the sources it used. "This week" comes first: every unscored game up to three days ahead (a game from before the build day
 with no score is waiting for its result, never "next").
